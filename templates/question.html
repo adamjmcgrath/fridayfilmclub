@@ -1,0 +1,74 @@
+{% extends "templates/base.tpl" %}
+
+{% block page_id %}question-page{% endblock page_id %}
+
+{% block main %}
+<div id="title">
+  <h3>Can you name this film?</h3>
+</div>
+<div id="answers">
+  <form action="" method="post">
+    {% for clue in answer.required_clues() %}
+    {% set guess = answer.made_guesses()[loop.index0] %}
+    {% set complete = answer.correct or answer.incorrect %}
+    <div class="clue"{% if loop.first %} id="screenshot"{% endif %}>
+      {% if loop.first %}
+      <img src="{{clue}}">
+      {% else %}
+      <p>
+        <b>Clue {{loop.index0}}:</b> {{clue}}
+      </p>
+      {% endif %}
+    </div>
+    <div class="guess grids
+                {% if not loop.last and not answer.correct or answer.incorrect %}
+                 incorrect{% endif %}">
+      <div class="input grid-5">
+        <p>
+        {% if loop.last and not answer.correct and not answer.incorrect %}
+          {{form.guess}}
+        {% else %}
+          <span>{{guess}}</span>
+        {% endif %}
+        </p>
+      </div>
+      <div class="button grid-2">
+        <p>
+          <button{% if not loop.last or complete %}
+                  disabled="disabled"{% endif %}>
+            <span>
+            {% if answer.correct %}
+              Correct
+            {% elif answer.incorrect %}
+              Incorrect
+            {% else %}
+              Submit
+            {% endif %}
+            </span>
+          </button>
+        </p>
+      </div>
+    </div>
+    {% endfor %}
+    {% if answer.score != None %}
+    <div id="answer">
+      <p>
+        <b>
+          {% if answer.correct %}Correct{% else %}Incorrect{% endif %}.
+          You scored {{answer.score}}
+        </b>
+        The answer is of course:
+        <b>{{question.film.title}}.</b>
+      </p>
+    </div>
+    {% endif %}
+  </form>
+</div>
+{% endblock %}
+
+{% block body_base %}
+{% include "templates/inc/questionjs.tpl" %}
+<script>
+  var ac = new ffc.AutoComplete(document.getElementById('ac'), 'film');
+</script>
+{% endblock %}

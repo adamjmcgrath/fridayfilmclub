@@ -1,0 +1,52 @@
+{% extends "templates/admin/base.tpl" %}
+
+{% block page_id %}add-question-page{% endblock page_id %}
+
+{% block main %}
+{{super()}}
+<h2>Upload Question</h2>
+<form action="" method="POST"
+      enctype="multipart/form-data">
+  <div class="field{% if form.film.errors %} error{% endif %}">
+    <p><label for="solution">Film</label></p>
+    <div class="input">
+      <p>
+        {{form.film}}
+      </p>
+    </div>
+  </div>
+  <div class="field{% if form.screenshot.errors %} error{% endif %}">
+    <p>{{form.screenshot.label}}</p>
+    {% if question and question.screenshot %}
+      <img src="{{question.screenshot_url(300)}}">
+    {% endif %}
+    <div class="input file">
+      <p>{{form.screenshot}}</p>
+    </div>
+  </div>
+  <div class="field{% if form.clue_1.errors %} error{% endif %}">
+    <p>{{form.clue_1.label}}</p>
+    <div class="input">
+      <p>{{form.clue_1}}</p>
+    </div>
+  </div>
+  <div class="field{% if form.clue_2.errors %} error{% endif %}">
+    <p>{{form.clue_2.label}}</p>
+    <div class="input">
+      <p>{{form.clue_2}}</p>
+    </div>
+  </div>
+  <div class="button clearfix">
+    <p class="grid-2">
+      <input type="submit" name="submit" value="Submit">
+    </p>
+  </div>
+</form>
+{% endblock %}
+
+{% block body_base %}
+{% include "templates/inc/questionjs.tpl" %}
+<script>
+  var ac = new ffc.AutoComplete(document.getElementById('ac'), 'film');
+</script>
+{% endblock %}

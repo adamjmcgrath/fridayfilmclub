@@ -1,0 +1,281 @@
+@import url(/static/css/grid.css);
+@import url(//fonts.googleapis.com/css?family=Poller+One|Open+Sans:400italic,400,700);
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font: 15px/18px 'Open Sans', arial, sans-serif;
+  padding-bottom: 72px;
+}
+
+.wrapper {
+/*  background: url(/static/img/grid.png) repeat-y 4px 0;*/
+}
+
+h1 {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 18px;
+  text-transform: uppercase;
+}
+
+h2 {
+  font-size: 14px;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 18px;
+}
+
+.admin #main h2 {
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 18px;
+  margin: 18px 0;
+}
+
+h3 {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #ccc;
+  padding: 5px;
+}
+
+td {
+  vertical-align: top;
+}
+
+.admin #main h3 {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 18px;
+  margin: 18px 0;
+}
+
+.admin #main ul {
+  list-style: inside;
+}
+
+#header {
+  border-bottom: 3px solid #000;
+  padding: 27px 0 24px;
+  text-align: center;
+}
+
+.admin #header b {
+  color: red;
+  font-weight: 400;
+}
+
+.admin .back {
+  font-size: 11px;
+}
+
+#title {
+  padding: 18px 0;
+}
+
+#question-page #screenshot {
+  background: #000;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  padding: 3px;
+}
+
+#screenshot img {
+  width: 100%;
+}
+
+.guess {
+  padding: 18px 0;
+}
+
+#add-question-page form label {
+  display: block;
+  padding: 5px 0;
+}
+
+#add-question-page form .input {
+  margin-bottom: 18px;
+}
+
+#add-question-page form .button p {
+  float: right;
+  margin-right: 0;
+}
+
+#add-question-page form textarea {
+  line-height: 1.4;
+  font-weight: normal;
+  text-indent: 0;
+  width: 98%;
+  padding: 0.5% 1.1%;
+}
+
+.input p, .button p {
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  background: #999;
+  padding: 1px;
+}
+
+.error .input p {
+  background: red;
+}
+
+.file p {
+  background: none;
+}
+
+.error .file p {
+  background: none;
+  color: red;
+}
+
+
+.input input,
+.button button,
+.input textarea,
+.button input,
+.input span {
+  background: #fff;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  border: 0;
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 34px;
+  height: 100%;
+  text-indent: 5px;
+  width: 100%;
+}
+
+.input span {
+  background: #f2f2f2;
+  color: #999;
+}
+
+.file input {
+  font-size: 12px;
+  font-weight: 400;
+  text-indent: 0;
+}
+
+.button button, .button input {
+  background: #f2f2f2;
+  cursor: pointer;
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.incorrect .button button,
+.correct .button button {
+  cursor: default;
+}
+
+.incorrect span.incorrect {
+  background: url(/static/img/cross.png) no-repeat 0 2px;
+  display: inline;
+  padding-left: 20px;
+}
+
+.correct span.correct {
+  background: url(/static/img/tick.png) no-repeat 0 2px;
+  display: inline;
+  padding-left: 20px;
+}
+
+.incorrect span.submit,
+.correct span.submit,
+span.incorrect,
+span.correct {
+  display: none;
+}
+
+.clue, #answer {
+  background: #f2f2f2;
+  border: 1px solid #999;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  font-size: 13px;
+  padding: 8px;
+}
+
+.incorrect {
+  opacity: 0.7;
+}
+
+.incorrect input {
+  color: #ccc;
+}
+
+#footer {
+  border-top: 1px solid #000;
+  clear: both;
+  font-size: 11px;
+  margin-top: 36px;
+  padding-top: 5px;
+  text-align: center;
+}
+
+.wrong-label {
+  font-family: poller;
+  font-size: 20px;
+  text-transform: uppercase;
+}
+
+/* Auto complete */
+.ac-renderer {
+  position: absolute;
+  background: #fff;
+  border: 1px solid #999;
+  -moz-box-shadow: 2px 2px 2px rgba(102, 102, 102, .4);
+  -webkit-box-shadow: 2px 2px 2px rgba(102, 102, 102, .4);
+  width: 410px;
+  max-width: 96%;
+}
+
+.ac-row {
+  cursor: pointer;
+  padding: 5px;
+}
+
+.ac-row span {
+  color: #CCC;
+  font-size: 80%;
+  margin-left: 5px;
+}
+
+.ac-highlighted {
+  font-weight: bold;
+}
+
+.ac-active {
+  background-color: #b2b4bf;
+}
+
+.clearfix:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}

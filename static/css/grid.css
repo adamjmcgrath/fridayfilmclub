@@ -1,0 +1,41 @@
+.wrapper {
+  max-width: 585px;
+  padding: 0 5px;
+  margin: 0 auto;
+}
+
+.grids {
+  width: auto;
+  max-width: 595px;
+  clear: both;
+  margin: 0 0 0 -1.681%;
+  list-style: none;
+  overflow: hidden;
+}
+
+.grids .grid-1,
+.grids .grid-2,
+.grids .grid-3,
+.grids .grid-4,
+.grids .grid-5,
+.grids .grid-6,
+.grids .grid-7 { margin: 0 0 0 1.681%; }
+
+.grid-1,
+.grid-2,
+.grid-3,
+.grid-4,
+.grid-5,
+.grid-6,
+.grid-7 {
+  float: left;
+  margin: 0 1.681% 0 0;
+}
+
+.grid-1 { width: 12.605% }
+.grid-2 { width: 26.891% }
+.grid-3 { width: 41.176% }
+.grid-4 { width: 55.462% }
+.grid-5 { width: 69.748% }
+.grid-6 { width: 84.034% }
+.grid-7 { width: 98.319%; margin: 0; }
