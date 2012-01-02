@@ -29,7 +29,6 @@ def slugify(st):
 
 def add_film_map(input_tuple):
   """Add films to the data store."""
-  logging.info('FOOBAR')
   io = StringIO.StringIO(input_tuple[1])
   row = csv.reader(io).next()
   logging.info(row)

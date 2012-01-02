@@ -90,8 +90,6 @@ class Question(webapp2.RequestHandler):
       form.populate_obj(answer)
       answer.put()
 
-    logging.info(form.errors)
-
     return webapp2.Response(template.render({
       'answer': answer,
       'dev_mode': settings.is_dev and self.request.get('debugjs'),
