@@ -53,6 +53,7 @@ class Question(db.Model):
   created = db.DateTimeProperty(auto_now_add=True)
   clue_1 = db.TextProperty()
   clue_2 = db.TextProperty()
+  clue_3 = db.TextProperty()
   film = db.ReferenceProperty(Film)
   posed = db.DateProperty()
   screenshot = blobstore.BlobReferenceProperty()
@@ -66,7 +67,7 @@ class Question(db.Model):
       return ''
 
   def clues(self):
-    return [self.screenshot_url(), self.clue_1, self.clue_2]
+    return [self.screenshot_url(), self.clue_1, self.clue_2, self.clue_3]
 
 
 class User(db.Model):
@@ -91,6 +92,7 @@ class Answer(db.Model):
   guess_0 = db.StringProperty() # Film db.Key.
   guess_1 = db.StringProperty() # Film db.Key.
   guess_2 = db.StringProperty() # Film db.Key.
+  guess_3 = db.StringProperty() # Film db.Key.
   current_guess = db.IntegerProperty(default=0)
   incorrect = db.BooleanProperty()
   question = db.ReferenceProperty(Question, collection_name='scores')
@@ -99,14 +101,14 @@ class Answer(db.Model):
 
   def made_guesses(self):
     """Returns a list of guesses that have been made."""
-    guesses = [self.guess_0, self.guess_1, self.guess_2]
+    guesses = [self.guess_0, self.guess_1, self.guess_2, self.guess_3]
     logging.info('guesses:')
     logging.info([Film.get(g).title for g in guesses if g != None])
     return [Film.get(g).title for g in guesses if g != None]
 
   def required_clues(self):
     """Returns a list of clues that need to be shown to the user."""
-    return self.question.clues()[:self.current_guess]
+    return self.question.clues()[:self.current_guess + 1]
 
   def calculate_score(self):
     """docstring for score"""

@@ -36,6 +36,12 @@
       <p>{{form.clue_2}}</p>
     </div>
   </div>
+  <div class="field{% if form.clue_3.errors %} error{% endif %}">
+    <p>{{form.clue_3.label}}</p>
+    <div class="input">
+      <p>{{form.clue_3}}</p>
+    </div>
+  </div>
   <div class="button clearfix">
     <p class="grid-2">
       <input type="submit" name="submit" value="Submit">

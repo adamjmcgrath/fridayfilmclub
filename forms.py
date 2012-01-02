@@ -105,11 +105,11 @@ class GuessField(FilmField):
     if correct:
       obj.correct = True
       obj.score = obj.calculate_score()
-    if (obj.current_guess == 2) and not correct:
+    elif (obj.current_guess == 3) and not correct:
       obj.incorrect = True
       obj.score = 0
-
-    obj.current_guess += 1
+    else:
+      obj.current_guess += 1
 
 
 class Question(Form):
@@ -118,6 +118,7 @@ class Question(Form):
   screenshot = ScreenShotField('Screenshot')
   clue_1 = fields.TextAreaField('Clue 1')
   clue_2 = fields.TextAreaField('Clue 2')
+  clue_3 = fields.TextAreaField('Clue 3')
 
 
 class Answer(Form):

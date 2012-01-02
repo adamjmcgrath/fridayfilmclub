@@ -37,9 +37,9 @@
           <button{% if not loop.last or complete %}
                   disabled="disabled"{% endif %}>
             <span>
-            {% if answer.correct %}
+            {% if answer.correct and loop.last %}
               Correct
-            {% elif answer.incorrect %}
+            {% elif answer.incorrect or not loop.last %}
               Incorrect
             {% else %}
               Submit
