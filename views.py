@@ -85,8 +85,12 @@ class Question(webapp2.RequestHandler):
     answer.question = question
     answer.user = user_entity
     form = forms.Answer(formdata=self.request.POST)
-    form.populate_obj(answer)
-    answer.put()
+
+    if form.validate():
+      form.populate_obj(answer)
+      answer.put()
+
+    logging.info(form.errors)
 
     return webapp2.Response(template.render({
       'answer': answer,

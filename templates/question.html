@@ -21,8 +21,8 @@
       {% endif %}
     </div>
     <div class="guess grids
-                {% if not loop.last and not answer.correct or answer.incorrect %}
-                 incorrect{% endif %}">
+                {% if not loop.last and not answer.correct or answer.incorrect %} incorrect{% endif %}
+                {% if loop.last and not answer.correct and not answer.incorrect and form.errors.guess %} error{% endif %}">
       <div class="input grid-5">
         <p>
         {% if loop.last and not answer.correct and not answer.incorrect %}

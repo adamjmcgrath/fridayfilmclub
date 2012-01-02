@@ -32,6 +32,7 @@ class Film(db.Model):
 
   def to_dict(self):
     return db.to_dict(self, {'key': str(self.key())})
+      
 
 
 class FilmIndex(db.Model):
@@ -102,8 +103,6 @@ class Answer(db.Model):
   def made_guesses(self):
     """Returns a list of guesses that have been made."""
     guesses = [self.guess_0, self.guess_1, self.guess_2, self.guess_3]
-    logging.info('guesses:')
-    logging.info([Film.get(g).title for g in guesses if g != None])
     return [Film.get(g).title for g in guesses if g != None]
 
   def required_clues(self):

@@ -13,6 +13,7 @@ import posixpath
 import webapp2
 from google.appengine.api import files
 from google.appengine.api import images
+from google.appengine.ext.db import BadKeyError
 from wtforms import fields, Form, validators, widgets
 
 import models
@@ -67,7 +68,10 @@ class FilmField(fields.TextField):
 
   def process_formdata(self, valuelist):
     """Process data received over the wire from a form."""
-    self.data = models.Film.get(valuelist and valuelist[0])
+    try:
+      self.data = models.Film.get(valuelist and valuelist[0])
+    except BadKeyError:
+      self.data = ''
 
   def populate_obj(self, obj, name):
     """Populate the object represented by the film field."""
@@ -123,4 +127,4 @@ class Question(Form):
 
 class Answer(Form):
   """An answer form."""
-  guess = GuessField()
+  guess = GuessField('Guess', [validators.Required()])
