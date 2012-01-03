@@ -114,3 +114,8 @@ class Answer(db.Model):
     # 0:10, 1:7, 2:5, 3:2
     scores = [10, 7, 5, 2]
     return scores[self.current_guess]
+
+  def guess_is_correct(self, i):
+    """Indicates wheather the guess is correct from a given index."""
+    guess_key = getattr(self, ('guess_%d' % self.current_guess))
+    return guess_key == self.question.film.key()

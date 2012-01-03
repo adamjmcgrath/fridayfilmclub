@@ -31,7 +31,6 @@ def add_film_map(input_tuple):
   """Add films to the data store."""
   io = StringIO.StringIO(input_tuple[1])
   row = csv.reader(io).next()
-  logging.info(row)
   year = row[0]
   title = row[1]
   film_entity = models.Film(

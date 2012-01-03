@@ -8,49 +8,59 @@
 </div>
 <div id="answers">
   <form action="" method="post">
-    {% for clue in answer.required_clues() %}
-    {% set guess = answer.made_guesses()[loop.index0] %}
+
+    {# A list of film title guesses that have been made by the user. #}
+    {% set made_guesses = answer.made_guesses() %}
+    {# Whether the question has been answered. #}
     {% set complete = answer.correct or answer.incorrect %}
-    <div class="clue"{% if loop.first %} id="screenshot"{% endif %}>
-      {% if loop.first %}
-      <img src="{{clue}}">
-      {% else %}
-      <p>
-        <b>Clue {{loop.index0}}:</b> {{clue}}
-      </p>
-      {% endif %}
-    </div>
-    <div class="guess grids
-                {% if not loop.last and not answer.correct or answer.incorrect %} incorrect{% endif %}
-                {% if loop.last and not answer.correct and not answer.incorrect and form.errors.guess %} error{% endif %}">
-      <div class="input grid-5">
-        <p>
-        {% if loop.last and not answer.correct and not answer.incorrect %}
-          {{form.guess}}
+
+    {% for clue in answer.required_clues() %}
+
+      {# The current film title of the users guess. #}
+      {% set guess = made_guesses[loop.index0] %}
+      {# Whether the current guess is correct. #}
+      {% set correct = answer.guess_is_correct(loop.index0) %}
+      {# Whether the current guess is incorrect. #}
+      {% set incorrect = not correct %}
+      {# Whether the guess is active and the user gets a form field. #}
+      {% set active = loop.last and not complete %}
+
+      <div class="clue"{% if loop.first %} id="screenshot"{% endif %}>
+        {% if loop.first %}
+        <img src="{{clue}}">
         {% else %}
-          <span>{{guess}}</span>
+        <p><b>Clue {{loop.index0}}:</b> {{clue}}</p>
         {% endif %}
-        </p>
       </div>
-      <div class="button grid-2">
-        <p>
-          <button{% if not loop.last or complete %}
-                  disabled="disabled"{% endif %}>
-            <span>
-            {% if answer.correct and loop.last %}
-              Correct
-            {% elif answer.incorrect or not loop.last %}
-              Incorrect
-            {% else %}
-              Submit
-            {% endif %}
-            </span>
-          </button>
-        </p>
-      </div>
-    </div>
+      {% if active %}
+        <div class="guess grids{% if form.errors.guess %} error{% endif %}">
+          <div class="input grid-5">
+            <p>{{form.guess}}</p>
+          </div>
+          <div class="button grid-2">
+            <p><button><span>Submit</span></button></p>
+          </div>
+        </div>
+      {% else %}
+        <div class="guess grids{% if incorrect %} incorrect{% endif %}">
+          <div class="input grid-5">
+            <p><span>{{guess}}</span></p>
+          </div>
+          <div class="button grid-2">
+            <p>
+              <button disabled="disabled">
+                <span>
+                {% if correct %}Correct
+                {% elif incorrect %}Incorrect
+                {% endif %}
+                </span>
+              </button>
+            </p>
+          </div>
+        </div>
+      {% endif %}
     {% endfor %}
-    {% if answer.score != None %}
+    {% if complete %}
     <div id="answer">
       <p>
         <b>
