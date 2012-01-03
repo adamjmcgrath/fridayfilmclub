@@ -2,6 +2,10 @@
 
 /**
  * @fileoverview Auto complete for Movies data.
+ *
+ * <div class="clue">
+ *   <p><b>Clue #:</b> Clue text.</p>
+ * </div>
  */
 goog.provide('ffc.Clue');
 
@@ -35,37 +39,9 @@ ffc.Clue = function(number) {
    */
   this.element = this.getElement();
 
-  /**
-   * The XhrIo instance for retrieving the clue fomr the server.
-   * @type {Element}
-   */
-  this.xhrIo = new goog.net.XhrIo();
 
 }
-goog.inherits(ffc.Clue, goog.events.eventTarget);
-
-
-/**
- * Prefix for clue element's id.
- * @type {string}
- */
-ffc.Clue.ID_PFX_ = 'clue-%s';
-
-
-/**
- * The base path for fetching clues.
- * @type {string}
- */
-ffc.Clue.ROOT_PATH_ = '/rpc/get_clue';
-
-
-/**
- * Add event listeners to the clue.
- */
-ffc.Clue.prototype.addEventListeners = function() {
-  
-
-};
+goog.inherits(ffc.Clue, goog.events.EventTarget);
 
 
 /**
@@ -76,14 +52,3 @@ ffc.Clue.prototype.getElement = function() {
   var id = goog.string.subs(ffc.Clue.ID_PFX_, this.displayNumber);
   return goog.dom.getElement(id);
 };
-
-
-/**
- * Clue constructor.
- * @constructor
- */
-ffc.Clue.prototype.getClue = function() {
-  var path = goog.string.path.join(ffc.Clue.ROOT_PATH_, this.number);
-  this.xhrIo = new goog.net.XhrIo();
-};
-

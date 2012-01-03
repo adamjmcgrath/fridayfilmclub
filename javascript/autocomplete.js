@@ -51,9 +51,16 @@ ffc.AutoComplete = function(el, elKey) {
   inputhandler.attachInputs(el);
 
 }
-goog.inherits(ffc.AutoComplete, goog.ui.AutoComplete)
-goog.exportSymbol('ffc.AutoComplete',
-    ffc.AutoComplete)
+goog.inherits(ffc.AutoComplete, goog.ui.AutoComplete);
+goog.exportSymbol('ffc.AutoComplete', ffc.AutoComplete);
+
+
+/**
+ *
+ */
+ffc.AutoComplete.prototype.getKeyInput = function() {
+  return this.keyInput;
+};
 
 
 /**

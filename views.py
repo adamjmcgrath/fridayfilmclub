@@ -90,9 +90,18 @@ class Question(webapp2.RequestHandler):
       form.populate_obj(answer)
       answer.put()
 
-    return webapp2.Response(template.render({
-      'answer': answer,
-      'dev_mode': settings.is_dev and self.request.get('debugjs'),
-      'form': form,
-      'question': question,
-    }))
+    if self.request.get('js'):
+      json_response = {
+        'correct': answer.correct == True,
+        'clue': question.clues()[answer.current_guess],
+      }
+      response = json.dumps(json_response)
+    else:
+      response = template.render({
+        'answer': answer,
+        'dev_mode': settings.is_dev and self.request.get('debugjs'),
+        'form': form,
+        'question': question,
+      })
+
+    return webapp2.Response(response)

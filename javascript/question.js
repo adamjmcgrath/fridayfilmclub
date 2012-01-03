@@ -5,6 +5,7 @@
  */
 goog.provide('ffc.Question');
 
+goog.require('ffc.AutoComplete');
 goog.require('ffc.Clue');
 goog.require('goog.events.EventTarget');
 
@@ -14,17 +15,32 @@ goog.require('goog.events.EventTarget');
  * Question constructor.
  * @constructor
  */
-ffc.Question = function(el) {
+ffc.Question = function() {
+
+  /**
+   *
+   */
+  this.autoComplete = new ffc.AutoComplete(document.getElementById('ac'),
+      'film');
 
   /**
    * The clues associated with a question.
    * @type {Array.<ffc.Clue>}
    */
-  this.clues = [new ffc.FirstClue()];
- 
+  this.clues = [];
+
   goog.base(this);
 };
-goog.inherits(ffc.Question, goog.events.eventTarget);
+goog.inherits(ffc.Question, goog.events.EventTarget);
+goog.exportSymbol('ffc.Question', ffc.Question);
+
+
+/**
+ * 
+ */
+ffc.Question.prototype.getAutoComplete = function() {
+  return this.autoComplete;
+};
 
 
 /**
@@ -32,4 +48,4 @@ goog.inherits(ffc.Question, goog.events.eventTarget);
  * @type {number}
  * @private
  */
-ffc.Guess.NUM_GUESSES_ = 3;
+ffc.Question.NUM_GUESSES_ = 3;

@@ -2,7 +2,7 @@
   <script src="/closure-library/closure/goog/base.js"></script>
   <script src="/static/js/deps.js"></script>
   <script>
-    goog.require('ffc.AutoComplete')
+    goog.require('ffc.Question')
   </script>
 {% else %}
   <script src="/static/js/quiz.js"></script>
