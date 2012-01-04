@@ -7,7 +7,7 @@
   <h3>Can you name this film?</h3>
 </div>
 <div id="answers">
-  <form action="" method="post">
+  <form action="" method="post" id="answer-form">
 
     {# A list of film title guesses that have been made by the user. #}
     {% set made_guesses = answer.made_guesses() %}
@@ -77,8 +77,10 @@
 {% endblock %}
 
 {% block body_base %}
+{% if not answer.correct and not answer.incorrect %}
 {% include "templates/inc/questionjs.tpl" %}
 <script>
   var q = new ffc.Question();
 </script>
+{% endif %}
 {% endblock %}

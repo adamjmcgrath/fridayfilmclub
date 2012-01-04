@@ -91,6 +91,7 @@ class Question(webapp2.RequestHandler):
       answer.put()
 
     if self.request.get('js'):
+      # @TODO(amcgrath) If last guess send correct answer and score.
       json_response = {
         'correct': answer.correct == True,
         'clue': question.clues()[answer.current_guess],

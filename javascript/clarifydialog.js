@@ -2,7 +2,10 @@
 
 /**
  * @fileoverview Auto complete for Movies data.
+ * 
+ * @author adamjmcgrath@gmail.com (Adam Mcgrath)
  */
+
 goog.provide('ffc.ClarifyDialog');
 
 goog.require('goog.ui.Dialog');
@@ -16,4 +19,4 @@ goog.require('goog.ui.Dialog');
 ffc.ClarifyDialog = function(el) {
 
 }
-goog.inherits(ffc.Guess, goog.ui.Dialog);
+goog.inherits(ffc.ClarifyDialog, goog.ui.Dialog);

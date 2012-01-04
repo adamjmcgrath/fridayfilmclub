@@ -5,8 +5,7 @@
  *
  * <div class="guess grids (incorrect)">
  *   <div class="input grid-5">
- *     (<p><span>Incorrect Guess</span></p>)
- *     (<input type="text" autocomplete="off" id="ac">)
+ *     <p>(<span>Incorrect Guess</span>)</p>
  *   </div>
  *   <div class="button grid-2">
  *     <p>
@@ -16,13 +15,18 @@
  *     </p>
  *   </div>
  * </div>
+ * 
+ * @author adamjmcgrath@gmail.com (Adam Mcgrath)
  */
+
 goog.provide('ffc.Guess');
 
 goog.require('goog.dom');
 goog.require('goog.dom.TagName');
+goog.require('goog.dom.classes');
 goog.require('goog.events');
-goog.require('goog.events.EventTarget');
+goog.require('goog.net.XhrIo');
+goog.require('goog.string');
 
 goog.require('ffc.AutoComplete');
 goog.require('ffc.ClarifyDialog');
@@ -35,21 +39,13 @@ goog.require('ffc.Clue');
  * @constructor
  * @param {number} number The number of the guess (zero indexed).
  */
-ffc.Guess = function(question) {
+ffc.Guess = function(input) {
+
   /**
    *
    */
-  this.question = question;
-
-  /**
-   * The XhrIo instance for retrieving the clue from the server.
-   * @type {Element}
-   */
-  this.xhrIo = new goog.net.XhrIo();
-
-  goog.base(this);
+  this.input = input;
 }
-goog.inherits(ffc.Guess, goog.events.EventTarget);
 
 
 /**
@@ -57,6 +53,7 @@ goog.inherits(ffc.Guess, goog.events.EventTarget);
  */
 ffc.Guess.ClassName = {
   ROOT: ['guess', 'grids'],
+  CORRECT: 'correct',
   INCORRECT: 'incorrect',
   INPUT: ['input', 'grid-5'],
   BUTTON: ['button', 'grid-2']
@@ -82,63 +79,83 @@ ffc.Guess.URI = '?js=1';
 /**
  * 
  */
-ffc.Guess.prototype.render = function() {
+ffc.Guess.POST = 'guess=%s';
+
+
+/**
+ * 
+ */
+ffc.Guess.prototype.render = function(parent) {
+  this.input.value = '';
+
+  var inputWrapInner = goog.dom.createDom(goog.dom.TagName.P,
+      null, this.input);
+
   this.inputWrap = goog.dom.createDom(goog.dom.TagName.DIV,
-      ffc.Guess.ClassName.INPUT, this.question.getAutoComplete().getTarget());
+      ffc.Guess.ClassName.INPUT, inputWrapInner);
 
   this.buttonMessage = goog.dom.createDom(goog.dom.TagName.SPAN,
-     null, ffc.Guess.Message.SUBMIT);
+      null, ffc.Guess.Message.SUBMIT);
 
   this.button = goog.dom.createDom(goog.dom.TagName.BUTTON,
-        null, this.buttonMessage);
+      null, this.buttonMessage);
 
-  var buttonWrapInner = goog.dom.createDom(goog.dom.TagName.DIV,
-     ffc.Guess.ClassName.BUTTON);
+  var buttonWrapInner = goog.dom.createDom(goog.dom.TagName.P,
+      null, this.button);
   this.buttonWrap = goog.dom.createDom(goog.dom.TagName.DIV,
-     ffc.Guess.ClassName.BUTTON, buttonWrapInner);
+      ffc.Guess.ClassName.BUTTON, buttonWrapInner);
 
   this.root = goog.dom.createDom(goog.dom.TagName.DIV,
-      ffc.Guess.ClassName.ROOT, this.input, this.buttonWrap);
+      ffc.Guess.ClassName.ROOT, this.inputWrap, this.buttonWrap);
+
+  parent.appendChild(this.root);
 };
 
 
 /**
  * 
  */
-ffc.Guess.prototype.addEventListeners = function() {
-  goog.events.addEventListener(this.button, goog.events.EventType.CLICK,
-      this.submit, false, this);
+ffc.Guess.prototype.decorate = function(parent) {
+
+  this.root = goog.dom.getElement(parent);
+
+  this.inputWrap = goog.dom.getElementByClass(
+      ffc.Guess.ClassName.INPUT, this.root);
+
+  this.buttonWrap = goog.dom.getElementByClass(
+      ffc.Guess.ClassName.BUTTON, this.root);
+
+  this.button = this.buttonWrap.getElementsByTagName(
+      goog.dom.TagName.BUTTON)[0];
+
+  this.buttonMessage = this.button.getElementsByTagName(
+      goog.dom.TagName.SPAN)[0];
+
 };
 
 
 /**
  * 
  */
-ffc.Guess.prototype.getDom = function() {
-  return this.root;
+ffc.Guess.prototype.submit = function(value, callback) {
+  goog.net.XhrIo.send(ffc.Guess.URI, callback, 'POST',
+      goog.string.subs(ffc.Guess.POST, value));
 };
 
 
 /**
  * 
  */
-ffc.Guess.prototype.getInputWrap = function() {
-  return this.inputWrap;
-};
+ffc.Guess.prototype.markAsGuessed = function(guessText, correct) {
+  this.button.disabled = 'disabled';
+  goog.dom.classes.enable(this.root, ffc.Guess.ClassName.CORRECT, correct);
+  goog.dom.classes.enable(this.root, ffc.Guess.ClassName.INCORRECT, !correct);
+  var msg = correct ? ffc.Guess.Message.CORRECT : ffc.Guess.Message.INCORRECT;
+  this.buttonMessage.innerHTML = msg;
 
-
-/**
- * 
- */
-ffc.Guess.prototype.submit = function() {
-  goog.net.XhrIo.send(ffc.Guess.URI, goog.bind(this.handleResponse), 'POST',
-      'guess=' + this.question.getAutoComplete().getKeyInput().value);
-};
-
-
-/**
- * 
- */
-ffc.Guess.prototype.handleResponse = function(e) {
-  console.log(e.target.getResponseJson);
+  var guessTextWrap = goog.dom.createDom(goog.dom.TagName.SPAN, null,
+      guessText);
+  // @TODO(amcgrath) Clean up this reference.
+  var wrap = this.inputWrap.getElementsByTagName(goog.dom.TagName.P)[0];
+  wrap.appendChild(guessTextWrap);
 };

@@ -2,6 +2,8 @@
 
 /**
  * @fileoverview Remote array matcher.
+ * 
+ * @author adamjmcgrath@gmail.com (Adam Mcgrath)
  */
 
 goog.provide('ffc.RemoteArrayMatcher');
@@ -18,8 +20,6 @@ goog.require('goog.string.path');
  * @constructor
  */
 ffc.RemoteArrayMatcher = function(url, keyEl) {
-  this.keyInput = goog.dom.getElement(keyEl);
-
   goog.base(this, url);
 };
 goog.inherits(ffc.RemoteArrayMatcher,
@@ -55,8 +55,7 @@ ffc.RemoteArrayMatcher.prototype.augmentMatchHandler =
   for (var i = 0; i < matches.length; i++) {
     var row = matches[i];
     row.render = goog.bind(ffc.RemoteArrayMatcher.rowRender, this, row);
-    row.select = goog.bind(ffc.RemoteArrayMatcher.rowSelect, this, row,
-        this.keyInput);
+    row.select = goog.bind(ffc.RemoteArrayMatcher.rowSelect, this, row);
     rows.push(row);
   }
   if (this.rowFilter_) {
@@ -77,8 +76,7 @@ ffc.RemoteArrayMatcher.rowRender = function(newRow, node, token) {
 /**
  *
  */
-ffc.RemoteArrayMatcher.rowSelect = function(newRow, keyInput, target) {
-  keyInput.value = newRow['key'];
+ffc.RemoteArrayMatcher.rowSelect = function(newRow, target) {
   target.value = newRow['title'];
 };
 
