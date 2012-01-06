@@ -196,11 +196,11 @@ def get_tags_name():
   if last_tag_name == None:
     num = 1
   else:
-    match = re.search('[0-9]{4}-[0-9]{2}-[0-9]{2}\-([0-9]*)',
+    match = re.search('[0-9]{4}-[0-9]{2}-[0-9]{2}-([0-9]*)',
         last_tag_name)
     num = int(match.group(1)) + 1
 
-  next_tag_name = '%s.%.3i' % (next_tag_name, num)
+  next_tag_name = '%s-%.3i' % (next_tag_name, num)
   print(green('Last tag name: %s' % last_tag_name))
   print(green('Next tag name: %s' % next_tag_name))
   return (last_tag_name, next_tag_name)
