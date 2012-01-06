@@ -12,7 +12,7 @@ import functools
 import os
 import sys
 from fabric.api import *
-from fabric.colors import green, red, green
+from fabric.colors import green, red, yellow
 import datetime
 import re
 
@@ -58,7 +58,7 @@ def include_appcfg(func):
 
 
 def last_tag():
-  print green('Last tag: %s' % get_last_tag_match())
+  print yellow('Last tag: %s' % get_last_tag_match())
 
 
 def tgz():
@@ -90,7 +90,7 @@ def run():
 ##############################
 
 def prepare_deploy(tag=None):
-  print(green('Preparing the deployement.'))
+  print yellow('Preparing the deployement.')
 
   if tag != None:
     env.deployement_tag = tag
@@ -109,16 +109,16 @@ def prepare_deploy(tag=None):
   with lcd(deploy_path):
     local('git checkout %s' % env.deployement_tag)
     local('find . -name ".git*" | xargs rm -rf')
-    print(green('App: %s' % env.app.application))
-    print(green('Ver: %s' % env.app.version))
+    print yellow('App: %s' % env.app.application)
+    print yellow('Ver: %s' % env.app.version)
   
   env.deploy_path = deploy_path
 
 
 def end_deploy():
-  print green('Cleaning up after the deploy.')
+  print yellow('Cleaning up after the deploy.')
   local('rm -rf %s' % env.deploy_path)
-  print green('Updating remote repository.')
+  print yellow('Updating remote repository.')
   # local('git push --tags origin master')
 
 
@@ -172,7 +172,7 @@ def need_to_tag(version1, version2):
     sha_version2 = local(
         'git log --pretty=format:%%H %s -1' % version2, capture=True)
     if sha_version1 == sha_version2:
-      print green('No need to tag, the last %s tag is the same as the current')
+      print yellow('No need to tag, the last %s tag is the same as the current')
       return False
   return True
 
@@ -182,7 +182,7 @@ def is_working_directory_clean():
   if status: # There are pending files.
     print red('Working directory not clean.')
     return False
-  print green('Working directory clean.')
+  print yellow('Working directory clean.')
   return True
 
 
@@ -201,7 +201,7 @@ def get_tags_name():
     num = int(match.group(1)) + 1
 
   next_tag_name = '%s-%.3i' % (next_tag_name, num)
-  print(green('Last tag name: %s' % last_tag_name))
-  print(green('Next tag name: %s' % next_tag_name))
+  print yellow('Last tag name: %s' % last_tag_name)
+  print yellow('Next tag name: %s' % next_tag_name)
   return (last_tag_name, next_tag_name)
 
