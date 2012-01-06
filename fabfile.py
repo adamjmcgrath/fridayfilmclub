@@ -189,14 +189,14 @@ def is_working_directory_clean():
 def get_tags_name():
   num = 1
   today = datetime.date.today()
-  next_tag_name = ('deploy-%i-%.2i-%.2i' %
+  next_tag_name = ('%i-%.2i-%.2i' %
       (today.year, today.month, today.day))
 
   last_tag_name = get_last_tag_match()
   if last_tag_name == None:
     num = 1
   else:
-    match = re.search('deploy-[0-9]{4}-[0-9]{2}-[0-9]{2}\.([0-9]*)',
+    match = re.search('[0-9]{4}-[0-9]{2}-[0-9]{2}\-([0-9]*)',
         last_tag_name)
     num = int(match.group(1)) + 1
 
