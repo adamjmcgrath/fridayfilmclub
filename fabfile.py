@@ -72,6 +72,10 @@ def deploy(tag=None):
     abort('Working directory should be clean before deploying.')
   
   prepare_deploy(tag)
+  print 'env.app.version:'
+  print 'env.app.version:'
+  print 'env.app.version:'
+  print env.app.version
   # local('%s %s -A %s -V %s --email=%s update .' % (PYTHON, APPENGINE_APP_CFG,
   #     env.app.application, env.app.version, env.gae_email), capture=False)
   end_deploy()
