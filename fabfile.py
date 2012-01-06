@@ -77,13 +77,12 @@ def deploy(tag=None):
   print 'env.app.version:'
   print env.app.version
   # local('%s %s -A %s -V %s --email=%s update .' % (PYTHON, APPENGINE_APP_CFG,
-  #     env.app.application, env.app.version, env.gae_email), capture=False)
+  #     env.app.application, env.app.version, env.gae_email))
   end_deploy()
 
 
 def run():
-  local('%s %s --port 8080 .' %
-      (PYTHON, APPENGINE_DEV_APPSERVER), capture=False)
+  local('%s %s --port 8080 .' % (PYTHON, APPENGINE_DEV_APPSERVER))
 
 
 ##############################
@@ -123,9 +122,10 @@ def end_deploy():
 
 def check_if_last_version():
   branch = local('git branch --no-color 2> /dev/null | '
-    'sed -e "/^[^*]/d"').replace('* ', '').strip()
-  local_sha = local('git log --pretty=format:%H HEAD -1').strip()
-  origin_sha = local('git log --pretty=format:%%H %s -1' % branch).strip()
+    'sed -e "/^[^*]/d"', capture=True).replace('* ', '').strip()
+  local_sha = local('git log --pretty=format:%H HEAD -1', capture=True).strip()
+  origin_sha = local(
+      'git log --pretty=format:%%H %s -1' % branch, capture=True).strip()
   if local_sha != origin_sha:
     abort("""
     Your %s branch is not up to date with origin/%s.
@@ -139,7 +139,7 @@ def check_if_last_version():
 
 
 def get_last_tag_match():
-  tags = local('git tag -l')
+  tags = local('git tag -l', capture=True)
   if len(tags) == 0:
     return None
   tags = tags.split()
@@ -164,11 +164,13 @@ def update_tag(tag_name, from_tag):
 
 
 def need_to_tag(version1, version2):
-  sha_version1 = local('git log --pretty=format:%%H %s -1' % version1)
+  sha_version1 = local(
+      'git log --pretty=format:%%H %s -1' % version1, capture=True)
   if version2:
-    sha_version2 = local('git log --pretty=format:%%H %s -1' % version2)
+    sha_version2 = local(
+        'git log --pretty=format:%%H %s -1' % version2, capture=True)
     if sha_version1 == sha_version2:
-      print(green('No need to tag, the last %s tag is the same as the current version' % env.version))
+      print green('No need to tag, the last %s tag is the same as the current')
       return False
   return True
 
