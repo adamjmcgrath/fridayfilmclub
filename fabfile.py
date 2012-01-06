@@ -23,8 +23,6 @@ PYTHON = '/usr/bin/python'
 
 env.gae_email = 'adamjmcgrath@gmail.com'
 
-
-
 def fix_appengine_path():
   EXTRA_PATHS = [
     APPENGINE_PATH,
@@ -40,6 +38,7 @@ def fix_appengine_path():
 
 fix_appengine_path()
 from google.appengine.api import appinfo
+
 
 
 def include_appcfg(func):
@@ -72,17 +71,14 @@ def deploy(tag=None):
     abort('Working directory should be clean before deploying.')
   
   prepare_deploy(tag)
-  print 'env.app.version:'
-  print 'env.app.version:'
-  print 'env.app.version:'
-  print env.app.version
-  # local('%s %s -A %s -V %s --email=%s update .' % (PYTHON, APPENGINE_APP_CFG,
-  #     env.app.application, env.app.version, env.gae_email))
+  local('%s %s -A %s -V %s --email=%s update .' % (PYTHON, APPENGINE_APP_CFG,
+      env.app.application, env.app.version, env.gae_email))
   end_deploy()
+  git_push()
 
 
 def run():
-  local('%s %s --port 8080 .' % (PYTHON, APPENGINE_DEV_APPSERVER))
+  local('%s --port 8080 .' % APPENGINE_DEV_APPSERVER)
 
 
 ##############################
@@ -118,8 +114,13 @@ def prepare_deploy(tag=None):
 def end_deploy():
   print yellow('Cleaning up after the deploy.')
   local('rm -rf %s' % env.deploy_path)
+
+
+def git_push():
+  if not is_working_directory_clean():
+    abort('Working directory should be clean before pushing.')
   print yellow('Updating remote repository.')
-  # local('git push --tags origin master')
+  local('git push --tags origin master')
 
 
 def check_if_last_version():

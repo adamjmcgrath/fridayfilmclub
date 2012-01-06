@@ -1,5 +1,5 @@
 *.pyc
 .DS_Store
-closure-library/
-mapreduce/
-wtforms/
+closure-library
+mapreduce
+wtforms
