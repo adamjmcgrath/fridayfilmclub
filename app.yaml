@@ -43,6 +43,7 @@ skip_files:
 - ^(.*/)?app\.yml
 - ^(.*/)?index\.yaml
 - ^(.*/)?index\.yml
+- ^(.*/)?fabfile\.py
 - ^(.*/)?.*~
 - ^(.*/)?.*\.py[co]
 - ^(.*/)?\..*

@@ -99,8 +99,6 @@ def prepare_deploy(tag=None):
 
   # Check out a clean copy.
   deploy_path = local('mktemp -d -t %s' % env.app.application, capture=True)
-  print 'deploy_path:'
-  print deploy_path
   local('git clone . %s' % deploy_path)
 
   with lcd(deploy_path):
@@ -113,8 +111,10 @@ def prepare_deploy(tag=None):
 
 
 def end_deploy():
-  print(green('Cleaning up after the deploy'))
+  print green('Cleaning up after the deploy.')
   local('rm -rf %s' % env.deploy_path)
+  print green('Updating remote repository.')
+  local('git push origin master')
 
 
 def check_if_last_version():
@@ -170,11 +170,11 @@ def need_to_tag(version1, version2):
 
 
 def is_working_directory_clean():
-  # status = local('git status --short', capture=True)
-  # if status: # There are pending files.
-  #   print red('Working directory not clean.')
-  #   return False
-  # print green('Working directory clean.')
+  status = local('git status --short', capture=True)
+  if status: # There are pending files.
+    print red('Working directory not clean.')
+    return False
+  print green('Working directory clean.')
   return True
 
 
