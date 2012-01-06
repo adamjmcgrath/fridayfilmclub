@@ -1068,8 +1068,6 @@ class InOrder(object):
   """
 
   _local = threading.local()
-  _local._in_order_futures = set()
-  _local._activated = False
 
   @classmethod
   def _add_future(cls, future):
@@ -1078,14 +1076,23 @@ class InOrder(object):
     Args:
       future: The future to add to the list.
     """
+    cls._thread_init()
     if cls._local._activated:
       cls._local._in_order_futures.add(future)
 
   def __init__(self):
     """Initializer."""
 
+  @classmethod
+  def _thread_init(cls):
+   """Ensure InOrder._local is initialized"""
+   if not hasattr(cls._local, '_in_order_futures'):
+     cls._local._in_order_futures = set()
+     cls._local._activated = False
+
   def __enter__(self):
     """When entering a 'with' block."""
+    InOrder._thread_init()
     if InOrder._local._activated:
       raise UnexpectedPipelineError('Already in an InOrder "with" block.')
     InOrder._local._activated = True
@@ -1804,7 +1811,8 @@ class _PipelineContext(object):
       attempt: The attempt number that should be tried.
     """
     After._local._after_all_futures = []
-    InOrder._activated = False
+    InOrder._thread_init()
+    InOrder._local._activated = False
 
     if not isinstance(pipeline_key, db.Key):
       pipeline_key = db.Key(pipeline_key)
