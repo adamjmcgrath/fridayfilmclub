@@ -98,6 +98,8 @@ def prepare_deploy(tag=None):
     do_tag()
 
   # Set the app version to the git tag.
+  print 'tag:'
+  print tag
   env.app.version = tag
   
   # Check out a clean copy.
