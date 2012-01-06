@@ -91,15 +91,15 @@ def run():
 
 def prepare_deploy(tag=None):
   print(green('Preparing the deployement.'))
-  
-  print 'env.app.version:'
-  print env.app.version
 
   if tag != None:
     env.deployement_tag = tag
   else:
     do_tag()
 
+  # Set the app version to the git tag.
+  env.app.version = tag
+  
   # Check out a clean copy.
   deploy_path = local('mktemp -d -t %s' % env.app.application, capture=True)
   local('git clone . %s' % deploy_path)
@@ -117,7 +117,7 @@ def end_deploy():
   print green('Cleaning up after the deploy.')
   local('rm -rf %s' % env.deploy_path)
   print green('Updating remote repository.')
-  local('git push origin master')
+  # local('git push --tags origin master')
 
 
 def check_if_last_version():
