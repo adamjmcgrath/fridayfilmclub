@@ -22,6 +22,7 @@ APPENGINE_APP_CFG = '/usr/local/bin/appcfg.py'
 PYTHON = '/usr/bin/python'
 
 env.gae_email = 'adamjmcgrath@gmail.com'
+env.gae_src = './src'
 
 def fix_appengine_path():
   EXTRA_PATHS = [
@@ -71,14 +72,14 @@ def deploy(tag=None):
     abort('Working directory should be clean before deploying.')
   
   prepare_deploy(tag)
-  local('%s %s -A %s -V %s --email=%s update .' % (PYTHON, APPENGINE_APP_CFG,
-      env.app.application, env.app.version, env.gae_email))
+  local('%s %s -A %s -V %s --email=%s update %s' % (PYTHON, APPENGINE_APP_CFG,
+      env.app.application, env.app.version, env.gae_email, env.gae_src))
   end_deploy()
   git_push()
 
 
 def run():
-  local('%s --port 8080 .' % APPENGINE_DEV_APPSERVER)
+  local('%s --port 8080 %s' % (APPENGINE_DEV_APPSERVER, env.gae_src))
 
 
 ##############################
