@@ -49,7 +49,7 @@ def include_appcfg(func):
   def decorated_func(*args, **kwargs):
     if not hasattr(env, 'app'):
       try:
-        appcfg = appinfo.LoadSingleAppInfo(open('app.yaml'))
+        appcfg = appinfo.LoadSingleAppInfo(open('%s/app.yaml' % env.gae_src))
       except IOError:
         abort('You must be in the App Engine application root.')
       env.app = appcfg
