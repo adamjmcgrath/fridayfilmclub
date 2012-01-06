@@ -1,9 +1,6 @@
 [submodule "src/closure-library"]
 	path = src/closure-library
 	url = https://github.com/jarib/google-closure-library.git
-[submodule "src/wtforms"]
-	path = src/wtforms
-	url = https://github.com/clones/wtforms.git
 [submodule "src/mapreduce"]
 	path = src/mapreduce
 	url = https://github.com/hudora/mapreduce.git

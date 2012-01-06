@@ -47,6 +47,7 @@ skip_files:
 - ^(.*/)?.*~
 - ^(.*/)?.*\.py[co]
 - ^(.*/)?\..*
+- ^(.*/)?closure-library/.*
 - ^(.*/)?data/.*
 - ^(.*/)?javascript/.*
 - ^(.*/)?scripts/.*
