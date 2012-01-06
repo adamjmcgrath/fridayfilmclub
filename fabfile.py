@@ -98,9 +98,9 @@ def prepare_deploy(tag=None):
     do_tag()
 
   # Set the app version to the git tag.
-  print 'tag:'
-  print tag
-  env.app.version = tag
+  print 'env.deployement_tag:'
+  print env.deployement_tag
+  env.app.version = env.deployement_tag
   
   # Check out a clean copy.
   deploy_path = local('mktemp -d -t %s' % env.app.application, capture=True)
