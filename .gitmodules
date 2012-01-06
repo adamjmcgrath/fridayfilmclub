@@ -4,3 +4,6 @@
 [submodule "src/wtforms"]
 	path = src/wtforms
 	url = https://github.com/hoydaa/lib-wtforms.git
+[submodule "src/mapreduce"]
+	path = src/mapreduce
+	url = https://github.com/koush/appengine-mapreduce.git
