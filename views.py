@@ -96,6 +96,9 @@ class Question(webapp2.RequestHandler):
         'correct': answer.correct == True,
         'clue': question.clues()[answer.current_guess],
       }
+      if answer.incorrect or answer.correct:
+        json_response['score'] = answer.score
+        json_response['answer'] = question.film.title
       response = json.dumps(json_response)
     else:
       response = template.render({
