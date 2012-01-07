@@ -89,6 +89,8 @@ class Answer(db.Model):
     guesses:
     score:
   """
+  # @TODO (adamjmcgrath) Inplement date answered correctly.
+  answered_correctly = db.DateProperty()
   correct = db.BooleanProperty()
   guess_0 = db.StringProperty() # Film db.Key.
   guess_1 = db.StringProperty() # Film db.Key.
@@ -96,9 +98,9 @@ class Answer(db.Model):
   guess_3 = db.StringProperty() # Film db.Key.
   current_guess = db.IntegerProperty(default=0)
   incorrect = db.BooleanProperty()
-  question = db.ReferenceProperty(Question, collection_name='scores')
+  question = db.ReferenceProperty(Question, collection_name='answers')
   score = db.IntegerProperty()
-  user = db.ReferenceProperty(User, collection_name='scores')
+  user = db.ReferenceProperty(User, collection_name='answers')
 
   def made_guesses(self):
     """Returns a list of guesses that have been made."""
