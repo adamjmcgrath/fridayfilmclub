@@ -15,6 +15,8 @@ goog.require('ffc.Score');
 
 goog.require('goog.events.EventType');
 goog.require('goog.dom');
+goog.require('goog.fx.dom.Scroll');
+goog.require('goog.fx.easing');
 goog.require('goog.ui.AutoComplete.EventType');
 
 
@@ -49,7 +51,8 @@ ffc.Question = function() {
    * The number of clues given to a user.
    * @type {Number}
    */
-  this.numClues = [];
+  this.numClues = goog.dom.getElementsByClass(
+      ffc.Question.ClassName.CLUE).length;
 
   /**
    * The guesses associated with a question.
@@ -68,13 +71,14 @@ goog.exportSymbol('ffc.Question', ffc.Question);
  * @type {number}
  * @private
  */
-ffc.Question.MAX_CLUES_ = 3;
+ffc.Question.MAX_CLUES_ = 4;
 
 
 /**
  * 
  */
 ffc.Question.ClassName = {
+  CLUE: 'clue',
   GUESS: 'guess'
 };
 
@@ -166,6 +170,8 @@ ffc.Question.prototype.hideGuessErrors = function() {
 ffc.Question.prototype.buildGuess = function() {
   var guess = new ffc.Guess(this.autoCompleteInput);
   guess.render(this.form);
+  // @TODO(adamjmcgrath) Use clue height and guess padding to calculate amount.
+  ffc.Question.scrollDown(72);
   this.guesses.push(guess);
 };
 
@@ -220,7 +226,20 @@ ffc.Question.prototype.onComplete = function(answer, correct, score) {
  *
  */
 ffc.Question.prototype.giveClue = function(clueText) {
-  this.numClues++;
   var clue = new ffc.Clue(this.numClues, clueText);
+  this.numClues++;
   clue.render(this.form);
+};
+
+
+
+
+/**
+ *
+ */
+ffc.Question.scrollDown = function(px) {
+  var ds = goog.dom.getDocumentScroll();
+  var anim = new goog.fx.dom.Scroll(goog.dom.getDocumentScrollElement(),
+      [ds.x, ds.y], [ds.x, ds.y + px], 500, goog.fx.easing.easeOut);
+  anim.play();
 };

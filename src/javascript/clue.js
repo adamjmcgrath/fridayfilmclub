@@ -24,7 +24,7 @@ goog.require('goog.string');
 ffc.Clue = function(number, text) {
 
   /**
-   * The number of the guess.
+   * The number of the clue.
    * @type {number}
    */
   this.number = number;
