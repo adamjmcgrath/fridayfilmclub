@@ -32,5 +32,6 @@ if [ $1 == "build" ]; then
     --output_mode=compiled \
     --compiler_jar=$CLOSURE_COMPILER_PATH \
     --compiler_flags="--compilation_level=ADVANCED_OPTIMIZATIONS" \
+    --compiler_flags="--output_wrapper=\"(function() {%output%})();\"" \
     > $FFC_JS_OUTPUT
 fi

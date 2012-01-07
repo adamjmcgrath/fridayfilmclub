@@ -89,8 +89,8 @@ class Answer(db.Model):
     guesses:
     score:
   """
-  # @TODO (adamjmcgrath) Inplement date answered correctly.
-  answered_correctly = db.DateProperty()
+  # @TODO (adamjmcgrath) Implement date answered correctly.
+  answered_correctly = db.DateTimeProperty()
   correct = db.BooleanProperty()
   guess_0 = db.StringProperty() # Film db.Key.
   guess_1 = db.StringProperty() # Film db.Key.

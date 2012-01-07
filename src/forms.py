@@ -7,6 +7,7 @@
 __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 
 from cgi import escape
+import datetime
 import logging
 import posixpath
 
@@ -108,6 +109,7 @@ class GuessField(FilmField):
 
     if correct:
       obj.correct = True
+      obj.answered_correctly = datetime.datetime.now()
       obj.score = obj.calculate_score()
     elif (obj.current_guess == 3) and not correct:
       obj.incorrect = True
