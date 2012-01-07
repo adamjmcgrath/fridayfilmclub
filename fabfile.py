@@ -82,9 +82,12 @@ def run():
   local('%s --port 8080 %s' % (APPENGINE_DEV_APPSERVER, env.gae_src))
 
 
-##############################
-# helpers
-##############################
+def commit():
+  if not is_working_directory_clean():
+    abort('Working directory should be clean before pushing.')
+  print yellow('Updating remote repository.')
+  local('git push --tags origin master')
+
 
 def prepare_deploy(tag=None):
   print yellow('Preparing the deployement.')
@@ -115,13 +118,6 @@ def prepare_deploy(tag=None):
 def end_deploy():
   print yellow('Cleaning up after the deploy.')
   local('rm -rf %s' % env.deploy_path)
-
-
-def git_push():
-  if not is_working_directory_clean():
-    abort('Working directory should be clean before pushing.')
-  print yellow('Updating remote repository.')
-  local('git push --tags origin master')
 
 
 def check_if_last_version():

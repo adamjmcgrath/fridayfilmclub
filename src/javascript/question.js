@@ -118,7 +118,8 @@ ffc.Question.prototype.addEventListeners = function() {
   goog.events.listen(this.form, goog.events.EventType.SUBMIT,
       this.onFormSubmit, false, this);
 
-  goog.events.listen(this.autoCompleteInput, goog.events.EventType.FOCUS,
+  goog.events.listen(this.autoCompleteInput,
+      [goog.events.EventType.FOCUS, goog.events.EventType.KEYDOWN],
       this.hideGuessErrors, false, this);
 };
 
@@ -172,6 +173,7 @@ ffc.Question.prototype.buildGuess = function() {
   guess.render(this.form);
   // @TODO(adamjmcgrath) Use clue height and guess padding to calculate amount.
   ffc.Question.scrollDown(72);
+  this.autoCompleteInput.focus();
   this.guesses.push(guess);
 };
 
