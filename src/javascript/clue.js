@@ -13,7 +13,9 @@ goog.provide('ffc.Clue');
 
 goog.require('goog.dom');
 goog.require('goog.dom.TagName');
+goog.require('goog.fx.dom.FadeInAndShow');
 goog.require('goog.string');
+goog.require('goog.style');
 
 
 
@@ -60,4 +62,5 @@ ffc.Clue.prototype.render = function(parent) {
       goog.string.htmlEscape(this.text));
 
   parent.appendChild(container);
+  (new goog.fx.dom.FadeInAndShow(container, 500)).play();
 };
