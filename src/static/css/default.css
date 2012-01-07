@@ -137,6 +137,14 @@ td {
   background: red;
 }
 
+#answer-form .error p {
+  background: red;
+}
+
+#answer-form .error p input {
+  color: red;
+}
+
 .file p {
   background: none;
 }
@@ -183,6 +191,10 @@ td {
   display: block;
   height: 100%;
   width: 100%;
+}
+
+.disabled button {
+  color: #ccc;
 }
 
 .incorrect .button button,

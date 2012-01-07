@@ -29,7 +29,6 @@ goog.require('goog.net.XhrIo');
 goog.require('goog.string');
 
 goog.require('ffc.AutoComplete');
-goog.require('ffc.ClarifyDialog');
 goog.require('ffc.Clue');
 
 
@@ -54,9 +53,11 @@ ffc.Guess = function(input) {
 ffc.Guess.ClassName = {
   ROOT: ['guess', 'grids'],
   CORRECT: 'correct',
+  DISABLED: 'disabled',
+  ERROR: 'error',
   INCORRECT: 'incorrect',
   INPUT: ['input', 'grid-5'],
-  BUTTON: ['button', 'grid-2']
+  BUTTON: ['button', 'grid-2', 'disabled']
 };
 
 
@@ -158,4 +159,13 @@ ffc.Guess.prototype.markAsGuessed = function(guessText, correct) {
   // @TODO(amcgrath) Clean up this reference.
   var wrap = this.inputWrap.getElementsByTagName(goog.dom.TagName.P)[0];
   wrap.appendChild(guessTextWrap);
+};
+
+
+/**
+ * 
+ */
+ffc.Guess.prototype.showHideError = function(error) {
+  goog.dom.classes.enable(this.buttonWrap, ffc.Guess.ClassName.DISABLED, error);
+  goog.dom.classes.enable(this.inputWrap, ffc.Guess.ClassName.ERROR, error);
 };

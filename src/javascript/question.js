@@ -113,6 +113,9 @@ ffc.Question.prototype.addEventListeners = function() {
 
   goog.events.listen(this.form, goog.events.EventType.SUBMIT,
       this.onFormSubmit, false, this);
+
+  goog.events.listen(this.autoCompleteInput, goog.events.EventType.FOCUS,
+      this.hideGuessErrors, false, this);
 };
 
 
@@ -140,17 +143,20 @@ ffc.Question.prototype.onAutoCompleteActivity = function(e) {
 ffc.Question.prototype.onFormSubmit = function(e) {
   e.preventDefault();
   if (!this.filmKeyInput.value) {
-    var rows = this.autoComplete.getRenderer().rows_;
-    if (rows && rows.length) {
-      // @TODO(adamjmcgrath) Show clarify dialog.
-    } else {
-      // @TODO(adamjmcgrath) Show error (create showError & clearError).
-    }
-    // @TODO(adamjmcgrath) Remove.
-    alert('You need to choose a film from the dropdown.')
+    var guess = goog.array.peek(this.guesses);
+    guess.showHideError(true);
   } else {
     this.makeGuess();
   }
+};
+
+
+/**
+ *
+ */
+ffc.Question.prototype.hideGuessErrors = function() {
+  var guess = goog.array.peek(this.guesses);
+  guess.showHideError(false);
 };
 
 
