@@ -75,7 +75,7 @@ def deploy(tag=None):
   local('%s %s -A %s -V %s --email=%s update %s' % (PYTHON, APPENGINE_APP_CFG,
       env.app.application, env.app.version, env.gae_email, env.gae_src))
   end_deploy()
-  git_push()
+  commit()
 
 
 def run():
