@@ -19,20 +19,31 @@ from wtforms import fields, Form, validators
 import settings
 
 
+def slugify(st):
+  """Remove special characters and replace spaces with hyphens."""
+  return '-'.join(
+      ''.join([s for s in st if (s.isalnum() or s == ' ')]).lower().split(' '))
+
+
+def slugify_splaceless(st):
+  """Remove special characters and spaces."""
+  return ''.join(slugify(st).split('-'))
+
 
 class Film(db.Model):
   """A Film.
 
   Attributes:
     title: The title of the Film.
+    title_slug: The slugified title of the Film.
     year: The year the Film came out.
   """
   title = db.StringProperty()
+  title_slug = db.StringProperty()
   year = db.IntegerProperty()
 
   def to_dict(self):
     return db.to_dict(self, {'key': str(self.key())})
-      
 
 
 class FilmIndex(db.Model):

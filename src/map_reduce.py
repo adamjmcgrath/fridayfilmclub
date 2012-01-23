@@ -21,21 +21,17 @@ FILMS_PER_INDEX = 10
 
 
 
-def slugify(st):
-  """Remove special characters and replace spaces with hyphens."""
-  return '-'.join(
-      ''.join([s for s in st if (s.isalnum() or s == ' ')]).lower().split(' '))
-
-
 def add_film_map(input_tuple):
   """Add films to the data store."""
   io = StringIO.StringIO(input_tuple[1])
   row = csv.reader(io).next()
   year = row[0]
   title = row[1]
+  title_slug = models.slugify_splaceless(title)
   film_entity = models.Film(
-      key_name='%s-%s' % (year, slugify(title)),
+      key_name='%s-%s' % (year, title_slug),
       title=unicode(title, 'utf-8'),
+      title_slug=title_slug,
       year=int(year))
   yield op.db.Put(film_entity)
 
