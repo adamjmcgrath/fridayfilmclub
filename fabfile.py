@@ -82,11 +82,11 @@ def run():
   local('%s --port 8080 %s' % (APPENGINE_DEV_APPSERVER, env.gae_src))
 
 
-def commit():
+def commit(branch='master'):
   if not is_working_directory_clean():
     abort('Working directory should be clean before pushing.')
   print yellow('Updating remote repository.')
-  local('git push --tags origin master')
+  local('git push --tags origin %s' % branch)
 
 
 def prepare_deploy(tag=None):
