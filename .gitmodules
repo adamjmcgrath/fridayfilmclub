@@ -8,3 +8,6 @@
 [submodule "src/twitter-bootstrap"]
 	path = src/twitter-bootstrap
 	url = https://github.com/twitter/bootstrap.git
+[submodule "src/less"]
+	path = src/less
+	url = https://github.com/cloudhead/less.js.git
