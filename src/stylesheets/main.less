@@ -1,0 +1,110 @@
+@import '../twitter-bootstrap/less/bootstrap.less';
+@import 'vars.less';
+
+h1 {
+  margin-bottom: @baseLineHeight/2;
+}
+
+.navbar-inner {
+  background: @grayLighter;
+  .border-radius(0);
+  .box-shadow(0 0 0);
+  padding: 20px;
+}
+
+.navbar {
+
+  .brand {
+    color: @black;
+  }
+
+}
+
+#sign-in {
+  float: right;
+}
+
+#screenshot {
+  margin-bottom: @baseLineHeight;
+}
+
+#clues {
+  .clearfix()
+}
+
+#clues .form-horizontal {
+
+  .btn {
+    float: right;
+  }
+  
+}
+
+#suggestions {
+  margin-top: @gridGutterWidth / 2;
+
+  label:first-child, label:nth-child(2) {
+    border-top: none;
+  }
+
+  label:nth-child(even) {
+    margin-left: 10px;
+  }
+
+  label, p {
+    cursor: pointer;
+    .border-radius(5px);
+    background: @grayLighter;
+    margin-bottom: 10px;
+    line-height: @baseLineHeight;
+    float: left;
+    overflow: hidden;
+    padding: 8px 0;
+    text-overflow: ellipsis;
+    width: (((@gridColumnWidth * 9) + (@gridGutterWidth * 6)) / 2) - 5px;
+    white-space: nowrap;
+  }
+
+  label:hover {
+    background: @grayDark;
+    color: @white;
+  }
+
+  input[type="radio"] {
+    margin-left: 10px;
+    margin-right: @gridGutterWidth / 2;
+  }
+
+  p {
+    border-top: none;
+    font-style: italic;
+    text-align: center;
+    width: 100%;
+  }
+
+  span {
+    color: @grayLight;
+    margin-left: 5px;
+    margin-right: @gridGutterWidth * 0.75;
+  }
+
+}
+
+.guess-buttons {
+  .clearfix();
+
+  a {
+    float: right;
+    margin-left: @gridGutterWidth / 2;
+  }
+
+  .disabled {
+    .opacity(20);
+  }
+
+}
+
+
+#sidebar {
+  margin-top: @baseLineHeight * 2.5;
+}

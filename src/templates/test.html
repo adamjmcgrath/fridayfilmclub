@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet/less" href="../stylesheets/main.less">
+    <script src="../less/dist/less-1.2.1.min.js"></script>
+  </head>
+  <body>
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="i-bar"></span>
+            <span class="i-bar"></span>
+            <span class="i-bar"></span>
+          </a>
+          <a class="brand" href="#">Friday Film Club</a>
+          <div id="sign-in">
+            <img src="//lh5.googleusercontent.com/-E6IDMzmpptU/AAAAAAAAAAI/AAAAAAAAAAA/21pl22zbMSU/s27-c/photo.jpg" height="40">
+            <a class="btn btn-primary" href="#">Log In</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="container">
+      <div class="row">
+        <div class="span9">
+          <h1>Can you identify this film?</h1>
+          <div id="clues">
+            <div class="thumbnail" id="screenshot">
+              <img src="http://lh4.ggpht.com/711pu0cRyhi561MlnmpgFuvVEgGfgIfnigFTwPMeqKtjr1J2VoY1yLAz4krXa-enGXQEE0FltCeGhkk" width="910" height="343">
+            </div>
+            <div class="alert failed-guess">
+              <b>Lorem ipsum dolor</b> is incorrect!
+            </div>
+            <div class="alert alert-info clue">
+              <b>Clue #1:</b> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            </div>
+            <div class="alert failed-guess">
+              <b>Consectetur adipisicing elit</b> is incorrect!
+            </div>
+            <div class="alert alert-info clue">
+              <b>Clue #2:</b> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            </div>
+            <form class="well">
+              <div class="input-prepend form-horizontal">
+                <span class="add-on"><i class="icon-search"></i></span>
+                <input id="prependedInput" size="16" type="text" class="span7">
+                <button type="submit" class="btn">Search</button>
+              </div>
+              <div class="controls rows" id="suggestions">
+                <!-- <p>Search for a film, then select your guess from the list.</p> -->
+                <label class="radio">
+                  <input type="radio" name="guess" value="">
+                  Once Upon a Time in the West<span>1982</span>
+                </label>
+                <label class="radio">
+                  <input type="radio" name="guess" value="">
+                  Reservoir Dogs<span>1992</span>
+                </label>
+                <label class="radio">
+                  <input type="radio" name="guess" value="">
+                  Rocky<span>1976</span>
+                </label>
+                <label class="radio">
+                  <input type="radio" name="guess" value="">
+                  The Great Escape<span>1963</span>
+                </label>
+                <label class="radio">
+                  <input type="radio" name="guess" value="">
+                  White Heat<span>1949</span>
+                </label>
+                <label class="radio">
+                  <input type="radio" name="guess" value="">
+                  Goodfellas<span>1990</span>
+                </label>
+                <label class="radio">
+                  <input type="radio" name="guess" value="">
+                  Vertigo<span>1958</span>
+                </label>
+                <label class="radio">
+                  <input type="radio" name="guess" value="">
+                  Papillon<span>1973</span>
+                </label>
+                <label class="radio">
+                  <input type="radio" name="guess" value="">
+                  12 Angry Men<span>1957</span>
+                </label>
+                <label class="radio">
+                  <input type="radio" name="guess" value="">
+                  Pulp Fiction<span>1994</span>
+                </label>
+                <div class="guess-buttons">
+                  <a href="#" class="btn btn-primary">Submit</a>
+                  <a href="#" class="btn btn-danger">Pass</a>
+                </div>
+              </div>
+            </form>
+            <div class="alert alert-success clue">
+              <h4 class="alert-heading">Correct!</h4>
+              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </div>
+            <div class="alert alert-error clue">
+              <h4 class="alert-heading">Incorrect!</h4>
+              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </div>
+          </div>
+        </div>
+        <div class="span3" id="sidebar">
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+          <p>Excepteur sint occaecat cupidatat non proident.</p>
+        </div>
+      </div>
+
+      <hr>
+      <div id="footer">
+        <p>&copy; Company 2012</p>
+      </div>
+    </div>
+  </body>
+</html>
