@@ -22,15 +22,15 @@ VALID_CALLBACK = re.compile('^\w+(\.\w+)*$')
 def get_films_from_slug(slug):
   """docstring for get_films_from_slug"""
   films = models.Film.all().filter('title_slug = ', slug).fetch(10) or []
-  logging.info(films)
   film_keys = [f.key() for f in films]
 
   film_index = models.FilmIndex.get_by_key_name(slug)
+  
   if not film_index:
     return films
 
-  films_from_index = models.Film.get(film_index.films)
-  films_from_index_sorted = sorted(films, key=lambda m: m.year, reverse=True)
+  films_from_index = models.Film.get(film_index.films)  
+  films_from_index_sorted = sorted(films_from_index, key=lambda m: m.year, reverse=True)
 
   for film in films_from_index_sorted:
     if film.key() not in film_keys:
@@ -62,7 +62,7 @@ class SuggestHandler(webapp2.RequestHandler):
 
     films = get_films_from_slug(prefix)
     if films:
-      films_response = [f.to_dict() for f in films_sorted]
+      films_response = [f.to_dict() for f in films]
       indent = 2 if debug else None
       films_json = json.dumps(films_response, indent=indent)
       if not debug:
