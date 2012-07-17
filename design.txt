@@ -1,0 +1,38 @@
+MODELS:
+
+  Question:
+    answer {Film}
+    clues {Clue[]}
+    created {Date}
+    posed {Date}
+    updated {Date}
+
+  User:
+    user {User}
+
+  UserQuestion:
+    complete {Date}
+    correct {Boolean}
+    guesses {Guess=}
+    question {Question}
+    user {User}
+
+API:
+
+  /api/quiz/{key}
+
+    POST: guess: {Film}
+
+    response: {
+      correct: {Boolean},
+      complete: {Boolean},
+      guesses: [
+        {String},
+        {String}
+      ],
+      clues: [
+        {String},
+        {String}
+      ],
+      score: {Number}
+    }
