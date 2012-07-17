@@ -7,6 +7,7 @@
 __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 
 import os
+import re
 
 import jinja2
 
@@ -15,3 +16,4 @@ jinja_env = jinja2.Environment(
 
 is_dev = os.environ['SERVER_SOFTWARE'].startswith('Development')
 
+_VALID_CALLBACK = re.compile('^\w+(\.\w+)*$')

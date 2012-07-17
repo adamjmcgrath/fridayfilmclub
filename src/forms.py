@@ -55,8 +55,8 @@ class GuessWidget(object):
   def __call__(self, field, **kwargs):
     kwargs.setdefault('id', field.id)
     
-    html_string = (u'<input type="text" autocomplete="off" id="ac">'
-                    '<input id="film" type="hidden" %s>')
+    html_string = (u'<input type="text" autocomplete="off" id="ac"'
+                    ' class="span7"><input id="film" type="hidden" %s>')
     film_entity = field.data
 
     params = widgets.html_params(name=field.name, **kwargs)

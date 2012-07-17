@@ -97,8 +97,7 @@ ffc.Question.prototype.getAutoCompleteInput = function() {
 ffc.Question.prototype.init = function() {
   this.addEventListeners();
 
-  var guesses = goog.dom.getElementsByClass(ffc.Question.ClassName.GUESS,
-      this.form);
+  var guesses = goog.dom.getElementsByClass(ffc.Question.ClassName.GUESS);
 
   for (var i = 0, len = guesses.length; i < len; i++) {
     this.guesses[i] = new ffc.Guess(this.autoCompleteInput);

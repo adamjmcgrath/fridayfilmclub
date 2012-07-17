@@ -63,9 +63,11 @@ class Question(db.Model):
     clues:
   """
   created = db.DateTimeProperty(auto_now_add=True)
-  clue_1 = db.TextProperty()
-  clue_2 = db.TextProperty()
-  clue_3 = db.TextProperty()
+  clues = db.StringListProperty()
+
+  # clue_1 = db.TextProperty()
+  # clue_2 = db.TextProperty()
+  # clue_3 = db.TextProperty()
   film = db.ReferenceProperty(Film)
   posed = db.DateProperty()
   screenshot = blobstore.BlobReferenceProperty()
@@ -102,7 +104,7 @@ class Answer(db.Model):
   """
   # @TODO (adamjmcgrath) Implement date answered correctly.
   answered_correctly = db.DateTimeProperty()
-  correct = db.BooleanProperty()
+  guesses = db.StringListProperty()
   guess_0 = db.StringProperty() # Film db.Key.
   guess_1 = db.StringProperty() # Film db.Key.
   guess_2 = db.StringProperty() # Film db.Key.

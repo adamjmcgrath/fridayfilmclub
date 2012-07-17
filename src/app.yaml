@@ -19,6 +19,15 @@ handlers:
 
 - url: /javascript
   static_dir: javascript
+
+- url: /less
+  static_dir: less
+
+- url: /twitter-bootstrap
+  static_dir: twitter-bootstrap
+
+- url: /stylesheets
+  static_dir: stylesheets
   
 - url: /mapreduce(/.*)?
   script: mapreduce.main.APP 

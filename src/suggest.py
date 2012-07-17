@@ -16,8 +16,6 @@ from google.appengine.api import memcache
 
 import models
 
-VALID_CALLBACK = re.compile('^\w+(\.\w+)*$')
-
 
 def get_films_from_slug(slug):
   """docstring for get_films_from_slug"""
@@ -45,7 +43,7 @@ class SuggestHandler(webapp2.RequestHandler):
   def get(self, prefix):
     debug = self.request.get('debug')
     callback = self.request.get('callback')
-    add_callback = callback and VALID_CALLBACK.match(callback)
+    add_callback = callback and settings._VALID_CALLBACK.match(callback)
     if not prefix:
       return webapp2.Response('')
 
