@@ -18,6 +18,7 @@ from google.appengine.ext.webapp import blobstore_handlers
 from mapreduce import control, mapreduce_pipeline
 from mapreduce.model import MapreduceState
 
+import baserequesthandler
 import forms
 import map_reduce
 import models
@@ -27,27 +28,26 @@ VALID_CALLBACK = re.compile('^\w+(\.\w+)*$')
 
 
 
-class HomePage(webapp2.RequestHandler):
+class HomePage(baserequesthandler.RequestHandler):
   """Shows the homepage."""
 
   def get(self):
-    template = settings.jinja_env.get_template(
-        'templates/admin/index.html')
-    return webapp2.Response(template.render({}))
+    return self.render_template('admin/index.html', {})
 
 
 class AddFilms(webapp2.RequestHandler):
   """Form for uploading films as a CSV file as '{Year}, {Title}'."""
 
   def get(self): 
-    template = settings.jinja_env.get_template('templates/admin/addfilms.html')
+    template = settings.jinja_env.get_template()
     upload_url = blobstore.create_upload_url('/admin/addfilmshandler')
-    return webapp2.Response(template.render({
-      'upload_url': upload_url
-    }))
+
+    return self.render_template('admin/addfilms.html', {
+        'upload_url': upload_url
+    })
 
 
-class AddEditQuestion(webapp2.RequestHandler):
+class AddEditQuestion(baserequesthandler.RequestHandler):
   """Adds a question to the datastore."""
 
   def get(self, key=None):
@@ -59,44 +59,41 @@ class AddEditQuestion(webapp2.RequestHandler):
       question_entity = None
       form = forms.Question()
     
-    template = settings.jinja_env.get_template(
-        'templates/admin/addquestion.html')
-    return webapp2.Response(template.render({
-      'form': form,
-      'question': question_entity,
-      'dev_mode': settings.is_dev and self.request.get('debugjs')
-    }))
+    return self.render_template('admin/addquestion.html', {
+        'form': form,
+        'question': question_entity,
+    })
 
   def post(self, key=None):
     form = forms.Question(formdata=self.request.POST)
-    template = settings.jinja_env.get_template(
-        'templates/admin/addquestion.html')
 
     if key:
       question_entity = models.Question.get(key)
     else:
       question_entity = models.Question()
 
-    form.populate_obj(question_entity)
     if form.validate():
+      # TODO(adamjmcgrath): only put once.
+      question_entity.put()
+      form.populate_obj(question_entity)
       question_entity.put()
       return webapp2.redirect('/admin/questions')
     else:
-      return webapp2.Response(template.render({
-      'form': form,
-      'film_entity': film_title,
-      'dev_mode': settings.is_dev and self.request.get('debugjs')
-    }))
+      return self.render_template('admin/questions.html', {
+          'form': form,
+          'question': question_entity,
+          'debug': self.request.get('debug')
+      })
 
 
-class Questions(webapp2.RequestHandler):
+
+class Questions(baserequesthandler.RequestHandler):
   """Adds a question to the datastore."""
 
   def get(self):
-    template = settings.jinja_env.get_template('templates/admin/questions.html')
-    return webapp2.Response(template.render({
+    return self.render_template('admin/questions.html', {
       'questions': models.Question.all(),
-    }))
+    })
 
 
 class AddFilmsHandler(blobstore_handlers.BlobstoreUploadHandler):
@@ -121,7 +118,7 @@ class AddFilmsHandler(blobstore_handlers.BlobstoreUploadHandler):
     return webapp2.redirect('/admin')
 
 
-class AddFilmsDone(webapp2.RequestHandler):
+class AddFilmsDone(baserequesthandler.RequestHandler):
   """Delete the blob once the films have been added to the datastore."""
 
   def post(self):
@@ -137,7 +134,7 @@ class AddFilmsDone(webapp2.RequestHandler):
     logging.info('Temp blob deleted for mapreduce: %s' % mr_id)
 
 
-class IndexFilms(webapp2.RequestHandler):
+class IndexFilms(baserequesthandler.RequestHandler):
   """Index's the films."""
 
   def post(self):

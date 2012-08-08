@@ -12,6 +12,7 @@ import os
 import webapp2
 
 import admin
+import api
 import suggest
 import views
 
@@ -28,6 +29,9 @@ routes = [
     (r'/admin/?', admin.HomePage),
     (r'/question/?(.+)?', views.Question),
     (r'/suggest/?(.+)?', suggest.SuggestHandler),
+
+    (r'/api/question/?(.+)?', api.Question),
+
     (r'/', views.HomePage),
 ]
 

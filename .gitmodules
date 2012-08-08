@@ -11,3 +11,6 @@
 [submodule "src/twitter-bootstrap"]
 	path = src/twitter-bootstrap
 	url = https://github.com/twitter/bootstrap.git
+[submodule "src/closure-templates"]
+	path = src/closure-templates
+	url = git@github.com:adamjmcgrath/closure-templates.git

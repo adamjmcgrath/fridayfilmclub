@@ -32,14 +32,6 @@ h1 {
   .clearfix()
 }
 
-#clues .form-horizontal {
-
-  .btn {
-    float: right;
-  }
-  
-}
-
 #suggestions {
   margin-top: @gridGutterWidth / 2;
 
@@ -47,7 +39,7 @@ h1 {
     border-top: none;
   }
 
-  label:nth-child(even) {
+  label.odd {
     margin-left: 10px;
   }
 
@@ -92,6 +84,7 @@ h1 {
 
 .guess-buttons {
   .clearfix();
+  clear: both;
 
   a {
     float: right;
@@ -104,7 +97,77 @@ h1 {
 
 }
 
+.thumbnail {
+  margin-bottom: 18px;
+}
 
 #sidebar {
   margin-top: @baseLineHeight * 2.5;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+/* Auto complete */
+.ac-renderer {
+/*  position: absolute;
+  background: #fff;
+  border: 1px solid #999;
+  -moz-box-shadow: 2px 2px 2px rgba(102, 102, 102, .4);
+  -webkit-box-shadow: 2px 2px 2px rgba(102, 102, 102, .4);
+  width: 410px;
+  max-width: 96%;
+*/}
+
+.ac-row {
+/*  cursor: pointer;
+  padding: 5px;
+*/}
+
+.ac-row span {
+/*  color: #CCC;
+  font-size: 80%;
+  margin-left: 5px;
+*/}
+
+.ac-highlighted {
+  font-weight: bold;
+}
+
+.ac-active {
+/*  background-color: #b2b4bf;*/
+}
+
+.clearfix:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+
+/**/
+
+#autocomplete {
+  width: 424px;
+}
+
+/* admin */
+fieldset.well {
+  padding-bottom: 0 !important;
+}
+input[type=file] {
+  margin-right: 12px;
+  width: 270px;
+}
+
+
+

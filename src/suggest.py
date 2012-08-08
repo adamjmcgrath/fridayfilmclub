@@ -6,7 +6,6 @@
 
 __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 
-import json
 import logging
 import os
 import re
@@ -14,6 +13,7 @@ import re
 import webapp2
 from google.appengine.api import memcache
 
+import baserequesthandler
 import models
 
 
@@ -37,36 +37,24 @@ def get_films_from_slug(slug):
   return films
 
 
-class SuggestHandler(webapp2.RequestHandler):
+class SuggestHandler(baserequesthandler.RequestHandler):
   """Returns JSON sugesting film titles given a starting string."""
 
   def get(self, prefix):
-    debug = self.request.get('debug')
-    callback = self.request.get('callback')
-    add_callback = callback and settings._VALID_CALLBACK.match(callback)
+    """foo"""
+    callback = self.get_json_callback()
+    prefix = prefix and prefix.strip()
+
     if not prefix:
       return webapp2.Response('')
 
-    prefix = prefix.strip()    
-    memcached = memcache.get(prefix)
-
-    get_films_from_slug(prefix)
-
-    self.response.headers['Content-Type'] = 'application/json; charset=utf-8'
-    if memcached and not debug:
-      if add_callback:
-        memcached = '%s(%s)' % (callback, memcached)
+    memcached = memcache.get(prefix + callback)
+    if memcached and self.is_debug_mode():
+      self.set_json_content_type()
       return webapp2.Response(memcached)
 
     films = get_films_from_slug(prefix)
     if films:
-      films_response = [f.to_dict() for f in films]
-      indent = 2 if debug else None
-      films_json = json.dumps(films_response, indent=indent)
-      if not debug:
-        memcache.set(prefix, films_json)
-      if add_callback:
-        films_json = '%s(%s)' % (callback, films_json)
-      return webapp2.Response(films_json)
+      return self.render_json([f.to_dict() for f in films])
     else:
-      return webapp2.Response('')
+      return self.render_empty()

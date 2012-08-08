@@ -17,6 +17,9 @@ handlers:
 - url: /closure-library
   static_dir: closure-library
 
+- url: /closure-templates
+  static_dir: closure-templates
+
 - url: /javascript
   static_dir: javascript
 
@@ -57,6 +60,7 @@ skip_files:
 - ^(.*/)?.*\.py[co]
 - ^(.*/)?\..*
 - ^(.*/)?closure-library/.*
+- ^(.*/)?closure-templates/.*
 - ^(.*/)?data/.*
 - ^(.*/)?javascript/.*
 - ^(.*/)?scripts/.*

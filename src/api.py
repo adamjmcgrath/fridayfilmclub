@@ -8,12 +8,14 @@ __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 
 import json
 import logging
+import posixpath
 
 import webapp2
 from google.appengine.api import users
 from google.appengine.api import memcache
 from google.appengine.ext import db
 
+import baserequesthandler
 import forms
 import models
 import settings
@@ -21,13 +23,10 @@ import settings
 _MAX_CLUES = 4
 
 
-class Quiz(webapp2.RequestHandler):
+class Question(baserequesthandler.RequestHandler):
   """Shows the homepage."""
 
-  def post(self, question_key):
-    # Get optional api settings.
-    debug = self.request.get('debug')
-    callback = self.request.get('callback')
+  def get(self, question_key):
 
     # Get the users guess
     guess = self.request.get('guess')
@@ -43,8 +42,9 @@ class Quiz(webapp2.RequestHandler):
       question=question, user=user_entity)
 
     # Check if guess is correct, update UserQuestion.
-    if guess:
-      user_question.correct = (guess.strip() == str(question.answer))
+    if guess and not user_question.complete:
+      user_question.correct = (guess.strip() == str(question.answer.key()))
+
       user_question.guesses.append(guess)
       if user_question.correct or len(user_question.guesses) > _MAX_CLUES:
         user_question.complete = True
@@ -53,21 +53,24 @@ class Quiz(webapp2.RequestHandler):
     # The number of the clues to show the user is one greater than the
     # number of guesses up to the maximum number of guesses.
     # If the user has had no guesses they get one clue.
-    clue_number = max((len(user_question.guesses) + 1), _MAX_CLUES)
+    clue_increment = 0 if user_question.correct else 1
+    clue_number = min((len(user_question.guesses) + clue_increment), _MAX_CLUES)
 
-    response = {
-      'correct': user_question.correct,
-      'complete': user_question.complete,
-      'guesses': user_question.guesses,
-      'clues': question.clues[:clue_number],
-    }
+    try:
+      guesses = models.Film.get(user_question.guesses)
+    except db.BadKeyError:
+      guesses = []
 
-    # Create/format the json response.
-    indent = 2 if debug else None
-    json_response = json.dumps(response, indent=indent)
-    if callback and settings._VALID_CALLBACK.match(callback):
-      json_response = '%s(%s)' % (callback, json_response)
+    # If the question is complete, reveal the correct answer to the user.
+    answer = {}
+    if user_question.complete:
+      answer = question.answer.to_dict()
 
-    self.response.headers['Content-Type'] = 'application/json; charset=utf-8'
-    return webapp2.Response(json_response)
+    return self.render_json({
+        'answer': answer,
+        'clues': [clue.to_json() for clue in question.clues[:clue_number]],
+        'complete': user_question.complete,
+        'correct': user_question.correct,
+        'guesses': [{'title': g.title, 'year': str(g.year)} for g in guesses],
+    })
 

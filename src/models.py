@@ -63,25 +63,30 @@ class Question(db.Model):
     clues:
   """
   created = db.DateTimeProperty(auto_now_add=True)
-  clues = db.StringListProperty()
-
-  # clue_1 = db.TextProperty()
-  # clue_2 = db.TextProperty()
-  # clue_3 = db.TextProperty()
-  film = db.ReferenceProperty(Film)
+  answer = db.ReferenceProperty(Film)
   posed = db.DateProperty()
   screenshot = blobstore.BlobReferenceProperty()
   updated = db.DateTimeProperty(auto_now=True)
 
-  def screenshot_url(self, size=None):
-    """Get's the question's screenshot url."""
-    if self.screenshot:
-      return images.get_serving_url(self.screenshot, size=size)
+
+class Clue(db.Model):
+  """A clue."""
+  text = db.TextProperty()
+  image = blobstore.BlobReferenceProperty()
+  question = db.ReferenceProperty(Question, collection_name='clues')
+
+  def image_url(self, size=None):
+    """Get's the image's url."""
+    if self.image:
+      return images.get_serving_url(self.image, size=size)
     else:
       return ''
 
-  def clues(self):
-    return [self.screenshot_url(), self.clue_1, self.clue_2, self.clue_3]
+  def to_json(self):
+    return {
+      'text': self.text,
+      'image': self.image_url(),
+    }
 
 
 class User(db.Model):
@@ -93,7 +98,7 @@ class User(db.Model):
   user = db.UserProperty()
 
 
-class Answer(db.Model):
+class UserQuestion(db.Model):
   """Links user and question and keeps track of guesses and score.
 
   Attributes:
@@ -104,25 +109,23 @@ class Answer(db.Model):
   """
   # @TODO (adamjmcgrath) Implement date answered correctly.
   answered_correctly = db.DateTimeProperty()
+  complete = db.BooleanProperty(default=False)
+  correct = db.BooleanProperty(default=False)
   guesses = db.StringListProperty()
-  guess_0 = db.StringProperty() # Film db.Key.
-  guess_1 = db.StringProperty() # Film db.Key.
-  guess_2 = db.StringProperty() # Film db.Key.
-  guess_3 = db.StringProperty() # Film db.Key.
   current_guess = db.IntegerProperty(default=0)
   incorrect = db.BooleanProperty()
   question = db.ReferenceProperty(Question, collection_name='answers')
   score = db.IntegerProperty()
   user = db.ReferenceProperty(User, collection_name='answers')
 
-  def made_guesses(self):
-    """Returns a list of guesses that have been made."""
-    guesses = [self.guess_0, self.guess_1, self.guess_2, self.guess_3]
-    return [Film.get(g).title for g in guesses if g != None]
-
-  def required_clues(self):
-    """Returns a list of clues that need to be shown to the user."""
-    return self.question.clues()[:self.current_guess + 1]
+  # def made_guesses(self):
+  #   """Returns a list of guesses that have been made."""
+  #   guesses = [self.guess_0, self.guess_1, self.guess_2, self.guess_3]
+  #   return [Film.get(g).title for g in guesses if g != None]
+  # 
+  # def required_clues(self):
+  #   """Returns a list of clues that need to be shown to the user."""
+  #   return self.question.clues()[:self.current_guess + 1]
 
   def calculate_score(self):
     """docstring for score"""
@@ -130,7 +133,7 @@ class Answer(db.Model):
     scores = [10, 7, 5, 2]
     return scores[self.current_guess]
 
-  def guess_is_correct(self, i):
-    """Indicates wheather the guess is correct from a given index."""
-    guess_key = getattr(self, ('guess_%d' % self.current_guess))
-    return guess_key == self.question.film.key()
+  # def guess_is_correct(self, i):
+  #   """Indicates wheather the guess is correct from a given index."""
+  #   guess_key = getattr(self, ('guess_%d' % self.current_guess))
+  #   return guess_key == self.question.film.key()
