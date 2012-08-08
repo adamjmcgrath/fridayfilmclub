@@ -1,0 +1,91 @@
+{namespace ffc.template.quiz}
+
+
+/**
+ * Answer form.
+ */
+{template .answerForm}
+<form class="well" id="answer-form">
+  <div class="input-prepend input-append form-horizontal">
+    <span class="add-on"><i class="icon-search"></i></span>
+    <input id="autocomplete" size="16" type="text" autocomplete="off">
+    <a href="#" class="btn" id="btn-search">Search</a>
+    <a href="#" class="btn" id="btn-clear">Clear</a>
+  </div>
+  <div class="controls rows">
+    <div id="suggestions">
+      <p id="suggest-info">Search for a film, then select your guess from the list.</p>
+    </div>
+  </div>
+  <div class="guess-buttons">
+    <a href="#" class="btn btn-primary" id="btn-submit">Submit</a>
+    <a href="#" class="btn btn-danger" id="btn-pass">Pass</a>
+  </div>
+</form>
+{/template}
+
+
+/**
+ * Option.
+ * @param title The film title.
+ * @param year The film year.
+ * @param key The film key.
+ * @param? odd Add a class of odd to the label.
+ */
+{template .option}
+<label class="radio{if $odd} odd{/if}">
+  <input type="radio" name="answer" value="{$key}">
+  {$title}<span>{$year}</span>
+</label>
+{/template}
+
+
+/**
+ * Guess.
+ * @param title The guess title.
+ * @param year The guess year.
+ */
+{template .guess}
+<div class="alert failed-guess">
+  <b>{$title} ({$year})</b> is incorrect!
+</div>
+{/template}
+
+
+/**
+ * Clue.
+ * @param position The clue position.
+ * @param? text The text.
+ * @param? image The path to the image.
+ */
+{template .clue}
+<div class="{if $image}thumbnail{else}alert alert-info clue{/if}">
+  {if $image}
+  <img src="{$image}" width="910" height="343">
+  <div class="caption">
+    <h4>Clue #{$position}</h4>
+    {if $text}<p>{$text}</p>{/if}
+  </div>
+  {else}
+  {if $text}<p><b>Clue #{$position}: </b>{$text}</p>{/if}
+  {/if}
+</div>
+{/template}
+
+
+
+
+/**
+ * Answer.
+ * @param correct Whether the question has been answered correctly.
+ * @param title The answer title.
+ * @param year The answer year.
+ */
+{template .answer}
+<div class="alert alert-{if $correct}success{else}error{/if} clue">
+  <h4 class="alert-heading">{if $correct}Correct!{else}Incorrect!{/if}</h4>
+  <p>The answer is of course: <b>{$title}</b> ({$year})</p>
+</div>
+{/template}
+
+

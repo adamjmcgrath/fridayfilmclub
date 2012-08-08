@@ -1,0 +1,66 @@
+{% extends "templates/jinja/admin/base.tpl" %}
+
+{% block page_id %}add-question-page{% endblock page_id %}
+
+{% block main %}
+{{super()}}
+<h2>Upload Question</h2>
+<form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
+  <fieldset>
+    <div class="control-group{% if form.answer.errors %} error{% endif %}">
+      <label class="control-label" for="ac">Film</label>
+      <div class="controls">
+        <input id="ac" class="input-xlarge focused" type="text" value="{{question and question.answer and question.answer.title or ''}}" autocomplete="off">
+        <input type="hidden" value="{{question and question.answer and question.answer.key() or ''}}" name="{{form.answer.name}}">
+        {# {{form.answer}} #}
+        <span class="help-inline">{{form.answer.errors[0]}}</span>
+      </div>
+    </div>
+  </fieldset>
+  {% for clue_form in form.clues %}
+  <h3>Clue {{loop.index}}:</h3>
+  <fieldset>
+    {% for clue_field in clue_form %}
+      <div class="control-group{% if clue_field.errors %} error{% endif %}">
+        <label class="control-label" for="{{clue_field.name}}">{{clue_field.name}}</label>
+        <div class="controls">
+          {{clue_field(class_='input-xlarge')}}
+          <span class="help-inline">{{clue_field.errors[0]}}</span>
+        </div>
+      </div>
+    {% endfor %}
+  </fieldset>
+  {% endfor %}
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary">Save changes</button>
+    {# <button class="btn">Cancel</button> #}
+  </div>
+</form>
+
+{% endblock %}
+
+{% block body_base %}
+{% include "templates/jinja/inc/questionjs.tpl" %}
+<script>
+  var input = document.getElementById('ac');
+  var fc = document.getElementById('film');
+  var ac = new ffc.AutoComplete(ac, fc);
+
+  // alert(ffc.template.textClue({position: 1, text: 'FOO'}))
+
+  goog.events.listen(ac, goog.ui.AutoComplete.EventType.SUGGESTIONS_UPDATE,
+      function(e) {
+        var rows = ac.getRenderer().rows_;
+        var value = input.value;
+        var keyValue = '';
+        for (var i = 0, len = rows.length; i < len; i++) {
+          if (value == rows[i].data['title']) {
+            keyValue = rows[i].data['key'];
+            break;
+          }
+        }
+        fc.value = keyValue;
+      }
+  );
+</script>
+{% endblock %}

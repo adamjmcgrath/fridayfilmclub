@@ -1,0 +1,177 @@
+// Copyright 2011 Friday Film Club All Rights Reserved.
+
+/**
+ * @fileoverview Answer form.
+ * 
+ * 
+ * @author adamjmcgrath@gmail.com (Adam Mcgrath)
+ */
+
+goog.provide('ffc.AnswerForm');
+goog.provide('ffc.AnswerFormEvent');
+
+goog.require('ffc.template.quiz');
+
+goog.require('goog.dom.forms');
+// goog.require('goog.dom.TagName');
+// goog.require('goog.dom.classes');
+goog.require('goog.events.Event');
+goog.require('goog.events.EventType');
+goog.require('goog.net.XhrIo');
+// goog.require('goog.string');
+goog.require('goog.ui.Component');
+
+goog.require('ffc.AutoComplete');
+
+goog.require('soy');
+
+
+
+
+/**
+ * Guess constructor.
+ * @constructor
+ */
+ffc.AnswerForm = function() {
+  goog.base(this);
+  
+  this.eh_ = this.getHandler();
+}
+goog.inherits(ffc.AnswerForm, goog.ui.Component);
+
+
+/**
+ * 
+ */
+ffc.AnswerForm.URI_ = '';
+
+
+/**
+ *
+ */
+ffc.AnswerForm.prototype.createDom = function() {
+  this.element_ = soy.renderAsFragment(ffc.template.quiz.answerForm);
+};
+
+
+/**
+ *
+ */
+ffc.AnswerForm.prototype.enterDocument = function() {
+  goog.base(this, 'enterDocument');
+
+  // TODO(adamjmcgrath): To go in decorateInternal
+  this.suggestInfo_ = this.dom_.getElement('suggest-info');
+  
+  this.acInput_ = this.dom_.getElement('autocomplete');
+  this.ac_ = new ffc.AutoComplete(this.acInput_,
+      this.dom_.getElement('suggestions'));
+
+  this.form_ = this.dom_.getElement('answer-form');
+
+  this.eh_.listen(this.dom_.getElement('btn-clear'),
+      goog.events.EventType.CLICK, this.onClear_);
+
+  this.eh_.listen(this.dom_.getElement('btn-search'),
+      goog.events.EventType.CLICK, goog.events.Event.preventDefault);
+
+  this.eh_.listen(this.dom_.getElement('btn-submit'),
+      goog.events.EventType.CLICK, this.onSubmit_, false, this);
+
+  this.eh_.listen(this.dom_.getElement('btn-pass'),
+      goog.events.EventType.CLICK, goog.events.Event.preventDefault);
+
+  this.eh_.listen(this.ac_, goog.ui.AutoComplete.EventType.SUGGESTIONS_UPDATE,
+      this.onAcUpdate_, false, this);
+
+};
+
+
+/**
+ *
+ */
+ffc.AnswerForm.prototype.clearForm = function(e) {
+  this.ac_.dismiss(true);
+  this.acInput_.value = '';
+  this.suggestInfo_.style.display = 'block';
+};
+
+
+/**
+ *
+ */
+ffc.AnswerForm.prototype.onClear_ = function(e) {
+  this.clearForm();
+  e.preventDefault();
+};
+
+
+/**
+ *
+ */
+ffc.AnswerForm.prototype.onAcUpdate_ = function(e) {
+  if (e.target.rows_.length) {
+    this.suggestInfo_.style.display = 'none';
+  } else {
+    this.suggestInfo_.style.display = 'block';
+  }
+
+};
+
+
+/**
+ *
+ */
+ffc.AnswerForm.prototype.onSubmit_ = function(e) {
+  var formDataMap = goog.dom.forms.getFormDataMap(this.form_);
+  var answer = formDataMap.get('answer') && formDataMap.get('answer')[0];
+
+  if (answer) {
+    goog.net.XhrIo.send('/api' + window.location.pathname + '?guess=' + answer,
+        goog.bind(this.onGuessResponse_, this));
+  }
+  
+  e.preventDefault();
+};
+
+
+/**
+ *
+ */
+ffc.AnswerForm.prototype.onGuessResponse_ = function(e) {
+  var data = e.target.getResponseJson();
+  this.dispatchEvent(
+      new ffc.AnswerFormEvent(ffc.AnswerForm.ANSWER_RESPONSE, this, data));
+};
+
+
+/**
+ *
+ */
+ffc.AnswerForm.ANSWER_RESPONSE = 'answerresponseevent';
+
+
+
+/**
+ * Object representing an answer form event event.
+ * @param {Object} data
+ *     {Array.<Object>} clues
+ *       {string?} image The path to the image clue.
+ *       {string?} text The text for the clue.
+ *     {boolean} complete
+ *     {boolean} correct
+ *     {Array.<Object>} guesses
+ *       {string?} title The title of the film guess.
+ *       {string?} year The year of the film guess.
+ * @extends {goog.events.Event}
+ * @constructor
+ */
+ffc.AnswerFormEvent = function (type, target, data) {
+  goog.base(this, type, target);
+
+  /**
+   * @type {Object}
+   */
+  this.data = data;
+};
+goog.inherits(ffc.AnswerFormEvent, goog.events.Event);

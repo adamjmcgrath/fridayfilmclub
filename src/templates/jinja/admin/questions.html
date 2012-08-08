@@ -1,0 +1,42 @@
+{% extends "templates/jinja/admin/base.tpl" %}
+
+{% block page_id %}questions-page{% endblock page_id %}
+
+{% block main %}
+{{super()}}
+<h2>Questions</h2>
+<table class="table">
+  <tr>
+    <th>title</th>
+    <th>clue 1</th>
+    <th>clue 2</th>
+    <th>clue 3</th>
+    <th>clue 4</th>
+    <th>edit</th>
+    <th>view</th>
+    <th>pose</th>
+  </tr>
+  {% for q in questions %}
+  <tr>
+    <td>{{q.answer.title}}</td>
+    {% for clue in q.clues %}
+      <td>
+      {% if clue.text %}
+        {{clue.text}}
+      {% else %}
+        <img src="{{clue.image_url(80)}}">
+      {% endif %}
+      </td>
+    {% endfor %}
+    <td><a href="/admin/editquestion/{{q.key()}}">edit</a></td>
+    <td><a href="/question/{{q.key()}}">view</a></td>
+    <td>
+      {% if not q.posed %}
+      <a href="/admin/posequestion/{{q.key()}}">email</a>
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}
+
