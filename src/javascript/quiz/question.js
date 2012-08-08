@@ -97,8 +97,10 @@ ffc.Question.prototype.render = function(e) {
 ffc.Question.prototype.enterDocument = function() {
   goog.base(this, 'enterDocument');
 
-  this.eh_.listen(this.answerForm, ffc.AnswerForm.ANSWER_RESPONSE,
-      this.onAnswerResponse_, false, this);
+  if (this.answerForm) {
+    this.eh_.listen(this.answerForm, ffc.AnswerForm.ANSWER_RESPONSE,
+        this.onAnswerResponse_, false, this);
+  }
 };
 
 
