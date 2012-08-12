@@ -35,11 +35,10 @@ class HomePage(baserequesthandler.RequestHandler):
     return self.render_template('admin/index.html', {})
 
 
-class AddFilms(webapp2.RequestHandler):
+class AddFilms(baserequesthandler.RequestHandler):
   """Form for uploading films as a CSV file as '{Year}, {Title}'."""
 
-  def get(self): 
-    template = settings.jinja_env.get_template()
+  def get(self):
     upload_url = blobstore.create_upload_url('/admin/addfilmshandler')
 
     return self.render_template('admin/addfilms.html', {
