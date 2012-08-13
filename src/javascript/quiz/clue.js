@@ -4,18 +4,19 @@
  * @fileoverview A clue element.
  * @author adamjmcgrath@gmail.com (Adam Mcgrath)
  */
-goog.provide('ffc.Clue');
+goog.provide('ffc.quiz.Clue');
 
-goog.require('goog.fx.dom.FadeInAndShow');
-goog.require('goog.ui.Component');
-
+goog.require('ffc.quiz.Component');
+goog.require('ffc.template.quiz');
 
 
 /**
  * Clue constructor.
+ * @param {number} position The position of the clue.
+ * @param {Object} data The data to populate the clue.
  * @constructor
  */
-ffc.Clue = function(position, data) {
+ffc.quiz.Clue = function(position, data) {
   goog.base(this);
 
   /**
@@ -37,24 +38,14 @@ ffc.Clue = function(position, data) {
   this.image_ = data.image;
 
 };
-goog.inherits(ffc.Clue, goog.ui.Component);
+goog.inherits(ffc.quiz.Clue, ffc.quiz.Component);
 
 
 /**
- *
+ * Create the clue dom.
  */
-ffc.Clue.prototype.createDom = function() {
+ffc.quiz.Clue.prototype.createDom = function() {
   this.element_ = soy.renderAsFragment(
       ffc.template.quiz.clue,
       {position: this.position_, text: this.text_, image: this.image_});
-};
-
-
-/**
- *
- */
-ffc.Clue.prototype.enterDocument = function() {
-  goog.base(this, 'enterDocument');
-
-  (new goog.fx.dom.FadeInAndShow(this.element_, 500)).play();
 };

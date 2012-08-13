@@ -32,7 +32,7 @@ if [ $1 == "build" ]; then
     --root=$CLOSURE_LIB \
     --root=$CLOSURE_TEMPLATES \
     --root=$FFC_SOURCE \
-    --namespace="ffc.Question" \
+    --namespace="ffc.quiz" \
     --output_mode=compiled \
     --compiler_jar=$CLOSURE_COMPILER_PATH \
     --compiler_flags="--compilation_level=ADVANCED_OPTIMIZATIONS" \
@@ -44,6 +44,6 @@ if [ $1 == "template" ]; then
   java -jar $CLOSURE_TEMPLATES_COMPILER_PATH \
     --shouldProvideRequireSoyNamespaces \
     --shouldGenerateJsdoc \
-    --outputPathFormat src/javascript/templates/{INPUT_FILE_NAME_NO_EXT}.soy.js \
+    --outputPathFormat src/javascript/template/{INPUT_FILE_NAME_NO_EXT}.soy.js \
     src/templates/soy/*.soy
 fi

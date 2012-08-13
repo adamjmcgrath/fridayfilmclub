@@ -53,10 +53,6 @@ class RequestHandler(webapp2.RequestHandler):
     self.response.headers['Content-Type'] = 'application/json; charset=utf-8'
 
   def render_json(self, json_obj):
-    
-    
-    logging.info(json_obj)
-    
     """docstring for render_json"""
     indent = 2 if self.is_debug_mode() else None
     callback = self.get_json_callback()

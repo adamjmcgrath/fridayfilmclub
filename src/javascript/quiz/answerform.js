@@ -1,55 +1,48 @@
 // Copyright 2011 Friday Film Club All Rights Reserved.
 
 /**
- * @fileoverview Answer form.
- * 
- * 
+ * @fileoverview The Answer form.
  * @author adamjmcgrath@gmail.com (Adam Mcgrath)
  */
 
-goog.provide('ffc.AnswerForm');
-goog.provide('ffc.AnswerFormEvent');
-
-goog.require('ffc.template.quiz');
+goog.provide('ffc.quiz.AnswerForm');
+goog.provide('ffc.quiz.AnswerFormEvent');
 
 goog.require('goog.dom.forms');
-// goog.require('goog.dom.TagName');
-// goog.require('goog.dom.classes');
 goog.require('goog.events.Event');
 goog.require('goog.events.EventType');
 goog.require('goog.net.XhrIo');
-// goog.require('goog.string');
-goog.require('goog.ui.Component');
 
+goog.require('ffc.quiz.Component');
 goog.require('ffc.AutoComplete');
+goog.require('ffc.template.quiz');
 
 goog.require('soy');
 
 
 
-
 /**
- * Guess constructor.
+ * Answer form constructor.
  * @constructor
  */
-ffc.AnswerForm = function() {
+ffc.quiz.AnswerForm = function() {
   goog.base(this);
   
   this.eh_ = this.getHandler();
 }
-goog.inherits(ffc.AnswerForm, goog.ui.Component);
+goog.inherits(ffc.quiz.AnswerForm, ffc.quiz.Component);
 
 
 /**
  * 
  */
-ffc.AnswerForm.URI_ = '';
+ffc.quiz.AnswerForm.URI_ = '';
 
 
 /**
  *
  */
-ffc.AnswerForm.prototype.createDom = function() {
+ffc.quiz.AnswerForm.prototype.createDom = function() {
   this.element_ = soy.renderAsFragment(ffc.template.quiz.answerForm);
 };
 
@@ -57,7 +50,7 @@ ffc.AnswerForm.prototype.createDom = function() {
 /**
  *
  */
-ffc.AnswerForm.prototype.enterDocument = function() {
+ffc.quiz.AnswerForm.prototype.enterDocument = function() {
   goog.base(this, 'enterDocument');
 
   // TODO(adamjmcgrath): To go in decorateInternal
@@ -90,7 +83,7 @@ ffc.AnswerForm.prototype.enterDocument = function() {
 /**
  *
  */
-ffc.AnswerForm.prototype.clearForm = function(e) {
+ffc.quiz.AnswerForm.prototype.clearForm = function(e) {
   this.ac_.dismiss(true);
   this.acInput_.value = '';
   this.suggestInfo_.style.display = 'block';
@@ -100,7 +93,7 @@ ffc.AnswerForm.prototype.clearForm = function(e) {
 /**
  *
  */
-ffc.AnswerForm.prototype.onClear_ = function(e) {
+ffc.quiz.AnswerForm.prototype.onClear_ = function(e) {
   this.clearForm();
   e.preventDefault();
 };
@@ -109,7 +102,7 @@ ffc.AnswerForm.prototype.onClear_ = function(e) {
 /**
  *
  */
-ffc.AnswerForm.prototype.onAcUpdate_ = function(e) {
+ffc.quiz.AnswerForm.prototype.onAcUpdate_ = function(e) {
   if (e.target.rows_.length) {
     this.suggestInfo_.style.display = 'none';
   } else {
@@ -122,8 +115,8 @@ ffc.AnswerForm.prototype.onAcUpdate_ = function(e) {
 /**
  *
  */
-ffc.AnswerForm.prototype.onPass_ = function(e) {
-  this.submitGuess_(ffc.AnswerForm.PASS_);
+ffc.quiz.AnswerForm.prototype.onPass_ = function(e) {
+  this.submitGuess_(ffc.quiz.AnswerForm.PASS_);
 
   e.preventDefault();
 };
@@ -132,7 +125,7 @@ ffc.AnswerForm.prototype.onPass_ = function(e) {
 /**
  *
  */
-ffc.AnswerForm.prototype.onSubmit_ = function(e) {
+ffc.quiz.AnswerForm.prototype.onSubmit_ = function(e) {
   var formDataMap = goog.dom.forms.getFormDataMap(this.form_);
   var answer = formDataMap.get('answer') && formDataMap.get('answer')[0];
 
@@ -147,7 +140,7 @@ ffc.AnswerForm.prototype.onSubmit_ = function(e) {
 /**
  *
  */
-ffc.AnswerForm.prototype.submitGuess_ = function(guess) {
+ffc.quiz.AnswerForm.prototype.submitGuess_ = function(guess) {
     goog.net.XhrIo.send('/api' + window.location.pathname + '?guess=' + guess,
         goog.bind(this.onGuessResponse_, this));
 };
@@ -156,23 +149,23 @@ ffc.AnswerForm.prototype.submitGuess_ = function(guess) {
 /**
  *
  */
-ffc.AnswerForm.prototype.onGuessResponse_ = function(e) {
+ffc.quiz.AnswerForm.prototype.onGuessResponse_ = function(e) {
   var data = e.target.getResponseJson();
   this.dispatchEvent(
-      new ffc.AnswerFormEvent(ffc.AnswerForm.ANSWER_RESPONSE, this, data));
+      new ffc.quiz.AnswerFormEvent(ffc.quiz.AnswerForm.ANSWER_RESPONSE, this, data));
 };
 
 
 /**
  *
  */
-ffc.AnswerForm.ANSWER_RESPONSE = 'answerresponseevent';
+ffc.quiz.AnswerForm.ANSWER_RESPONSE = 'answerresponseevent';
 
 
 /**
  *
  */
-ffc.AnswerForm.PASS_ = 'pass';
+ffc.quiz.AnswerForm.PASS_ = 'pass';
 
 
 
@@ -190,7 +183,7 @@ ffc.AnswerForm.PASS_ = 'pass';
  * @extends {goog.events.Event}
  * @constructor
  */
-ffc.AnswerFormEvent = function (type, target, data) {
+ffc.quiz.AnswerFormEvent = function (type, target, data) {
   goog.base(this, type, target);
 
   /**
@@ -198,4 +191,4 @@ ffc.AnswerFormEvent = function (type, target, data) {
    */
   this.data = data;
 };
-goog.inherits(ffc.AnswerFormEvent, goog.events.Event);
+goog.inherits(ffc.quiz.AnswerFormEvent, goog.events.Event);

@@ -6,16 +6,16 @@
  * @author adamjmcgrath@gmail.com (Adam Mcgrath)
  */
  
-goog.provide('ffc.Question');
+goog.provide('ffc.quiz.Question');
 
 goog.require('goog.array');
 goog.require('goog.net.XhrIo');
 goog.require('goog.ui.Component');
 
-goog.require('ffc.Answer');
-goog.require('ffc.AnswerForm');
-goog.require('ffc.Clue');
-goog.require('ffc.Guess');
+goog.require('ffc.quiz.Answer');
+goog.require('ffc.quiz.AnswerForm');
+goog.require('ffc.quiz.Clue');
+goog.require('ffc.quiz.Guess');
 
 
 
@@ -24,7 +24,7 @@ goog.require('ffc.Guess');
  * @param {String} key The key id of the question in the datastore.
  * @constructor
  */
-ffc.Question = function(key, element) {
+ffc.quiz.Question = function(key, element) {
   goog.base(this);
   
   /**
@@ -43,14 +43,14 @@ ffc.Question = function(key, element) {
 
   /**
    * Array of clues.
-   * @type {Array.<ffc.Clue>}
+   * @type {Array.<ffc.quiz.Clue>}
    * @private
    */
   this.clues_ = [];
 
   /**
    * Array of clues.
-   * @type {Array.<ffc.Guess>}
+   * @type {Array.<ffc.quiz.Guess>}
    * @private
    */
   this.guesses_ = [];
@@ -59,31 +59,31 @@ ffc.Question = function(key, element) {
 
   goog.net.XhrIo.send('/api/question/' + key, goog.bind(this.render, this));
 };
-goog.inherits(ffc.Question, goog.ui.Component);
-goog.exportSymbol('ffc.Question', ffc.Question);
+goog.inherits(ffc.quiz.Question, goog.ui.Component);
+goog.exportSymbol('ffc.quiz.Question', ffc.quiz.Question);
 
 
 /**
  *
  */
-ffc.Question.prototype.render = function(e) {
+ffc.quiz.Question.prototype.render = function(e) {
   var data = e.target.getResponseJson(),
       i,
       guess,
       len;
   
   for (i = 0, len = data.clues.length; i < len; i++) {
-    this.addClue(new ffc.Clue(i + 1, data.clues[i]));
+    this.addClue(new ffc.quiz.Clue(i + 1, data.clues[i]));
     guess = data.guesses[i];
     if (guess) {
-      this.addGuess(new ffc.Guess(guess));
+      this.addGuess(new ffc.quiz.Guess(guess));
     }
   }
 
   if (data.complete) {
-    this.addChild(new ffc.Answer(data), true);
+    this.addChild(new ffc.quiz.Answer(data), true);
   } else {
-    this.answerForm = new ffc.AnswerForm();
+    this.answerForm = new ffc.quiz.AnswerForm();
     this.addChild(this.answerForm, true);
   }
 
@@ -94,11 +94,11 @@ ffc.Question.prototype.render = function(e) {
 /**
  *
  */
-ffc.Question.prototype.enterDocument = function() {
+ffc.quiz.Question.prototype.enterDocument = function() {
   goog.base(this, 'enterDocument');
 
   if (this.answerForm) {
-    this.eh_.listen(this.answerForm, ffc.AnswerForm.ANSWER_RESPONSE,
+    this.eh_.listen(this.answerForm, ffc.quiz.AnswerForm.ANSWER_RESPONSE,
         this.onAnswerResponse_, false, this);
   }
 };
@@ -107,15 +107,15 @@ ffc.Question.prototype.enterDocument = function() {
 /**
  *
  */
-ffc.Question.prototype.addCluesAndGuesses = function(clues, guesses) {
+ffc.quiz.Question.prototype.addCluesAndGuesses = function(clues, guesses) {
   var clue;
   var clueCount = this.clues_.length;
 
   for (i = 0, len = guesses.length; i < len; i++) {
-    this.addGuess(new ffc.Guess(guesses[i]), this.getChildCount() - 1);
+    this.addGuess(new ffc.quiz.Guess(guesses[i]), this.getChildCount() - 1);
     clue = clues[i];
     if (clue) {
-      this.addClue(new ffc.Clue(i + 1 + clueCount, clue),
+      this.addClue(new ffc.quiz.Clue(i + 1 + clueCount, clue),
           this.getChildCount() - 1);
     }
   }
@@ -125,7 +125,7 @@ ffc.Question.prototype.addCluesAndGuesses = function(clues, guesses) {
 /**
  *
  */
-ffc.Question.prototype.addClue = function(clue, opt_index) {
+ffc.quiz.Question.prototype.addClue = function(clue, opt_index) {
   var index = opt_index || this.getChildCount();
   
   this.clues_.push(clue);
@@ -136,7 +136,7 @@ ffc.Question.prototype.addClue = function(clue, opt_index) {
 /**
  *
  */
-ffc.Question.prototype.addGuess = function(guess, opt_index) {
+ffc.quiz.Question.prototype.addGuess = function(guess, opt_index) {
   var index = opt_index || this.getChildCount();
 
   this.guesses_.push(guess);
@@ -145,14 +145,14 @@ ffc.Question.prototype.addGuess = function(guess, opt_index) {
 
 
 /**
- * @param {ffc.AnswerFormEvent} e
+ * @param {ffc.quiz.AnswerFormEvent} e
  */
-ffc.Question.prototype.onAnswerResponse_ = function(e) {
+ffc.quiz.Question.prototype.onAnswerResponse_ = function(e) {
   var data = e.data;
 
   if (data.complete) {
     this.removeChild(this.answerForm, true);
-    this.addChild(new ffc.Answer(data), true);
+    this.addChild(new ffc.quiz.Answer(data), true);
   } else {
     this.answerForm.clearForm();
     var clues = goog.array.slice(data.clues, this.clues_.length);

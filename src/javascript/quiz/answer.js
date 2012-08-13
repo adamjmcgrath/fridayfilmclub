@@ -1,13 +1,12 @@
-// Copyright 2011 Friday Film Club All Rights Reserved.
+// Copyright 2012 Friday Film Club All Rights Reserved.
 
 /**
  * @fileoverview An answer element.
  * @author adamjmcgrath@gmail.com (Adam Mcgrath)
  */
-goog.provide('ffc.Answer');
+goog.provide('ffc.quiz.Answer');
 
-goog.require('goog.fx.dom.FadeInAndShow');
-goog.require('goog.ui.Component');
+goog.require('ffc.quiz.Component');
 
 
 
@@ -15,7 +14,7 @@ goog.require('goog.ui.Component');
  * Answer constructor.
  * @constructor
  */
-ffc.Answer = function(data) {
+ffc.quiz.Answer = function(data) {
   goog.base(this);
 
   /**
@@ -34,24 +33,14 @@ ffc.Answer = function(data) {
   this.year_ = data.answer.year;
 
 };
-goog.inherits(ffc.Answer, goog.ui.Component);
+goog.inherits(ffc.quiz.Answer, ffc.quiz.Component);
 
 
 /**
- *
+ * Create the answer's DOM.
  */
-ffc.Answer.prototype.createDom = function() {
+ffc.quiz.Answer.prototype.createDom = function() {
   this.element_ = soy.renderAsFragment(
       ffc.template.quiz.answer,
       {correct: this.correct_, title: this.title_, year: this.year_});
-};
-
-
-/**
- *
- */
-ffc.Answer.prototype.enterDocument = function() {
-  goog.base(this, 'enterDocument');
-
-  (new goog.fx.dom.FadeInAndShow(this.element_, 500)).play();
 };

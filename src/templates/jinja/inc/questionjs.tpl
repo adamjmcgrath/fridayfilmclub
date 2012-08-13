@@ -3,7 +3,7 @@
   <script src="/static/js/deps.js"></script>
   <script>
     goog.require('goog.ui.Component');
-    goog.require('ffc.Question');
+    goog.require('ffc.quiz.Question');
   </script>
 {% else %}
   <script src="/static/js/quiz.js"></script>

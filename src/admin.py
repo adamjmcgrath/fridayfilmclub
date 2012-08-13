@@ -69,9 +69,6 @@ class AddEditQuestion(baserequesthandler.RequestHandler):
     else:
       question_entity = models.Question()
 
-    logging.info(self.request.POST)
-    logging.info(form.answer)
-
     if form.validate():
       # TODO(adamjmcgrath): only put once.
       question_entity.put()
