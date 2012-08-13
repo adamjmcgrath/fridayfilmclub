@@ -7,15 +7,15 @@
  * @author adamjmcgrath@gmail.com (Adam Mcgrath)
  */
 
-goog.provide('ffc.AutoComplete')
+goog.provide('ffc.suggest.AutoComplete');
 
-goog.require('goog.array')
-goog.require('goog.dom')
-goog.require('goog.ui.AutoComplete.Renderer')
-goog.require('goog.ui.AutoComplete.RichInputHandler')
-goog.require('goog.ui.AutoComplete')
+goog.require('goog.array');
+goog.require('goog.dom');
+goog.require('goog.ui.AutoComplete.Renderer');
+goog.require('goog.ui.AutoComplete.RichInputHandler');
+goog.require('goog.ui.AutoComplete');
 
-goog.require('ffc.RemoteArrayMatcher');
+goog.require('ffc.suggest.RemoteArrayMatcher');
 
 
 
@@ -23,7 +23,7 @@ goog.require('ffc.RemoteArrayMatcher');
  * AutoComplete constructor.
  * @constructor
  */
-ffc.AutoComplete = function(el, parent) {
+ffc.suggest.AutoComplete = function(el, parent) {
   // Create a custom renderer that renders rich rows.  The renderer calls
   // row.render(node, token) for each row.
   var customRenderer = {};
@@ -39,7 +39,7 @@ ffc.AutoComplete = function(el, parent) {
    */
   this.renderer_ = new goog.ui.AutoComplete.Renderer(parent, customRenderer);
 
-  this.matcher_ = new ffc.RemoteArrayMatcher(ffc.AutoComplete.API_URL_);
+  this.matcher_ = new ffc.suggest.RemoteArrayMatcher(ffc.suggest.AutoComplete.API_URL_);
 
   var inputhandler = new goog.ui.AutoComplete.RichInputHandler(null, null,
       false, 300);
@@ -51,21 +51,21 @@ ffc.AutoComplete = function(el, parent) {
   inputhandler.attachInputs(el);
 
 }
-goog.inherits(ffc.AutoComplete, goog.ui.AutoComplete);
-goog.exportSymbol('ffc.AutoComplete', ffc.AutoComplete);
+goog.inherits(ffc.suggest.AutoComplete, goog.ui.AutoComplete);
+goog.exportSymbol('ffc.suggest.AutoComplete', ffc.suggest.AutoComplete);
 
 
 /**
  * @private
  */
-ffc.AutoComplete.API_URL_ = '/suggest';
+ffc.suggest.AutoComplete.API_URL_ = '/suggest';
 
 
 /**
  * AutoComplete constructor.
  * @constructor
  */
-ffc.AutoComplete.prototype.dismiss = function(reallyDismiss) {
+ffc.suggest.AutoComplete.prototype.dismiss = function(reallyDismiss) {
   if (reallyDismiss) {
     goog.base(this, 'dismiss');
   }

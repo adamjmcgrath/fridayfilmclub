@@ -6,7 +6,7 @@
  * @author adamjmcgrath@gmail.com (Adam Mcgrath)
  */
 
-goog.provide('ffc.RemoteArrayMatcher');
+goog.provide('ffc.suggest.RemoteArrayMatcher');
 
 goog.require('goog.events');
 goog.require('goog.dom');
@@ -21,25 +21,25 @@ goog.require('ffc.template.quiz');
 /**
  * @constructor
  */
-ffc.RemoteArrayMatcher = function(url, keyEl) {
+ffc.suggest.RemoteArrayMatcher = function(url, keyEl) {
   goog.base(this, url);
 };
-goog.inherits(ffc.RemoteArrayMatcher,
+goog.inherits(ffc.suggest.RemoteArrayMatcher,
     goog.ui.AutoComplete.RemoteArrayMatcher);
 
 
 /**
  * @override
  */
-ffc.RemoteArrayMatcher.prototype.buildUrl = function(uri, token) {
-  return goog.string.path.join(uri, ffc.RemoteArrayMatcher.slugify(token));
+ffc.suggest.RemoteArrayMatcher.prototype.buildUrl = function(uri, token) {
+  return goog.string.path.join(uri, ffc.suggest.RemoteArrayMatcher.slugify(token));
 };
 
 
 /**
  * @override
  */
-ffc.RemoteArrayMatcher.prototype.requestMatchingRows =
+ffc.suggest.RemoteArrayMatcher.prototype.requestMatchingRows =
     function(token, maxMatches, matchHandler) {
   // Augment the matchhandler to add/update the render/select row methods.
   var myMatchHandler = goog.bind(this.augmentMatchHandler, this, matchHandler);
@@ -51,13 +51,13 @@ ffc.RemoteArrayMatcher.prototype.requestMatchingRows =
 /**
  * @override
  */
-ffc.RemoteArrayMatcher.prototype.augmentMatchHandler =
+ffc.suggest.RemoteArrayMatcher.prototype.augmentMatchHandler =
     function(matchHandler, token, matches) {
   var rows = [];
   for (var i = 0; i < matches.length; i++) {
     var row = matches[i];
-    row.render = goog.bind(ffc.RemoteArrayMatcher.rowRender, this, row, i);
-    row.select = goog.bind(ffc.RemoteArrayMatcher.rowSelect, this, row);
+    row.render = goog.bind(ffc.suggest.RemoteArrayMatcher.rowRender, this, row, i);
+    row.select = goog.bind(ffc.suggest.RemoteArrayMatcher.rowSelect, this, row);
     rows.push(row);
   }
   if (this.rowFilter_) {
@@ -70,7 +70,7 @@ ffc.RemoteArrayMatcher.prototype.augmentMatchHandler =
 /**
  *
  */
-ffc.RemoteArrayMatcher.rowRender = function(newRow, pos, node, token) {
+ffc.suggest.RemoteArrayMatcher.rowRender = function(newRow, pos, node, token) {
   soy.renderElement(node, ffc.template.quiz.option, {
       title: newRow['title'],
       key: newRow['key'],
@@ -83,7 +83,7 @@ ffc.RemoteArrayMatcher.rowRender = function(newRow, pos, node, token) {
 /**
  *
  */
-ffc.RemoteArrayMatcher.rowSelect = function(newRow, target) {
+ffc.suggest.RemoteArrayMatcher.rowSelect = function(newRow, target) {
   target.value = newRow['title'];
 };
 
@@ -92,6 +92,6 @@ ffc.RemoteArrayMatcher.rowSelect = function(newRow, target) {
  * Transform text into a URL slug: spaces turned into dashes, remove non alnum
  * @param string text
  */
-ffc.RemoteArrayMatcher.slugify = function(text) {
+ffc.suggest.RemoteArrayMatcher.slugify = function(text) {
   return (text.replace(/[^-a-zA-Z0-9]+/ig, '')).toLowerCase();
 };

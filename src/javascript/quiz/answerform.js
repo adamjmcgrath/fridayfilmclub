@@ -14,7 +14,7 @@ goog.require('goog.events.EventType');
 goog.require('goog.net.XhrIo');
 
 goog.require('ffc.quiz.Component');
-goog.require('ffc.AutoComplete');
+goog.require('ffc.suggest.AutoComplete');
 goog.require('ffc.template.quiz');
 
 goog.require('soy');
@@ -57,7 +57,7 @@ ffc.quiz.AnswerForm.prototype.enterDocument = function() {
   this.suggestInfo_ = this.dom_.getElement('suggest-info');
   
   this.acInput_ = this.dom_.getElement('autocomplete');
-  this.ac_ = new ffc.AutoComplete(this.acInput_,
+  this.ac_ = new ffc.suggest.AutoComplete(this.acInput_,
       this.dom_.getElement('suggestions'));
 
   this.form_ = this.dom_.getElement('answer-form');
