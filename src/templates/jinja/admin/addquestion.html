@@ -11,7 +11,7 @@
       <label class="control-label" for="ac">Film</label>
       <div class="controls">
         <input id="ac" class="input-xlarge focused" type="text" value="{{question and question.answer and question.answer.title or ''}}" autocomplete="off">
-        <input type="hidden" value="{{question and question.answer and question.answer.key() or ''}}" name="{{form.answer.name}}">
+        {# <input type="hidden" value="{{question and question.answer and question.answer.key() or ''}}" name="{{form.answer.name}}" id="film-key"> #}
         {# {{form.answer}} #}
         <span class="help-inline">{{form.answer.errors[0]}}</span>
       </div>
@@ -43,24 +43,6 @@
 {% include "templates/jinja/inc/questionjs.tpl" %}
 <script>
   var input = document.getElementById('ac');
-  var fc = document.getElementById('film');
-  var ac = new ffc.AutoComplete(ac, fc);
-
-  // alert(ffc.template.textClue({position: 1, text: 'FOO'}))
-
-  goog.events.listen(ac, goog.ui.AutoComplete.EventType.SUGGESTIONS_UPDATE,
-      function(e) {
-        var rows = ac.getRenderer().rows_;
-        var value = input.value;
-        var keyValue = '';
-        for (var i = 0, len = rows.length; i < len; i++) {
-          if (value == rows[i].data['title']) {
-            keyValue = rows[i].data['key'];
-            break;
-          }
-        }
-        fc.value = keyValue;
-      }
-  );
+  var ac = new ffc.AutoComplete(ac, input.parentNode);
 </script>
 {% endblock %}

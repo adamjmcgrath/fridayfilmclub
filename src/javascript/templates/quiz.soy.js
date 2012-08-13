@@ -41,7 +41,7 @@ ffc.template.quiz.option = function(opt_data, opt_sb) {
  */
 ffc.template.quiz.guess = function(opt_data, opt_sb) {
   var output = opt_sb || new soy.StringBuilder();
-  output.append('<div class="alert failed-guess"><b>', soy.$$escapeHtml(opt_data.title), ' (', soy.$$escapeHtml(opt_data.year), ')</b> is incorrect!</div>');
+  output.append('<div class="alert failed-guess">', (opt_data.title) ? '<b>' + soy.$$escapeHtml(opt_data.title) + ' (' + soy.$$escapeHtml(opt_data.year) + ')</b> is incorrect!' : '<b>PASS</b>', '</div>');
   return opt_sb ? '' : output.toString();
 };
 

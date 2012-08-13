@@ -42,12 +42,16 @@
 
 /**
  * Guess.
- * @param title The guess title.
- * @param year The guess year.
+ * @param? title The guess title.
+ * @param? year The guess year.
  */
 {template .guess}
 <div class="alert failed-guess">
-  <b>{$title} ({$year})</b> is incorrect!
+  {if $title}
+    <b>{$title} ({$year})</b> is incorrect!
+  {else}
+    <b>PASS</b>
+  {/if}
 </div>
 {/template}
 

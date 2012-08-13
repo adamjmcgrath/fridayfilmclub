@@ -24,8 +24,6 @@ import map_reduce
 import models
 import settings
 
-VALID_CALLBACK = re.compile('^\w+(\.\w+)*$')
-
 
 
 class HomePage(baserequesthandler.RequestHandler):
@@ -71,6 +69,9 @@ class AddEditQuestion(baserequesthandler.RequestHandler):
     else:
       question_entity = models.Question()
 
+    logging.info(self.request.POST)
+    logging.info(form.answer)
+
     if form.validate():
       # TODO(adamjmcgrath): only put once.
       question_entity.put()
@@ -78,7 +79,7 @@ class AddEditQuestion(baserequesthandler.RequestHandler):
       question_entity.put()
       return webapp2.redirect('/admin/questions')
     else:
-      return self.render_template('admin/questions.html', {
+      return self.render_template('admin/addquestion.html', {
           'form': form,
           'question': question_entity,
           'debug': self.request.get('debug')

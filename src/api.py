@@ -21,6 +21,8 @@ import models
 import settings
 
 _MAX_CLUES = 4
+_PASS = 'pass'
+
 
 
 class Question(baserequesthandler.RequestHandler):
@@ -56,10 +58,17 @@ class Question(baserequesthandler.RequestHandler):
     clue_increment = 0 if user_question.correct else 1
     clue_number = min((len(user_question.guesses) + clue_increment), _MAX_CLUES)
 
-    try:
-      guesses = models.Film.get(user_question.guesses)
-    except db.BadKeyError:
-      guesses = []
+    guesses = []
+    for g in user_question.guesses:
+      if g == _PASS:
+        # A blank guess is a "pass".
+        guesses.append({})
+      else:
+        film_entity = models.Film.get(g)
+        guesses.append({
+          'title': film_entity.title,
+          'year': str(film_entity.year)
+        })
 
     # If the question is complete, reveal the correct answer to the user.
     answer = {}
@@ -71,6 +80,6 @@ class Question(baserequesthandler.RequestHandler):
         'clues': [clue.to_json() for clue in question.clues[:clue_number]],
         'complete': user_question.complete,
         'correct': user_question.correct,
-        'guesses': [{'title': g.title, 'year': str(g.year)} for g in guesses],
+        'guesses': guesses,
     })
 

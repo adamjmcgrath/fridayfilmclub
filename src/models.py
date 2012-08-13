@@ -118,22 +118,8 @@ class UserQuestion(db.Model):
   score = db.IntegerProperty()
   user = db.ReferenceProperty(User, collection_name='answers')
 
-  # def made_guesses(self):
-  #   """Returns a list of guesses that have been made."""
-  #   guesses = [self.guess_0, self.guess_1, self.guess_2, self.guess_3]
-  #   return [Film.get(g).title for g in guesses if g != None]
-  # 
-  # def required_clues(self):
-  #   """Returns a list of clues that need to be shown to the user."""
-  #   return self.question.clues()[:self.current_guess + 1]
-
   def calculate_score(self):
     """docstring for score"""
     # 0:10, 1:7, 2:5, 3:2
     scores = [10, 7, 5, 2]
     return scores[self.current_guess]
-
-  # def guess_is_correct(self, i):
-  #   """Indicates wheather the guess is correct from a given index."""
-  #   guess_key = getattr(self, ('guess_%d' % self.current_guess))
-  #   return guess_key == self.question.film.key()

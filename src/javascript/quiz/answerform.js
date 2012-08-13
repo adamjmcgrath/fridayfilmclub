@@ -79,7 +79,7 @@ ffc.AnswerForm.prototype.enterDocument = function() {
       goog.events.EventType.CLICK, this.onSubmit_, false, this);
 
   this.eh_.listen(this.dom_.getElement('btn-pass'),
-      goog.events.EventType.CLICK, goog.events.Event.preventDefault);
+      goog.events.EventType.CLICK, this.onPass_, false, this);
 
   this.eh_.listen(this.ac_, goog.ui.AutoComplete.EventType.SUGGESTIONS_UPDATE,
       this.onAcUpdate_, false, this);
@@ -122,16 +122,34 @@ ffc.AnswerForm.prototype.onAcUpdate_ = function(e) {
 /**
  *
  */
+ffc.AnswerForm.prototype.onPass_ = function(e) {
+  this.submitGuess_(ffc.AnswerForm.PASS_);
+
+  e.preventDefault();
+};
+
+
+/**
+ *
+ */
 ffc.AnswerForm.prototype.onSubmit_ = function(e) {
   var formDataMap = goog.dom.forms.getFormDataMap(this.form_);
   var answer = formDataMap.get('answer') && formDataMap.get('answer')[0];
 
   if (answer) {
-    goog.net.XhrIo.send('/api' + window.location.pathname + '?guess=' + answer,
-        goog.bind(this.onGuessResponse_, this));
+    this.submitGuess_(answer);
   }
-  
+
   e.preventDefault();
+};
+
+
+/**
+ *
+ */
+ffc.AnswerForm.prototype.submitGuess_ = function(guess) {
+    goog.net.XhrIo.send('/api' + window.location.pathname + '?guess=' + guess,
+        goog.bind(this.onGuessResponse_, this));
 };
 
 
@@ -149,6 +167,12 @@ ffc.AnswerForm.prototype.onGuessResponse_ = function(e) {
  *
  */
 ffc.AnswerForm.ANSWER_RESPONSE = 'answerresponseevent';
+
+
+/**
+ *
+ */
+ffc.AnswerForm.PASS_ = 'pass';
 
 
 
