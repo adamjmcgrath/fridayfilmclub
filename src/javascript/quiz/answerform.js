@@ -44,7 +44,24 @@ ffc.quiz.AnswerForm.URI_ = '';
  * @override
  */
 ffc.quiz.AnswerForm.prototype.createDom = function() {
-  this.element_ = soy.renderAsFragment(ffc.template.quiz.answerForm);
+  this.decorateInternal(soy.renderAsFragment(ffc.template.quiz.answerForm));
+};
+
+
+/**
+ * @override
+ */
+ffc.quiz.AnswerForm.prototype.decorateInternal = function(element) {
+  goog.base(this, 'decorateInternal', element);
+
+  // TODO - use getElementByClass and this.element.
+  this.suggestInfo_ = this.dom_.getElement('suggest-info');
+
+  this.acInput_ = this.dom_.getElement('autocomplete');
+  this.ac_ = new ffc.suggest.AutoComplete(this.acInput_,
+      this.dom_.getElement('suggestions'));
+
+  this.form_ = this.dom_.getElement('answer-form');
 };
 
 
@@ -53,15 +70,6 @@ ffc.quiz.AnswerForm.prototype.createDom = function() {
  */
 ffc.quiz.AnswerForm.prototype.enterDocument = function() {
   goog.base(this, 'enterDocument');
-
-  // TODO(adamjmcgrath): To go in decorateInternal
-  this.suggestInfo_ = this.dom_.getElement('suggest-info');
-
-  this.acInput_ = this.dom_.getElement('autocomplete');
-  this.ac_ = new ffc.suggest.AutoComplete(this.acInput_,
-      this.dom_.getElement('suggestions'));
-
-  this.form_ = this.dom_.getElement('answer-form');
 
   this.eh_.listen(this.dom_.getElement('btn-clear'),
       goog.events.EventType.CLICK, this.onClear_);
