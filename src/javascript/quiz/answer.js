@@ -12,6 +12,7 @@ goog.require('ffc.quiz.Component');
 
 /**
  * Answer constructor.
+ * @param {Object} data The answer data obj.
  * @constructor
  */
 ffc.quiz.Answer = function(data) {
@@ -19,16 +20,19 @@ ffc.quiz.Answer = function(data) {
 
   /**
    * @type {boolean}
+   * @private
    */
   this.correct_ = data.correct;
 
   /**
    * @type {string}
+   * @private
    */
   this.title_ = data.answer.title;
 
   /**
    * @type {string}
+   * @private
    */
   this.year_ = data.answer.year;
 

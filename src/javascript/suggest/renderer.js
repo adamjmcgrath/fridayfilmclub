@@ -3,7 +3,7 @@
 
 /**
  * @fileoverview Auto complete for Movies data.
- * 
+ *
  * @author adamjmcgrath@gmail.com (Adam Mcgrath)
  */
 
@@ -15,6 +15,8 @@ goog.require('goog.ui.AutoComplete.Renderer');
 
 /**
  * AutoComplete constructor.
+ * @param {Element} parent The parent in which to render the auto complete.
+ * @param {{renderRow: function() {}}}
  * @constructor
  */
 ffc.suggest.AutoCompleteRenderer = function(parent, customRenderer) {
@@ -28,7 +30,8 @@ goog.inherits(ffc.suggest.AutoCompleteRenderer, goog.ui.AutoComplete.Renderer);
  * @param {Object} e The document click event.
  * @private
  */
-ffc.suggest.AutoCompleteRenderer.prototype.handleDocumentMousedown_ = function (e) {
+ffc.suggest.AutoCompleteRenderer.prototype.handleDocumentMousedown_ =
+    function(e) {
   this.hiliteNone();
   e.stopPropagation();
 };

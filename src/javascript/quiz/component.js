@@ -25,6 +25,7 @@ goog.inherits(ffc.quiz.Component, goog.ui.Component);
 /**
  * Base component condsructor.
  * @type {goog.fx.dom.FadeInAndShow}
+ * @private
  */
 ffc.quiz.Component.prototype.fx_ = null;
 
@@ -44,7 +45,7 @@ ffc.quiz.Component.prototype.enterDocument = function() {
 /**
  * Disposes of the animation.
  */
-ffc.quiz.Component.prototype.disposeInternal = function () {
+ffc.quiz.Component.prototype.disposeInternal = function() {
   this.fx_.destroy();
   goog.base(this, 'disposeInternal');
 };
@@ -53,5 +54,6 @@ ffc.quiz.Component.prototype.disposeInternal = function () {
 /**
  * Fade in time.
  * @type {string}
+ * @private
  */
 ffc.quiz.Component.FADE_DELAY_ = 500;

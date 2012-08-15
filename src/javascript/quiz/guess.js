@@ -11,13 +11,13 @@ goog.provide('ffc.quiz.Guess');
 goog.require('ffc.template.quiz');
 
 
+
 /**
  * Guess constructor.
  * @constructor
  * @param {Object} data The data to populate the guess.
  */
 ffc.quiz.Guess = function(data) {
-
   /**
    * The title of the guess (a film title).
    * @type {string}

@@ -10,6 +10,7 @@ goog.require('ffc.quiz.Component');
 goog.require('ffc.template.quiz');
 
 
+
 /**
  * Clue constructor.
  * @param {number} position The position of the clue.
@@ -22,18 +23,21 @@ ffc.quiz.Clue = function(position, data) {
   /**
    * The number of the clue.
    * @type {number}
+   * @private
    */
   this.position_ = position;
 
   /**
    * The text for the clue.
    * @type {string}
+   * @private
    */
   this.text_ = data.text;
 
   /**
    * The path to the image clue.
    * @type {string}
+   * @private
    */
   this.image_ = data.image;
 

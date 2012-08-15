@@ -8,14 +8,14 @@
 goog.provide('ffc.quiz.AnswerForm');
 goog.provide('ffc.quiz.AnswerFormEvent');
 
+goog.require('ffc.quiz.Component');
+goog.require('ffc.suggest.AutoComplete');
+goog.require('ffc.template.quiz');
+
 goog.require('goog.dom.forms');
 goog.require('goog.events.Event');
 goog.require('goog.events.EventType');
 goog.require('goog.net.XhrIo');
-
-goog.require('ffc.quiz.Component');
-goog.require('ffc.suggest.AutoComplete');
-goog.require('ffc.template.quiz');
 
 goog.require('soy');
 
@@ -27,20 +27,21 @@ goog.require('soy');
  */
 ffc.quiz.AnswerForm = function() {
   goog.base(this);
-  
+
   this.eh_ = this.getHandler();
-}
+};
 goog.inherits(ffc.quiz.AnswerForm, ffc.quiz.Component);
 
 
 /**
- * 
+ * @type {string} Uri to submit the answer to.
+ * @private
  */
 ffc.quiz.AnswerForm.URI_ = '';
 
 
 /**
- *
+ * @override
  */
 ffc.quiz.AnswerForm.prototype.createDom = function() {
   this.element_ = soy.renderAsFragment(ffc.template.quiz.answerForm);
@@ -48,14 +49,14 @@ ffc.quiz.AnswerForm.prototype.createDom = function() {
 
 
 /**
- *
+ * @override
  */
 ffc.quiz.AnswerForm.prototype.enterDocument = function() {
   goog.base(this, 'enterDocument');
 
   // TODO(adamjmcgrath): To go in decorateInternal
   this.suggestInfo_ = this.dom_.getElement('suggest-info');
-  
+
   this.acInput_ = this.dom_.getElement('autocomplete');
   this.ac_ = new ffc.suggest.AutoComplete(this.acInput_,
       this.dom_.getElement('suggestions'));
@@ -81,9 +82,9 @@ ffc.quiz.AnswerForm.prototype.enterDocument = function() {
 
 
 /**
- *
+ * Clear the form.
  */
-ffc.quiz.AnswerForm.prototype.clearForm = function(e) {
+ffc.quiz.AnswerForm.prototype.clearForm = function() {
   this.ac_.dismiss(true);
   this.acInput_.value = '';
   this.suggestInfo_.style.display = 'block';
@@ -91,7 +92,9 @@ ffc.quiz.AnswerForm.prototype.clearForm = function(e) {
 
 
 /**
- *
+ * Handle clicking the clear button.
+ * @param {goog.events.Event} e The browser event.
+ * @private.
  */
 ffc.quiz.AnswerForm.prototype.onClear_ = function(e) {
   this.clearForm();
@@ -100,7 +103,9 @@ ffc.quiz.AnswerForm.prototype.onClear_ = function(e) {
 
 
 /**
- *
+ * Handle auto complete update.
+ * @param {goog.events.Event} e The autocomplete update event.
+ * @private
  */
 ffc.quiz.AnswerForm.prototype.onAcUpdate_ = function(e) {
   if (e.target.rows_.length) {
@@ -108,22 +113,24 @@ ffc.quiz.AnswerForm.prototype.onAcUpdate_ = function(e) {
   } else {
     this.suggestInfo_.style.display = 'block';
   }
-
 };
 
 
 /**
- *
+ * Handle clicking the 'Pass' button.
+ * @param {goog.events.Event} e The browser event.
+ * @private
  */
 ffc.quiz.AnswerForm.prototype.onPass_ = function(e) {
   this.submitGuess_(ffc.quiz.AnswerForm.PASS_);
-
   e.preventDefault();
 };
 
 
 /**
- *
+ * Handle clicking the 'Submit' button.
+ * @param {goog.events.Event} e The browser event.
+ * @private
  */
 ffc.quiz.AnswerForm.prototype.onSubmit_ = function(e) {
   var formDataMap = goog.dom.forms.getFormDataMap(this.form_);
@@ -138,39 +145,48 @@ ffc.quiz.AnswerForm.prototype.onSubmit_ = function(e) {
 
 
 /**
- *
+ * Submit a guess.
+ * @param {string} guess The users guess.
+ * @private
  */
 ffc.quiz.AnswerForm.prototype.submitGuess_ = function(guess) {
-    goog.net.XhrIo.send('/api' + window.location.pathname + '?guess=' + guess,
-        goog.bind(this.onGuessResponse_, this));
+  goog.net.XhrIo.send('/api' + window.location.pathname + '?guess=' + guess,
+      goog.bind(this.onGuessResponse_, this));
 };
 
 
 /**
- *
+ * Handle a response form the server after making a guess.
+ * @param {goog.events.Event} e The xhr event.
+ * @private
  */
 ffc.quiz.AnswerForm.prototype.onGuessResponse_ = function(e) {
   var data = e.target.getResponseJson();
   this.dispatchEvent(
-      new ffc.quiz.AnswerFormEvent(ffc.quiz.AnswerForm.ANSWER_RESPONSE, this, data));
+      new ffc.quiz.AnswerFormEvent(
+          ffc.quiz.AnswerForm.ANSWER_RESPONSE, this, data));
 };
 
 
 /**
- *
+ * The Answer response event.
+ * @type {string}
  */
 ffc.quiz.AnswerForm.ANSWER_RESPONSE = 'answerresponseevent';
 
 
 /**
- *
+ * A special string to send the server as a guess when the user passes.
+ * @private
  */
 ffc.quiz.AnswerForm.PASS_ = 'pass';
 
 
 
 /**
- * Object representing an answer form event event.
+ * Object representing an answer form event.
+ * @param {string} type The event type.
+ * @param {ffc.quiz.AnswerForm} target The event target.
  * @param {Object} data
  *     {Array.<Object>} clues
  *       {string?} image The path to the image clue.
@@ -183,7 +199,7 @@ ffc.quiz.AnswerForm.PASS_ = 'pass';
  * @extends {goog.events.Event}
  * @constructor
  */
-ffc.quiz.AnswerFormEvent = function (type, target, data) {
+ffc.quiz.AnswerFormEvent = function(type, target, data) {
   goog.base(this, type, target);
 
   /**
