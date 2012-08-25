@@ -32,7 +32,13 @@ def add_film_map(input_tuple):
       key_name='%s-%s' % (year, title_slug),
       title=unicode(title, 'utf-8'),
       title_slug=title_slug,
-      year=int(year))
+      year=int(year),)
+  
+  try:
+    film_entity.grossing = int(row[2])
+  except IndexError:
+    pass
+
   yield op.db.Put(film_entity)
 
 
@@ -49,17 +55,27 @@ def film_index_map(entity):
       pfx = start[:j]
       if pfx not in starts:
         starts.append(pfx)
-        yield (pfx, '%s/%s' % (entity.year, key))
+        yield (pfx, '%d/%d/%s/%s' % (entity.year, entity.grossing or 0, entity.title_slug, key))
 
 
 def film_index_reduce(word, films):
   """Reduce the indexed film titles and add the indexes to the datastore."""
   logging.info('Reducing: %s' % word)
-  films_sorted = sorted(
-      films, key=lambda m: m.split('/')[0], reverse=True)[:FILMS_PER_INDEX]
+
+  # Sort by year.
+  films_sorted_year = sorted(
+      films, key=lambda m: m.split('/')[0], reverse=True)
+  # Then sort by grossing.
+  films_sorted_grossing = sorted(films_sorted_year,
+      key=lambda m: int(m.split('/')[1]), reverse=True)
+  # Then put exact matches at the top.
+  films_sorted_match = sorted(films_sorted_grossing,
+      key=lambda m: m.split('/')[2] == word, reverse=True)
+
   index_entity = models.FilmIndex(
       key_name=word,
-      films=[db.Key(m.split('/')[1]) for m in films_sorted],)
+      films=[db.Key(m.split('/')[3]) for m in films_sorted_match][:FILMS_PER_INDEX],)
+
   yield op.db.Put(index_entity)
 
 

@@ -11,7 +11,7 @@ from optparse import OptionParser
 import urllib2
 import re
 
-from third_party.BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 
 parser = OptionParser() 
 
@@ -28,7 +28,7 @@ parser.add_option('-o', '--output', dest='output',
 opts, args = parser.parse_args()
 
 WIKI_HOST = 'http://en.wikipedia.org'
-WIKI_URL = WIKI_HOST + '/wiki/Category:%d_movies'
+WIKI_URL = WIKI_HOST + '/wiki/Category:%d_films'
 FILM_RE = re.compile(r' *\(.*movie\)')
 FILM_FILE = 'films.csv'
 
@@ -43,6 +43,7 @@ def get_films_from_page(opener, csv_writer, y, url, film_list):
       title = link['title']
       if not (title.startswith('Category:') or
               title.startswith('Wikipedia:') or
+              title.startswith('commons:') or
               title.endswith('in movie')):
         film_title = re.sub(FILM_RE, '', title)
         csv_writer.writerow([y, film_title.encode('utf8')])
@@ -50,9 +51,10 @@ def get_films_from_page(opener, csv_writer, y, url, film_list):
       pass
   print '  next page'
   try:
-    next_url = WIKI_HOST + soup.find('a', text='next 200').parent['href']
+    next_url = WIKI_HOST + soup.find('a', text='next 200')['href']
     get_films_from_page(opener, csv_writer, y, next_url, film_list)
-  except (KeyError, AttributeError):
+  except (KeyError, AttributeError, TypeError):
+    print 'error'
     pass
 
 
@@ -68,7 +70,7 @@ def main():
   opener.addheaders = [('User-agent', 'Mozilla/5.0')]
 
   film_list = set()
-  for y in range(opts.start_year, opt.end_year + 1):
+  for y in range(opts.start_year, opts.end_year + 1):
     logging.info('Scraping year: %d', y)
     url = WIKI_URL % y
     get_films_from_page(opener, csv_writer, y, url, film_list)

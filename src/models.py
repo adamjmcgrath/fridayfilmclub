@@ -41,6 +41,7 @@ class Film(db.Model):
   title = db.StringProperty()
   title_slug = db.StringProperty()
   year = db.IntegerProperty()
+  grossing = db.IntegerProperty()
 
   def to_dict(self):
     return db.to_dict(self, {'key': str(self.key())})

@@ -19,22 +19,9 @@ import models
 
 def get_films_from_slug(slug):
   """docstring for get_films_from_slug"""
-  films = models.Film.all().filter('title_slug = ', slug).fetch(10) or []
-  film_keys = [f.key() for f in films]
-
   film_index = models.FilmIndex.get_by_key_name(slug)
-  
-  if not film_index:
-    return films
 
-  films_from_index = models.Film.get(film_index.films)  
-  films_from_index_sorted = sorted(films_from_index, key=lambda m: m.year, reverse=True)
-
-  for film in films_from_index_sorted:
-    if film.key() not in film_keys:
-      films.append(film)
-
-  return films
+  return models.Film.get(film_index.films)  
 
 
 class SuggestHandler(baserequesthandler.RequestHandler):
@@ -53,8 +40,10 @@ class SuggestHandler(baserequesthandler.RequestHandler):
       self.set_json_content_type()
       return webapp2.Response(memcached)
 
-    films = get_films_from_slug(prefix)
-    if films:
+    film_index = models.FilmIndex.get_by_key_name(prefix)
+    
+    if film_index:
+      films = models.Film.get(film_index.films)
       return self.render_json([f.to_dict() for f in films])
     else:
       return self.render_empty()
