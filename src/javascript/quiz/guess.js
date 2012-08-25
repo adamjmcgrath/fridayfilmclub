@@ -23,14 +23,14 @@ ffc.quiz.Guess = function(data) {
    * @type {string}
    * @private
    */
-  this.title_ = data.title;
+  this.title_ = data['title'];
 
   /**
   * The year of the film guessed.
   * @type {string}
   * @private
    */
-  this.year_ = data.year;
+  this.year_ = data['year'];
 };
 goog.inherits(ffc.quiz.Guess, goog.ui.Component);
 

@@ -14,10 +14,12 @@ CLOSURE_TEMPLATES_COMPILER_PATH=~/bin/SoyToJsSrcCompiler.jar
 
 FFC_PATH=./src
 FFC_SOURCE=$FFC_PATH/javascript
+QUIZ_SOURCE=$FFC_SOURCE/quiz
+SUGGEST_SOURCE=$FFC_SOURCE/suggest
+TEMPLATE_SOURCE=$FFC_SOURCE/template
 FFC_JS_OUTPUT=$FFC_PATH/static/js/quiz.js
 FFC_DEPS_OUTPUT=$FFC_PATH/static/js/deps.js
 
-MODE=$1
 
 if [ $1 == "deps" ]; then
   $CLOSURE_DEPSWRITER_PATH \
@@ -27,12 +29,15 @@ if [ $1 == "deps" ]; then
   echo 'Written deps to '$FFC_DEPS_OUTPUT
 fi
 
+
 if [ $1 == "build" ]; then
   $CLOSURE_BUILDER_PATH \
     --root=$CLOSURE_LIB \
     --root=$CLOSURE_TEMPLATES \
-    --root=$FFC_SOURCE \
-    --namespace="ffc.quiz" \
+    --root=$QUIZ_SOURCE \
+    --root=$SUGGEST_SOURCE \
+    --root=$TEMPLATE_SOURCE \
+    --namespace="ffc.quiz.Question" \
     --output_mode=compiled \
     --compiler_jar=$CLOSURE_COMPILER_PATH \
     --compiler_flags="--compilation_level=ADVANCED_OPTIMIZATIONS" \

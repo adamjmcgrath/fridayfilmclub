@@ -51,25 +51,14 @@ ffc.quiz.AnswerForm.prototype.createDom = function() {
 /**
  * @override
  */
-ffc.quiz.AnswerForm.prototype.decorateInternal = function(element) {
-  goog.base(this, 'decorateInternal', element);
-
-  // TODO - use getElementByClass and this.element.
-  this.suggestInfo_ = this.dom_.getElement('suggest-info');
-
-  this.acInput_ = this.dom_.getElement('autocomplete');
-  this.ac_ = new ffc.suggest.AutoComplete(this.acInput_,
-      this.dom_.getElement('suggestions'));
-
-  this.form_ = this.dom_.getElement('answer-form');
-};
-
-
-/**
- * @override
- */
 ffc.quiz.AnswerForm.prototype.enterDocument = function() {
   goog.base(this, 'enterDocument');
+
+  this.suggestInfo_ = this.getElementByClass('suggest-info');
+
+  this.acInput_ = this.getElementByClass('autocomplete');
+  this.ac_ = new ffc.suggest.AutoComplete(this.acInput_,
+      this.getElementByClass('suggestions'));
 
   this.eh_.listen(this.dom_.getElement('btn-clear'),
       goog.events.EventType.CLICK, this.onClear_);
@@ -141,7 +130,7 @@ ffc.quiz.AnswerForm.prototype.onPass_ = function(e) {
  * @private
  */
 ffc.quiz.AnswerForm.prototype.onSubmit_ = function(e) {
-  var formDataMap = goog.dom.forms.getFormDataMap(this.form_);
+  var formDataMap = goog.dom.forms.getFormDataMap(this.element_);
   var answer = formDataMap.get('answer') && formDataMap.get('answer')[0];
 
   if (answer) {

@@ -32,14 +32,14 @@ ffc.quiz.Clue = function(position, data) {
    * @type {string}
    * @private
    */
-  this.text_ = data.text;
+  this.text_ = data['text'];
 
   /**
    * The path to the image clue.
    * @type {string}
    * @private
    */
-  this.image_ = data.image;
+  this.image_ = data['image'];
 
 };
 goog.inherits(ffc.quiz.Clue, ffc.quiz.Component);

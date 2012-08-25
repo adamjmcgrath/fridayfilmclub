@@ -22,19 +22,19 @@ ffc.quiz.Answer = function(data) {
    * @type {boolean}
    * @private
    */
-  this.correct_ = data.correct;
+  this.correct_ = data['correct'];
 
   /**
    * @type {string}
    * @private
    */
-  this.title_ = data.answer.title;
+  this.title_ = data['answer']['title'];
 
   /**
    * @type {string}
    * @private
    */
-  this.year_ = data.answer.year;
+  this.year_ = data['answer']['year'];
 
 };
 goog.inherits(ffc.quiz.Answer, ffc.quiz.Component);

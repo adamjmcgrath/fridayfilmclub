@@ -80,15 +80,15 @@ ffc.quiz.Question.prototype.render = function(e) {
   var i;
   var len;
 
-  for (i = 0, len = data.clues.length; i < len; i++) {
-    this.addClue(new ffc.quiz.Clue(i + 1, data.clues[i]));
-    guess = data.guesses[i];
+  for (i = 0, len = data['clues'].length; i < len; i++) {
+    this.addClue(new ffc.quiz.Clue(i + 1, data['clues'][i]));
+    guess = data['guesses'][i];
     if (guess) {
       this.addGuess(new ffc.quiz.Guess(guess));
     }
   }
 
-  if (data.complete) {
+  if (data['complete']) {
     this.addChild(new ffc.quiz.Answer(data), true);
   } else {
     this.answerForm = new ffc.quiz.AnswerForm();
@@ -163,13 +163,13 @@ ffc.quiz.Question.prototype.addGuess = function(guess, opt_index) {
 ffc.quiz.Question.prototype.onAnswerResponse_ = function(e) {
   var data = e.data;
 
-  if (data.complete) {
+  if (data['complete']) {
     this.removeChild(this.answerForm, true);
     this.addChild(new ffc.quiz.Answer(data), true);
   } else {
     this.answerForm.clearForm();
-    var clues = goog.array.slice(data.clues, this.clues_.length);
-    var guesses = goog.array.slice(data.guesses, this.guesses_.length);
+    var clues = goog.array.slice(data['clues'], this.clues_.length);
+    var guesses = goog.array.slice(data['guesses'], this.guesses_.length);
 
     this.addCluesAndGuesses(clues, guesses);
   }
