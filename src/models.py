@@ -25,23 +25,21 @@ def slugify(st):
       ''.join([s for s in st if (s.isalnum() or s == ' ')]).lower().split(' '))
 
 
-def slugify_splaceless(st):
-  """Remove special characters and spaces."""
-  return ''.join(slugify(st).split('-'))
-
-
 class Film(db.Model):
   """A Film.
 
   Attributes:
+    batch: An id for identifiying in which group the film was added.
+    grossing: The dallar amount the film made.
     title: The title of the Film.
     title_slug: The slugified title of the Film.
     year: The year the Film came out.
   """
+  batch = db.IntegerProperty()
+  grossing = db.IntegerProperty()
   title = db.StringProperty()
   title_slug = db.StringProperty()
   year = db.IntegerProperty()
-  grossing = db.IntegerProperty()
 
   def to_dict(self):
     return db.to_dict(self, {'key': str(self.key())})

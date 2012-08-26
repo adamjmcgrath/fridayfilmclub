@@ -100,16 +100,28 @@ class AddFilmsHandler(blobstore_handlers.BlobstoreUploadHandler):
     upload_files = self.get_uploads('file')
     blob_info = upload_files[0]
 
+    batch = 1
+    last_add = models.Film.all().order('-batch').get()
+    if last_add:
+      batch += last_add.batch
+
+    logging.info('Uploading film batch: %d.' % batch)
+
     mapreduce_parameters = {
       'blob_key': str(blob_info.key()),
       'done_callback': '/admin/addfilmsdone',
+    }
+    
+    mapper_parameters = {
+      'blob_keys': str(blob_info.key()),
+      'batch': batch
     }
 
     map_reduce_id = control.start_map(
         'Add films to datastore.', # Name
         'map_reduce.add_film_map', # handler_spec
         'mapreduce.input_readers.BlobstoreLineInputReader', # reader_spec
-        {'blob_keys': str(blob_info.key())}, # mapper_parameters
+        mapper_parameters, # mapper_parameters
         mapreduce_parameters=mapreduce_parameters)
 
     return webapp2.redirect('/admin')

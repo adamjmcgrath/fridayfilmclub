@@ -9,10 +9,11 @@ __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 import csv
 import cStringIO as StringIO
 import logging
+import re
 
 from google.appengine.ext import db
 
-from mapreduce import base_handler, mapreduce_pipeline
+from mapreduce import base_handler, context, mapreduce_pipeline
 from mapreduce import operation as op
 
 import models
@@ -23,13 +24,17 @@ FILMS_PER_INDEX = 10
 
 def add_film_map(input_tuple):
   """Add films to the data store."""
+  ctx = context.get()
+  batch = ctx.mapreduce_spec.mapper.params['batch']
+
   io = StringIO.StringIO(input_tuple[1])
   row = csv.reader(io).next()
   year = row[0]
   title = row[1]
-  title_slug = models.slugify_splaceless(title)
+  title_slug = models.slugify(title)
   film_entity = models.Film(
       key_name='%s-%s' % (year, title_slug),
+      batch=int(batch),
       title=unicode(title, 'utf-8'),
       title_slug=title_slug,
       year=int(year),)
@@ -55,7 +60,9 @@ def film_index_map(entity):
       pfx = start[:j]
       if pfx not in starts:
         starts.append(pfx)
-        yield (pfx, '%d/%d/%s/%s' % (entity.year, entity.grossing or 0, entity.title_slug, key))
+        slug = re.sub('-', '', entity.title_slug)
+        grossing = entity.grossing or 0
+        yield (pfx, '%d/%d/%s/%s' % (entity.year, grossing, slug, key))
 
 
 def film_index_reduce(word, films):
