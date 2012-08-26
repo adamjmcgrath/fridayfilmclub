@@ -7,6 +7,7 @@
 __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 
 import logging
+import models
 
 import webapp2
 from google.appengine.api import files
@@ -18,11 +19,13 @@ from wtforms import fields, Form, validators
 
 import settings
 
+RE_SPECIAL_CHARS_ = re.compile(r'[^a-zA-Z ]')
+
 
 def slugify(st):
   """Remove special characters and replace spaces with hyphens."""
-  return '-'.join(
-      ''.join([s for s in st if (s.isalnum() or s == ' ')]).lower().split(' '))
+  return '-'.join(re.sub(RE_SPECIAL_CHARS_, '', st)).lower().split(' '))
+
 
 
 class Film(db.Model):
