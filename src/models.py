@@ -20,7 +20,7 @@ from wtforms import fields, Form, validators
 
 import settings
 
-RE_SPECIAL_CHARS_ = re.compile(r'[^a-zA-Z ]')
+RE_SPECIAL_CHARS_ = re.compile(r'[^a-zA-Z0-9 ]')
 
 
 def slugify(st):

@@ -24,8 +24,10 @@ FILMS_PER_INDEX = 10
 
 def add_film_map(input_tuple):
   """Add films to the data store."""
+  batch = 0
   ctx = context.get()
-  batch = ctx.mapreduce_spec.mapper.params['batch']
+  if ctx:
+    batch = ctx.mapreduce_spec.mapper.params['batch']
 
   io = StringIO.StringIO(input_tuple[1])
   row = csv.reader(io).next()
