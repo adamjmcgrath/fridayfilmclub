@@ -24,7 +24,7 @@ RE_SPECIAL_CHARS_ = re.compile(r'[^a-zA-Z ]')
 
 def slugify(st):
   """Remove special characters and replace spaces with hyphens."""
-  return '-'.join(re.sub(RE_SPECIAL_CHARS_, '', st)).lower().split(' '))
+  return '-'.join(re.sub(RE_SPECIAL_CHARS_, '', st).lower().split(' '))
 
 
 
