@@ -64,6 +64,8 @@ skip_files:
 - ^(.*/)?\..*
 - ^(.*/)?closure-library/.*
 - ^(.*/)?closure-templates/.*
+- ^(.*/)?twitter-bootstrap/.*
+- ^(.*/)?less/.*
 - ^(.*/)?data/.*
 - ^(.*/)?growjs/.*
 - ^(.*/)?javascript/.*
