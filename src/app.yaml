@@ -70,3 +70,4 @@ skip_files:
 - ^(.*/)?growjs/.*
 - ^(.*/)?javascript/.*
 - ^(.*/)?scripts/.*
+- ^(.*/)?stylesheets/.*
