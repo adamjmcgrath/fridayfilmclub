@@ -201,7 +201,7 @@ def get_tags_name():
   if last_tag_name == None:
     num = 1
   else:
-    match = re.search('[0-9]{4}-[0-9]{2}-[0-9]{2}\.([0-9]*)',
+    match = re.search('[0-9]{4}-[0-9]{2}-[0-9]{2}-([0-9]*)',
         last_tag_name)
     num = int(match.group(1)) + 1
 
