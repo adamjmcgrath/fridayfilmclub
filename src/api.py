@@ -48,7 +48,7 @@ class Question(baserequesthandler.RequestHandler):
       user_question.correct = (guess.strip() == str(question.answer.key()))
 
       user_question.guesses.append(guess)
-      if user_question.correct or len(user_question.guesses) > _MAX_CLUES:
+      if user_question.correct or len(user_question.guesses) >= _MAX_CLUES:
         user_question.complete = True
       user_question.put()
 

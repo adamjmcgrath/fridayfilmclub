@@ -89,3 +89,28 @@
   <p>The answer is of course: <b>{$title}</b> ({$year})</p>
 </div>
 {/template}
+
+
+/**
+ * Score.
+ * @param score The characters to show in the points field.
+ * @param clueCount The number of clues given.
+ */
+{template .score}
+<div class="well score">
+  <h4>Points available:</h4>
+  <p class="points-available">
+    {foreach $s in $score}
+      <span class="point">{$s}</span>
+    {/foreach}
+    <sub></sub>
+  </p>
+  <h4>Clues:</h4>
+  <div class="progress">
+    <div class="bar bar-active bar-1">1</div>
+    <div class="bar{if $clueCount > 1} bar-active{/if} bar-2">2</div>
+    <div class="bar{if $clueCount > 2} bar-active{/if} bar-3">3</div>
+    <div class="bar{if $clueCount > 3} bar-active{/if} bar-4">4</div>
+  </div>
+</div>
+{/template}

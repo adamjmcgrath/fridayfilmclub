@@ -10,30 +10,14 @@
 {% endblock %}
 
 {% block sidebar %}
-<div class="span3" id="sidebar">
-  
-  <div class="well score">
-      <h4>Points available:</h4>
-      <p class="points-available">
-        <span class="number1">0</span>
-        <span class="number2">6</span>
-        <sub></sub>
-      </p>
-      <h4>Clues:</h4>
-      <div class="progress">
-        <div class="bar bar-active bar-1" style="width: 25%;">1</div>
-        <div class="bar bar-active bar-2" style="width: 25%;">2</div>
-        <div class="bar bar-active bar-3" style="width: 25%;">3</div>
-        <div class="bar bar-4" style="width: 25%;">4</div>
-      </div>
-  </div>
-</div>
+<div class="span3" id="sidebar"></div>
 {% endblock %}
 
 {% block body_base %}
 {% include "templates/jinja/inc/questionjs.tpl" %}
 <script>
-  var q = new ffc.quiz.Question('{{question.key()}}', document.getElementById('clues'));
+  var q = new ffc.quiz.Question('{{question.key()}}',
+      document.getElementById('clues'), document.getElementById('sidebar'));
 </script>
 {% endblock %}
 

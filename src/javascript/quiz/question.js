@@ -12,6 +12,7 @@ goog.require('ffc.quiz.Answer');
 goog.require('ffc.quiz.AnswerForm');
 goog.require('ffc.quiz.Clue');
 goog.require('ffc.quiz.Guess');
+goog.require('ffc.quiz.Score');
 
 goog.require('goog.array');
 goog.require('goog.net.XhrIo');
@@ -24,9 +25,10 @@ goog.require('goog.ui.Component');
  * @param {String} key The key id of the question in the datastore.
  * @param {Element} parent The element in which to render the component once
  *     it gets a data response form the server.
+ * @param {Element} scoreParent The element in which to render the score board.
  * @constructor
  */
-ffc.quiz.Question = function(key, parent) {
+ffc.quiz.Question = function(key, parent, scoreParent) {
   goog.base(this);
 
   /**
@@ -64,6 +66,20 @@ ffc.quiz.Question = function(key, parent) {
    */
   this.parentEl_ = parent;
 
+  /**
+   * The score board.
+   * @type {ffc.quiz.Score}
+   * @private
+   */
+  this.score_ = null;
+
+  /**
+   * The parent element to render the score.
+   * @type {Element}
+   * @private
+   */
+  this.scoreParentEl_ = scoreParent;
+
   goog.net.XhrIo.send('/api/question/' + key, goog.bind(this.render, this));
 };
 goog.inherits(ffc.quiz.Question, goog.ui.Component);
@@ -94,6 +110,9 @@ ffc.quiz.Question.prototype.render = function(e) {
     this.answerForm = new ffc.quiz.AnswerForm();
     this.addChild(this.answerForm, true);
   }
+
+  this.score_ = new ffc.quiz.Score(data);
+  this.score_.render(this.scoreParentEl_);
 
   goog.base(this, 'render', this.parentEl_);
 };
@@ -162,6 +181,8 @@ ffc.quiz.Question.prototype.addGuess = function(guess, opt_index) {
  */
 ffc.quiz.Question.prototype.onAnswerResponse_ = function(e) {
   var data = e.data;
+
+  this.score_.updateScore(data);
 
   if (data['complete']) {
     this.removeChild(this.answerForm, true);
