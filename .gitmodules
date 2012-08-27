@@ -17,3 +17,6 @@
 [submodule "src/growjs"]
 	path = src/growjs
 	url = git@github.com:adamjmcgrath/growjs.git
+[submodule "src/mapreduce"]
+	path = src/mapreduce
+	url = git@github.com:adamjmcgrath/appengine-mapreduce-python.git
