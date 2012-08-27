@@ -15,7 +15,10 @@ goog.require('ffc.template.quiz');
 goog.require('goog.dom.forms');
 goog.require('goog.events.Event');
 goog.require('goog.events.EventType');
+goog.require('goog.fx.Transition.EventType');
 goog.require('goog.net.XhrIo');
+
+goog.require('grow.fx.Shake');
 
 goog.require('soy');
 
@@ -29,6 +32,13 @@ ffc.quiz.AnswerForm = function() {
   goog.base(this);
 
   this.eh_ = this.getHandler();
+
+  /**
+   * The incorrect shake animation.
+   * @type {grow.fx.Shake}
+   * @prive
+   */
+  this.shake_ = null;
 };
 goog.inherits(ffc.quiz.AnswerForm, ffc.quiz.Component);
 
@@ -75,6 +85,20 @@ ffc.quiz.AnswerForm.prototype.enterDocument = function() {
   this.eh_.listen(this.ac_, goog.ui.AutoComplete.EventType.SUGGESTIONS_UPDATE,
       this.onAcUpdate_, false, this);
 
+  this.shake_ = new grow.fx.Shake(this.element_);
+
+};
+
+
+/**
+ * Clear the form.
+ */
+ffc.quiz.AnswerForm.prototype.showIncorrect = function(callback) {
+  this.clearForm();
+
+  this.eh_.listenOnce(this.shake_, goog.fx.Transition.EventType.END, callback);
+
+  this.shake_.play();
 };
 
 

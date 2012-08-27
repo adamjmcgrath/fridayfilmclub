@@ -17,6 +17,7 @@ FFC_SOURCE=$FFC_PATH/javascript
 QUIZ_SOURCE=$FFC_SOURCE/quiz
 SUGGEST_SOURCE=$FFC_SOURCE/suggest
 TEMPLATE_SOURCE=$FFC_SOURCE/template
+GROW_SOURCE=$FFC_PATH/growjs
 FFC_JS_OUTPUT=$FFC_PATH/static/js/quiz.js
 FFC_DEPS_OUTPUT=$FFC_PATH/static/js/deps.js
 
@@ -25,6 +26,7 @@ if [ $1 == "deps" ]; then
   $CLOSURE_DEPSWRITER_PATH \
     --root_with_prefix="$FFC_SOURCE ../../../javascript/"\
     --root_with_prefix="$CLOSURE_TEMPLATES ../../../closure-templates/javascript/"\
+    --root_with_prefix="$GROW_SOURCE ../../../growjs/"\
     > $FFC_DEPS_OUTPUT
   echo 'Written deps to '$FFC_DEPS_OUTPUT
 fi
@@ -37,6 +39,7 @@ if [ $1 == "build" ]; then
     --root=$QUIZ_SOURCE \
     --root=$SUGGEST_SOURCE \
     --root=$TEMPLATE_SOURCE \
+    --root=$GROW_SOURCE \
     --namespace="ffc.quiz.Question" \
     --output_mode=compiled \
     --compiler_jar=$CLOSURE_COMPILER_PATH \

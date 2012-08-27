@@ -8,6 +8,7 @@
 
 goog.provide('ffc.quiz.Guess');
 
+goog.require('ffc.quiz.Component');
 goog.require('ffc.template.quiz');
 
 
@@ -32,7 +33,7 @@ ffc.quiz.Guess = function(data) {
    */
   this.year_ = data['year'];
 };
-goog.inherits(ffc.quiz.Guess, goog.ui.Component);
+goog.inherits(ffc.quiz.Guess, ffc.quiz.Component);
 
 
 /**

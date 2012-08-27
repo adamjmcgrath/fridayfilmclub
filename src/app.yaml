@@ -23,6 +23,9 @@ handlers:
 - url: /javascript
   static_dir: javascript
 
+- url: /growjs
+  static_dir: growjs
+
 - url: /less
   static_dir: less
 
@@ -62,5 +65,6 @@ skip_files:
 - ^(.*/)?closure-library/.*
 - ^(.*/)?closure-templates/.*
 - ^(.*/)?data/.*
+- ^(.*/)?growjs/.*
 - ^(.*/)?javascript/.*
 - ^(.*/)?scripts/.*

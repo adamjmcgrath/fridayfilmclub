@@ -167,10 +167,10 @@ ffc.quiz.Question.prototype.onAnswerResponse_ = function(e) {
     this.removeChild(this.answerForm, true);
     this.addChild(new ffc.quiz.Answer(data), true);
   } else {
-    this.answerForm.clearForm();
     var clues = goog.array.slice(data['clues'], this.clues_.length);
     var guesses = goog.array.slice(data['guesses'], this.guesses_.length);
 
-    this.addCluesAndGuesses(clues, guesses);
+    this.answerForm.showIncorrect(
+        goog.bind(this.addCluesAndGuesses, this, clues, guesses));
   }
 };

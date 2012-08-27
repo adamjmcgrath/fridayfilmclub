@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# coding=utf-8
 #
 # Copyright 2011 Friday Film Club. All Rights Reserved.
 
@@ -41,32 +42,29 @@ os.environ['USER_EMAIL'] = 'adamjmcgrath@gmail.com'
 
 
 def auth_func():
- return (os.environ['USER_EMAIL'], getpass.getpass('Password:'))
+  return (os.environ['USER_EMAIL'], getpass.getpass('Password:'))
 
 
 def main():
-  # Use local dev server by passing in as parameter:
-  # servername='localhost:8080'
-  # Otherwise, remote_api assumes you are targeting APP_NAME.appspot.com
+  # Use 'localhost:8080' for dev server.
   remote_api_stub.ConfigureRemoteDatastore(APP_NAME, '/_ah/remote_api',
       auth_func, servername='ffcapp.appspot.com')
 
   cursor = None
   while True:
-    logging.info('Updating a batch.')
+    print 'Updating a batch.'
     query = models.Film.all()
     if cursor:
       query.with_cursor(cursor)
-
+  
     films = query.fetch(limit=1000)
     if not films:
       break
-
+  
     for film in films:
-      film.batch = 1
-      film.grossing = None
       film.title_slug = models.slugify(film.title)
-
+      print film.title + ': ' + film.title_slug
+  
     db.put(films)
     cursor = query.cursor()
 

@@ -14,3 +14,6 @@
 [submodule "src/closure-templates"]
 	path = src/closure-templates
 	url = git@github.com:adamjmcgrath/closure-templates.git
+[submodule "src/growjs"]
+	path = src/growjs
+	url = git@github.com:adamjmcgrath/growjs.git
