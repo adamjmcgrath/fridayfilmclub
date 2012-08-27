@@ -3,8 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>{% block title %}Friday Film Club{% endblock %}</title>
-    <link rel="stylesheet/less" href="/stylesheets/main.less">
-    <script src="/less/dist/less-1.3.0.min.js"></script>
+    {% include "templates/jinja/inc/css.tpl" %}
   </head>
   <body id="{% block page_id %}{% endblock %}">
     <div class="navbar">
