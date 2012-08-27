@@ -62,7 +62,7 @@ def film_index_map(entity):
         starts.append(pfx)
         slug = re.sub('-', '', entity.title_slug)
         grossing = entity.grossing or 0
-        yield (pfx, '%d/%d/%s/%s' % (entity.year, grossing, slug, key))
+        yield (pfx, '%d|%d|%s|%s' % (entity.year, grossing, slug, key))
 
 
 def film_index_reduce(word, films):
@@ -71,17 +71,17 @@ def film_index_reduce(word, films):
 
   # Sort by year.
   films_sorted_year = sorted(
-      films, key=lambda m: m.split('/')[0], reverse=True)
+      films, key=lambda m: m.split('|')[0], reverse=True)
   # Then sort by grossing.
   films_sorted_grossing = sorted(films_sorted_year,
-      key=lambda m: int(m.split('/')[1]), reverse=True)
+      key=lambda m: int(m.split('|')[1]), reverse=True)
   # Then put exact matches at the top.
   films_sorted_match = sorted(films_sorted_grossing,
-      key=lambda m: m.split('/')[2] == word, reverse=True)
+      key=lambda m: m.split('|')[2] == word, reverse=True)
 
   index_entity = models.FilmIndex(
       key_name=word,
-      films=[db.Key(m.split('/')[3]) for m in films_sorted_match][:FILMS_PER_INDEX],)
+      films=[db.Key(m.split('|')[3]) for m in films_sorted_match][:FILMS_PER_INDEX],)
 
   yield op.db.Put(index_entity)
 
