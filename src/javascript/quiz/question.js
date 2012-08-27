@@ -152,6 +152,15 @@ ffc.quiz.Question.prototype.addCluesAndGuesses = function(clues, guesses) {
 
 
 /**
+ * @param {Object} data The data.
+ */
+ffc.quiz.Question.prototype.addAnswer = function(data) {
+  this.removeChild(this.answerForm, true);
+  this.addChild(new ffc.quiz.Answer(data), true);
+};
+
+
+/**
  * @param {ffc.quiz.Clue} clue The clue object to add.
  * @param {number=} opt_index The index to add the clue.
  */
@@ -180,18 +189,22 @@ ffc.quiz.Question.prototype.addGuess = function(guess, opt_index) {
  * @private
  */
 ffc.quiz.Question.prototype.onAnswerResponse_ = function(e) {
+  var callback;
   var data = e.data;
 
   this.score_.updateScore(data);
 
   if (data['complete']) {
-    this.removeChild(this.answerForm, true);
-    this.addChild(new ffc.quiz.Answer(data), true);
+    callback = goog.bind(this.addAnswer, this, data);
   } else {
     var clues = goog.array.slice(data['clues'], this.clues_.length);
     var guesses = goog.array.slice(data['guesses'], this.guesses_.length);
-
-    this.answerForm.showIncorrect(
-        goog.bind(this.addCluesAndGuesses, this, clues, guesses));
+    callback = goog.bind(this.addCluesAndGuesses, this, clues, guesses);
+  }
+  
+  if (!data['correct']) {
+    this.answerForm.showIncorrect(callback);
+  } else {
+    callback();
   }
 };
