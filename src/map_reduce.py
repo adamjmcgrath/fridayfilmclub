@@ -2,7 +2,7 @@
 #
 # Copyright 2011 Friday Film Club. All Rights Reserved.
 
-"""The MapReduce functions for Friday Film Club."""
+"""MapReduce functions for Friday Film Club."""
 
 __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 
