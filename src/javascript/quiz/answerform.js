@@ -36,7 +36,7 @@ ffc.quiz.AnswerForm = function() {
   /**
    * The incorrect shake animation.
    * @type {grow.fx.Shake}
-   * @prive
+   * @private
    */
   this.shake_ = null;
 };
