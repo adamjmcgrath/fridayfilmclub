@@ -7,8 +7,8 @@ goog.addDependency('../../../javascript/quiz/answerform.js', ['ffc.quiz.AnswerFo
 goog.addDependency('../../../javascript/quiz/clue.js', ['ffc.quiz.Clue'], ['ffc.quiz.Component', 'ffc.template.quiz']);
 goog.addDependency('../../../javascript/quiz/component.js', ['ffc.quiz.Component'], ['goog.fx.dom.FadeInAndShow', 'goog.ui.Component']);
 goog.addDependency('../../../javascript/quiz/guess.js', ['ffc.quiz.Guess'], ['ffc.quiz.Component', 'ffc.template.quiz']);
-goog.addDependency('../../../javascript/quiz/question.js', ['ffc.quiz.Question'], ['ffc.quiz.Answer', 'ffc.quiz.AnswerForm', 'ffc.quiz.Clue', 'ffc.quiz.Guess', 'ffc.quiz.Score', 'goog.array', 'goog.net.XhrIo', 'goog.ui.Component']);
-goog.addDependency('../../../javascript/quiz/score.js', ['ffc.quiz.Score'], ['ffc.quiz.Component', 'ffc.template.quiz', 'goog.string']);
+goog.addDependency('../../../javascript/quiz/question.js', ['ffc.quiz.Question'], ['ffc.quiz.Answer', 'ffc.quiz.AnswerForm', 'ffc.quiz.Clue', 'ffc.quiz.Guess', 'ffc.quiz.Score', 'goog.array', 'goog.net.XhrIo', 'goog.ui.Component', 'goog.ui.ScrollFloater']);
+goog.addDependency('../../../javascript/quiz/score.js', ['ffc.quiz.Score'], ['ffc.quiz.Component', 'ffc.template.quiz', 'goog.dom.classes', 'goog.string']);
 goog.addDependency('../../../javascript/suggest/autocomplete.js', ['ffc.suggest.AutoComplete'], ['ffc.suggest.RemoteArrayMatcher', 'goog.array', 'goog.dom', 'goog.ui.AutoComplete', 'goog.ui.AutoComplete.Renderer', 'goog.ui.AutoComplete.RichInputHandler']);
 goog.addDependency('../../../javascript/suggest/remotearraymatcher.js', ['ffc.suggest.RemoteArrayMatcher'], ['ffc.template.quiz', 'goog.dom', 'goog.dom.dataset', 'goog.events', 'goog.string.path', 'goog.ui.AutoComplete.RemoteArrayMatcher']);
 goog.addDependency('../../../javascript/suggest/renderer.js', ['ffc.suggest.AutoCompleteRenderer'], ['goog.ui.AutoComplete.Renderer']);

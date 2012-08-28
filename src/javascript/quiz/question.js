@@ -17,6 +17,7 @@ goog.require('ffc.quiz.Score');
 goog.require('goog.array');
 goog.require('goog.net.XhrIo');
 goog.require('goog.ui.Component');
+goog.require('goog.ui.ScrollFloater');
 
 
 
@@ -80,6 +81,13 @@ ffc.quiz.Question = function(key, parent, scoreParent) {
    */
   this.scoreParentEl_ = scoreParent;
 
+  /**
+   * SCroll floater for the score board.
+   * @type {goog.ui.ScrollFloater}
+   * @private
+   */
+  this.scrollfloater_ = new goog.ui.ScrollFloater();
+
   goog.net.XhrIo.send('/api/question/' + key, goog.bind(this.render, this));
 };
 goog.inherits(ffc.quiz.Question, goog.ui.Component);
@@ -128,6 +136,8 @@ ffc.quiz.Question.prototype.enterDocument = function() {
     this.eh_.listen(this.answerForm, ffc.quiz.AnswerForm.ANSWER_RESPONSE,
         this.onAnswerResponse_, false, this);
   }
+  
+  this.scrollfloater_.decorate(this.scoreParentEl_);
 };
 
 

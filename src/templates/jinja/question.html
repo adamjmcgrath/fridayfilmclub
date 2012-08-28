@@ -10,14 +10,17 @@
 {% endblock %}
 
 {% block sidebar %}
-<div class="span3" id="sidebar"></div>
+<div class="span3" id="sidebar">
+  <div id="score-wrap"></div>
+</div>
 {% endblock %}
 
 {% block body_base %}
 {% include "templates/jinja/inc/questionjs.tpl" %}
 <script>
   var q = new ffc.quiz.Question('{{question.key()}}',
-      document.getElementById('clues'), document.getElementById('sidebar'));
+      document.getElementById('clues'),
+      document.getElementById('score-wrap'));
 </script>
 {% endblock %}
 

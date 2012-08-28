@@ -733,7 +733,8 @@ h1{margin-bottom:9px;}
 .guess-buttons .disabled{opacity:0.2;filter:alpha(opacity=20);}
 .thumbnail{margin-bottom:18px;}
 .answer-form{position:relative;}
-#sidebar{margin-top:45px;position:relative;}
+#sidebar{margin-top:35px;position:relative;}
+#score-wrap{padding-top:10px;}
 .score h4{clear:left;margin:-5px 0 8px 0;}
 .score .progress{margin-bottom:0;}.score .progress .bar{background:none;float:left;text-indent:-9999px;width:25%;}
 .score .progress .bar-active{background-color:#4bb1cf;background-image:-moz-linear-gradient(top, #5bc0de, #339bb9);background-image:-ms-linear-gradient(top, #5bc0de, #339bb9);background-image:-webkit-gradient(linear, 0 0, 0 100%, from(#5bc0de), to(#339bb9));background-image:-webkit-linear-gradient(top, #5bc0de, #339bb9);background-image:-o-linear-gradient(top, #5bc0de, #339bb9);background-image:linear-gradient(top, #5bc0de, #339bb9);background-repeat:repeat-x;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#5bc0de', endColorstr='#339bb9', GradientType=0);border-right:1px solid #339bb9;border-left:1px solid #5bc0de;text-indent:0;}
