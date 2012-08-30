@@ -102,8 +102,8 @@ ffc.quiz.Score.prototype.updateScore = function(score, numClues) {
 /**
  * @override
  */
-ffc.quiz.Score.prototype.deocrateInternal = function() {
-  goog.base(this, 'decorateInternal');
+ffc.quiz.Score.prototype.disposeInternal = function() {
+  goog.base(this, 'disposeInternal');
   this.pointEls_ = null;
   this.clueBars_ = null;
 };

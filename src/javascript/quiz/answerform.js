@@ -17,7 +17,7 @@ goog.require('goog.events.Event');
 goog.require('goog.events.EventType');
 goog.require('goog.fx.Transition.EventType');
 
-goog.require('grow.fx.Shake');
+goog.require('grow.fx.dom.Shake');
 
 goog.require('soy');
 
@@ -41,7 +41,7 @@ ffc.quiz.AnswerForm = function() {
 
   /**
    * The incorrect shake animation.
-   * @type {grow.fx.Shake}
+   * @type {grow.fx.dom.Shake}
    * @private
    */
   this.shake_ = null;
@@ -105,7 +105,7 @@ ffc.quiz.AnswerForm.prototype.enterDocument = function() {
   this.eh_.listen(this.ac_, goog.ui.AutoComplete.EventType.SUGGESTIONS_UPDATE,
       this.onAcUpdate_, false, this);
 
-  this.shake_ = new grow.fx.Shake(this.element_);
+  this.shake_ = new grow.fx.dom.Shake(this.element_);
 
 };
 
