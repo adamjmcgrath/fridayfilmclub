@@ -16,7 +16,6 @@ goog.require('goog.dom.forms');
 goog.require('goog.events.Event');
 goog.require('goog.events.EventType');
 goog.require('goog.fx.Transition.EventType');
-goog.require('goog.net.XhrIo');
 
 goog.require('grow.fx.Shake');
 
@@ -34,11 +33,32 @@ ffc.quiz.AnswerForm = function() {
   this.eh_ = this.getHandler();
 
   /**
+   * The auto complete.
+   * @type {ffc.suggest.AutoComplete}
+   * @private
+   */
+  this.ac_ = null;
+
+  /**
    * The incorrect shake animation.
    * @type {grow.fx.Shake}
    * @private
    */
   this.shake_ = null;
+
+  /**
+   * The place older element for an empty list of suggestions
+   * @type {Element}
+   * @private
+   */
+  this.suggestInfo_ = null;
+
+  /**
+   * The input to deocrate with the autocomplete.
+   * @type {Element}
+   * @private
+   */
+  this.acInput_ = null;
 };
 goog.inherits(ffc.quiz.AnswerForm, ffc.quiz.Component);
 
@@ -173,6 +193,19 @@ ffc.quiz.AnswerForm.prototype.onSubmit_ = function(e) {
 ffc.quiz.AnswerForm.prototype.submitGuess_ = function(guess) {
   this.dispatchEvent(new ffc.quiz.AnswerFormEvent(
       ffc.quiz.AnswerForm.MAKE_GUESS, this, guess));
+};
+
+
+/**
+ * @override
+ */
+ffc.quiz.AnswerForm.prototype.disposeInternal = function(guess) {
+  goog.base(this, 'disposeInternal');
+  this.shake_.dispose();
+  this.ac_.dispose();
+  this.shake_ = null;
+  this.suggestInfo_ = null;
+  this.acInput_ = null;
 };
 
 

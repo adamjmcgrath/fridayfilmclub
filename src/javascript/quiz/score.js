@@ -36,6 +36,20 @@ ffc.quiz.Score = function(score, numClues) {
    * @private
    */
   this.score_ = score;
+
+  /**
+   * The elements that show the users score.
+   * @type {Array.<Element>}
+   * @private
+   */
+   this.pointEls_ = null;
+
+  /**
+   * The elements that show how many clues the user has had.
+   * @type {Array.<Element>}
+   * @private
+   */
+  this.clueBars_ = null;
 };
 goog.inherits(ffc.quiz.Score, ffc.quiz.Component);
 
@@ -82,4 +96,14 @@ ffc.quiz.Score.prototype.updateScore = function(score, numClues) {
       goog.dom.classes.add(clueBar, 'bar-active');
     }
   }
+};
+
+
+/**
+ * @override
+ */
+ffc.quiz.Score.prototype.deocrateInternal = function() {
+  goog.base(this, 'decorateInternal');
+  this.pointEls_ = null;
+  this.clueBars_ = null;
 };

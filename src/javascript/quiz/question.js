@@ -42,13 +42,6 @@ ffc.quiz.Question = function(key, parent, scoreParent) {
   this.eh_ = this.getHandler();
 
   /**
-   * The model.
-   * @type {ffc.quiz.QuestionModel}
-   * @private
-   */
-  this.model_ = new ffc.quiz.QuestionModel();
-
-  /**
    * Array of clues.
    * @type {Array.<ffc.quiz.Clue>}
    * @private
@@ -101,6 +94,8 @@ ffc.quiz.Question = function(key, parent, scoreParent) {
    * @private
    */
   this.url_ = goog.string.subs(ffc.quiz.Question.URI_, key);
+
+  this.setModel(new ffc.quiz.QuestionModel());
 
   this.eh_.listen(this.xhr_, goog.net.EventType.COMPLETE,
       this.onResponse_, false, this);
@@ -159,6 +154,10 @@ ffc.quiz.Question.prototype.enterDocument = function() {
         this.onGuess_, false, this);
   }
   this.scrollfloater_.decorate(this.scoreParentEl_);
+
+  // Clean up after unload.
+  this.eh_.listen(window, goog.events.EventType.UNLOAD,
+      this.dispose, false, this);
 };
 
 
@@ -260,4 +259,21 @@ ffc.quiz.Question.prototype.onResponse_ = function(e) {
   } else {
     this.render(this.parentEl_);
   }
+};
+
+
+/**
+ * @override
+ */
+ffc.quiz.Question.prototype.disposeInternal = function(e) {
+  goog.base(this, 'disposeInternal');
+  this.eh_.dispose();
+  this.score_.disposeInternal();
+  this.scrollfloater_.dispose();
+  this.xhr_.dispose();
+  this.clues_ = null;
+  this.guesses_ = null;
+  this.parentEl_ = null;
+  this.scoreParentEl_ = null;
+  this.url_ = null;
 };
