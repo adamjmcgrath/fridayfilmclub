@@ -12,29 +12,29 @@ goog.require('ffc.quiz.Component');
 
 /**
  * Answer constructor.
- * @param {Object} data The answer data obj.
+ * @param {ffc.quiz.AnswerModel} model The answer model.
  * @constructor
  */
-ffc.quiz.Answer = function(data) {
+ffc.quiz.Answer = function(model) {
   goog.base(this);
 
   /**
    * @type {boolean}
    * @private
    */
-  this.correct_ = data['correct'];
+  this.correct_ = model.correct;
 
   /**
    * @type {string}
    * @private
    */
-  this.title_ = data['answer']['title'];
+  this.title_ = model.title;
 
   /**
-   * @type {string}
+   * @type {number}
    * @private
    */
-  this.year_ = data['answer']['year'];
+  this.year_ = model.year;
 
 };
 goog.inherits(ffc.quiz.Answer, ffc.quiz.Component);

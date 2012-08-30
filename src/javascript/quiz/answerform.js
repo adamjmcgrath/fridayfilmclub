@@ -92,12 +92,12 @@ ffc.quiz.AnswerForm.prototype.enterDocument = function() {
 
 /**
  * Clear the form.
+ * @param {function() {}} callback A function to call once the shake
+ *     animation has finished.
  */
 ffc.quiz.AnswerForm.prototype.showIncorrect = function(callback) {
   this.clearForm();
-
   this.eh_.listenOnce(this.shake_, goog.fx.Transition.EventType.END, callback);
-
   this.shake_.play();
 };
 
@@ -171,29 +171,16 @@ ffc.quiz.AnswerForm.prototype.onSubmit_ = function(e) {
  * @private
  */
 ffc.quiz.AnswerForm.prototype.submitGuess_ = function(guess) {
-  goog.net.XhrIo.send('/api' + window.location.pathname + '?guess=' + guess,
-      goog.bind(this.onGuessResponse_, this));
+  this.dispatchEvent(new ffc.quiz.AnswerFormEvent(
+      ffc.quiz.AnswerForm.MAKE_GUESS, this, guess));
 };
 
 
 /**
- * Handle a response form the server after making a guess.
- * @param {goog.events.Event} e The xhr event.
- * @private
- */
-ffc.quiz.AnswerForm.prototype.onGuessResponse_ = function(e) {
-  var data = e.target.getResponseJson();
-  this.dispatchEvent(
-      new ffc.quiz.AnswerFormEvent(
-          ffc.quiz.AnswerForm.ANSWER_RESPONSE, this, data));
-};
-
-
-/**
- * The Answer response event.
+ * The guess event.
  * @type {string}
  */
-ffc.quiz.AnswerForm.ANSWER_RESPONSE = 'answerresponseevent';
+ffc.quiz.AnswerForm.MAKE_GUESS = 'makeguessevent';
 
 
 /**
@@ -208,24 +195,16 @@ ffc.quiz.AnswerForm.PASS_ = 'pass';
  * Object representing an answer form event.
  * @param {string} type The event type.
  * @param {ffc.quiz.AnswerForm} target The event target.
- * @param {Object} data
- *     {Array.<Object>} clues
- *       {string?} image The path to the image clue.
- *       {string?} text The text for the clue.
- *     {boolean} complete
- *     {boolean} correct
- *     {Array.<Object>} guesses
- *       {string?} title The title of the film guess.
- *       {string?} year The year of the film guess.
+ * @param {string} guess The user's guess (or 'pass').
  * @extends {goog.events.Event}
  * @constructor
  */
-ffc.quiz.AnswerFormEvent = function(type, target, data) {
+ffc.quiz.AnswerFormEvent = function(type, target, guess) {
   goog.base(this, type, target);
 
   /**
-   * @type {Object}
+   * @type {string}
    */
-  this.data = data;
+  this.guess = guess;
 };
 goog.inherits(ffc.quiz.AnswerFormEvent, goog.events.Event);

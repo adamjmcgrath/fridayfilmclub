@@ -2,7 +2,7 @@
 #
 # Copyright 2011 Friday Film Club. All Rights Reserved.
 
-"""Question and Answer API."""
+"""Question and Answer API - this contains the main quiz logic."""
 
 __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 
@@ -22,16 +22,25 @@ import settings
 
 _MAX_CLUES = 4
 _PASS = 'pass'
-
+# This is used to calculate the users score based on how many guesses they have
+# had. If they get it on the first guess, they get the maximum points. It's not
+# possible to get it right without guessing, so add a place holder at the front.
+_SCORE = [None, 10, 7, 5, 2, 0]
 
 
 class Question(baserequesthandler.RequestHandler):
   """Shows the homepage."""
 
   def get(self, question_key):
+    return self.get_or_post(question_key)
 
+  def post(self, question_key):
     # Get the users guess
     guess = self.request.get('guess')
+
+    return self.get_or_post(question_key, guess=guess)
+
+  def get_or_post(self, question_key, guess=None):
 
     # Get the question and user.
     question = models.Question.get(question_key)
@@ -70,16 +79,23 @@ class Question(baserequesthandler.RequestHandler):
           'year': str(film_entity.year)
         })
 
-    # If the question is complete, reveal the correct answer to the user.
-    answer = {}
-    if user_question.complete:
-      answer = question.answer.to_dict()
-
-    return self.render_json({
-        'answer': answer,
+    response_obj = {
         'clues': [clue.to_json() for clue in question.clues[:clue_number]],
-        'complete': user_question.complete,
         'correct': user_question.correct,
         'guesses': guesses,
-    })
+    }
+
+    # If the question is complete, reveal the correct answer to the user.
+    if user_question.complete:
+      response_obj['answer'] = question.answer.to_dict()
+
+    # Calculate the users score. Unless they have answered the question
+    # correctly, their score is effectively the score they will get IF they
+    # answer the next question correctly.
+    index = len(user_question.guesses)
+    if not user_question.correct:
+      index += 1
+    response_obj['score'] = _SCORE[index]
+
+    return self.render_json(response_obj)
 

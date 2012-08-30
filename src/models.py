@@ -121,8 +121,3 @@ class UserQuestion(db.Model):
   score = db.IntegerProperty()
   user = db.ReferenceProperty(User, collection_name='answers')
 
-  def calculate_score(self):
-    """docstring for score"""
-    # 0:10, 1:7, 2:5, 3:2
-    scores = [10, 7, 5, 2]
-    return scores[self.current_guess]

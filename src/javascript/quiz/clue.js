@@ -13,11 +13,10 @@ goog.require('ffc.template.quiz');
 
 /**
  * Clue constructor.
- * @param {number} position The position of the clue.
- * @param {Object} data The data to populate the clue.
+ * @param {ffc.quiz.ClueModel} model The clue model.
  * @constructor
  */
-ffc.quiz.Clue = function(position, data) {
+ffc.quiz.Clue = function(model) {
   goog.base(this);
 
   /**
@@ -25,21 +24,21 @@ ffc.quiz.Clue = function(position, data) {
    * @type {number}
    * @private
    */
-  this.position_ = position;
+  this.position_ = model.position;
 
   /**
    * The text for the clue.
    * @type {string}
    * @private
    */
-  this.text_ = data['text'];
+  this.text_ = model.text;
 
   /**
    * The path to the image clue.
    * @type {string}
    * @private
    */
-  this.image_ = data['image'];
+  this.image_ = model.image;
 
 };
 goog.inherits(ffc.quiz.Clue, ffc.quiz.Component);

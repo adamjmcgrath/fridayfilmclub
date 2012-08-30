@@ -12,12 +12,14 @@ goog.require('ffc.quiz.Answer');
 goog.require('ffc.quiz.AnswerForm');
 goog.require('ffc.quiz.Clue');
 goog.require('ffc.quiz.Guess');
+goog.require('ffc.quiz.QuestionModel');
 goog.require('ffc.quiz.Score');
-
 goog.require('goog.array');
+goog.require('goog.net.EventType');
 goog.require('goog.net.XhrIo');
 goog.require('goog.ui.Component');
 goog.require('goog.ui.ScrollFloater');
+goog.require('goog.uri.utils');
 
 
 
@@ -33,18 +35,18 @@ ffc.quiz.Question = function(key, parent, scoreParent) {
   goog.base(this);
 
   /**
-   * The key id of the question in the datastore.
-   * @private
-   * @type {String}
-   */
-  this.key_ = key;
-
-  /**
    * Event handler for this object.
    * @type {goog.events.EventHandler}
    * @private
    */
   this.eh_ = this.getHandler();
+
+  /**
+   * The model.
+   * @type {ffc.quiz.QuestionModel}
+   * @private
+   */
+  this.model_ = new ffc.quiz.QuestionModel();
 
   /**
    * Array of clues.
@@ -82,47 +84,67 @@ ffc.quiz.Question = function(key, parent, scoreParent) {
   this.scoreParentEl_ = scoreParent;
 
   /**
-   * SCroll floater for the score board.
+   * Scroll floater for the score board.
    * @type {goog.ui.ScrollFloater}
    * @private
    */
   this.scrollfloater_ = new goog.ui.ScrollFloater();
 
-  goog.net.XhrIo.send('/api/question/' + key, goog.bind(this.render, this));
+  /**
+   * @type {goog.net.XhrIo}
+   * @private
+   */
+  this.xhr_ = new goog.net.XhrIo();
+
+  /**
+   * @type {string}
+   * @private
+   */
+  this.url_ = goog.string.subs(ffc.quiz.Question.URI_, key);
+
+  this.eh_.listen(this.xhr_, goog.net.EventType.COMPLETE,
+      this.onResponse_, false, this);
+  this.xhr_.send(this.url_);
 };
 goog.inherits(ffc.quiz.Question, goog.ui.Component);
 goog.exportSymbol('ffc.quiz.Question', ffc.quiz.Question);
 
 
 /**
- * @override
- * @param {goog.events.Event} e The xhr response event.
+ * The question API endpoint for getting question data and posting guesses.
+ * @type {string}
+ * @private
  */
-ffc.quiz.Question.prototype.render = function(e) {
-  var data = e.target.getResponseJson();
-  var guess;
-  var i;
-  var len;
+ffc.quiz.Question.URI_ = '/api/question/%s';
 
-  for (i = 0, len = data['clues'].length; i < len; i++) {
-    this.addClue(new ffc.quiz.Clue(i + 1, data['clues'][i]));
-    guess = data['guesses'][i];
-    if (guess) {
-      this.addGuess(new ffc.quiz.Guess(guess));
-    }
-  }
 
-  if (data['complete']) {
-    this.addChild(new ffc.quiz.Answer(data), true);
+/**
+ * @override
+ */
+ffc.quiz.Question.prototype.render = function(parent) {
+  var clues = this.model_.clues;
+
+  // Create the score board and add it as a child so it get's cleaned up
+  // with the question, but render it somewhere else (in the sidebar).
+  this.score_ = new ffc.quiz.Score(this.model_.score, clues.length);
+  this.addChild(this.score_);
+  this.score_.render(this.scoreParentEl_);
+
+  // Show the first clue on render, then any further updates to clues and
+  // guesses starts with the users guess, then the clue.
+  this.addClue(new ffc.quiz.Clue(this.model_.lastClues.shift()));
+  // Aad the rest of the clues and guesses.
+  this.addCluesAndGuesses();
+
+  // Add the correct answer if the question is complete, or add the answer form.
+  if (this.model_.answer) {
+    this.addChild(new ffc.quiz.Answer(this.model_.answer), true);
   } else {
     this.answerForm = new ffc.quiz.AnswerForm();
     this.addChild(this.answerForm, true);
   }
 
-  this.score_ = new ffc.quiz.Score(data);
-  this.score_.render(this.scoreParentEl_);
-
-  goog.base(this, 'render', this.parentEl_);
+  goog.base(this, 'render', parent);
 };
 
 
@@ -133,40 +155,40 @@ ffc.quiz.Question.prototype.enterDocument = function() {
   goog.base(this, 'enterDocument');
 
   if (this.answerForm) {
-    this.eh_.listen(this.answerForm, ffc.quiz.AnswerForm.ANSWER_RESPONSE,
-        this.onAnswerResponse_, false, this);
+    this.eh_.listen(this.answerForm, ffc.quiz.AnswerForm.MAKE_GUESS,
+        this.onGuess_, false, this);
   }
-  
   this.scrollfloater_.decorate(this.scoreParentEl_);
 };
 
 
 /**
  * Add clues and guesses to the question.
- * @param {Array.Object} clues An array of clue data.
- * @param {Array.Object} guesses An array of guess data.
  */
-ffc.quiz.Question.prototype.addCluesAndGuesses = function(clues, guesses) {
-  var clue;
-  var clueCount = this.clues_.length;
+ffc.quiz.Question.prototype.addCluesAndGuesses = function() {
+  var clues = this.model_.lastClues;
+  var guesses = this.model_.lastGuesses;
+  // If the answer form is present, we add the child at the childCount - 1,
+  // otherwise we add the child to the end.
+  var addIndex = this.answerForm && this.answerForm.isInDocument() ? -1 : 0;
 
   for (i = 0, len = guesses.length; i < len; i++) {
-    this.addGuess(new ffc.quiz.Guess(guesses[i]), this.getChildCount() - 1);
+    var index = this.getChildCount() + addIndex;
+    this.addGuess(new ffc.quiz.Guess(guesses[i]), index);
     clue = clues[i];
     if (clue) {
-      this.addClue(new ffc.quiz.Clue(i + 1 + clueCount, clue),
-          this.getChildCount() - 1);
+      this.addClue(new ffc.quiz.Clue(clue), index + 1);
     }
   }
 };
 
 
 /**
- * @param {Object} data The data.
+ * Add the answer, remove the answer form.
  */
-ffc.quiz.Question.prototype.addAnswer = function(data) {
+ffc.quiz.Question.prototype.addAnswer = function() {
   this.removeChild(this.answerForm, true);
-  this.addChild(new ffc.quiz.Answer(data), true);
+  this.addChild(new ffc.quiz.Answer(this.model_.answer), true);
 };
 
 
@@ -195,26 +217,47 @@ ffc.quiz.Question.prototype.addGuess = function(guess, opt_index) {
 
 
 /**
+ * Update the question with an updated model.
+ */
+ffc.quiz.Question.prototype.update = function() {
+  this.score_.updateScore(this.model_.score, this.model_.clues.length);
+
+  if (this.model_.answer) {
+    // If the question is complete add the answer.
+    var callback = goog.bind(this.addAnswer, this);
+    if (!this.model_.answer.correct) {
+      this.answerForm.showIncorrect(callback);
+    } else {
+      callback();
+    }
+  } else {
+    // Otherwise add more clues and guesses.
+    this.answerForm.showIncorrect(goog.bind(this.addCluesAndGuesses, this));
+  }
+};
+
+
+/**
  * @param {ffc.quiz.AnswerFormEvent} e The event obj.
  * @private
  */
-ffc.quiz.Question.prototype.onAnswerResponse_ = function(e) {
-  var callback;
-  var data = e.data;
+ffc.quiz.Question.prototype.onGuess_ = function(e) {
+  var guess = e.guess;
+  // Post the guess to the question api.
+  this.xhr_.send(this.url_, 'POST',
+      goog.uri.utils.buildQueryDataFromMap({'guess': guess}));
+};
 
-  this.score_.updateScore(data);
 
-  if (data['complete']) {
-    callback = goog.bind(this.addAnswer, this, data);
+/**
+ * @param {ffc.quiz.AnswerFormEvent} e The event obj.
+ * @private
+ */
+ffc.quiz.Question.prototype.onResponse_ = function(e) {
+  this.model_.update(e.target.getResponseJson());
+  if (this.isInDocument()) {
+    this.update();
   } else {
-    var clues = goog.array.slice(data['clues'], this.clues_.length);
-    var guesses = goog.array.slice(data['guesses'], this.guesses_.length);
-    callback = goog.bind(this.addCluesAndGuesses, this, clues, guesses);
-  }
-  
-  if (!data['correct']) {
-    this.answerForm.showIncorrect(callback);
-  } else {
-    callback();
+    this.render(this.parentEl_);
   }
 };

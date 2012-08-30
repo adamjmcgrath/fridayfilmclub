@@ -16,10 +16,11 @@ goog.require('goog.string');
 
 /**
  * Score constructor.
- * @param {Object} data The data to populate the score.
+ * @param {number} score The user's current score.
+ * @param {number} numClues The number of clues the user has been given.
  * @constructor
  */
-ffc.quiz.Score = function(data) {
+ffc.quiz.Score = function(score, numClues) {
   goog.base(this);
 
   /**
@@ -27,29 +28,16 @@ ffc.quiz.Score = function(data) {
    * @type {number}
    * @private
    */
-  this.numClues_ = data['clues'].length;
+  this.numClues_ = numClues;
 
   /**
    * The current points available.
    * @type {number}
    * @private
    */
-  this.score_ = ffc.quiz.Score.POINTS_[this.numClues_ - 1];
-
-  if (data['complete'] && !data['correct']) {
-    this.score_ = 0;
-  }
-
+  this.score_ = score;
 };
 goog.inherits(ffc.quiz.Score, ffc.quiz.Component);
-
-
-/**
- * Score constructor.
- * @param {Object} data The data to populate the score.
- * @constructor
- */
-ffc.quiz.Score.POINTS_ = [12, 8, 4, 2];
 
 
 /**
@@ -64,7 +52,7 @@ ffc.quiz.Score.prototype.createDom = function() {
 
 
 /**
- * 
+ * @override
  */
 ffc.quiz.Score.prototype.decorateInternal = function(element) {
   goog.base(this, 'decorateInternal', element);
@@ -75,16 +63,13 @@ ffc.quiz.Score.prototype.decorateInternal = function(element) {
 
 
 /**
- * 
+ * Update the score board.
+ * @param {number} score The user's current score.
+ * @param {number} numClues The number of clues the user has been given.
  */
-ffc.quiz.Score.prototype.updateScore = function(data) {
-  this.numClues_ = data['clues'].length;
-
-  this.score_ = ffc.quiz.Score.POINTS_[this.numClues_ - 1];
-  
-  if (data['complete'] && !data['correct']) {
-    this.score_ = 0;
-  }
+ffc.quiz.Score.prototype.updateScore = function(score, numClues) {
+  this.numClues_ = numClues;
+  this.score_ = score;
 
   var points = goog.string.padNumber(this.score_, 2);
 
@@ -96,5 +81,5 @@ ffc.quiz.Score.prototype.updateScore = function(data) {
     if (clueBar) {
       goog.dom.classes.add(clueBar, 'bar-active');
     }
-  };
+  }
 };
