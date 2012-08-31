@@ -1,0 +1,85 @@
+#clues {
+  .clearfix();
+
+  .thumbnail {
+    margin-bottom: 18px;
+  }
+
+  .answer-form {
+    position: relative;
+  }
+
+  .ac-highlighted {
+    font-weight: bold;
+  }
+
+  .autocomplete {
+    width: 424px;
+  }
+
+  .clue p {
+    margin-bottom: 0;
+  }
+
+}
+
+.suggestions {
+  margin-top: @gridGutterWidth / 2;
+
+  label.odd {
+    margin-left: @gridGutterWidth /2;
+  }
+
+  label, p {
+    cursor: pointer;
+    .border-radius(5px);
+    background: @grayLighter;
+    margin-bottom: 10px;
+    line-height: @baseLineHeight;
+    float: left;
+    overflow: hidden;
+    padding: 8px 0;
+    text-overflow: ellipsis;
+    width: (((@gridColumnWidth * 9) + (@gridGutterWidth * 6)) / 2) - 5;
+    white-space: nowrap;
+  }
+
+  label:hover {
+    background: @grayDark;
+    color: @white;
+  }
+
+  input[type="radio"] {
+    margin-left: 10px;
+    margin-right: @gridGutterWidth / 2;
+  }
+
+  p {
+    border-top: none;
+    font-style: italic;
+    text-align: center;
+    width: 100%;
+  }
+
+  span {
+    color: @grayLight;
+    margin-left: 5px;
+    margin-right: @gridGutterWidth * 0.75;
+  }
+
+}
+
+.guess-buttons {
+  .clearfix();
+  clear: both;
+
+  a {
+    float: right;
+    margin-left: @gridGutterWidth / 2;
+  }
+
+  .disabled {
+    .opacity(20);
+  }
+
+}

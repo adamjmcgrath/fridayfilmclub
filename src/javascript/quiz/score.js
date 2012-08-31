@@ -9,6 +9,7 @@ goog.provide('ffc.quiz.Score');
 goog.require('ffc.quiz.Component');
 goog.require('ffc.template.quiz');
 
+goog.require('goog.Timer');
 goog.require('goog.dom.classes');
 goog.require('goog.string');
 
@@ -22,6 +23,13 @@ goog.require('goog.string');
  */
 ffc.quiz.Score = function(score, numClues) {
   goog.base(this);
+
+  /**
+   * Event handler for this object.
+   * @type {goog.events.EventHandler}
+   * @private
+   */
+  this.eh_ = this.getHandler();
 
   /**
    * The number of clues.
@@ -50,8 +58,23 @@ ffc.quiz.Score = function(score, numClues) {
    * @private
    */
   this.clueBars_ = null;
+
+  /**
+   * The countdown timer for animating the points display.
+   * @type {goog.Timer}
+   * @private
+   */
+  this.countDownTimer_ = new goog.Timer(ffc.quiz.Score.COUNTDOWN_INTERVAL_);
 };
 goog.inherits(ffc.quiz.Score, ffc.quiz.Component);
+
+
+/**
+ * Interval for the countdown animation..
+ * @type {number}
+ * @private
+ */
+ffc.quiz.Score.COUNTDOWN_INTERVAL_ = 200;
 
 
 /**
@@ -83,18 +106,35 @@ ffc.quiz.Score.prototype.decorateInternal = function(element) {
  */
 ffc.quiz.Score.prototype.updateScore = function(score, numClues) {
   this.numClues_ = numClues;
-  this.score_ = score;
 
-  var points = goog.string.padNumber(this.score_, 2);
-
-  this.pointEls_[0].innerHTML = points[0];
-  this.pointEls_[1].innerHTML = points[1];
+  this.eh_.listen(this.countDownTimer_, goog.Timer.TICK,
+      goog.bind(this.countDown_, this, score));
+  this.countDownTimer_.start();
 
   for (var i = 0; i < this.numClues_; i++) {
     var clueBar = this.clueBars_[i];
     if (clueBar) {
       goog.dom.classes.add(clueBar, 'bar-active');
     }
+  }
+};
+
+
+/**
+ * Animate the updating of the score board.
+ * @param {number} newScore The new score to update the board with.
+ * @private
+ */
+ffc.quiz.Score.prototype.countDown_ = function(newScore) {
+  this.score_ -= 1;
+
+  var points = goog.string.padNumber(this.score_, 2);
+  this.pointEls_[0].innerHTML = points[0];
+  this.pointEls_[1].innerHTML = points[1];
+
+  if (this.score_ == newScore) {
+    this.countDownTimer_.stop();
+    this.eh_.unlisten(this.countDownTimer_, goog.Timer.TICK);
   }
 };
 

@@ -715,13 +715,16 @@ a.label:hover,a.badge:hover{color:#ffffff;text-decoration:none;cursor:pointer;}
 .invisible{visibility:hidden;}
 h1{margin-bottom:9px;}
 .navbar-inner{background:#eeeeee;-webkit-border-radius:0;-moz-border-radius:0;border-radius:0;-webkit-box-shadow:0 0 0;-moz-box-shadow:0 0 0;box-shadow:0 0 0;padding:20px;}
-.navbar .brand{color:#000000;}
-#sign-in{float:right;}
-#screenshot{margin-bottom:18px;}
+.navbar .brand{color:#000000;float:none;font-size:22px;line-height:20px;font-weight:bold;display:block;text-align:center;}
+#sign-in{position:absolute;right:20px;top:20px;}
 #clues{*zoom:1;}#clues:before,#clues:after{display:table;content:"";}
 #clues:after{clear:both;}
-.suggestions{margin-top:10px;}.suggestions label:first-child,.suggestions label:nth-child(2){border-top:none;}
-.suggestions label.odd{margin-left:10px;}
+#clues .thumbnail{margin-bottom:18px;}
+#clues .answer-form{position:relative;}
+#clues .ac-highlighted{font-weight:bold;}
+#clues .autocomplete{width:424px;}
+#clues .clue p{margin-bottom:0;}
+.suggestions{margin-top:10px;}.suggestions label.odd{margin-left:10px;}
 .suggestions label,.suggestions p{cursor:pointer;-webkit-border-radius:5px;-moz-border-radius:5px;border-radius:5px;background:#eeeeee;margin-bottom:10px;line-height:18px;float:left;overflow:hidden;padding:8px 0;text-overflow:ellipsis;width:280px;white-space:nowrap;}
 .suggestions label:hover{background:#333333;color:#ffffff;}
 .suggestions input[type="radio"]{margin-left:10px;margin-right:10px;}
@@ -731,8 +734,6 @@ h1{margin-bottom:9px;}
 .guess-buttons:after{clear:both;}
 .guess-buttons a{float:right;margin-left:10px;}
 .guess-buttons .disabled{opacity:0.2;filter:alpha(opacity=20);}
-.thumbnail{margin-bottom:18px;}
-.answer-form{position:relative;}
 #sidebar{margin-top:35px;position:relative;}
 #score-wrap{padding-top:10px;}
 .score h4{clear:left;margin:-5px 0 8px 0;}
@@ -745,9 +746,5 @@ h1{margin-bottom:9px;}
 .score .points-available span{-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;text-align:center;background:#333;color:white;width:49%;display:block;float:left;margin-bottom:8px;}
 .score .points-available sub{position:absolute;display:block;height:1px;background:#fff;width:100%;bottom:46px;}
 .score .point:first-child{margin-right:1px;}
-.ac-highlighted{font-weight:bold;}
-.clearfix:after{content:".";display:block;height:0;clear:both;visibility:hidden;}
-.autocomplete{width:424px;}
-.clue p{margin-bottom:0;}
-fieldset.well{padding-bottom:0 !important;}
-input[type=file]{margin-right:12px;width:270px;}
+#add-question fieldset.well{padding-bottom:0 !important;}
+#add-question input[type=file]{margin-right:12px;width:270px;}

@@ -5,7 +5,7 @@
 {% block main %}
 {{super()}}
 <h2>Upload Question</h2>
-<form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
+<form id="add-question" class="form-horizontal" action="" method="post" enctype="multipart/form-data">
   <fieldset>
     <div class="control-group{% if form.answer.errors %} error{% endif %}">
       <label class="control-label" for="ac">Film</label>
