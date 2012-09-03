@@ -46,11 +46,18 @@ ffc.quiz.Score = function(score, numClues) {
   this.score_ = score;
 
   /**
+   * Keep a placeholder for the new score when updating the score.
+   * @type {number}
+   * @private
+   */
+  this.newScore_ = score;
+
+  /**
    * The elements that show the users score.
    * @type {Array.<Element>}
    * @private
    */
-   this.pointEls_ = null;
+  this.pointEls_ = null;
 
   /**
    * The elements that show how many clues the user has had.
@@ -100,15 +107,25 @@ ffc.quiz.Score.prototype.decorateInternal = function(element) {
 
 
 /**
+ * @override
+ */
+ffc.quiz.Score.prototype.enterDocument = function() {
+  goog.base(this, 'enterDocument');
+
+  this.eh_.listen(this.countDownTimer_, goog.Timer.TICK,
+      this.countDown_, false, this);
+};
+
+
+/**
  * Update the score board.
  * @param {number} score The user's current score.
  * @param {number} numClues The number of clues the user has been given.
  */
 ffc.quiz.Score.prototype.updateScore = function(score, numClues) {
   this.numClues_ = numClues;
+  this.newScore_ = score;
 
-  this.eh_.listen(this.countDownTimer_, goog.Timer.TICK,
-      goog.bind(this.countDown_, this, score));
   this.countDownTimer_.start();
 
   for (var i = 0; i < this.numClues_; i++) {
@@ -122,19 +139,17 @@ ffc.quiz.Score.prototype.updateScore = function(score, numClues) {
 
 /**
  * Animate the updating of the score board.
- * @param {number} newScore The new score to update the board with.
  * @private
  */
-ffc.quiz.Score.prototype.countDown_ = function(newScore) {
+ffc.quiz.Score.prototype.countDown_ = function() {
   this.score_ -= 1;
 
   var points = goog.string.padNumber(this.score_, 2);
   this.pointEls_[0].innerHTML = points[0];
   this.pointEls_[1].innerHTML = points[1];
 
-  if (this.score_ == newScore) {
+  if (this.newScore_ == this.score_) {
     this.countDownTimer_.stop();
-    this.eh_.unlisten(this.countDownTimer_, goog.Timer.TICK);
   }
 };
 
