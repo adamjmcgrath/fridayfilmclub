@@ -21,6 +21,9 @@
 	path = src/mapreduce
 	url = git@github.com:adamjmcgrath/appengine-mapreduce-python.git
         ignore = untracked
-[submodule "src/third_party/simpleauth"]
-	path = src/third_party/simpleauth
+[submodule "submodules/simpleauth"]
+	path = submodules/simpleauth
 	url = git://github.com/crhym3/simpleauth.git
+[submodule "submodules/httplib2"]
+	path = submodules/httplib2
+	url = git@github.com:adamjmcgrath/httplib2.git

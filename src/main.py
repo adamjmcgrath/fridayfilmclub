@@ -13,8 +13,13 @@ import webapp2
 
 import admin
 import api
+import auth
 import suggest
+import secrets
 import views
+
+if 'third_party' not in sys.path:
+    sys.path[0:0] = ['third_party']
 
 debug = os.environ.get('SERVER_SOFTWARE', '').startswith('Dev')
 
@@ -27,20 +32,33 @@ routes = [
     (r'/admin/indexfilms/?', admin.IndexFilms),
     (r'/admin/questions/?', admin.Questions),
     (r'/admin/?', admin.HomePage),
-    (r'/question/?(.+)?', views.Question),
-    (r'/suggest/?(.+)?', suggest.SuggestHandler),
 
     (r'/api/question/?(.+)?', api.Question),
+
+    Route('/auth/<provider>', handler='handlers.AuthHandler:_simple_auth', name='auth_login'),
+    Route('/auth/<provider>/callback', handler='handlers.AuthHandler:_auth_callback', name='auth_callback'),
+    Route('/logout', handler='handlers.AuthHandler:logout', name='logout')
+
+    (r'/question/?(.+)?', views.Question),
+
+    (r'/suggest/?(.+)?', suggest.SuggestHandler),
+
+
 
     (r'/', views.HomePage),
 ]
 
-config = {}
-config['webapp2_extras.sessions'] = {
-    'secret_key': 'B1gtr0ubl31nl1ttl3ch1n4',
+app_config = {
+  'webapp2_extras.sessions': {
+    'cookie_name': '_simpleauth_sess',
+    'secret_key': secrets.SESSION_KEY
+  },
+  'webapp2_extras.auth': {
+    'user_attributes': []
+  }
 }
 
-app = webapp2.WSGIApplication(routes=routes, debug=debug, config=config)
+app = webapp2.WSGIApplication(routes=routes, debug=debug, config=app_config)
 
 def main():
   app.run()

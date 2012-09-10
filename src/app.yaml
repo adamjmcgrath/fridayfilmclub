@@ -9,6 +9,9 @@ libraries:
   version: latest
 - name: markupsafe
   version: latest
+- name: lxml
+  version: latest
+
 
 handlers:
 - url: /static
