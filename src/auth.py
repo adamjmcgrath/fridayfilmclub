@@ -10,12 +10,31 @@ import logging
 import baserequesthandler
 import secrets
 
+import webapp2
+from webapp2_extras import auth, sessions
+
 from simpleauth.handler import SimpleAuthHandler
 
 
 
 class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
   """Authentication handler for all kinds of auth."""
+
+  def dispatch(self):
+    # Get a session store for this request.
+    self.session_store = sessions.get_store(request=self.request)
+    
+    try:
+      # Dispatch the request.
+      webapp2.RequestHandler.dispatch(self)
+    finally:
+      # Save all sessions.
+      self.session_store.save_sessions(self.response)
+
+  @webapp2.cached_property
+  def session(self):
+    """Returns a session using the default cookie key"""
+    return self.session_store.get_session()
 
   def _on_signin(self, data, auth_info, provider):
     """Callback whenever a new or existing user is logging in.
@@ -24,9 +43,11 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
     
     See what's in it with logging.info(data, auth_info)
     """
-    
+
     auth_id = '%s:%s' % (provider, data['id'])
-    
+
+    logging.info(auth_id)
+
     # 1. check whether user exist, e.g.
     #    User.get_by_auth_id(auth_id)
     #

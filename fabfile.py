@@ -78,13 +78,13 @@ def deploy(tag=None):
   commit()
 
 
-def run(clear_datastore=False):
+def run(port='8080', clear_datastore=False):
   if clear_datastore:
-    command = '%s --port 8080 --clear_datastore %s'
+    command = '%s --port %s --clear_datastore %s'
   else:
-    command = '%s --port 8080 %s'
+    command = '%s --port %s %s'
   
-  local(command % (APPENGINE_DEV_APPSERVER, env.gae_src))
+  local(command % (APPENGINE_DEV_APPSERVER, port, env.gae_src))
 
 
 def commit(branch='master'):

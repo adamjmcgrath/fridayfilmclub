@@ -27,3 +27,6 @@
 [submodule "submodules/httplib2"]
 	path = submodules/httplib2
 	url = git@github.com:adamjmcgrath/httplib2.git
+[submodule "submodules/oauth2"]
+	path = submodules/oauth2
+	url = git://github.com/simplegeo/python-oauth2.git

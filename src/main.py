@@ -8,8 +8,12 @@ __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 
 import logging
 import os
+import sys
 
 import webapp2
+
+if 'third_party' not in sys.path:
+  sys.path[0:0] = ['third_party']
 
 import admin
 import api
@@ -18,8 +22,6 @@ import suggest
 import secrets
 import views
 
-if 'third_party' not in sys.path:
-    sys.path[0:0] = ['third_party']
 
 debug = os.environ.get('SERVER_SOFTWARE', '').startswith('Dev')
 
@@ -35,9 +37,12 @@ routes = [
 
     (r'/api/question/?(.+)?', api.Question),
 
-    Route('/auth/<provider>', handler='handlers.AuthHandler:_simple_auth', name='auth_login'),
-    Route('/auth/<provider>/callback', handler='handlers.AuthHandler:_auth_callback', name='auth_callback'),
-    Route('/logout', handler='handlers.AuthHandler:logout', name='logout')
+    webapp2.Route('/auth/<provider>',
+        handler='auth.AuthHandler:_simple_auth', name='auth_login'),
+    webapp2.Route('/auth/<provider>/callback',
+        handler='auth.AuthHandler:_auth_callback', name='auth_callback'),
+    webapp2.Route('/logout',
+        handler='auth.AuthHandler:logout', name='logout'),
 
     (r'/question/?(.+)?', views.Question),
 
