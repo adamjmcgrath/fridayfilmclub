@@ -12,16 +12,11 @@ import re
 
 import webapp2
 from google.appengine.api import memcache
+from google.appengine.ext import ndb
 
 import baserequesthandler
 import models
 
-
-def get_films_from_slug(slug):
-  """docstring for get_films_from_slug"""
-  film_index = models.FilmIndex.get_by_key_name(slug)
-
-  return models.Film.get(film_index.films)  
 
 
 class SuggestHandler(baserequesthandler.RequestHandler):
@@ -40,10 +35,10 @@ class SuggestHandler(baserequesthandler.RequestHandler):
       self.set_json_content_type()
       return webapp2.Response(memcached)
 
-    film_index = models.FilmIndex.get_by_key_name(prefix)
-    
+    film_index = models.FilmIndex.get_by_id(prefix)
+
     if film_index:
-      films = models.Film.get(film_index.films)
+      films = ndb.get_multi(film_index.films)
       return self.render_json([f.to_dict() for f in films])
     else:
       return self.render_empty()

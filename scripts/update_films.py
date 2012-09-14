@@ -30,7 +30,7 @@ fix_appengine_path()
 # Add models to path.
 sys.path.insert(0, '/Users/adam/dev/projects/ffc/src/')
 
-from google.appengine.ext import db
+from google.appengine.ext import ndb
 from google.appengine.ext.remote_api import remote_api_stub
 
 import models
@@ -53,7 +53,7 @@ def main():
   cursor = None
   while True:
     print 'Updating a batch.'
-    query = models.Film.all()
+    query = models.Film.query()
     if cursor:
       query.with_cursor(cursor)
   
@@ -65,7 +65,7 @@ def main():
       film.title_slug = models.slugify(film.title)
       print film.title + ': ' + film.title_slug
   
-    db.put(films)
+    ndb.put_multi(films)
     cursor = query.cursor()
 
 

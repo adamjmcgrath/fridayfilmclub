@@ -12,7 +12,7 @@ import re
 import webapp2
 from google.appengine.api import memcache
 from google.appengine.ext import blobstore
-from google.appengine.ext import db
+from google.appengine.ext import ndb
 from google.appengine.ext.webapp import blobstore_handlers
 
 from mapreduce import control, mapreduce_pipeline
@@ -49,7 +49,7 @@ class AddEditQuestion(baserequesthandler.RequestHandler):
 
   def get(self, key=None):
     if key:
-      question_entity = models.Question.get(key)
+      question_entity = ndb.Key('Question', key).get()
 
       form = forms.Question(obj=question_entity)
     else:
@@ -65,14 +65,22 @@ class AddEditQuestion(baserequesthandler.RequestHandler):
     form = forms.Question(formdata=self.request.POST)
 
     if key:
-      question_entity = models.Question.get(key)
+      question_entity = ndb.Key('Question', key).get()
     else:
       question_entity = models.Question()
 
+    logging.info(key)
+    logging.info(question_entity)
+    logging.info(models.Question())
+
     if form.validate():
       # TODO(adamjmcgrath): only put once.
+      logging.info('1')
+      logging.info(question_entity)
       question_entity.put()
       form.populate_obj(question_entity)
+      logging.info('2')
+      logging.info(question_entity)
       question_entity.put()
       return webapp2.redirect('/admin/questions')
     else:
@@ -89,7 +97,7 @@ class Questions(baserequesthandler.RequestHandler):
 
   def get(self):
     return self.render_template('admin/questions.html', {
-      'questions': models.Question.all(),
+      'questions': models.Question.query(),
     })
 
 
@@ -101,7 +109,7 @@ class AddFilmsHandler(blobstore_handlers.BlobstoreUploadHandler):
     blob_info = upload_files[0]
 
     batch = 1
-    last_add = models.Film.all().order('-batch').get()
+    last_add = models.Film.query().order(-models.Film.batch).get()
     if last_add:
       batch += last_add.batch
 

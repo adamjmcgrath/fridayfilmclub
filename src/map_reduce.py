@@ -11,7 +11,7 @@ import cStringIO as StringIO
 import logging
 import re
 
-from google.appengine.ext import db
+from google.appengine.ext import ndb
 
 from mapreduce import base_handler, context, mapreduce_pipeline
 from mapreduce import operation as op
@@ -33,7 +33,7 @@ def add_film_map(input_tuple):
   title = row[1]
   title_slug = models.slugify(title)
   film_entity = models.Film(
-      key_name='%s-%s' % (year, title_slug),
+      id='%s-%s' % (year, title_slug),
       batch=int(batch),
       title=unicode(title, 'utf-8'),
       title_slug=title_slug,
@@ -44,15 +44,15 @@ def add_film_map(input_tuple):
   except IndexError:
     pass
 
-  yield op.db.Put(film_entity)
+  yield film_entity.put()
 
 
 def film_index_map(entity):
   """Index each film title."""
-  key = entity.key()
-  key_name = key.name()
-  logging.info('Mapping: %s' % key_name)
-  words = key_name.split('-')[1:]
+  key = entity.key
+  id = key.string_id()
+  logging.info('Mapping: %s' % id)
+  words = id.split('-')[1:]
   starts = []
   for i in range(0, len(words)):
     start = ''.join(words[i:])
@@ -62,7 +62,7 @@ def film_index_map(entity):
         starts.append(pfx)
         slug = re.sub('-', '', entity.title_slug)
         grossing = entity.grossing or 0
-        yield (pfx, '%d|%d|%s|%s' % (entity.year, grossing, slug, key))
+        yield (pfx, '%d|%d|%s|%s' % (entity.year, grossing, slug, id))
 
 
 def film_index_reduce(word, films):
@@ -80,8 +80,8 @@ def film_index_reduce(word, films):
       key=lambda m: m.split('|')[2] == word, reverse=True)
 
   index_entity = models.FilmIndex(
-      key_name=word,
-      films=[db.Key(m.split('|')[3]) for m in films_sorted_match][:FILMS_PER_INDEX],)
+      id=word,
+      films=[ndb.Key('Film', m.split('|')[3]) for m in films_sorted_match][:FILMS_PER_INDEX],)
 
   yield op.db.Put(index_entity)
 

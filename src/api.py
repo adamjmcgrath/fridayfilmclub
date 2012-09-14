@@ -13,7 +13,6 @@ import posixpath
 import webapp2
 from google.appengine.api import users
 from google.appengine.api import memcache
-from google.appengine.ext import db
 
 import baserequesthandler
 import forms
@@ -45,7 +44,7 @@ class Question(baserequesthandler.RequestHandler):
     # Get the question and user.
     question = models.Question.get(question_key)
     user_id = users.get_current_user().user_id()
-    user_entity = models.User.get_by_key_name(user_id)
+    user_entity = models.User.get_by_id(user_id)
 
     # Construct/get the user key.
     user_question_key = posixpath.join(user_id, question_key)

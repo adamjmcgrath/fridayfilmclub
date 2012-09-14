@@ -14,6 +14,7 @@ import posixpath
 import webapp2
 from google.appengine.api import files
 from google.appengine.api import images
+from google.appengine.ext import ndb
 from google.appengine.ext.db import BadKeyError
 from wtforms import fields, Form, validators, widgets
 
@@ -28,13 +29,13 @@ class FilmField(fields.HiddenField):
   def process_formdata(self, valuelist):
     """Process data received over the wire from a form."""
     try:
-      self.data = models.Film.get(valuelist and valuelist[0])
+      self.data = ndb.Key('Film', valuelist and valuelist[0]).get()
     except BadKeyError:
       self.data = ''
 
   def populate_obj(self, obj, name):
     """Populate the object represented by the film field."""
-    obj.answer = self.data.key()
+    obj.answer = self.data.key
 
 
 class ImageField(fields.FileField):
@@ -50,7 +51,12 @@ class ImageField(fields.FileField):
     with files.open(file_name, 'a') as f:
       f.write(img_file)
     files.finalize(file_name)
+
+    logging.info(obj)
+    logging.info(files.blobstore.get_blob_key(file_name))
+
     obj.image = files.blobstore.get_blob_key(file_name)
+    logging.info(obj)
 
 
 class ClueForm(Form):
@@ -75,6 +81,7 @@ class ClueFormField(fields.FormField):
 
   def populate_obj(self, entity):
     """docstring for populate_obj"""
+
     self.form.populate_obj(entity)
 
 
@@ -82,14 +89,19 @@ class CluesFieldList(fields.FieldList):
 
   def populate_obj(self, entity, name):
     counter = 0
+
     for entry, data in zip(self.entries, self.data):
       try:
         clue = entity.clues[counter]
+        entry.populate_obj(clue)
+        clue.put()
+        entity.clues[counter](clue.key)
       except IndexError:
-        clue = models.Clue(question=entity)
+        clue = models.Clue(question=entity.key)
+        entry.populate_obj(clue)
+        clue.put()
+        entity.clues.append(clue.key)
       counter += 1
-      entry.populate_obj(clue)
-      clue.put()
 
 
 class Question(Form):

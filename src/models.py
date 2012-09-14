@@ -11,10 +11,12 @@ import re
 import models
 
 import webapp2
+from webapp2_extras.appengine.auth.models import User as AuthUser
+
 from google.appengine.api import files
 from google.appengine.api import images
 from google.appengine.api.datastore_errors import BadArgumentError
-from google.appengine.ext import db
+from google.appengine.ext import ndb
 from google.appengine.ext import blobstore
 from wtforms import fields, Form, validators
 
@@ -29,7 +31,7 @@ def slugify(st):
 
 
 
-class Film(db.Model):
+class Film(ndb.Model):
   """A Film.
 
   Attributes:
@@ -39,44 +41,52 @@ class Film(db.Model):
     title_slug: The slugified title of the Film.
     year: The year the Film came out.
   """
-  batch = db.IntegerProperty()
-  grossing = db.IntegerProperty()
-  title = db.StringProperty()
-  title_slug = db.StringProperty()
-  year = db.IntegerProperty()
+  batch = ndb.IntegerProperty()
+  grossing = ndb.IntegerProperty()
+  title = ndb.StringProperty()
+  title_slug = ndb.StringProperty()
+  year = ndb.IntegerProperty()
 
   def to_dict(self):
-    return db.to_dict(self, {'key': str(self.key())})
+    return {
+      'key': self.key.string_id(),
+      'batch': self.batch,
+      'grossing': self.grossing,
+      'title': self.title,
+      'title_slug': self.title_slug,
+      'year': self.year,
+    }
 
 
-class FilmIndex(db.Model):
+class FilmIndex(ndb.Model):
   """An index to search for Films.
 
   Attributes:
     films: a list of films that the index matches.
   """
-  films = db.ListProperty(db.Key)
+  films = ndb.KeyProperty(repeated=True)
 
 
-class Question(db.Model):
+class Question(ndb.Model):
   """A question.
 
   Attributes:
     answer:
     clues:
   """
-  created = db.DateTimeProperty(auto_now_add=True)
-  answer = db.ReferenceProperty(Film)
-  posed = db.DateProperty()
-  screenshot = blobstore.BlobReferenceProperty()
-  updated = db.DateTimeProperty(auto_now=True)
+  answers = ndb.KeyProperty(repeated=True)
+  clues = ndb.KeyProperty(repeated=True)
+  created = ndb.DateTimeProperty(auto_now_add=True)
+  answer = ndb.KeyProperty(kind=Film)
+  posed = ndb.DateProperty()
+  updated = ndb.DateTimeProperty(auto_now=True)
 
 
-class Clue(db.Model):
+class Clue(ndb.Model):
   """A clue."""
-  text = db.TextProperty()
-  image = blobstore.BlobReferenceProperty()
-  question = db.ReferenceProperty(Question, collection_name='clues')
+  text = ndb.TextProperty()
+  image = ndb.BlobKeyProperty()
+  question = ndb.KeyProperty(kind=Question)
 
   def image_url(self, size=None):
     """Get's the image's url."""
@@ -92,16 +102,18 @@ class Clue(db.Model):
     }
 
 
-class User(db.Model):
+# webapp2_extras.appengine.auth.models.User
+class User(AuthUser):
   """A user.
 
   Attributes:
     films
   """
-  user = db.UserProperty()
+  user = ndb.UserProperty()
+  answers = ndb.KeyProperty()
 
 
-class UserQuestion(db.Model):
+class UserQuestion(ndb.Model):
   """Links user and question and keeps track of guesses and score.
 
   Attributes:
@@ -111,13 +123,13 @@ class UserQuestion(db.Model):
     score:
   """
   # @TODO (adamjmcgrath) Implement date answered correctly.
-  answered_correctly = db.DateTimeProperty()
-  complete = db.BooleanProperty(default=False)
-  correct = db.BooleanProperty(default=False)
-  guesses = db.StringListProperty()
-  current_guess = db.IntegerProperty(default=0)
-  incorrect = db.BooleanProperty()
-  question = db.ReferenceProperty(Question, collection_name='answers')
-  score = db.IntegerProperty()
-  user = db.ReferenceProperty(User, collection_name='answers')
+  answered_correctly = ndb.DateTimeProperty()
+  complete = ndb.BooleanProperty(default=False)
+  correct = ndb.BooleanProperty(default=False)
+  guesses = ndb.StringProperty(repeated=True)
+  current_guess = ndb.IntegerProperty(default=0)
+  incorrect = ndb.BooleanProperty()
+  question = ndb.KeyProperty(kind=Question)
+  score = ndb.IntegerProperty()
+  user = ndb.KeyProperty(kind=User)
 
