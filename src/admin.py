@@ -69,18 +69,10 @@ class AddEditQuestion(baserequesthandler.RequestHandler):
     else:
       question_entity = models.Question()
 
-    logging.info(key)
-    logging.info(question_entity)
-    logging.info(models.Question())
-
     if form.validate():
       # TODO(adamjmcgrath): only put once.
-      logging.info('1')
-      logging.info(question_entity)
       question_entity.put()
       form.populate_obj(question_entity)
-      logging.info('2')
-      logging.info(question_entity)
       question_entity.put()
       return webapp2.redirect('/admin/questions')
     else:
