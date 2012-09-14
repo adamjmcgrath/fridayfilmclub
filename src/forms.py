@@ -52,11 +52,7 @@ class ImageField(fields.FileField):
       f.write(img_file)
     files.finalize(file_name)
 
-    logging.info(obj)
-    logging.info(files.blobstore.get_blob_key(file_name))
-
     obj.image = files.blobstore.get_blob_key(file_name)
-    logging.info(obj)
 
 
 class ClueForm(Form):
