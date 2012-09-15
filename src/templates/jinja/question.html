@@ -18,7 +18,7 @@
 {% block body_base %}
 {% include "templates/jinja/inc/questionjs.tpl" %}
 <script>
-  var q = new ffc.quiz.Question('{{question.key()}}',
+  var q = new ffc.quiz.Question('{{question.key.id()}}',
       document.getElementById('clues'),
       document.getElementById('score-wrap'));
 </script>

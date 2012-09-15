@@ -30,30 +30,30 @@ _SCORE = [None, 10, 7, 5, 2, 0]
 class Question(baserequesthandler.RequestHandler):
   """Shows the homepage."""
 
-  def get(self, question_key):
-    return self.get_or_post(question_key)
+  def get(self, question_id):
+    return self.get_or_post(question_id)
 
-  def post(self, question_key):
+  def post(self, question_id):
     # Get the users guess
     guess = self.request.get('guess')
 
-    return self.get_or_post(question_key, guess=guess)
+    return self.get_or_post(question_id, guess=guess)
 
-  def get_or_post(self, question_key, guess=None):
+  def get_or_post(self, question_id, guess=None):
 
     # Get the question and user.
-    question = models.Question.get(question_key)
+    question = models.Question.get_by_id(int(question_id))
     user_id = users.get_current_user().user_id()
     user_entity = models.User.get_by_id(user_id)
 
     # Construct/get the user key.
-    user_question_key = posixpath.join(user_id, question_key)
-    user_question = models.UserQuestion.get_or_insert(user_question_key,
+    user_question_id = posixpath.join(user_id, question_id)
+    user_question = models.UserQuestion.get_or_insert(user_question_id,
       question=question, user=user_entity)
 
     # Check if guess is correct, update UserQuestion.
     if guess and not user_question.complete:
-      user_question.correct = (guess.strip() == str(question.answer.key()))
+      user_question.correct = (guess.strip() == str(question.answer.id()))
 
       user_question.guesses.append(guess)
       if user_question.correct or len(user_question.guesses) >= _MAX_CLUES:
@@ -72,21 +72,21 @@ class Question(baserequesthandler.RequestHandler):
         # A blank guess is a "pass".
         guesses.append({})
       else:
-        film_entity = models.Film.get(g)
+        film_entity = models.Film.get_by_id(g)
         guesses.append({
           'title': film_entity.title,
           'year': str(film_entity.year)
         })
 
     response_obj = {
-        'clues': [clue.to_json() for clue in question.clues[:clue_number]],
+        'clues': [clue.get().to_json() for clue in question.clues[:clue_number]],
         'correct': user_question.correct,
         'guesses': guesses,
     }
 
     # If the question is complete, reveal the correct answer to the user.
     if user_question.complete:
-      response_obj['answer'] = question.answer.to_dict()
+      response_obj['answer'] = question.answer.get().to_dict()
 
     # Calculate the users score. Unless they have answered the question
     # correctly, their score is effectively the score they will get IF they

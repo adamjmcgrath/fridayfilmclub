@@ -15,6 +15,7 @@ import re
 import webapp2
 from google.appengine.api import users
 from google.appengine.api import memcache
+from google.appengine.ext import ndb
 
 import baserequesthandler
 import forms
@@ -33,21 +34,21 @@ class HomePage(baserequesthandler.RequestHandler):
 class Question(baserequesthandler.RequestHandler):
   """Shows the homepage."""
 
-  def get(self, question_key):
+  def get(self, question_id):
 
-    if question_key:
-      question = models.Question.get(question_key)
+    if question_id:
+      question = models.Question.get_by_id(int(question_id))
     else:
       question = models.Question.query().get()
-      question_key = str(question.key())
 
     user = users.get_current_user()
     user_id = user.user_id()
     user_entity = models.User.get_or_insert(user_id)
 
-    user_question_id = posixpath.join(user_id, question_key)
+    user_question_id = posixpath.join(user_id, str(question.key.id()))
     user_question = models.UserQuestion.get_or_insert(user_question_id,
-      question=question, user=user_entity
+      question=question.key,
+      user=user_entity.key
     )
 
     return self.render_template('question.html', {
