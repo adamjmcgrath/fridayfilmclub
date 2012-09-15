@@ -93,7 +93,8 @@ class CluesFieldList(fields.FieldList):
         clue.put()
         entity.clues[counter](clue.key)
       except IndexError:
-        clue = models.Clue(question=entity.key)
+        clue_id = '%d-%d' % (entity.key.id(), counter)
+        clue = models.Clue(id=clue_id, question=entity.key)
         entry.populate_obj(clue)
         clue.put()
         entity.clues.append(clue.key)

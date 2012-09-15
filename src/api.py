@@ -47,7 +47,7 @@ class Question(baserequesthandler.RequestHandler):
     user_entity = models.User.get_by_id(user_id)
 
     # Construct/get the user key.
-    user_question_id = posixpath.join(user_id, question_id)
+    user_question_id = '%s-%s' % (question_id, user_id)
     user_question = models.UserQuestion.get_or_insert(user_question_id,
       question=question, user=user_entity)
 
@@ -89,7 +89,7 @@ class Question(baserequesthandler.RequestHandler):
       response_obj['answer'] = question.answer.get().to_dict()
 
     # Calculate the users score. Unless they have answered the question
-    # correctly, their score is effectively the score they will get IF they
+    # correctly, their score is effectively the score they will get if they
     # answer the next question correctly.
     index = len(user_question.guesses)
     if not user_question.correct:

@@ -109,7 +109,6 @@ class User(AuthUser):
   Attributes:
     films
   """
-  user = ndb.UserProperty()
   answers = ndb.KeyProperty()
 
 

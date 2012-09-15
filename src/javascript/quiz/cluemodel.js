@@ -11,7 +11,7 @@ goog.provide('ffc.quiz.ClueModel');
 
 /**
  * Clue Model constructor.
- * @param {Object=} data
+ * @param {Object} data
  *   {string=} image The path to the image clue.
  *   {string=} text The text for the clue.
  * @param {number} position The position of the clue.

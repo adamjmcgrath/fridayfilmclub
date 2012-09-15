@@ -12,7 +12,7 @@ goog.provide('ffc.quiz.GuessModel');
 
 /**
  * Guess Model constructor.
- * @param {Object=} data
+ * @param {Object} data
  *   {string} title The title of the answer.
  *   {string} year The year of the film answer.
  * @param {number} position The number of the guess.

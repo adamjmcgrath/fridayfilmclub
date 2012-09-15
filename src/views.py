@@ -45,7 +45,7 @@ class Question(baserequesthandler.RequestHandler):
     user_id = user.user_id()
     user_entity = models.User.get_or_insert(user_id)
 
-    user_question_id = posixpath.join(user_id, str(question.key.id()))
+    user_question_id = '%d-%s' % (question.key.id(), user_id)
     user_question = models.UserQuestion.get_or_insert(user_question_id,
       question=question.key,
       user=user_entity.key

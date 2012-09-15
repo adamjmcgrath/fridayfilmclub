@@ -28,11 +28,11 @@
       {% endif %}
       </td>
     {% endfor %}
-    <td><a href="/admin/editquestion/{{q.key}}">edit</a></td>
-    <td><a href="/question/{{q.key}}">view</a></td>
+    <td><a href="/admin/editquestion/{{q.key.id()}}">edit</a></td>
+    <td><a href="/question/{{q.key.id()}}">view</a></td>
     <td>
       {% if not q.posed %}
-      <a href="/admin/posequestion/{{q.key}}">email</a>
+      <a href="/admin/posequestion/{{q.key.id()}}">email</a>
       {% endif %}
     </td>
   </tr>

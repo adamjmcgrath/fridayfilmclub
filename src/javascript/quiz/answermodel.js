@@ -11,7 +11,7 @@ goog.provide('ffc.quiz.AnswerModel');
 
 /**
  * Answer Model constructor.
- * @param {Object=} data
+ * @param {Object} data
  *   {string} title The title of the answer.
  *   {string} year The year of the film answer.
  * @param {boolean} correct Whether the answer is correct.

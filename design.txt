@@ -36,3 +36,19 @@ API:
       ],
       score: {Number}
     }
+
+
+AUTH:
+
+  - question page:
+    - var theWindow = window.open(/auth/twitter/)
+    - var add mask
+
+  - /auth/twitter/callback
+      - window.opener.authSuccess
+  
+  - question page
+    - dispatch(ffc.auth.OAuth.LOGIN_SUCCESS)
+    - close theWindow
+    - removeMask
+    - load question
