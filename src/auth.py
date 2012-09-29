@@ -18,51 +18,66 @@ from simpleauth.handler import SimpleAuthHandler
 
 
 class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
-  """Authentication handler for all kinds of auth."""
+  """Authentication handler for OAuth 2.0, 1.0(a) and OpenID."""
 
-  def dispatch(self):
-    # Get a session store for this request.
-    self.session_store = sessions.get_store(request=self.request)
-    
-    try:
-      # Dispatch the request.
-      webapp2.RequestHandler.dispatch(self)
-    finally:
-      # Save all sessions.
-      self.session_store.save_sessions(self.response)
-
-  @webapp2.cached_property
-  def session(self):
-    """Returns a session using the default cookie key"""
-    return self.session_store.get_session()
+  USER_ATTRS = {
+    'google'   : {
+      'picture': 'avatar_url',
+      'name'   : 'name',
+      'link'   : 'link',
+      'email'   : 'email',
+    },
+    'facebook' : {
+      'id': lambda id: ('avatar_url', 'http://graph.facebook.com/{0}/picture?type=large'.format(id)),
+      'name'   : 'name',
+      'link'   : 'link',
+      'email'   : 'email',
+    },
+    'twitter'  : {
+      'profile_image_url': 'avatar_url',
+      'screen_name'      : 'name',
+      'link'             : 'link',
+    },
+  }
 
   def _on_signin(self, data, auth_info, provider):
     """Callback whenever a new or existing user is logging in.
-    data is a user info dictionary.
-    auth_info contains access token or oauth token and secret.
-    
-    See what's in it with logging.info(data, auth_info)
+
+    Args:
+      data: is a user info dictionary.
+      auth_info: contains access token or oauth token and secret.
+      provider: the id of the oauth provider.
     """
-
     auth_id = '%s:%s' % (provider, data['id'])
+    logging.info('Looking for a user with id %s' % auth_id)
+    logging.info(data)
 
-    logging.info(auth_id)
+    user = self.auth.store.user_model.get_by_auth_id(auth_id)
+    if user:
+      logging.info('Found existing user to log in')
+      # existing user. just log them in.
+      self.auth.set_session(self.auth.store.user_to_dict(user))
 
-    # 1. check whether user exist, e.g.
-    #    User.get_by_auth_id(auth_id)
-    #
-    # 2. create a new user if it doesn't
-    #    User(**data).put()
-    #
-    # 3. sign in the user
-    #    self.session['_user_id'] = auth_id
-    #
-    # 4. redirect somewhere, e.g. self.redirect('/profile')
-    #
-    # See more on how to work the above steps here:
-    # http://webapp-improved.appspot.com/api/webapp2_extras/auth.html
-    # http://code.google.com/p/webapp-improved/issues/detail?id=20
-    
+    else:
+      # check whether there's a user currently logged in
+      # then, create a new user if nobody's signed in, 
+      # otherwise add this auth_id to currently logged in user.
+      if self.current_user:
+        logging.info('Updating currently logged in user')
+        u = self.current_user
+        u.auth_ids.append(auth_id)
+        u.populate(**self._to_user_model_attrs(data, provider))
+        u.put()
+
+      else:
+        logging.info('Creating a brand new user')
+        ok, user = self.auth.store.user_model.create_user(
+            auth_id, **self._to_user_model_attrs(data, provider))
+        if ok:
+          self.auth.set_session(self.auth.store.user_to_dict(user))
+
+    # show them their profile data
+    self.redirect('/profile')
 
   def logout(self):
     self.auth.unset_session()
@@ -72,14 +87,22 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
     return self.uri_for('auth_callback', provider=provider, _full=True)
 
   def _get_consumer_info_for(self, provider):
-    """Get he apps OAuth credentials.
-
-    Args:
-      provider: The OAuth provider identifier (twitter, facebook or google)
-    
-    Returns:
-      a tuple (key, secret) for auth init requests.
-      For OAuth 2.0 it also returns a scope, e.g.
-      ('my app id', 'my app secret', 'email,user_about_me')
-    """
+    """Returns a tuple (key, secret) for auth init requests."""
     return secrets.AUTH_CONFIG[provider]
+
+  def _to_user_model_attrs(self, data, provider):
+    attrs_map = self.USER_ATTRS[provider]
+    user_attrs = {}
+    for k, v in data.iteritems():
+      if k in attrs_map:
+        key = attrs_map[k]
+        provider_key = '%s_%s' % (provider, key)
+        if isinstance(key, str):
+          user_attrs.setdefault(provider_key, v)
+          user_attrs.setdefault(key, v)
+        else:
+          values = key(v)
+          user_attrs.setdefault('%s_%s' % (provider, values[0]), values[1])
+          user_attrs.setdefault(*values)
+
+    return user_attrs

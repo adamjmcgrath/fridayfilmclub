@@ -110,6 +110,18 @@ class User(AuthUser):
     films
   """
   answers = ndb.KeyProperty()
+  avatar_url = ndb.StringProperty()
+  name = ndb.StringProperty()
+  link = ndb.StringProperty()
+  google_avatar_url = ndb.StringProperty()
+  google_name = ndb.StringProperty()
+  google_link = ndb.StringProperty()
+  facebook_avatar_url = ndb.StringProperty()
+  facebook_name = ndb.StringProperty()
+  facebook_link = ndb.StringProperty()
+  twitter_avatar_url = ndb.StringProperty()
+  twitter_name = ndb.StringProperty()
+  twitter_link = ndb.StringProperty()
 
 
 class UserQuestion(ndb.Model):

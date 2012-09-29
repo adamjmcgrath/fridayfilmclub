@@ -1,0 +1,34 @@
+{% extends "templates/jinja/base.tpl" %}
+
+{% block page_id %}login-page{% endblock page_id %}
+
+{% block main %}
+<div class="row" id="login-buttons">
+  <div >
+    <a href="/auth/facebook" class="btn btn-large btn-primary" type="button">
+      <img src="/static/img/facebook.png">
+      Login with Facebook
+    </a>
+  </div>
+  <div >
+    <a href="/auth/twitter" class="btn btn-large btn-info" type="button">
+      <img src="/static/img/twitter.png">
+      Login with Twitter
+    </a>
+  </div>
+  <div >
+    <a href="/auth/google" class="btn btn-large" type="button">
+      <img src="/static/img/google.png">
+      Login with Google
+    </a>
+  </div>  
+</div>
+{% endblock %}
+
+{% block sidebar %}
+{% endblock %}
+
+{% block body_base %}
+{% endblock %}
+
+

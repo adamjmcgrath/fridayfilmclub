@@ -11,6 +11,7 @@ import os
 import sys
 
 import webapp2
+from webapp2_extras import routes as webapp_routes
 
 if 'third_party' not in sys.path:
   sys.path[0:0] = ['third_party']
@@ -26,31 +27,38 @@ import views
 debug = os.environ.get('SERVER_SOFTWARE', '').startswith('Dev')
 
 routes = [
-    (r'/admin/addfilms/?', admin.AddFilms),
-    (r'/admin/addfilmshandler/?', admin.AddFilmsHandler),
-    (r'/admin/addfilmsdone/?', admin.AddFilmsDone),
-    webapp2.Route(r'/admin/editquestion/<key>', admin.AddEditQuestion),
-    (r'/admin/addquestion/?', admin.AddEditQuestion),
-    (r'/admin/indexfilms/?', admin.IndexFilms),
-    (r'/admin/questions/?', admin.Questions),
-    (r'/admin/?', admin.HomePage),
 
-    (r'/api/question/?(.+)?', api.Question),
+    # Admin section.
+    webapp_routes.PathPrefixRoute('/admin', [
+        webapp2.Route('/addfilms', admin.AddFilms, 'admin-add-films'),
+        webapp2.Route('/addfilmshandler', admin.AddFilmsHandler,
+            'admin-add-films-handler'),
+        webapp2.Route('/addfilmsdone', admin.AddFilmsDone,
+            'admin-add-films-done'),
+        webapp2.Route('/addquestion', admin.AddEditQuestion, 'admin-add-question'),
+        webapp2.Route(r'/editquestion/<key>', admin.AddEditQuestion,
+            'admin-edit-question'),
+        webapp2.Route('/indexfilms', admin.IndexFilms, 'admin-index-films'),
+        webapp2.Route('/questions', admin.Questions, 'admin-questions'),
+    ]),
+    webapp2.Route(r'/admin', admin.HomePage, 'admin-homepage'),
 
+    # Api.
+    webapp2.Route(r'/api/question/?(.+)?', api.Question, 'api-question'),
+    webapp2.Route(r'/suggest/?(.+)?', suggest.SuggestHandler, name='suggest'),
+
+    # Authentication.
     webapp2.Route('/auth/<provider>',
         handler='auth.AuthHandler:_simple_auth', name='auth_login'),
     webapp2.Route('/auth/<provider>/callback',
         handler='auth.AuthHandler:_auth_callback', name='auth_callback'),
-    webapp2.Route('/logout',
-        handler='auth.AuthHandler:logout', name='logout'),
+    webapp2.Route('/logout', handler='auth.AuthHandler:logout', name='logout'),
 
-    (r'/question/?(.+)?', views.Question),
-
-    (r'/suggest/?(.+)?', suggest.SuggestHandler),
-
-
-
-    (r'/', views.HomePage),
+    # Main views.
+    webapp2.Route(r'/question/?(.+)?', views.Question, name='question'),
+    webapp2.Route(r'/profile', views.Profile, name='profile'),
+    webapp2.Route(r'/login', views.Login, name='login'),
+    webapp2.Route(r'/', views.HomePage, name='home'),
 ]
 
 app_config = {

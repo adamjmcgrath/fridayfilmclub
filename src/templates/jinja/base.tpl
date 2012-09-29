@@ -14,10 +14,15 @@
             <span class="i-bar"></span>
             <span class="i-bar"></span>
           </a>
-          <a class="brand" href="#">{% block logo %}Friday Film Club{% endblock %}</a>
+          <a class="brand cookie" href="#">{% block logo %}Friday Film Club{% endblock %}</a>
           <div id="sign-in">
-            <img src="//lh4.googleusercontent.com/-l6LPIjkmjwA/AAAAAAAAAAI/AAAAAAAAAAA/ZAxpZ-lfnUw/s27-c/photo.jpg" height="30">
-            <a class="btn btn-primary" href="#">Log In</a>
+            {% if logged_in %}
+              <span>
+                <b>{{user.name}}</b><br>
+                <a href="/profile">profile</a> - <a href="/logout">logout</a>
+              </span>
+              <img src="{{user.avatar_url}}" width="30" height="30">
+            {% endif %}
           </div>
         </div>
       </div>

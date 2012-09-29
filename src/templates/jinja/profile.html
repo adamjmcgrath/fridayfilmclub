@@ -1,0 +1,50 @@
+{% extends "templates/jinja/base.tpl" %}
+
+{% block page_id %}profile-page{% endblock page_id %}
+
+{% block main %}
+<div class="span9">
+  <h1>Profile</h1>
+  {% if logged_in %}
+  <ul>
+    <li>{{user.avatar_url}}</li>
+    <li>{{user.name}}</li>
+    <li>{{user.link}}</li>
+    <li>{{user.email}}</li>
+  <ul>
+  <ul>
+    <li>
+      <h4>Google</h4>
+      {{user.google_avatar_url}}<br>
+      {{user.google_name}}<br>
+      {{user.google_link}}<br>
+      {{user.google_email}}
+    </li>
+    <li>
+      <h4>Facebook</h4>
+      {{user.facebook_avatar_url}}<br>
+      {{user.facebook_name}}<br>
+      {{user.facebook_link}}<br>
+      {{user.facebook_email}}
+    </li>
+    <li>
+      <h4>Twitter</h4>
+      {{user.twitter_avatar_url}}<br>
+      {{user.twitter_name}}<br>
+      {{user.twitter_link}}
+    </li>
+  </ul>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block sidebar %}
+<div class="span3" id="sidebar">
+  
+</div>
+{% endblock %}
+
+{% block body_base %}
+{% endblock %}
+
+
