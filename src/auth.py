@@ -49,7 +49,7 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
       'email'   : 'email',
     },
     'twitter'  : {
-      'profile_image_url': 'avatar_url',
+      'profile_image_url': lambda id: ('avatar_url', id.replace('_normal','')),
       'screen_name'      : 'name',
       'link'             : 'link',
     },
