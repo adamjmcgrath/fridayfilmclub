@@ -58,7 +58,9 @@ class RequestHandler(webapp2.RequestHandler):
   @webapp2.cached_property
   def logged_in(self):
     """Returns true if a user is currently logged in, false otherwise"""
-    return self.auth.get_user_by_session() is not None
+    # TODO better fix for this.
+    user_dict = self.auth.get_user_by_session()
+    return self.auth.store.user_model.get_by_id(user_dict['user_id']) is not None
 
   def is_debug_mode(self):
     """docstring for is_debug_mode"""
