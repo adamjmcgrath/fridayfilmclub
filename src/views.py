@@ -43,11 +43,9 @@ class Question(baserequesthandler.RequestHandler):
     else:
       question = models.Question.query().get()
 
-    user = users.get_current_user()
-    user_id = user.user_id()
-    user_entity = models.User.get_or_insert(user_id)
+    user = self.current_user
 
-    user_question_id = '%d-%s' % (question.key.id(), user_id)
+    user_question_id = '%d-%s' % (question.key.id(), user.key.id())
     user_question = models.UserQuestion.get_or_insert(user_question_id,
       question=question.key,
       user=user_entity.key
