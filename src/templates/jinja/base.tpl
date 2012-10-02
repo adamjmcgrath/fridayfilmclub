@@ -34,7 +34,7 @@
       </div>
       <hr>
       <div id="footer">
-        <p>&copy; Company 2012</p>
+        <p>&copy; Friday Film Club</p>
       </div>
     </div>
     {% block body_base %}{% endblock %}
