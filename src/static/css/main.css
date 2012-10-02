@@ -761,4 +761,8 @@ h1{margin-bottom:9px;}
 #sign-in:after{clear:both;}
 #sign-in span{float:left;line-height:15px;margin-right:8px;text-align:right;}
 #sign-in img{float:right;}
+#home-page{background:#eee;}
+#home-page .navbar .brand{font-size:60px;line-height:30px;}
+#home-page .navbar{margin-top:40px;}
+#home-page #footer{display:none;}
 .cookie{font-family:'Cookie',cursive;}
