@@ -143,6 +143,10 @@ ffc.quiz.Score.prototype.updateScore = function(score, numClues) {
  */
 ffc.quiz.Score.prototype.countDown_ = function() {
   this.score_ -= 1;
+  // TODO (Better fix for this)
+  if (this.newScore_ > this.score_) {
+    this.newScore_ = this.score_
+  }
 
   var points = goog.string.padNumber(this.score_, 2);
   this.pointEls_[0].innerHTML = points[0];
