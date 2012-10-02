@@ -44,8 +44,8 @@ routes = [
     webapp2.Route(r'/admin', admin.HomePage, 'admin-homepage'),
 
     # Api.
-    webapp2.Route(r'/api/question/?(.+)?', api.Question, 'api-question'),
-    webapp2.Route(r'/suggest/?(.+)?', suggest.SuggestHandler, name='suggest'),
+    webapp2.Route(r'/api/question/<:.+>', api.Question, 'api-question'),
+    webapp2.Route(r'/suggest/<:.+>', suggest.SuggestHandler, name='suggest'),
 
     # Authentication.
     webapp2.Route('/auth/<provider>',
@@ -55,7 +55,7 @@ routes = [
     webapp2.Route('/logout', handler='auth.AuthHandler:logout', name='logout'),
 
     # Main views.
-    webapp2.Route(r'/question/?(.+)?', views.Question, name='question'),
+    webapp2.Route(r'/question/<:.+>', views.Question, name='question'),
     webapp2.Route(r'/profile', views.Profile, name='profile'),
     webapp2.Route(r'/login', views.Login, name='login'),
     webapp2.Route(r'/', views.HomePage, name='home'),
