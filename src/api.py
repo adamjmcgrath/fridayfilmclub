@@ -46,13 +46,12 @@ class Question(baserequesthandler.RequestHandler):
 
     # Get the question and user.
     question = models.Question.get_by_id(int(question_id))
-    user_id = users.get_current_user().user_id()
-    user_entity = models.User.get_by_id(user_id)
+    user = self.current_user
 
     # Construct/get the user key.
-    user_question_id = '%s-%s' % (question_id, user_id)
+    user_question_id = '%s-%s' % (question_id, user.key.id())
     user_question = models.UserQuestion.get_or_insert(user_question_id,
-      question=question, user=user_entity)
+      question=question, user=user)
 
     # Check if guess is correct, update UserQuestion.
     if guess and not user_question.complete:
