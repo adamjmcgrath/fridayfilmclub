@@ -60,6 +60,8 @@ class RequestHandler(webapp2.RequestHandler):
     """Returns true if a user is currently logged in, false otherwise"""
     # TODO better fix for this.
     user_dict = self.auth.get_user_by_session()
+    if not user_dict:
+      return False
     return self.auth.store.user_model.get_by_id(user_dict['user_id']) is not None
 
   def is_debug_mode(self):
