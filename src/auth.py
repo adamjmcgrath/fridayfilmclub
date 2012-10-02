@@ -49,7 +49,7 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
       'email'   : 'email',
     },
     'twitter'  : {
-      'profile_image_url': lambda id: ('avatar_url', id.replace('_normal','')),
+      'profile_image_url': lambda url: ('avatar_url', url.replace('_normal','')),
       'screen_name'      : 'name',
       'link'             : 'link',
     },
@@ -77,7 +77,7 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
       # check whether there's a user currently logged in
       # then, create a new user if nobody's signed in, 
       # otherwise add this auth_id to currently logged in user.
-      if self.current_user:
+      if self.logged_in:
         logging.info('Updating currently logged in user')
         u = self.current_user
         u.auth_ids.append(auth_id)
