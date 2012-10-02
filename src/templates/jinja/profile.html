@@ -4,43 +4,68 @@
 
 {% block main %}
 <div class="span9">
-  <h1>Profile</h1>
-  {% if logged_in %}
-  <ul>
-    <li>{{user.avatar_url}}</li>
-    <li>{{user.name}}</li>
-    <li>{{user.link}}</li>
-    <li>{{user.email}}</li>
-  <ul>
-  <ul>
-    <li>
-      <h4>Google</h4>
-      {{user.google_avatar_url}}<br>
-      {{user.google_name}}<br>
-      {{user.google_link}}<br>
-      {{user.google_email}}
-    </li>
-    <li>
-      <h4>Facebook</h4>
-      {{user.facebook_avatar_url}}<br>
-      {{user.facebook_name}}<br>
-      {{user.facebook_link}}<br>
-      {{user.facebook_email}}
-    </li>
-    <li>
-      <h4>Twitter</h4>
-      {{user.twitter_avatar_url}}<br>
-      {{user.twitter_name}}<br>
-      {{user.twitter_link}}
-    </li>
-  </ul>
-  {% endif %}
+  <h1>{{user.name}}'s Profile</h1>
+  <p>{{user.email}}</p>
+  <p><a href="{{user.link}}">{{user.link}}</a></p>
+
+
+  <table class="table">
+    <tr>
+      <th>Service</th>
+      <th>Picture</th>
+      <th>Name</th>
+      <th>Link</th>
+      <th>Email</th>
+    <tr>
+    {% if user.google_name %}
+     <tr>
+       <td>Google</td>
+       <td><img src="{{user.google_avatar_url}}" width="30" alt="{{user.google_name}}"></td>
+       <td>{{user.google_name}}</td>
+       <td><a href="{{user.google_link}}">Google page</a></td>
+       <td>{{user.google_email}}</td>
+     </tr>
+    {% endif %}
+    {% if user.facebook_name %}
+    <tr>
+      <td>Facebook</td>
+       <td><img src="{{user.facebook_avatar_url}}" width="30" alt="{{user.facebook_name}}"></td>
+      <td>{{user.facebook_name}}</td>
+      <td><a href="{{user.facebook_link}}">Facebook page</a></td>
+      <td>{{user.facebook_email}}</td>
+    </tr>
+    {% endif %}
+    {% if user.twitter_name %}
+    <tr>
+      <td>Twitter</td>
+      <td><img src="{{user.twitter_avatar_url}}" width="30" alt="{{user.twitter_name}}"></td>
+      <td>{{user.twitter_name}}</td>
+      <td><a href="{{user.twitter_link}}">Twitter page</a></td>
+      <td>{{user.twitter_email}}</td>
+    </tr>
+    {% endif %}
+    {% if not user.google_name %}
+    <tr>
+      <td colspan="5"><a href="/auth/google">Add Google account</td>
+    </tr>
+    {% endif %}
+    {% if not user.facebook_name %}
+    <tr>
+      <td colspan="5"><a href="/auth/facebook">Add Facebook account</td>
+    </tr>
+    {% endif %}
+    {% if not user.twitter_name %}
+    <tr>
+      <td colspan="5"><a href="/auth/twitter">Add Twitter account</td>
+    </tr>
+    {% endif %}
+  </table>
 </div>
 {% endblock %}
 
 {% block sidebar %}
 <div class="span3" id="sidebar">
-  
+  <img src="{{user.avatar_url}}" style="width: 100%">
 </div>
 {% endblock %}
 

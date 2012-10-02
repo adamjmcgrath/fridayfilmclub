@@ -17,6 +17,7 @@ from google.appengine.api import users
 from google.appengine.api import memcache
 from google.appengine.ext import ndb
 
+import auth
 import baserequesthandler
 import forms
 import models
@@ -34,6 +35,7 @@ class HomePage(baserequesthandler.RequestHandler):
 class Question(baserequesthandler.RequestHandler):
   """Shows the homepage."""
 
+  @auth.login_required
   def get(self, question_id):
 
     if question_id:
@@ -64,8 +66,10 @@ class Login(baserequesthandler.RequestHandler):
     return self.render_template('login.html', {})
 
 
+
 class Profile(baserequesthandler.RequestHandler):
   """Shows the profile page."""
 
+  @auth.login_required
   def get(self):
     return self.render_template('profile.html', {})

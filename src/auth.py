@@ -16,6 +16,21 @@ from webapp2_extras import auth, sessions
 from simpleauth.handler import SimpleAuthHandler
 
 
+def login_required(handler_method):
+  """A decorator to require that a user be logged in to access a handler.
+  """
+  def check_login(self, *args, **kwargs):
+
+    if self.logged_in:
+      return handler_method(self, *args, **kwargs)
+    elif self.request.method == 'POST':
+      self.abort(401)
+    else:
+      self.session['original_url'] = self.request.url
+      self.redirect('/login')
+
+  return check_login
+
 
 class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
   """Authentication handler for OAuth 2.0, 1.0(a) and OpenID."""
@@ -76,8 +91,13 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
         if ok:
           self.auth.set_session(self.auth.store.user_to_dict(user))
 
-    # show them their profile data
-    self.redirect('/profile')
+    # Redirect them to the next page.
+    target = self.session.get('original_url')
+    if target:
+      del self.session['original_url']
+      self.redirect(str(target))
+    else:
+      self.redirect('/profile')
 
   def logout(self):
     self.auth.unset_session()

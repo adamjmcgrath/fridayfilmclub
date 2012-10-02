@@ -14,6 +14,7 @@ import webapp2
 from google.appengine.api import users
 from google.appengine.api import memcache
 
+import auth
 import baserequesthandler
 import forms
 import models
@@ -30,9 +31,11 @@ _SCORE = [None, 10, 7, 5, 2, 0]
 class Question(baserequesthandler.RequestHandler):
   """Shows the homepage."""
 
+  @auth.login_required
   def get(self, question_id):
     return self.get_or_post(question_id)
 
+  @auth.login_required
   def post(self, question_id):
     # Get the users guess
     guess = self.request.get('guess')
