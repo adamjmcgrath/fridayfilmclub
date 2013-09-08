@@ -18,13 +18,11 @@ if 'third_party' not in sys.path:
 
 import admin
 import api
-import auth
+import settings
 import suggest
 import secrets
 import views
 
-
-debug = os.environ.get('SERVER_SOFTWARE', '').startswith('Dev')
 
 routes = [
 
@@ -71,7 +69,7 @@ app_config = {
   }
 }
 
-app = webapp2.WSGIApplication(routes=routes, debug=debug, config=app_config)
+app = webapp2.WSGIApplication(routes=routes, debug=settings.debug, config=app_config)
 
 def main():
   app.run()

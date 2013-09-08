@@ -6,3 +6,7 @@
 
 __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 
+import os
+
+
+debug = os.environ.get('SERVER_SOFTWARE', '').startswith('Dev')
