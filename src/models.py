@@ -89,7 +89,7 @@ class Clue(ndb.Model):
   question = ndb.KeyProperty(kind=Question)
 
   def image_url(self, size=None):
-    """Get's the image's url."""
+    """Gets the image's url."""
     if self.image:
       return images.get_serving_url(self.image, size=size)
     else:

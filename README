@@ -4,10 +4,24 @@ Friday Film Club app
 This is a python web application that runs on Google App Engine, using the
 webapp2 framework.
 
-
 Sub-modules and libraries:
 --------------------------
 
-  closure-library
-  appengine-mapreduce
-  wtform
+### Javascript
+
+- Closure Library
+- Closure Templates
+- GrowJs
+
+### CSS
+
+- Less
+- Twitter Bootstrap
+
+### Python
+
+- Wtform
+- Appengine Mapreduce
+- Httplib2
+- Oauth2
+- Simpleauth

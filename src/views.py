@@ -64,7 +64,6 @@ class Login(baserequesthandler.RequestHandler):
     return self.render_template('login.html', {})
 
 
-
 class Profile(baserequesthandler.RequestHandler):
   """Shows the profile page."""
 
