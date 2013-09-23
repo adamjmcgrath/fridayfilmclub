@@ -6,11 +6,14 @@
 
 __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 
+from datetime import datetime
 import logging
 
 import auth
 import baserequesthandler
 import models
+
+from google.appengine.api import users
 
 _MAX_CLUES = 4
 _PASS = 'pass'
@@ -36,6 +39,10 @@ class Question(baserequesthandler.RequestHandler):
     question = models.Question.get_by_id(int(question_id))
     user = self.current_user
     posed = question.posed
+
+    # For debugging - create an arbitrary posed date for un-posed questions.
+    if not posed and users.is_current_user_admin():
+      posed = datetime.now()
 
     # Construct/get the user key.
     user_question_id = '%s-%s' % (question_id, user.key.id())

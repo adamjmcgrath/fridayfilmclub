@@ -6,22 +6,14 @@
 
 __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 
-import json
 import logging
-import os
-import posixpath
-import re
 
-import webapp2
+
 from google.appengine.api import users
-from google.appengine.api import memcache
-from google.appengine.ext import ndb
 
 import auth
 import baserequesthandler
-import forms
 import models
-import settings
 
 
 
@@ -42,6 +34,10 @@ class Question(baserequesthandler.RequestHandler):
       question = models.Question.get_by_id(int(question_id))
     else:
       question = models.Question.query().get()
+
+    # Only Admins can view a question before it's posed
+    if not question.posed and not users.is_current_user_admin():
+      return self.error(401)
 
     user = self.current_user
 
