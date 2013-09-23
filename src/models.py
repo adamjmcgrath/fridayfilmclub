@@ -6,6 +6,8 @@
 
 __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 
+from datetime import datetime
+import logging
 import re
 
 from webapp2_extras.appengine.auth.models import User as AuthUser
@@ -15,6 +17,11 @@ from google.appengine.ext import ndb
 
 
 RE_SPECIAL_CHARS_ = re.compile(r'[^a-zA-Z0-9 ]')
+
+# Maximum possible score
+_MAX_SCORE = 10000
+# No. of seconds penalty per guess
+_TIME_PER_PENALTY = 1000
 
 
 def slugify(my_string):
@@ -71,7 +78,7 @@ class Question(ndb.Model):
   clues = ndb.KeyProperty(repeated=True)
   created = ndb.DateTimeProperty(auto_now_add=True)
   answer = ndb.KeyProperty(kind=Film)
-  posed = ndb.DateProperty()
+  posed = ndb.DateTimeProperty()
   updated = ndb.DateTimeProperty(auto_now=True)
 
 
@@ -133,9 +140,22 @@ class UserQuestion(ndb.Model):
   complete = ndb.BooleanProperty(default=False)
   correct = ndb.BooleanProperty(default=False)
   guesses = ndb.StringProperty(repeated=True)
-  current_guess = ndb.IntegerProperty(default=0)
-  incorrect = ndb.BooleanProperty()
   question = ndb.KeyProperty(kind=Question)
   score = ndb.IntegerProperty()
   user = ndb.KeyProperty(kind=User)
+
+  def calculate_score(self, posed):
+    now = int(datetime.now().strftime('%s'))
+    posed = int(posed.strftime('%s'))
+    penalties = len(self.guesses) *  _TIME_PER_PENALTY
+    if self.complete and not self.correct:
+      score = 0
+    else:
+      score = max(_MAX_SCORE - (now - posed) - penalties, 0)
+
+    logging.info('Score: Now: %d, Posed: %d, Penalties: %d, Score: %d', now,
+        posed, penalties, score)
+
+    return score
+
 

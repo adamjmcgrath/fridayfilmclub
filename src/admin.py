@@ -125,7 +125,7 @@ class PoseQuestion(baserequesthandler.RequestHandler):
                       queue_name='pose')
 
     logging.info('Question: %s, posed at: %s', question.answer.id(),
-        now.strftime('%H:%m on %d/%M/%Y'))
+        now.strftime('%H:%M.%s on %d/%M/%Y'))
 
     return self.render_template('admin/posed.html', {
       'all_users': not debug,

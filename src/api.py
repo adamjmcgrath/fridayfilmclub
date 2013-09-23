@@ -6,26 +6,14 @@
 
 __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 
-import json
 import logging
-import posixpath
-
-import webapp2
-from google.appengine.api import users
-from google.appengine.api import memcache
 
 import auth
 import baserequesthandler
-import forms
 import models
-import settings
 
 _MAX_CLUES = 4
 _PASS = 'pass'
-# This is used to calculate the users score based on how many guesses they have
-# had. If they get it on the first guess, they get the maximum points. It's not
-# possible to get it right without guessing, so add a place holder at the front.
-_SCORE = [None, 10, 7, 5, 2, 0]
 
 
 class Question(baserequesthandler.RequestHandler):
@@ -47,6 +35,7 @@ class Question(baserequesthandler.RequestHandler):
     # Get the question and user.
     question = models.Question.get_by_id(int(question_id))
     user = self.current_user
+    posed = question.posed
 
     # Construct/get the user key.
     user_question_id = '%s-%s' % (question_id, user.key.id())
@@ -60,6 +49,7 @@ class Question(baserequesthandler.RequestHandler):
       user_question.guesses.append(guess)
       if user_question.correct or len(user_question.guesses) >= _MAX_CLUES:
         user_question.complete = True
+        user_question.score = user_question.calculate_score(posed)
       user_question.put()
 
     # The number of the clues to show the user is one greater than the
@@ -84,19 +74,12 @@ class Question(baserequesthandler.RequestHandler):
         'clues': [clue.get().to_json() for clue in question.clues[:clue_number]],
         'correct': user_question.correct,
         'guesses': guesses,
+        'score': user_question.calculate_score(posed)
     }
 
     # If the question is complete, reveal the correct answer to the user.
     if user_question.complete:
       response_obj['answer'] = question.answer.get().to_dict()
-
-    # Calculate the users score. Unless they have answered the question
-    # correctly, their score is effectively the score they will get if they
-    # answer the next question correctly.
-    index = len(user_question.guesses)
-    if not user_question.correct:
-      index += 1
-    response_obj['score'] = _SCORE[index]
 
     return self.render_json(response_obj)
 

@@ -46,13 +46,6 @@ ffc.quiz.Score = function(score, numClues) {
   this.score_ = score;
 
   /**
-   * Keep a placeholder for the new score when updating the score.
-   * @type {number}
-   * @private
-   */
-  this.newScore_ = score;
-
-  /**
    * The elements that show the users score.
    * @type {Array.<Element>}
    * @private
@@ -81,14 +74,14 @@ goog.inherits(ffc.quiz.Score, ffc.quiz.Component);
  * @type {number}
  * @private
  */
-ffc.quiz.Score.COUNTDOWN_INTERVAL_ = 200;
+ffc.quiz.Score.COUNTDOWN_INTERVAL_ = 1000;
 
 
 /**
  * Create the clue dom.
  */
 ffc.quiz.Score.prototype.createDom = function() {
-  var score = goog.string.padNumber(this.score_, 2).split('');
+  var score = goog.string.padNumber(this.score_, 5).split('');
 
   this.decorateInternal(soy.renderAsFragment(ffc.template.quiz.score,
       {score: score, clueCount: this.numClues_}));
@@ -114,6 +107,8 @@ ffc.quiz.Score.prototype.enterDocument = function() {
 
   this.eh_.listen(this.countDownTimer_, goog.Timer.TICK,
       this.countDown_, false, this);
+
+  this.countDownTimer_.start();
 };
 
 
@@ -123,10 +118,8 @@ ffc.quiz.Score.prototype.enterDocument = function() {
  * @param {number} numClues The number of clues the user has been given.
  */
 ffc.quiz.Score.prototype.updateScore = function(score, numClues) {
+  this.score_ = score;
   this.numClues_ = numClues;
-  this.newScore_ = score;
-
-  this.countDownTimer_.start();
 
   for (var i = 0; i < this.numClues_; i++) {
     var clueBar = this.clueBars_[i];
@@ -142,19 +135,17 @@ ffc.quiz.Score.prototype.updateScore = function(score, numClues) {
  * @private
  */
 ffc.quiz.Score.prototype.countDown_ = function() {
-  this.score_ -= 1;
-  // TODO (Better fix for this)
-  if (this.newScore_ > this.score_) {
-    this.newScore_ = this.score_
-  }
-
-  var points = goog.string.padNumber(this.score_, 2);
-  this.pointEls_[0].innerHTML = points[0];
-  this.pointEls_[1].innerHTML = points[1];
-
-  if (this.newScore_ == this.score_) {
+  if (!this.score_) {
     this.countDownTimer_.stop();
+    return;
   }
+
+  this.score_ -= 1;
+
+  var points = goog.string.padNumber(this.score_, 5);
+  goog.array.forEach(this.pointEls_, function(el, i) {
+    el.innerHTML = points[i];
+  });
 };
 
 
