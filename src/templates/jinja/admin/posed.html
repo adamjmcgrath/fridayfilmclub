@@ -1,0 +1,11 @@
+{% extends "templates/jinja/admin/base.tpl" %}
+
+{% block page_id %}posed-page{% endblock page_id %}
+
+{% block main %}
+{{super()}}
+<p>Question "{{ question.answer.id() }}" Posed</p>
+{% if not all_users and not question.posed %}
+  <p>Pose the question to <a href="{{ url }}">all users</a>.</p>
+{% endif %}
+{% endblock %}

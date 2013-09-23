@@ -38,6 +38,7 @@ routes = [
             'admin-edit-question'),
         webapp2.Route('/indexfilms', admin.IndexFilms, 'admin-index-films'),
         webapp2.Route('/questions', admin.Questions, 'admin-questions'),
+        webapp2.Route('/posequestion/<key>', admin.PoseQuestion, 'admin-posequestion'),
     ]),
     webapp2.Route(r'/admin', admin.HomePage, 'admin-homepage'),
 

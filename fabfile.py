@@ -78,12 +78,15 @@ def deploy(tag=None):
   commit()
 
 
-def run(port='8080', clear_datastore=False):
+def run(port='8080', clear_datastore=False, send_mail=True):
+  command = '%s --port %s'
+
   if clear_datastore:
-    command = '%s --port %s --clear_datastore %s'
-  else:
-    command = '%s --port %s %s'
-  
+    command += ' --clear_datastore'
+  if send_mail:
+    command += ' --enable_sendmail=yes'
+
+  command += ' %s'
   local(command % (APPENGINE_DEV_APPSERVER, port, env.gae_src))
 
 

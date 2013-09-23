@@ -31,9 +31,7 @@
     <td><a href="/admin/editquestion/{{q.key.id()}}">edit</a></td>
     <td><a href="/question/{{q.key.id()}}">view</a></td>
     <td>
-      {% if not q.posed %}
-      <a href="/admin/posequestion/{{q.key.id()}}">email</a>
-      {% endif %}
+      <a href="/admin/posequestion/{{q.key.id()}}?debug=true">email</a>
     </td>
   </tr>
   {% endfor %}

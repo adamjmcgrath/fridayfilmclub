@@ -5,12 +5,14 @@
 
 __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 
+from datetime import datetime
 import logging
 import os
 import re
+import urlparse
 
 import webapp2
-from google.appengine.api import memcache
+from google.appengine.api import memcache, taskqueue, users, mail
 from google.appengine.ext import blobstore
 from google.appengine.ext import ndb
 from google.appengine.ext.webapp import blobstore_handlers
@@ -93,8 +95,56 @@ class Questions(baserequesthandler.RequestHandler):
     })
 
 
+class PoseQuestion(baserequesthandler.RequestHandler):
+  """Email the question out to the users and post it on the twitter/FB feed."""
+
+  def get(self, key):
+    """Create a queue for sending out the emails."""
+    debug = self.request.get('debug')
+    user_entities = models.User.query()
+    question = models.Question.get_by_id(int(key))
+    now = datetime.now()
+    url = self.request.path
+
+    if question.posed and not debug:
+      return self.response.out.write('You\'ve already posed this question.')
+
+    if not debug:
+      question.posed = now
+      question.put()
+
+    if (debug):
+      taskqueue.add(url=self.request.path,
+                    params={'email': users.get_current_user().email()},
+                    queue_name='pose')
+    else:
+      # TODO (adamjmcgrath) Batch the loop through users.
+      for user_entity in user_entities:
+        taskqueue.add(url=url,
+                      params={'email': user_entity.email},
+                      queue_name='pose')
+
+    logging.info('Question: %s, posed at: %s', question.answer.id(),
+        now.strftime('%H:%m on %d/%M/%Y'))
+
+    return self.render_template('admin/posed.html', {
+      'all_users': not debug,
+      'question': question,
+      'url': url
+    })
+
+  def post(self, key):
+    """Queue handler for sending out each email."""
+    email = self.request.get('email')
+    link = urlparse.urljoin(self.request.host_url, 'question/%s' % key)
+    mail.send_mail(sender='adamjmcgrath@gmail.com',
+                     to=email,
+                     subject='This weeks Friday Film Club question',
+                     body='Go play: %s' % link)
+
+
 class AddFilmsHandler(blobstore_handlers.BlobstoreUploadHandler):
-  """Processes the uploaded films and creates a blob to upoad and index."""
+  """Processes the uploaded films and creates a blob to upload and index."""
 
   def post(self):
     upload_files = self.get_uploads('file')
