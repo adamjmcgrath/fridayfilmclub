@@ -52,3 +52,44 @@ AUTH:
     - close theWindow
     - removeMask
     - load question
+
+
+CONTENTS:
+
+  ALL PAGES:
+    header:
+      - login / user details
+    footer:
+      - twitter link
+      - fb link
+      - g+ link
+
+  HOME:
+    - how to play
+    - play for fun
+    - sign up
+
+  ARCHIVE (questions):
+    - list of questions by number / date
+
+  LEADER BOARD:
+    - Top scorer
+        - this week
+        - this month
+        - this year
+        - all time
+
+  HOW IT WORKS:
+    - video
+
+  PROFILE:
+    - twitter details / button
+    - fb details / button
+    - g+ details / button
+
+  QUESTION:
+    - clues
+    - guesses
+    - answer form
+    - score
+    - play for fun
