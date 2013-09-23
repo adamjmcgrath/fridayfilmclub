@@ -6,28 +6,20 @@
 
 __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 
-import logging
 import re
-import models
 
-import webapp2
 from webapp2_extras.appengine.auth.models import User as AuthUser
 
-from google.appengine.api import files
 from google.appengine.api import images
-from google.appengine.api.datastore_errors import BadArgumentError
 from google.appengine.ext import ndb
-from google.appengine.ext import blobstore
-from wtforms import fields, Form, validators
 
-import settings
 
 RE_SPECIAL_CHARS_ = re.compile(r'[^a-zA-Z0-9 ]')
 
 
-def slugify(st):
+def slugify(my_string):
   """Remove special characters and replace spaces with hyphens."""
-  return '-'.join(re.sub(RE_SPECIAL_CHARS_, '', st).lower().split(' '))
+  return '-'.join(re.sub(RE_SPECIAL_CHARS_, '', my_string).lower().split(' '))
 
 
 
@@ -67,6 +59,7 @@ class FilmIndex(ndb.Model):
   films = ndb.KeyProperty(repeated=True)
 
 
+# pylint: disable=W0232
 class Question(ndb.Model):
   """A question.
 
@@ -82,6 +75,7 @@ class Question(ndb.Model):
   updated = ndb.DateTimeProperty(auto_now=True)
 
 
+# pylint: disable=W0232
 class Clue(ndb.Model):
   """A clue."""
   text = ndb.TextProperty()
@@ -102,7 +96,7 @@ class Clue(ndb.Model):
     }
 
 
-# webapp2_extras.appengine.auth.models.User
+# pylint: disable=W0232
 class User(AuthUser):
   """A user.
 
@@ -124,6 +118,7 @@ class User(AuthUser):
   twitter_link = ndb.StringProperty()
 
 
+# pylint: disable=W0232
 class UserQuestion(ndb.Model):
   """Links user and question and keeps track of guesses and score.
 
@@ -133,7 +128,7 @@ class UserQuestion(ndb.Model):
     guesses:
     score:
   """
-  # @TODO (adamjmcgrath) Implement date answered correctly.
+  # TODO (adamjmcgrath) Implement date answered correctly.
   answered_correctly = ndb.DateTimeProperty()
   complete = ndb.BooleanProperty(default=False)
   correct = ndb.BooleanProperty(default=False)

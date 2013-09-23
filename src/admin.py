@@ -94,7 +94,7 @@ class Questions(baserequesthandler.RequestHandler):
 
 
 class AddFilmsHandler(blobstore_handlers.BlobstoreUploadHandler):
-  """Processes the uploaded films and create's a blob to upoad and index."""
+  """Processes the uploaded films and creates a blob to upoad and index."""
 
   def post(self):
     upload_files = self.get_uploads('file')
