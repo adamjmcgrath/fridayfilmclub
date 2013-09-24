@@ -53,10 +53,15 @@ routes = [
         handler='auth.AuthHandler:_auth_callback', name='auth_callback'),
     webapp2.Route('/logout', handler='auth.AuthHandler:logout', name='logout'),
 
-    # Main views.
+    # Main views (Authenticated).
     webapp2.Route(r'/question/<:.+>', views.Question, name='question'),
     webapp2.Route(r'/profile', views.Profile, name='profile'),
     webapp2.Route(r'/login', views.Login, name='login'),
+
+    # Main views.
+    webapp2.Route(r'/archive', views.Archive, name='archive'),
+    webapp2.Route(r'/leaderboard', views.LeaderBoard, name='leader-board'),
+    webapp2.Route(r'/how', views.HowItWorks, name='how-it-works'),
     webapp2.Route(r'/', views.HomePage, name='home'),
 ]
 

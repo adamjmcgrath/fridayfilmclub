@@ -66,3 +66,24 @@ class Profile(baserequesthandler.RequestHandler):
   @auth.login_required
   def get(self):
     return self.render_template('profile.html', {})
+
+
+class Archive(baserequesthandler.RequestHandler):
+  """An archive of old questions."""
+
+  def get(self):
+    self.response.out.write('Archive')
+
+
+class LeaderBoard(baserequesthandler.RequestHandler):
+  """The leader board / results page."""
+
+  def get(self):
+    self.response.out.write('LeaderBoard')
+
+
+class HowItWorks(baserequesthandler.RequestHandler):
+  """How it works / rules."""
+
+  def get(self):
+    self.response.out.write('HowItWorks')

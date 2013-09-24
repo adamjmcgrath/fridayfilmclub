@@ -68,6 +68,7 @@ CONTENTS:
     - how to play
     - play for fun
     - sign up
+    - leader board
 
   ARCHIVE (questions):
     - list of questions by number / date
