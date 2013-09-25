@@ -9,7 +9,7 @@
 
 goog.provide('ffc.suggest.AutoCompleteRenderer');
 
-goog.require('goog.ui.AutoComplete.Renderer');
+goog.require('goog.ui.ac.Renderer');
 
 
 
@@ -22,7 +22,7 @@ goog.require('goog.ui.AutoComplete.Renderer');
 ffc.suggest.AutoCompleteRenderer = function(parent, customRenderer) {
   goog.base(this, parent, customRenderer);
 };
-goog.inherits(ffc.suggest.AutoCompleteRenderer, goog.ui.AutoComplete.Renderer);
+goog.inherits(ffc.suggest.AutoCompleteRenderer, goog.ui.ac.Renderer);
 
 
 /**

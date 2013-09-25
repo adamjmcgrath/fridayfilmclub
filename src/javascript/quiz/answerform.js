@@ -102,7 +102,7 @@ ffc.quiz.AnswerForm.prototype.enterDocument = function() {
   this.eh_.listen(this.dom_.getElement('btn-pass'),
       goog.events.EventType.CLICK, this.onPass_, false, this);
 
-  this.eh_.listen(this.ac_, goog.ui.AutoComplete.EventType.SUGGESTIONS_UPDATE,
+  this.eh_.listen(this.ac_, goog.ui.ac.AutoComplete.EventType.SUGGESTIONS_UPDATE,
       this.onAcUpdate_, false, this);
 
   this.shake_ = new grow.fx.dom.Shake(this.element_);

@@ -14,7 +14,7 @@ goog.require('goog.dom');
 goog.require('goog.dom.dataset');
 goog.require('goog.events');
 goog.require('goog.string.path');
-goog.require('goog.ui.AutoComplete.RemoteArrayMatcher');
+goog.require('goog.ui.ac.RemoteArrayMatcher');
 
 
 
@@ -27,7 +27,7 @@ ffc.suggest.RemoteArrayMatcher = function(url) {
   goog.base(this, url);
 };
 goog.inherits(ffc.suggest.RemoteArrayMatcher,
-    goog.ui.AutoComplete.RemoteArrayMatcher);
+    goog.ui.ac.RemoteArrayMatcher);
 
 
 /**

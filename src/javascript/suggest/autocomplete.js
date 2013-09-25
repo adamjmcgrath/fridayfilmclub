@@ -13,9 +13,9 @@ goog.require('ffc.suggest.RemoteArrayMatcher');
 
 goog.require('goog.array');
 goog.require('goog.dom');
-goog.require('goog.ui.AutoComplete');
-goog.require('goog.ui.AutoComplete.Renderer');
-goog.require('goog.ui.AutoComplete.RichInputHandler');
+goog.require('goog.ui.ac.AutoComplete');
+goog.require('goog.ui.ac.Renderer');
+goog.require('goog.ui.ac.RichInputHandler');
 
 
 
@@ -39,7 +39,7 @@ ffc.suggest.AutoComplete = function(el, parent) {
    * @type {goog.ui.AutoComplete.Renderer}
    * @private
    */
-  this.renderer_ = new goog.ui.AutoComplete.Renderer(parent, customRenderer);
+  this.renderer_ = new goog.ui.ac.Renderer(parent, customRenderer);
 
   /**
    * A matcher the takes a uri to a suggest endpoint and returns an object to
@@ -50,16 +50,16 @@ ffc.suggest.AutoComplete = function(el, parent) {
   this.matcher_ = new ffc.suggest.RemoteArrayMatcher(
       ffc.suggest.AutoComplete.API_URL_);
 
-  var inputhandler = new goog.ui.AutoComplete.RichInputHandler(
+  var inputhandler = new goog.ui.ac.RichInputHandler(
       null, null, false, 300);
   inputhandler.handleBlur = function() {};
 
-  goog.ui.AutoComplete.call(this, this.matcher_, this.renderer_, inputhandler);
+  goog.ui.ac.AutoComplete.call(this, this.matcher_, this.renderer_, inputhandler);
 
   inputhandler.attachAutoComplete(this);
   inputhandler.attachInputs(el);
 };
-goog.inherits(ffc.suggest.AutoComplete, goog.ui.AutoComplete);
+goog.inherits(ffc.suggest.AutoComplete, goog.ui.ac.AutoComplete);
 goog.exportSymbol('ffc.suggest.AutoComplete', ffc.suggest.AutoComplete);
 
 
