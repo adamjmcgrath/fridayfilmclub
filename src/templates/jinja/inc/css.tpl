@@ -4,4 +4,4 @@
 {% else %}
   <link rel="stylesheet" href="/static/css/main.css">
 {% endif %}
-<link href="http://fonts.googleapis.com/css?family=Cookie&text=FridaylmCub" rel="stylesheet">
+<link href="http://fonts.googleapis.com/css?family=Montserrat:400,700|Cookie" rel="stylesheet">

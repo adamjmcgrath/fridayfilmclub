@@ -14,7 +14,7 @@
             <span class="i-bar"></span>
             <span class="i-bar"></span>
           </a>
-          <a class="brand cookie" href="#">{% block logo %}Friday Film Club{% endblock %}</a>
+          <a class="brand custom-font" href="#">{% block logo %}Friday Film Club{% endblock %}</a>
           <div id="sign-in">
             {% if logged_in %}
               <span>
@@ -28,10 +28,12 @@
       </div>
     </div>
     <div class="container">
-      <div class="row">
-        {% block main %}{% endblock %}
-        {% block sidebar %}{% endblock %}
-      </div>
+      {% block content %}
+        <div class="row">
+          {% block main %}{% endblock %}
+          {% block sidebar %}{% endblock %}
+        </div>
+      {% endblock %}
       <hr>
       <div id="footer">
         <p>&copy; Friday Film Club</p>
