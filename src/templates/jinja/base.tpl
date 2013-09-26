@@ -17,6 +17,8 @@
                 <a href="/profile">profile</a> - <a href="{{ uri_for('logout') }}">logout</a>
               </span>
               <img src="{{user.avatar_url}}" width="30" height="30">
+            {% else %}
+              <a href="{{ uri_for('login') }}" class="btn btn-primary">Login</a>
             {% endif %}
           </div>
         </div>

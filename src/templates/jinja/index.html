@@ -7,7 +7,11 @@
     <h1 class="custom-font">Think you know film?</h1>
     <h2 class="custom-font-script">You don't know Jack...</h2>
     <p>
-      <a href="{{ uri_for('profile') }}" class="btn btn-lg btn-success">Register to Play</a>
+      {% if logged_in %}
+        <a href="{{ uri_for('how-it-works') }}" class="btn btn-lg btn-info">How to Play</a>
+      {% else %}
+        <a href="{{ uri_for('profile') }}" class="btn btn-lg btn-success">Register to Play</a>
+      {% endif %}
     </p>
     <p class="text-muted">
       We'll send you an email every Friday with a film quiz question and some clues.<br>
