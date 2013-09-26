@@ -72,18 +72,18 @@ class Archive(baserequesthandler.RequestHandler):
   """An archive of old questions."""
 
   def get(self):
-    self.response.out.write('Archive')
+    return self.render_template('archive.html', {})
 
 
 class LeaderBoard(baserequesthandler.RequestHandler):
   """The leader board / results page."""
 
   def get(self):
-    self.response.out.write('LeaderBoard')
+    return self.render_template('leaderboard.html', {})
 
 
 class HowItWorks(baserequesthandler.RequestHandler):
   """How it works / rules."""
 
   def get(self):
-    self.response.out.write('HowItWorks')
+    return self.render_template('how.html', {})
