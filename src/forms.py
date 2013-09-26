@@ -83,15 +83,17 @@ class ClueFormField(fields.FormField):
 
 class CluesFieldList(fields.FieldList):
 
+  def process(self, formdata, clues, **kwargs):
+    super(CluesFieldList, self).process(formdata, [clue.get() for clue in clues], **kwargs)
+
   def populate_obj(self, entity, name):
     counter = 0
 
     for entry, data in zip(self.entries, self.data):
       try:
-        clue = entity.clues[counter]
+        clue = entity.clues[counter].get()
         entry.populate_obj(clue)
         clue.put()
-        entity.clues[counter](clue.key)
       except IndexError:
         clue_id = '%d-%d' % (entity.key.id(), counter)
         clue = models.Clue(id=clue_id, question=entity.key)

@@ -10,7 +10,7 @@
     <div class="control-group{% if form.answer.errors %} error{% endif %}">
       <label class="control-label" for="ac">Film</label>
       <div class="controls">
-        <input id="ac" class="input-lg form-control focused" type="text" value="{{question and question.answer and question.answer.title or ''}}" autocomplete="off">
+        <input id="ac" class="input-lg form-control focused" type="text" value="{{question and question.answer and question.answer.get().title or ''}}" autocomplete="off">
         <span class="help-inline">{{form.answer.errors[0]}}</span>
       </div>
     </div>
