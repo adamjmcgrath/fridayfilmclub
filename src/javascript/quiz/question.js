@@ -137,6 +137,7 @@ ffc.quiz.Question.prototype.render = function(parent) {
   } else {
     this.answerForm = new ffc.quiz.AnswerForm();
     this.addChild(this.answerForm, true);
+    this.score_.startClock();
   }
 
   goog.base(this, 'render', parent);
@@ -170,6 +171,12 @@ ffc.quiz.Question.prototype.addCluesAndGuesses = function() {
   // If the answer form is present, we add the child at the childCount - 1,
   // otherwise we add the child to the end.
   var addIndex = this.answerForm && this.answerForm.isInDocument() ? -1 : 0;
+
+  // If the question has been answered,
+  // don't show the last guess (as this is the answer).
+  if (this.model_.answer) {
+    guesses.pop();
+  }
 
   for (i = 0, len = guesses.length; i < len; i++) {
     var index = this.getChildCount() + addIndex;
@@ -229,6 +236,7 @@ ffc.quiz.Question.prototype.update = function() {
     } else {
       callback();
     }
+    this.score_.stopClock();
   } else {
     // Otherwise add more clues and guesses.
     this.answerForm.showIncorrect(goog.bind(this.addCluesAndGuesses, this));

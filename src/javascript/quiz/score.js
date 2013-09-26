@@ -107,8 +107,6 @@ ffc.quiz.Score.prototype.enterDocument = function() {
 
   this.eh_.listen(this.countDownTimer_, goog.Timer.TICK,
       this.countDown_, false, this);
-
-  this.countDownTimer_.start();
 };
 
 
@@ -131,12 +129,28 @@ ffc.quiz.Score.prototype.updateScore = function(score, numClues) {
 
 
 /**
+ * Start ticking the score down.
+ */
+ffc.quiz.Score.prototype.startClock = function() {
+  this.countDownTimer_.start();
+};
+
+
+/**
+ * Start ticking the score down.
+ */
+ffc.quiz.Score.prototype.stopClock = function() {
+  this.countDownTimer_.stop();
+};
+
+
+/**
  * Animate the updating of the score board.
  * @private
  */
 ffc.quiz.Score.prototype.countDown_ = function() {
   if (!this.score_) {
-    this.countDownTimer_.stop();
+    this.stopClock();
     return;
   }
 

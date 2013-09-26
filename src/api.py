@@ -81,7 +81,7 @@ class Question(baserequesthandler.RequestHandler):
         'clues': [clue.get().to_json() for clue in question.clues[:clue_number]],
         'correct': user_question.correct,
         'guesses': guesses,
-        'score': user_question.calculate_score(posed)
+        'score': user_question.score or user_question.calculate_score(posed)
     }
 
     # If the question is complete, reveal the correct answer to the user.

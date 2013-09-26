@@ -135,8 +135,6 @@ class UserQuestion(ndb.Model):
     guesses:
     score:
   """
-  # TODO (adamjmcgrath) Implement date answered correctly.
-  answered_correctly = ndb.DateTimeProperty()
   complete = ndb.BooleanProperty(default=False)
   correct = ndb.BooleanProperty(default=False)
   guesses = ndb.StringProperty(repeated=True)
@@ -144,10 +142,16 @@ class UserQuestion(ndb.Model):
   score = ndb.IntegerProperty()
   user = ndb.KeyProperty(kind=User)
 
+  def incorrect_guesses(self):
+    if self.correct:
+      return self.guesses[:-1]
+    else:
+      return self.guesses
+
   def calculate_score(self, posed):
     now = int(datetime.now().strftime('%s'))
     posed = int(posed.strftime('%s'))
-    penalties = len(self.guesses) *  _TIME_PER_PENALTY
+    penalties = len(self.incorrect_guesses()) *  _TIME_PER_PENALTY
     if self.complete and not self.correct:
       score = 0
     else:
