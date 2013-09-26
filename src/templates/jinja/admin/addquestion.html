@@ -5,7 +5,7 @@
 {% block main %}
 {{super()}}
 <h2>Upload Question</h2>
-<form id="add-question" class="form-horizontal" action="" method="post" enctype="multipart/form-data">
+<form id="add-question" class="form-horizontal" action="" method="post" enctype="multipart/form-data" onsubmit="return getAnswer()">
   <fieldset>
     <div class="control-group{% if form.answer.errors %} error{% endif %}">
       <label class="control-label" for="ac">Film</label>
@@ -13,6 +13,7 @@
         <input id="ac" class="input-lg form-control focused" type="text" value="{{question and question.answer and question.answer.get().title or ''}}" autocomplete="off">
         <span class="help-inline">{{form.answer.errors[0]}}</span>
       </div>
+      <input type="hidden" id="original-answer" name="original-answer" value="{{ question and question.answer and question.answer.id() }}">
     </div>
   </fieldset>
   {% for clue_form in form.clues %}
@@ -41,5 +42,15 @@
 <script>
   var input = document.getElementById('ac');
   var ac = new ffc.suggest.AutoComplete(input, input.parentNode);
+
+  // When you edit a form and don't change the answer, the answer field is not
+  // populated by the auto complete - so do it manually.
+  function getAnswer(e) {
+    var form = document.getElementById('add-question');
+    if (!form.answer) {
+      form['original-answer'].setAttribute('name', 'answer');
+    }
+    return true;
+  }
 </script>
 {% endblock %}
