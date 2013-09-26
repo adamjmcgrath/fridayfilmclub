@@ -64,12 +64,12 @@ class AddEditQuestion(baserequesthandler.RequestHandler):
     })
 
   def post(self, key=None):
-    form = forms.Question(formdata=self.request.POST)
-
     if key:
       question_entity = ndb.Key('Question', int(key)).get()
     else:
       question_entity = models.Question()
+
+    form = forms.Question(formdata=self.request.POST, obj=question_entity)
 
     if form.validate():
       # TODO(adamjmcgrath): only put once.

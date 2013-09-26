@@ -82,9 +82,14 @@ class ClueFormField(fields.FormField):
 
 
 class CluesFieldList(fields.FieldList):
+  #
+  def process(self, formdata, obj=None, **kwargs):
+    if obj:
+      clues = [clue.get() for clue in obj]
+      super(CluesFieldList, self).process(formdata, clues, **kwargs)
+    else:
+      super(CluesFieldList, self).process(formdata, **kwargs)
 
-  def process(self, formdata, clues, **kwargs):
-    super(CluesFieldList, self).process(formdata, [clue.get() for clue in clues], **kwargs)
 
   def populate_obj(self, entity, name):
     counter = 0
