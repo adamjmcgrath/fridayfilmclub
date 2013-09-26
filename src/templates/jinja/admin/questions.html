@@ -28,10 +28,10 @@
       {% endif %}
       </td>
     {% endfor %}
-    <td><a href="/admin/editquestion/{{q.key.id()}}">edit</a></td>
-    <td><a href="/question/{{q.key.id()}}">view</a></td>
+    <td><a href="{{ uri_for('admin-edit-question', key=q.key.id()) }}">edit</a></td>
+    <td><a href="{{ uri_for('question', None, q.key.id()) }}">view</a></td>
     <td>
-      <a href="/admin/posequestion/{{q.key.id()}}?debug=true">email</a>
+      <a href="{{ uri_for('admin-posequestion', key=q.key.id()) }}?debug=true">email</a>
     </td>
   </tr>
   {% endfor %}

@@ -6,15 +6,15 @@
 <h2>Admin</h2>
 <h3>Manage Questions</h3>
 <ul>
-  <li><a href="/admin/addquestion">Add question</a></li>
-  <li><a href="/admin/questions">Manage questions</a></li>
+  <li><a href="{{ uri_for('admin-add-question') }}">Add question</a></li>
+  <li><a href="{{ uri_for('admin-questions') }}">Manage questions</a></li>
 </ul>
 <h3>Manage Films</h3>
 <ul>
-  <li><a href="/admin/addfilms">Add films</a></li>
+  <li><a href="{{ uri_for('admin-add-films') }}">Add films</a></li>
   <li><a href="#" onclick="return doIndexFilms()">Index films</a></li>
 </ul>
-<form action="/admin/indexfilms" method="post"
+<form action="{{ uri_for('admin-index-films') }}" method="post"
       enctype="multipart/form-data" id="uploadform"></form>
 <script>
   function doIndexFilms() {
@@ -22,6 +22,6 @@
       document.getElementById('uploadform').submit();
     }
     return false;
-  };
+  }
 </script>
 {% endblock %}

@@ -15,7 +15,7 @@ goog.require('soy.StringBuilder');
  */
 ffc.template.quiz.answerForm = function(opt_data, opt_sb) {
   var output = opt_sb || new soy.StringBuilder();
-  output.append('<form class="well answer-form"><div class="input-prepend input-append form-horizontal"><span class="add-on"><i class="icon-search"></i></span><input class="autocomplete" size="16" type="text" autocomplete="off"><a href="#" class="btn" id="btn-search">Search</a><a href="#" class="btn" id="btn-clear">Clear</a></div><div class="controls rows"><div class="suggestions"><p class="suggest-info">Search for a film, then select your guess from the list.</p></div></div><div class="guess-buttons"><a href="#" class="btn btn-primary" id="btn-submit">Submit</a><a href="#" class="btn btn-danger" id="btn-pass">Pass</a></div></form>');
+  output.append('<form class="well answer-form"><div class="form-inline"><input class="autocomplete input-lg form-control" size="16" type="text" autocomplete="off"><a href="#" class="btn btn-lg btn-success" id="btn-search">Search</a><a href="#" class="btn btn-lg btn-warning" id="btn-clear">Clear</a></div><div class="controls rows"><div class="suggestions"><p class="suggest-info">Search for a film, then select your guess from the list.</p></div></div><div class="guess-buttons"><a href="#" class="btn btn-lg btn-primary" id="btn-submit">Submit</a><a href="#" class="btn btn-lg btn-danger" id="btn-pass">Pass</a></div></form>');
   return opt_sb ? '' : output.toString();
 };
 
@@ -41,7 +41,7 @@ ffc.template.quiz.option = function(opt_data, opt_sb) {
  */
 ffc.template.quiz.guess = function(opt_data, opt_sb) {
   var output = opt_sb || new soy.StringBuilder();
-  output.append('<div class="alert failed-guess">', (opt_data.title) ? '<b>' + soy.$$escapeHtml(opt_data.title) + ' (' + soy.$$escapeHtml(opt_data.year) + ')</b> is incorrect!' : '<b>PASS</b>', '</div>');
+  output.append('<div class="alert alert-warning failed-guess">', (opt_data.title) ? '<b>' + soy.$$escapeHtml(opt_data.title) + ' (' + soy.$$escapeHtml(opt_data.year) + ')</b> is incorrect!' : '<b>PASS</b>', '</div>');
   return opt_sb ? '' : output.toString();
 };
 

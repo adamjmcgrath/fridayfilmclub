@@ -1,3 +1,5 @@
+
+
 #clues {
   .clearfix();
 
@@ -7,6 +9,11 @@
 
   .answer-form {
     position: relative;
+
+    .form-inline .btn {
+      margin-left: 10px;
+    }
+
   }
 
   .ac-highlighted {
@@ -14,7 +21,7 @@
   }
 
   .autocomplete {
-    width: 424px;
+    width: 468px;
   }
 
   .clue p {
@@ -32,15 +39,15 @@
 
   label, p {
     cursor: pointer;
-    .border-radius(5px);
+    border-radius: 5px;
     background: @grayLighter;
-    margin-bottom: 10px;
+    margin-bottom: 0;
     line-height: @baseLineHeight;
     float: left;
     overflow: hidden;
-    padding: 8px 0;
+    padding: 15px 0;
     text-overflow: ellipsis;
-    width: (((@gridColumnWidth * 9) + (@gridGutterWidth * 6)) / 2) - 5;
+    width: 323px;
     white-space: nowrap;
   }
 
@@ -72,6 +79,7 @@
 .guess-buttons {
   .clearfix();
   clear: both;
+  padding-top: 10px;
 
   a {
     float: right;

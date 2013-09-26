@@ -8,5 +8,5 @@
 {% endblock %}
 
 {% block main %}
-<p class="back"><a href="/admin">« Back to Admin</a></p>
+<p class="back"><a href="{{ uri_for('admin-homepage') }}">« Back to Admin</a></p>
 {% endblock %}

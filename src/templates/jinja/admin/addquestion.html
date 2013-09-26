@@ -10,7 +10,7 @@
     <div class="control-group{% if form.answer.errors %} error{% endif %}">
       <label class="control-label" for="ac">Film</label>
       <div class="controls">
-        <input id="ac" class="input-xlarge focused" type="text" value="{{question and question.answer and question.answer.title or ''}}" autocomplete="off">
+        <input id="ac" class="input-lg form-control focused" type="text" value="{{question and question.answer and question.answer.title or ''}}" autocomplete="off">
         <span class="help-inline">{{form.answer.errors[0]}}</span>
       </div>
     </div>
@@ -22,7 +22,7 @@
       <div class="control-group{% if clue_field.errors %} error{% endif %}">
         <label class="control-label" for="{{clue_field.name}}">{{clue_field.name}}</label>
         <div class="controls">
-          {{clue_field(class_='input-xlarge')}}
+          {{clue_field(class_='form-control')}}
           <span class="help-inline">{{clue_field.errors[0]}}</span>
         </div>
       </div>

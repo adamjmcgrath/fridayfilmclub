@@ -3,7 +3,7 @@
 {% block page_id %}profile-page{% endblock page_id %}
 
 {% block main %}
-<div class="span9">
+<div class="col-md-9">
   <h1>{{user.name}}'s Profile</h1>
   <p>{{user.email}}</p>
   <p><a href="{{user.link}}">{{user.link}}</a></p>
@@ -46,17 +46,17 @@
     {% endif %}
     {% if not user.google_name %}
     <tr>
-      <td colspan="5"><a href="/auth/google">Add Google account</td>
+      <td colspan="5"><a href="{{ uri_for('auth_login', provider='google') }}">Add Google account</td>
     </tr>
     {% endif %}
     {% if not user.facebook_name %}
     <tr>
-      <td colspan="5"><a href="/auth/facebook">Add Facebook account</td>
+      <td colspan="5"><a href="{{ uri_for('auth_login', provider='facebook') }}">Add Facebook account</td>
     </tr>
     {% endif %}
     {% if not user.twitter_name %}
     <tr>
-      <td colspan="5"><a href="/auth/twitter">Add Twitter account</td>
+      <td colspan="5"><a href="{{ uri_for('auth_login', provider='twitter') }}">Add Twitter account</td>
     </tr>
     {% endif %}
   </table>
@@ -64,7 +64,7 @@
 {% endblock %}
 
 {% block sidebar %}
-<div class="span3" id="sidebar">
+<div class="col-md-3" id="sidebar">
   <img src="{{user.avatar_url}}" style="width: 100%">
 </div>
 {% endblock %}

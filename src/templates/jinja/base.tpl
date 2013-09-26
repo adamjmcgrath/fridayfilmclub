@@ -3,29 +3,23 @@
   <head>
     <meta charset="utf-8">
     <title>{% block title %}Friday Film Club{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% include "templates/jinja/inc/css.tpl" %}
   </head>
   <body id="{% block page_id %}{% endblock %}">
     <div class="navbar">
-      <div class="navbar-inner">
         <div class="container">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="i-bar"></span>
-            <span class="i-bar"></span>
-            <span class="i-bar"></span>
-          </a>
-          <a class="brand custom-font" href="#">{% block logo %}Friday Film Club{% endblock %}</a>
+          <a class="navbar-brand custom-font" href="{{ uri_for('home') }}">{% block logo %}Friday Film Club{% endblock %}</a>
           <div id="sign-in">
             {% if logged_in %}
               <span>
                 <b>{{user.name}}</b><br>
-                <a href="/profile">profile</a> - <a href="/logout">logout</a>
+                <a href="/profile">profile</a> - <a href="{{ uri_for('logout') }}">logout</a>
               </span>
               <img src="{{user.avatar_url}}" width="30" height="30">
             {% endif %}
           </div>
         </div>
-      </div>
     </div>
     <div class="container">
       {% block content %}

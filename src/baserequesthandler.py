@@ -21,6 +21,7 @@ import settings
 
 _JINJA_ENV = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
+_JINJA_ENV.globals.update({'uri_for': webapp2.uri_for})
 _TEMPLATE_PATH = '/templates/jinja/'
 _VALID_CALLBACK = re.compile('^\w+(\.\w+)*$')
 
