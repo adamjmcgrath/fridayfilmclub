@@ -102,6 +102,12 @@ class PoseQuestion(baserequesthandler.RequestHandler):
     """Create a queue for sending out the emails."""
     debug = self.request.get('debug')
     user_entities = models.User.query()
+    old_question = models.Question.query(
+                       models.Question.is_current == True).get()
+    if old_question:
+      old_question.is_current = False
+      old_question.put()
+
     question = models.Question.get_by_id(int(key))
     now = datetime.now()
     url = self.request.path
@@ -111,6 +117,7 @@ class PoseQuestion(baserequesthandler.RequestHandler):
 
     if not debug:
       question.posed = now
+      question.is_current = True
       question.put()
 
     if (debug):

@@ -74,12 +74,12 @@ class Question(ndb.Model):
     answer:
     clues:
   """
-  answers = ndb.KeyProperty(repeated=True)
   clues = ndb.KeyProperty(repeated=True)
   created = ndb.DateTimeProperty(auto_now_add=True)
   answer = ndb.KeyProperty(kind=Film)
   posed = ndb.DateTimeProperty()
   updated = ndb.DateTimeProperty(auto_now=True)
+  is_current = ndb.BooleanProperty(default=False)
 
 
 # pylint: disable=W0232
@@ -110,7 +110,6 @@ class User(AuthUser):
   Attributes:
     films
   """
-  answers = ndb.KeyProperty()
   avatar_url = ndb.StringProperty()
   name = ndb.StringProperty()
   link = ndb.StringProperty()
@@ -123,6 +122,18 @@ class User(AuthUser):
   twitter_avatar_url = ndb.StringProperty()
   twitter_name = ndb.StringProperty()
   twitter_link = ndb.StringProperty()
+  overall_score = ndb.IntegerProperty(default=0)
+  questions_answered = ndb.IntegerProperty(default=0)
+
+  @staticmethod
+  def to_leaderboard_json(user):
+    """Used to return json for the leader board api all."""
+    return {
+      'user_name': user.name,
+      'user_pic': user.avatar_url,
+      'score': user.overall_score,
+      'answered': user.questions_answered,
+    }
 
 
 # pylint: disable=W0232
@@ -162,4 +173,14 @@ class UserQuestion(ndb.Model):
 
     return score
 
+  @staticmethod
+  def to_leaderboard_json(user_question):
+    """Used to return json for the leader board api all."""
+    user = user_question.user.get()
+    return {
+      'user_name': user.name,
+      'user_pic': user.avatar_url,
+      'score': user_question.score,
+      'answered': user.questions_answered,
+    }
 

@@ -14,13 +14,14 @@ import baserequesthandler
 import models
 
 from google.appengine.api import users
+from google.appengine.ext import ndb
 
 _MAX_CLUES = 4
 _PASS = 'pass'
 
 
 class Question(baserequesthandler.RequestHandler):
-  """Shows the homepage."""
+  """The main question/answer app logic - through a REST api."""
 
   @auth.login_required
   def get(self, question_id):
@@ -57,7 +58,10 @@ class Question(baserequesthandler.RequestHandler):
       if user_question.correct or len(user_question.guesses) >= _MAX_CLUES:
         user_question.complete = True
         user_question.score = user_question.calculate_score(posed)
+        user.overall_score += user_question.score
+        user.questions_answered += 1
       user_question.put()
+      user.put()
 
     # The number of the clues to show the user is one greater than the
     # number of guesses up to the maximum number of guesses.
@@ -89,4 +93,36 @@ class Question(baserequesthandler.RequestHandler):
       response_obj['answer'] = question.answer.get().to_dict()
 
     return self.render_json(response_obj)
+
+
+class LeaderBoard(baserequesthandler.RequestHandler):
+  """Leader boards."""
+
+  def get(self, duration):
+    is_week = duration == 'week'
+    offset = self.request.get('offset') or 0
+    limit = self.request.get('limit') or 20
+    qo = ndb.QueryOptions(offset=int(offset), limit=int(limit))
+    response_obj = {}
+
+    if is_week:
+      question_query = models.Question.query(models.Question.is_current == True)
+      question_key = question_query.get(keys_only=True)
+      user_question_query = models.UserQuestion.query(
+          models.UserQuestion.question == question_key,
+          models.UserQuestion.complete == True).order(
+              -models.UserQuestion.score)
+      response_obj['count'] = user_question_query.count()
+      response_obj['users'] = user_question_query.map(
+          models.UserQuestion.to_leaderboard_json, options=qo)
+
+    else: # All time
+      user_query = models.User.query().order(
+                       -models.User.overall_score)
+      response_obj['count'] = user_query.count()
+      response_obj['users'] = user_query.map(
+                                  models.User.to_leaderboard_json, options=qo)
+
+    return self.render_json(response_obj)
+
 
