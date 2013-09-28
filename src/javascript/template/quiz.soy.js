@@ -81,11 +81,11 @@ ffc.template.quiz.answer = function(opt_data, opt_sb) {
 ffc.template.quiz.score = function(opt_data, opt_sb) {
   var output = opt_sb || new soy.StringBuilder();
   output.append('<div class="well score"><h4>Points available:</h4><p class="points-available">');
-  var sList78 = opt_data.score;
-  var sListLen78 = sList78.length;
-  for (var sIndex78 = 0; sIndex78 < sListLen78; sIndex78++) {
-    var sData78 = sList78[sIndex78];
-    output.append('<span class="point">', soy.$$escapeHtml(sData78), '</span>');
+  var sList91 = opt_data.score;
+  var sListLen91 = sList91.length;
+  for (var sIndex91 = 0; sIndex91 < sListLen91; sIndex91++) {
+    var sData91 = sList91[sIndex91];
+    output.append('<span class="point">', soy.$$escapeHtml(sData91), '</span>');
   }
   output.append('<sub></sub></p><h4>Clues:</h4><div class="progress"><div class="bar bar-active bar-1">1</div><div class="bar', (opt_data.clueCount > 1) ? ' bar-active' : '', ' bar-2">2</div><div class="bar', (opt_data.clueCount > 2) ? ' bar-active' : '', ' bar-3">3</div><div class="bar', (opt_data.clueCount > 3) ? ' bar-active' : '', ' bar-4">4</div></div></div>');
   return opt_sb ? '' : output.toString();

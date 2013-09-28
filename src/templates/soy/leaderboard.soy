@@ -1,0 +1,39 @@
+{namespace ffc.template.leaderboard}
+
+
+/**
+ * Table.
+ */
+{template .table}
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+        <th colspan="2">User</th>
+        <th class="leaderboard-number">Score</th>
+        <th class="leaderboard-number">Answered</th>
+        <th class="leaderboard-number">Av. Score</th>
+    </tr>
+  </thead>
+  <tbody class="leaderboard-users"></tbody>
+</table>
+{/template}
+
+
+/**
+ * Pagination.
+ */
+{template .pagination}
+<div class="leaderboard-pagination"><ul class="pagination pagination-sm"></ul></div>
+{/template}
+
+
+/**
+ * Page.
+ * @param number
+ * @param active
+ */
+{template .page}
+<li{if $active} class="active"{/if}>
+    <a href="#">{$number}</a>
+</li>
+{/template}

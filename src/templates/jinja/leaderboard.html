@@ -2,21 +2,42 @@
 
 {% block page_id %}leaderboard-page{% endblock page_id %}
 
-{% block main %}
-<div class="col-md-9">
+{% block content %}
+<div class="container">
   <h1>Leaderboard</h1>
-  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus iaculis tempus facilisis. Fusce suscipit, erat eu ornare volutpat, mi massa dignissim nulla, non vestibulum neque dui commodo lectus.</p>
-  <p>Aenean pretium molestie purus, sit amet mattis diam hendrerit in. In in viverra odio. Suspendisse sodales diam dapibus, scelerisque turpis at, dictum eros. In vel facilisis libero, eu tincidunt lectus.</p>
-  <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla et eros tempor, tristique lectus ac, volutpat diam. Integer eget bibendum purus.</p>
-  <p>Ut ultrices nisl vel nibh lacinia, sed consequat nibh fermentum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris ultrices dictum est, eu venenatis augue fermentum ut.</p>
-  <p>Pellentesque a gravida eros, et auctor odio. Vivamus commodo dignissim adipiscing. Curabitur rutrum nibh eget erat aliquam vehicula.</p></div>
-{% endblock %}
-
-{% block sidebar %}
-<div class="col-md-3" id="sidebar">
-
+  <ul id="leaderboard-tabs" class="nav nav-tabs">
+    <li class="active"><a href="#" data-leaderboard="week">This week</a></li>
+    <li><a href="#" data-leaderboard="all">All time</a></li>
+  </ul>
+  <div id="leaderboard-container-all"></div>
+  <div id="leaderboard-container-week"></div>
 </div>
 {% endblock %}
 
+
 {% block body_base %}
+{% if debug %}
+  <script src="/closure-library/closure/goog/base.js"></script>
+  <script src="/static/js/deps.js"></script>
+  <script>
+    goog.require('goog.ui.Component');
+    goog.require('ffc.leaderboard.LeaderBoard');
+    goog.require('ffc.leaderboard.LeaderBoardToggler');
+  </script>
+{% else %}
+  <script src="/static/js/leaderboard.js"></script>
+{% endif %}
+<script>
+
+  var lbmw = new ffc.leaderboard.LeaderBoardModel('week', ffc.api.Client.getInstance());
+  var lbw = new ffc.leaderboard.LeaderBoard(lbmw, document.getElementById('leaderboard-container-week'));
+  lbw.render();
+
+  var lbma = new ffc.leaderboard.LeaderBoardModel('all', ffc.api.Client.getInstance());
+  var lba = new ffc.leaderboard.LeaderBoard(lbma, document.getElementById('leaderboard-container-all'));
+
+  var lbt = new ffc.leaderboard.LeaderBoardToggler(lbw, lba);
+  lbt.decorate(document.getElementById('leaderboard-tabs'));
+
+</script>
 {% endblock %}

@@ -149,11 +149,7 @@ ffc.quiz.AnswerForm.prototype.onClear_ = function(e) {
  * @private
  */
 ffc.quiz.AnswerForm.prototype.onAcUpdate_ = function(e) {
-  if (e.target.rows_.length) {
-    this.suggestInfo_.style.display = 'none';
-  } else {
-    this.suggestInfo_.style.display = 'block';
-  }
+  this.suggestInfo_.style.display = e.target.rows_.length ? 'none' : 'block';
 };
 
 
