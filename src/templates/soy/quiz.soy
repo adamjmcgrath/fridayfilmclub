@@ -83,7 +83,7 @@
  * @param year The answer year.
  */
 {template .answer}
-<div class="alert alert-{if $correct}success{else}error{/if} clue">
+<div class="alert alert-{if $correct}success{else}danger{/if} clue">
   <h4 class="alert-heading">{if $correct}Correct!{else}Incorrect!{/if}</h4>
   <p>The answer is of course: <b>{$title}</b> ({$year})</p>
 </div>

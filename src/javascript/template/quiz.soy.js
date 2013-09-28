@@ -67,7 +67,7 @@ ffc.template.quiz.clue = function(opt_data, opt_sb) {
  */
 ffc.template.quiz.answer = function(opt_data, opt_sb) {
   var output = opt_sb || new soy.StringBuilder();
-  output.append('<div class="alert alert-', (opt_data.correct) ? 'success' : 'error', ' clue"><h4 class="alert-heading">', (opt_data.correct) ? 'Correct!' : 'Incorrect!', '</h4><p>The answer is of course: <b>', soy.$$escapeHtml(opt_data.title), '</b> (', soy.$$escapeHtml(opt_data.year), ')</p></div>');
+  output.append('<div class="alert alert-', (opt_data.correct) ? 'success' : 'danger', ' clue"><h4 class="alert-heading">', (opt_data.correct) ? 'Correct!' : 'Incorrect!', '</h4><p>The answer is of course: <b>', soy.$$escapeHtml(opt_data.title), '</b> (', soy.$$escapeHtml(opt_data.year), ')</p></div>');
   return opt_sb ? '' : output.toString();
 };
 
