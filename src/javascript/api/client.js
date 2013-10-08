@@ -20,6 +20,7 @@ goog.require('goog.result.Result');
 ffc.api.Client = function() {
 };
 goog.addSingletonGetter(ffc.api.Client);
+goog.exportSymbol('ffc.api.Client.getInstance', ffc.api.Client.getInstance);
 
 
 /**

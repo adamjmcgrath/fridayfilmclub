@@ -45,6 +45,10 @@ ffc.leaderboard.LeaderBoardToggler = function(var_args) {
 
 };
 goog.inherits(ffc.leaderboard.LeaderBoardToggler, goog.ui.Component);
+goog.exportSymbol('ffc.leaderboard.LeaderBoardToggler',
+    ffc.leaderboard.LeaderBoardToggler);
+goog.exportProperty(ffc.leaderboard.LeaderBoardToggler.prototype, 'decorate',
+    ffc.leaderboard.LeaderBoardToggler.prototype.decorate);
 
 
 /**

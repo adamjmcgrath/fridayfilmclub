@@ -35,7 +35,7 @@ if [ $1 == "deps" ]; then
 fi
 
 
-if [ $1 == "build" ]; then
+if [ $1 == "build_quiz" ]; then
   $CLOSURE_BUILDER_PATH \
     --root=$CLOSURE_LIB \
     --root=$CLOSURE_TEMPLATES \
@@ -50,16 +50,19 @@ if [ $1 == "build" ]; then
     --compiler_flags="--compilation_level=ADVANCED_OPTIMIZATIONS" \
     --compiler_flags="--output_wrapper=\"(function() {%output%})();\"" \
     > $FFC_QUIZ_JS_OUTPUT
+fi
 
+if [ $1 == "build_leaderboard" ]; then
   $CLOSURE_BUILDER_PATH \
     --root=$CLOSURE_LIB \
     --root=$CLOSURE_TEMPLATES \
     --root=$API_SOURCE \
     --root=$LEADERBOARD_SOURCE \
-    --root=$SUGGEST_SOURCE \
     --root=$TEMPLATE_SOURCE \
     --root=$GROW_SOURCE \
     --namespace="ffc.leaderboard.LeaderBoard" \
+    --namespace="ffc.leaderboard.LeaderBoardToggler" \
+    --namespace="ffc.leaderboard.LeaderBoardModel" \
     --output_mode=compiled \
     --compiler_jar=$CLOSURE_COMPILER_PATH \
     --compiler_flags="--compilation_level=ADVANCED_OPTIMIZATIONS" \

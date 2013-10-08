@@ -49,6 +49,11 @@ ffc.leaderboard.LeaderBoard = function(model, container) {
   this.setModel(model);
 };
 goog.inherits(ffc.leaderboard.LeaderBoard, goog.ui.Component);
+goog.exportSymbol('ffc.leaderboard.LeaderBoard', ffc.leaderboard.LeaderBoard);
+goog.exportProperty(ffc.leaderboard.LeaderBoard.prototype, 'render',
+    ffc.leaderboard.LeaderBoard.prototype.render);
+goog.exportProperty(ffc.leaderboard.LeaderBoard.prototype, 'createDom',
+    ffc.leaderboard.LeaderBoard.prototype.createDom);
 
 
 /**

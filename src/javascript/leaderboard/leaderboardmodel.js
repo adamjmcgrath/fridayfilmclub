@@ -48,6 +48,8 @@ ffc.leaderboard.LeaderBoardModel = function(id, client) {
   this.getData_ = goog.bind(client.getLeaderBoard, client, id);
 };
 goog.inherits(ffc.leaderboard.LeaderBoardModel, goog.pubsub.PubSub);
+goog.exportSymbol('ffc.leaderboard.LeaderBoardModel',
+    ffc.leaderboard.LeaderBoardModel);
 
 
 /**
