@@ -60,9 +60,8 @@ if [ $1 == "build_leaderboard" ]; then
     --root=$LEADERBOARD_SOURCE \
     --root=$TEMPLATE_SOURCE \
     --root=$GROW_SOURCE \
-    --namespace="ffc.leaderboard.LeaderBoard" \
     --namespace="ffc.leaderboard.LeaderBoardToggler" \
-    --namespace="ffc.leaderboard.LeaderBoardModel" \
+    --namespace="ffc.leaderboard.LeaderBoard" \
     --output_mode=compiled \
     --compiler_jar=$CLOSURE_COMPILER_PATH \
     --compiler_flags="--compilation_level=ADVANCED_OPTIMIZATIONS" \
