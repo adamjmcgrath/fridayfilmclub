@@ -14,11 +14,14 @@ CLOSURE_TEMPLATES_COMPILER_PATH=~/bin/SoyToJsSrcCompiler.jar
 
 FFC_PATH=./src
 FFC_SOURCE=$FFC_PATH/javascript
+API_SOURCE=$FFC_SOURCE/api
 QUIZ_SOURCE=$FFC_SOURCE/quiz
+LEADERBOARD_SOURCE=$FFC_SOURCE/leaderboard
 SUGGEST_SOURCE=$FFC_SOURCE/suggest
 TEMPLATE_SOURCE=$FFC_SOURCE/template
 GROW_SOURCE=$FFC_PATH/growjs
-FFC_JS_OUTPUT=$FFC_PATH/static/js/quiz.js
+FFC_QUIZ_JS_OUTPUT=$FFC_PATH/static/js/quiz.js
+FFC_LEADERBOARD_JS_OUTPUT=$FFC_PATH/static/js/leaderboard.js
 FFC_DEPS_OUTPUT=$FFC_PATH/static/js/deps.js
 
 
@@ -36,6 +39,7 @@ if [ $1 == "build" ]; then
   $CLOSURE_BUILDER_PATH \
     --root=$CLOSURE_LIB \
     --root=$CLOSURE_TEMPLATES \
+    --root=$API_SOURCE \
     --root=$QUIZ_SOURCE \
     --root=$SUGGEST_SOURCE \
     --root=$TEMPLATE_SOURCE \
@@ -45,7 +49,22 @@ if [ $1 == "build" ]; then
     --compiler_jar=$CLOSURE_COMPILER_PATH \
     --compiler_flags="--compilation_level=ADVANCED_OPTIMIZATIONS" \
     --compiler_flags="--output_wrapper=\"(function() {%output%})();\"" \
-    > $FFC_JS_OUTPUT
+    > $FFC_QUIZ_JS_OUTPUT
+
+  $CLOSURE_BUILDER_PATH \
+    --root=$CLOSURE_LIB \
+    --root=$CLOSURE_TEMPLATES \
+    --root=$API_SOURCE \
+    --root=$LEADERBOARD_SOURCE \
+    --root=$SUGGEST_SOURCE \
+    --root=$TEMPLATE_SOURCE \
+    --root=$GROW_SOURCE \
+    --namespace="ffc.leaderboard.LeaderBoard" \
+    --output_mode=compiled \
+    --compiler_jar=$CLOSURE_COMPILER_PATH \
+    --compiler_flags="--compilation_level=ADVANCED_OPTIMIZATIONS" \
+    --compiler_flags="--output_wrapper=\"(function() {%output%})();\"" \
+    > $FFC_LEADERBOARD_JS_OUTPUT
 fi
 
 if [ $1 == "template" ]; then
