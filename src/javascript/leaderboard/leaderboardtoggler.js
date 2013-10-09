@@ -79,7 +79,7 @@ ffc.leaderboard.LeaderBoardToggler.prototype.handleTabClick_ = function(e) {
     for (var i = 0, len = this.leaderBoards_.length; i < len; i++) {
       var lb = this.leaderBoards_[i];
       if (lb.getType() == type) {
-        lb.render();
+        lb.render(document.getElementById('leaderboard-container-' + type));
       } else {
         lb.exitDocument();
       }

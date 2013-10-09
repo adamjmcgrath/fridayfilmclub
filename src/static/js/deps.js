@@ -3,7 +3,7 @@
 goog.addDependency('../../../closure-templates/javascript/soyutils_usegoog.js', ['soy', 'soy.StringBuilder', 'soy.esc', 'soydata', 'soydata.SanitizedHtml', 'soydata.SanitizedHtmlAttribute', 'soydata.SanitizedJsStrChars', 'soydata.SanitizedUri'], ['goog.asserts', 'goog.dom.DomHelper', 'goog.format', 'goog.i18n.BidiFormatter', 'goog.i18n.bidi', 'goog.soy', 'goog.string', 'goog.string.StringBuffer']);
 goog.addDependency('../../../growjs/grow/fx/dom/shake.js', ['grow.fx.dom.Shake'], ['goog.fx.dom.Slide']);
 goog.addDependency('../../../javascript/api/client.js', ['ffc.api.Client'], ['goog.labs.net.xhr', 'goog.result.Result']);
-goog.addDependency('../../../javascript/leaderboard/leaderboard.js', ['ffc.leaderboard.LeaderBoard'], ['ffc.leaderboard.LeaderBoardModel', 'ffc.template.leaderboard', 'goog.array', 'goog.dom', 'goog.dom.TagName', 'goog.string', 'goog.uri.utils', 'soy']);
+goog.addDependency('../../../javascript/leaderboard/leaderboard.js', ['ffc.leaderboard.LeaderBoard'], ['ffc.leaderboard.LeaderBoardModel', 'ffc.template.leaderboard', 'goog.array', 'goog.dom', 'goog.dom.TagName', 'goog.string', 'goog.ui.Component', 'goog.uri.utils', 'soy']);
 goog.addDependency('../../../javascript/leaderboard/leaderboardmodel.js', ['ffc.leaderboard.LeaderBoardModel'], ['ffc.api.Client', 'ffc.leaderboard.User', 'goog.Uri', 'goog.array', 'goog.pubsub.PubSub']);
 goog.addDependency('../../../javascript/leaderboard/leaderboardtoggler.js', ['ffc.leaderboard.LeaderBoardToggler'], ['goog.dom.TagName', 'goog.dom.classes', 'goog.dom.dataset']);
 goog.addDependency('../../../javascript/leaderboard/user.js', ['ffc.leaderboard.User'], []);

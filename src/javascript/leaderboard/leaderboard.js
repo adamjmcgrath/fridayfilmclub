@@ -15,6 +15,7 @@ goog.require('goog.array');
 goog.require('goog.dom');
 goog.require('goog.dom.TagName');
 goog.require('goog.string');
+goog.require('goog.ui.Component');
 goog.require('goog.uri.utils');
 
 goog.require('soy');
@@ -24,10 +25,9 @@ goog.require('soy');
 /**
  * LeaderBoard constructor.
  * @param {ffc.leaderboard.LeaderBoardModel} model The leaderboard model.
- * @param {Element} container The container.
  * @constructor
  */
-ffc.leaderboard.LeaderBoard = function(model, container) {
+ffc.leaderboard.LeaderBoard = function(model) {
   goog.base(this);
 
   /**
@@ -44,16 +44,12 @@ ffc.leaderboard.LeaderBoard = function(model, container) {
    */
   this.dh_ = this.getDomHelper();
 
-  this.render = goog.partial(this.render, container);
-
   this.setModel(model);
 };
 goog.inherits(ffc.leaderboard.LeaderBoard, goog.ui.Component);
 goog.exportSymbol('ffc.leaderboard.LeaderBoard', ffc.leaderboard.LeaderBoard);
 goog.exportProperty(ffc.leaderboard.LeaderBoard.prototype, 'render',
     ffc.leaderboard.LeaderBoard.prototype.render);
-goog.exportProperty(ffc.leaderboard.LeaderBoard.prototype, 'createDom',
-    ffc.leaderboard.LeaderBoard.prototype.createDom);
 
 
 /**

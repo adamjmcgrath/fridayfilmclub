@@ -30,11 +30,11 @@
 <script>
 
   var lbmw = new ffc.leaderboard.LeaderBoardModel('week', ffc.api.Client.getInstance());
-  var lbw = new ffc.leaderboard.LeaderBoard(lbmw, document.getElementById('leaderboard-container-week'));
-  lbw.render();
+  var lbw = new ffc.leaderboard.LeaderBoard(lbmw);
+  lbw.render(document.getElementById('leaderboard-container-week'));
 
   var lbma = new ffc.leaderboard.LeaderBoardModel('all', ffc.api.Client.getInstance());
-  var lba = new ffc.leaderboard.LeaderBoard(lbma, document.getElementById('leaderboard-container-all'));
+  var lba = new ffc.leaderboard.LeaderBoard(lbma);
 
   var lbt = new ffc.leaderboard.LeaderBoardToggler(lbw, lba);
   lbt.decorate(document.getElementById('leaderboard-tabs'));
