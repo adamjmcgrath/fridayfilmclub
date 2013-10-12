@@ -3,9 +3,10 @@ h1 {
   margin-bottom: @baseLineHeight/2;
 }
 
-.navbar {
+#title-bar {
   background: @grayDark;
   border-radius: 0;
+  margin-bottom: 0;
   padding: 10px;
 }
 
@@ -30,3 +31,20 @@ h1 {
   right: 20px;
   top: 20px;
 }
+
+#nav {
+  border-radius: 0;
+  border-width: 1px 0;
+  text-align: center;
+
+  .navbar-nav {
+    display: inline-block;
+    float: none;
+    margin-bottom: -5px;
+  }
+
+  a {
+    padding: 15px 30px;
+  }
+}
+

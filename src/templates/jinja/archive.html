@@ -1,6 +1,8 @@
 {% extends "templates/jinja/base.tpl" %}
 
-{% block page_id %}archive-page{% endblock page_id %}
+{% set page_id = 'archive-page' %}
+
+{% block page_id %}{{ page_id }}{% endblock page_id %}
 
 {% block main %}
 <div class="col-md-9">

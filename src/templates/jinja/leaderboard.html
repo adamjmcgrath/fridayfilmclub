@@ -1,6 +1,8 @@
 {% extends "templates/jinja/base.tpl" %}
 
-{% block page_id %}leaderboard-page{% endblock page_id %}
+{% set page_id = 'leaderboard-page' %}
+
+{% block page_id %}{{ page_id }}{% endblock page_id %}
 
 {% block content %}
 <div class="container">

@@ -7,7 +7,7 @@
     {% include "templates/jinja/inc/css.tpl" %}
   </head>
   <body id="{% block page_id %}{% endblock %}">
-    <div class="navbar">
+    <div class="navbar" id="title-bar">
         <div class="container">
           <a class="navbar-brand custom-font" href="{{ uri_for('home') }}">{% block logo %}Friday Film Club{% endblock %}</a>
           <div id="sign-in">
@@ -23,6 +23,15 @@
           </div>
         </div>
     </div>
+
+    <div class="navbar navbar-default" id="nav">
+      <ul class="nav navbar-nav">
+        <li{% if page_id == 'how-page' %} class="active"{% endif %}><a href="/how">How to play</a></li>
+        <li{% if page_id == 'archive-page' %} class="active"{% endif %}><a href="/archive">Old questions</a></li>
+        <li{% if page_id == 'leaderboard-page' %} class="active"{% endif %}><a href="/leaderboard">Leaderboard</a></li>
+      </ul>
+    </div>
+
     <div class="container">
       {% block content %}
         <div class="row">
