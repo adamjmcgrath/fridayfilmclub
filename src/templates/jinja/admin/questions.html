@@ -5,6 +5,13 @@
 {% block main %}
 {{super()}}
 <h2>Questions</h2>
+
+  <ul class="nav nav-tabs navbar-collapse navbar-ex1-collapse">
+    <li{% if not posed and not current %} class="active"{% endif %}><a href="{{ uri_for('admin-questions') }}">Unposed</a></li>
+    <li{% if posed %} class="active"{% endif %}><a href="{{ uri_for('admin-questions') }}?posed=1">Posed</a></li>
+    <li class="pull-right{% if current %} active{% endif %}"><a href="{{ uri_for('admin-questions') }}?current=1">Current Question</a></li>
+  </ul>
+
 <table class="table">
   <tr>
     <th>title</th>
@@ -14,7 +21,7 @@
     <th>clue 4</th>
     <th>edit</th>
     <th>view</th>
-    <th>pose</th>
+    {% if not posed and not current %}<th>pose</th>{% endif %}
   </tr>
   {% for q in questions %}
   <tr>
@@ -30,9 +37,7 @@
     {% endfor %}
     <td><a href="{{ uri_for('admin-edit-question', key=q.key.id()) }}">edit</a></td>
     <td><a href="{{ uri_for('question', None, q.key.id()) }}">view</a></td>
-    <td>
-      <a href="{{ uri_for('admin-posequestion', key=q.key.id()) }}?debug=true">email</a>
-    </td>
+    {% if not posed and not current %}<td><a href="{{ uri_for('admin-posequestion', key=q.key.id()) }}?debug=true">email</a></td>{% endif %}
   </tr>
   {% endfor %}
 </table>

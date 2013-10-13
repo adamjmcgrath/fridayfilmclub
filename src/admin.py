@@ -76,7 +76,7 @@ class AddEditQuestion(baserequesthandler.RequestHandler):
       question_entity.put()
       form.populate_obj(question_entity)
       question_entity.put()
-      return webapp2.redirect('/admin/questions')
+      return webapp2.redirect('/admin')
     else:
       return self.render_template('admin/addquestion.html', {
           'form': form,
@@ -90,8 +90,19 @@ class Questions(baserequesthandler.RequestHandler):
   """Adds a question to the datastore."""
 
   def get(self):
+    posed = bool(self.request.get('posed'))
+    current = bool(self.request.get('current'))
+    if posed:
+      questions = models.Question.query(models.Question.posed != None)
+    elif current:
+      questions = models.Question.query(models.Question.is_current == True)
+    else:
+      questions = models.Question.query(models.Question.posed == None)
+
     return self.render_template('admin/questions.html', {
-      'questions': models.Question.query(),
+      'questions': questions,
+      'posed': posed,
+      'current': current
     })
 
 
