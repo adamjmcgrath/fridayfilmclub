@@ -19,9 +19,9 @@ from google.appengine.ext import ndb
 RE_SPECIAL_CHARS_ = re.compile(r'[^a-zA-Z0-9 ]')
 
 # Maximum possible score
-_MAX_SCORE = 10000
+_MAX_SCORE = 20000
 # No. of seconds penalty per guess
-_TIME_PER_PENALTY = 1000
+_TIME_PER_PENALTY = 2000
 
 
 def slugify(my_string):
