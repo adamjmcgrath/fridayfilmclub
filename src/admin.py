@@ -139,7 +139,11 @@ class PoseQuestion(baserequesthandler.RequestHandler):
       # TODO (adamjmcgrath) Batch the loop through users.
       for user_entity in user_entities:
         taskqueue.add(url=url,
-                      params={'email': user_entity.email},
+                      params={
+                        'email': user_entity.email,
+                        'email_msg': question.email_msg,
+                        'username': user_entity.name,
+                      },
                       queue_name='pose')
 
     logging.info('Question: %s, posed at: %s', question.answer.id(),
@@ -154,11 +158,16 @@ class PoseQuestion(baserequesthandler.RequestHandler):
   def post(self, key):
     """Queue handler for sending out each email."""
     email = self.request.get('email')
-    link = urlparse.urljoin(self.request.host_url, 'question/%s' % key)
+
+    body = self.generate_template('email/question.txt', {
+      'url': urlparse.urljoin(self.request.host_url, 'question/%s' % key),
+      'msg': self.request.get('email_msg'),
+      'name': self.request.get('username')
+    })
     mail.send_mail(sender='adamjmcgrath@gmail.com',
                      to=email,
                      subject='This weeks Friday Film Club question',
-                     body='Go play: %s' % link)
+                     body=body)
 
 
 class AddFilmsHandler(blobstore_handlers.BlobstoreUploadHandler):

@@ -70,8 +70,8 @@ class RequestHandler(webapp2.RequestHandler):
     return (os.environ['SERVER_SOFTWARE'].startswith('Development') and
         self.request.get('debug') != 'false')
 
-  def render_template(self, template_path, template_obj):
-    """docstring for render_to_template"""
+  def generate_template(self, template_path, template_obj):
+    """Create the template output."""
     template = _JINJA_ENV.get_template(
         posixpath.join(_TEMPLATE_PATH, template_path))
     values = {
@@ -83,7 +83,11 @@ class RequestHandler(webapp2.RequestHandler):
       values['user'] = self.current_user
     # Add manually supplied template values
     values.update(template_obj)
-    return webapp2.Response(template.render(values))
+    return template.render(values)
+
+  def render_template(self, template_path, template_obj):
+    """docstring for render_template"""
+    return webapp2.Response(self.generate_template(template_path, template_obj))
 
   def get_json_callback(self):
     """Get json callback"""
@@ -108,6 +112,6 @@ class RequestHandler(webapp2.RequestHandler):
     return webapp2.Response(json_response)
 
   def render_empty(self):
-    """eEnder an empty response."""
+    """Render an empty response."""
     return webapp2.Response('')
 

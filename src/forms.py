@@ -112,3 +112,7 @@ class Question(Form):
   """A question form."""
   answer = FilmField('Film', [validators.Required()], id='film')
   clues = CluesFieldList(ClueFormField(ClueForm), min_entries=4)
+  email_msg = fields.TextAreaField('Email Message')
+  imdb_url = fields.TextField('IMDB Link',
+                              default='http://www.imdb.com/title/XXX/')
+

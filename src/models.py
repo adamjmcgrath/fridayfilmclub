@@ -80,6 +80,9 @@ class Question(ndb.Model):
   posed = ndb.DateTimeProperty()
   updated = ndb.DateTimeProperty(auto_now=True)
   is_current = ndb.BooleanProperty(default=False)
+  imdb_url = ndb.StringProperty()
+  email_msg = ndb.TextProperty()
+  # TODO (adamjmcgrath) season
 
 
 # pylint: disable=W0232
