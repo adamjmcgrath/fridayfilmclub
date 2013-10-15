@@ -11,6 +11,7 @@ import logging
 
 import auth
 import baserequesthandler
+from functools import partial
 import models
 
 from google.appengine.api import users
@@ -48,18 +49,24 @@ class Question(baserequesthandler.RequestHandler):
     # Construct/get the user key.
     user_question_id = '%s-%s' % (question_id, user.key.id())
     user_question = models.UserQuestion.get_or_insert(user_question_id,
-      question=question, user=user)
+      question=question.key, user=user.key)
+    user_season_id = '%s-%s' % (question.season.id(), user.key.id())
+    user_season = models.UserSeason.get_or_insert(user_season_id,
+      season=question.season, user=user.key)
 
     # Check if guess is correct, update UserQuestion.
     if guess and not user_question.complete:
       user_question.correct = (guess.strip() == str(question.answer.id()))
-
       user_question.guesses.append(guess)
+
       if user_question.correct or len(user_question.guesses) >= _MAX_CLUES:
         user_question.complete = True
         user_question.score = user_question.calculate_score(posed)
+        user_season.score += user_question.calculate_score(posed)
         user.overall_score += user_question.score
         user.questions_answered += 1
+        user_season.put()
+
       user_question.put()
       user.put()
 
@@ -99,14 +106,25 @@ class LeaderBoard(baserequesthandler.RequestHandler):
   """Leader boards."""
 
   def get(self, duration):
+    is_all = duration == 'all'
     is_week = duration == 'week'
     offset = self.request.get('offset') or 0
     limit = self.request.get('limit') or 20
     qo = ndb.QueryOptions(offset=int(offset), limit=int(limit))
     response_obj = {}
 
-    if is_week:
-      question_query = models.Question.query(models.Question.is_current == True)
+    if is_all:
+      user_query = models.User.query().order(
+                       -models.User.overall_score)
+
+      response_obj['count'] = user_query.count()
+      response_obj['users'] = user_query.map(
+                                  models.User.to_leaderboard_json, options=qo)
+
+    elif is_week:
+      question_query = models.Question.query(
+          models.Question.is_current == True)
+
       question_key = question_query.get(keys_only=True)
       user_question_query = models.UserQuestion.query(
           models.UserQuestion.question == question_key,
@@ -116,12 +134,18 @@ class LeaderBoard(baserequesthandler.RequestHandler):
       response_obj['users'] = user_question_query.map(
           models.UserQuestion.to_leaderboard_json, options=qo)
 
-    else: # All time
-      user_query = models.User.query().order(
-                       -models.User.overall_score)
-      response_obj['count'] = user_query.count()
-      response_obj['users'] = user_query.map(
-                                  models.User.to_leaderboard_json, options=qo)
+    else: # Should be the Season number.
+      season = models.Season.get_by_id(duration)
+      user_season_query = models.UserSeason.query(
+          models.UserSeason.season == season.key).order(
+              -models.UserSeason.score)
+      questions_in_season = models.Question.query(
+          models.Question.season == season.key).count()
+      response_obj['count'] = user_season_query.count()
+      response_obj['users'] = user_season_query.map(
+          partial(models.UserSeason.to_leaderboard_json, questions_in_season),
+          options=qo)
+
 
     return self.render_json(response_obj)
 

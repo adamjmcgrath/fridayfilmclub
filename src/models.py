@@ -66,6 +66,19 @@ class FilmIndex(ndb.Model):
   films = ndb.KeyProperty(repeated=True)
 
 
+class Season(ndb.Model):
+  """Group questions into seasons."""
+  number = ndb.IntegerProperty()
+
+  @staticmethod
+  def get_current():
+    season = Season.query().order(-Season.number).get()
+    if not season:
+      season = Season(id='1', number=1)
+      season.put()
+    return season
+
+
 # pylint: disable=W0232
 class Question(ndb.Model):
   """A question.
@@ -82,7 +95,7 @@ class Question(ndb.Model):
   is_current = ndb.BooleanProperty(default=False)
   imdb_url = ndb.StringProperty()
   email_msg = ndb.TextProperty()
-  # TODO (adamjmcgrath) season
+  season = ndb.KeyProperty(kind=Season)
 
 
 # pylint: disable=W0232
@@ -187,3 +200,20 @@ class UserQuestion(ndb.Model):
       'answered': user.questions_answered,
     }
 
+
+class UserSeason(ndb.Model):
+  """Keep track of a users score over a season."""
+  score = ndb.IntegerProperty(default=0)
+  season = ndb.KeyProperty(kind=Season)
+  user = ndb.KeyProperty(kind=User)
+
+  @staticmethod
+  def to_leaderboard_json(questions_in_season, user_season):
+    """Used to return json for the leader board api season."""
+    user = user_season.user.get()
+    return {
+      'user_name': user.name,
+      'user_pic': user.avatar_url,
+      'score': user_season.score,
+      'answered': questions_in_season,
+    }

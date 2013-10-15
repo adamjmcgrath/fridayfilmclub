@@ -37,6 +37,12 @@ indexes:
   - name: score
     direction: desc
 
+- kind: UserSeason
+  properties:
+  - name: season
+  - name: score
+    direction: desc
+
 - kind: _AE_MR_MapreduceState
   properties:
   - name: __key__

@@ -57,7 +57,7 @@ class AddEditQuestion(baserequesthandler.RequestHandler):
     else:
       question_entity = None
       form = forms.Question()
-    
+
     return self.render_template('admin/addquestion.html', {
         'form': form,
         'question': question_entity,
@@ -136,6 +136,9 @@ class PoseQuestion(baserequesthandler.RequestHandler):
                     params={'email': users.get_current_user().email()},
                     queue_name='pose')
     else:
+      question.season = models.Season.get_current().key
+      question.put()
+
       # TODO (adamjmcgrath) Batch the loop through users.
       for user_entity in user_entities:
         taskqueue.add(url=url,
