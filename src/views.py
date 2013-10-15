@@ -79,7 +79,9 @@ class LeaderBoard(baserequesthandler.RequestHandler):
   """The leader board / results page."""
 
   def get(self):
-    return self.render_template('leaderboard.html', {})
+    return self.render_template('leaderboard.html', {
+      'season': models.Season.get_current()
+    })
 
 
 class HowItWorks(baserequesthandler.RequestHandler):

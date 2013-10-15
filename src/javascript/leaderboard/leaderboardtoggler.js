@@ -16,11 +16,11 @@ goog.require('goog.dom.dataset');
 
 /**
  * LeaderBoardToggler constructor.
- * @param {ffc.leaderboard.LeaderBoard} var_args Some leaderboards.
+ * @param {Array.<ffc.leaderboard.LeaderBoard>} leaderboards Some leaderboards.
  *
  * @constructor
  */
-ffc.leaderboard.LeaderBoardToggler = function(var_args) {
+ffc.leaderboard.LeaderBoardToggler = function(leaderboards) {
   goog.base(this);
 
   /**
@@ -41,7 +41,7 @@ ffc.leaderboard.LeaderBoardToggler = function(var_args) {
    * @type {Array.<ffc.leaderboard.LeaderBoard>}
    * @private
    */
-  this.leaderBoards_ = Array.prototype.slice.call(arguments, 0);
+  this.leaderBoards_ = leaderboards;
 
 };
 goog.inherits(ffc.leaderboard.LeaderBoardToggler, goog.ui.Component);
@@ -80,7 +80,7 @@ ffc.leaderboard.LeaderBoardToggler.prototype.handleTabClick_ = function(e) {
       var lb = this.leaderBoards_[i];
       if (lb.getType() == type) {
         lb.render(document.getElementById('leaderboard-container-' + type));
-      } else {
+      } else if (lb.isInDocument()) {
         lb.exitDocument();
       }
     }

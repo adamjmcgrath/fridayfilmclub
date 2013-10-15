@@ -9,9 +9,15 @@
   <h1>Leaderboard</h1>
   <ul id="leaderboard-tabs" class="nav nav-tabs">
     <li class="active"><a href="#" data-leaderboard="week">This week</a></li>
+    {% for season_number in range(season.number) %}
+    <li><a href="#" data-leaderboard="{{ loop.index }}">Season {{ loop.index }}</a></li>
+    {% endfor %}
     <li><a href="#" data-leaderboard="all">All time</a></li>
   </ul>
   <div id="leaderboard-container-all"></div>
+  {% for season_number in range(season.number) %}
+  <div id="leaderboard-container-{{ loop.index }}"></div>
+  {% endfor %}
   <div id="leaderboard-container-week"></div>
 </div>
 {% endblock %}
@@ -37,8 +43,17 @@
 
   var lbma = new ffc.leaderboard.LeaderBoardModel('all', ffc.api.Client.getInstance());
   var lba = new ffc.leaderboard.LeaderBoard(lbma);
+  var lbs = [lbw, lba];
 
-  var lbt = new ffc.leaderboard.LeaderBoardToggler(lbw, lba);
+  {% for season_number in range(season.number) %}
+    lbs.push(
+      new ffc.leaderboard.LeaderBoard(
+        new ffc.leaderboard.LeaderBoardModel('{{ loop.index }}', ffc.api.Client.getInstance())
+      )
+    );
+  {% endfor %}
+
+  var lbt = new ffc.leaderboard.LeaderBoardToggler(lbs);
   lbt.decorate(document.getElementById('leaderboard-tabs'));
 
 </script>
