@@ -97,7 +97,7 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
       del self.session['original_url']
       self.redirect(str(target))
     else:
-      self.redirect('/profile')
+      self.redirect('/settings')
 
   def logout(self):
     self.auth.unset_session()

@@ -4,7 +4,27 @@
 
 {% block main %}
 <div class="col-md-9">
-  <h1>{{user.name}}'s Profile</h1>
+  <h1>Your profile</h1>
+
+  <form class="form-horizontal" role="form">
+    <div class="form-group">
+      <label for="inputEmail1" class="col-lg-2 control-label">Username</label>
+      <div class="col-lg-10">
+        <input type="email" class="form-control" id="inputEmail1" value="{{user.name}}">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="inputEmail" class="col-lg-2 control-label">Email</label>
+      <div class="col-lg-10">
+        <input type="email" class="form-control" id="inputEmail" value="{{user.email}}">
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-lg-offset-2 col-lg-10">
+        <button type="submit" class="btn btn-default pull-right">Save profile</button>
+      </div>
+    </div>
+  </form>
   <p>{{user.email}}</p>
   <p><a href="{{user.link}}">{{user.link}}</a></p>
 

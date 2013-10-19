@@ -14,7 +14,7 @@ goog.require('soydata');
  * @notypecheck
  */
 ffc.template.leaderboard.table = function(opt_data, opt_ignored) {
-  return '<table class="table table-striped table-hover"><thead><tr><th colspan="2">User</th><th class="leaderboard-number">Score</th><th class="leaderboard-number">Answered</th><th class="leaderboard-number">Av. Score</th></tr></thead><tbody class="leaderboard-users"></tbody></table>';
+  return '<table class="table table-striped table-hover"><thead><tr><th colspan="2">User</th><th class="leaderboard-score">Score</th><th class="leaderboard-answered">Answered</th><th class="leaderboard-average">Av. Score</th></tr></thead><tbody class="leaderboard-users"></tbody></table>';
 };
 
 

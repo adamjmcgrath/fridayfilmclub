@@ -14,7 +14,7 @@ goog.require('soydata');
  * @notypecheck
  */
 ffc.template.quiz.answerForm = function(opt_data, opt_ignored) {
-  return '<form class="well answer-form"><div class="form-inline"><div class="input-group"><span class="input-group-addon">Search</span><input class="autocomplete input-lg form-control" size="16" type="text" autocomplete="off"></div><a href="#" class="btn btn-lg btn-success" id="btn-search">Search</a><a href="#" class="btn btn-lg btn-warning" id="btn-clear">Clear</a></div><div class="controls rows"><div class="suggestions"><p class="suggest-info">Search for a film, then select your guess from the list.</p></div></div><div class="guess-buttons"><a href="#" class="btn btn-primary" id="btn-submit">Submit</a><a href="#" class="btn btn-danger" id="btn-pass">Pass</a></div></form>';
+  return '<form class="well answer-form"><div class="form-inline"><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-film"></span></span><input class="autocomplete input-lg form-control" size="16" type="text" autocomplete="off"></div><a href="#" class="btn btn-lg btn-success" id="btn-search">Search</a><a href="#" class="btn btn-lg btn-warning" id="btn-clear">Clear</a></div><div class="controls rows"><div class="suggestions"><p class="suggest-info">Search for a film, then select your guess from the list.</p></div></div><div class="guess-buttons"><a href="#" class="btn btn-primary" id="btn-submit">Submit</a><a href="#" class="btn btn-danger" id="btn-pass">Pass</a></div></form>';
 };
 
 

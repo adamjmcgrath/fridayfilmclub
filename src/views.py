@@ -59,18 +59,18 @@ class Question(baserequesthandler.RequestHandler):
 
 
 class Login(baserequesthandler.RequestHandler):
-  """Shows the profile page."""
+  """Shows the login page."""
 
   def get(self):
     return self.render_template('login.html', {})
 
 
-class Profile(baserequesthandler.RequestHandler):
-  """Shows the profile page."""
+class Settings(baserequesthandler.RequestHandler):
+  """Shows the Settings page."""
 
   @auth.login_required
   def get(self):
-    return self.render_template('profile.html', {})
+    return self.render_template('settings.html', {})
 
 
 class Archive(baserequesthandler.RequestHandler):

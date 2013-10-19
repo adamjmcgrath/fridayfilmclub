@@ -37,6 +37,9 @@ handlers:
 - url: /twitter-bootstrap
   static_dir: twitter-bootstrap
 
+- url: /fonts
+  static_dir: twitter-bootstrap/fonts
+
 - url: /stylesheets
   static_dir: stylesheets
   

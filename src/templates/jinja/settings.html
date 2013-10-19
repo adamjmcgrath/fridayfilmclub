@@ -1,0 +1,85 @@
+{% extends "templates/jinja/base.tpl" %}
+
+{% block page_id %}settings-page{% endblock page_id %}
+
+{% block main %}
+<div class="col-md-9">
+  <h1>Settings</h1>
+  <h4 class="text-muted">Edit your profile</h4>
+  <form class="form-horizontal" role="form">
+    <div class="form-group">
+      <label for="inputEmail1" class="col-lg-3 control-label">firdayfilmclub.com/u/</label>
+      <div class="col-lg-9">
+        <input type="email" class="form-control" id="inputEmail1" value="{{user.name}}">
+        <p class="help-block">Your public username.</p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="inputEmail" class="col-lg-3 control-label">Email</label>
+      <div class="col-lg-9">
+        <input type="email" class="form-control" id="inputEmail" value="{{user.email}}">
+        <p class="help-block">We need you email to send the weekly question to.</p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="profilePic" class="col-lg-3 control-label">Profile pic</label>
+      <div class="col-lg-9">
+        <input type="file" id="profilePic">
+        <p class="help-block">Max size 1MB</p>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-lg-offset-2 col-lg-10">
+        <button type="submit" class="btn btn-primary pull-right">Save profile</button>
+      </div>
+    </div>
+  </form>
+  <h4 class="text-muted">Add services</h4>
+  <ul class="list-group">
+    <li class="list-group-item">
+      Google
+      {% if user.google_name %}
+        <span class="glyphicon glyphicon-ok pull-right"></span>
+      {% else %}
+        <a href="/auth/google" class="btn btn-xs btn-default pull-right" type="button">
+          <img src="/static/img/google.png">
+          Add
+        </a>
+      {% endif %}
+    </li>
+    <li class="list-group-item">
+      Facebook
+      {% if user.facebook_name %}
+        <span class="glyphicon glyphicon-ok pull-right"></span>
+      {% else %}
+        <a href="/auth/facebook" class="btn btn-xs btn-primary pull-right" type="button">
+          <img src="/static/img/facebook.png">
+          Add
+        </a>
+      {% endif %}
+    </li>
+    <li class="list-group-item">
+      Twitter
+      {% if user.twitter_name %}
+        <span class="glyphicon glyphicon-ok pull-right"></span>
+      {% else %}
+        <a href="/auth/twitter" class="btn btn-xs btn-info pull-right" type="button">
+          <img src="/static/img/twitter.png">
+          Add
+        </a>
+      {% endif %}
+    </li>
+  </ul>
+</div>
+{% endblock %}
+
+{% block sidebar %}
+<div class="col-md-3" id="sidebar">
+  <img src="{{user.avatar_url}}" style="width: 100%">
+</div>
+{% endblock %}
+
+{% block body_base %}
+{% endblock %}
+
+

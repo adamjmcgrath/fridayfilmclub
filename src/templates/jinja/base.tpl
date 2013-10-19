@@ -14,7 +14,7 @@
             {% if logged_in %}
               <span>
                 <b>{{user.name}}</b><br>
-                <a href="/profile">profile</a> - <a href="{{ uri_for('logout') }}">logout</a>
+                <a href="{{ uri_for('settings') }}">settings</a> - <a href="{{ uri_for('logout') }}">logout</a>
               </span>
               <img src="{{user.avatar_url}}" width="30" height="30">
             {% else %}
