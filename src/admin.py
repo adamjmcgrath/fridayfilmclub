@@ -93,7 +93,7 @@ class Questions(baserequesthandler.RequestHandler):
     posed = bool(self.request.get('posed'))
     current = bool(self.request.get('current'))
     if posed:
-      questions = models.Question.query(models.Question.posed != None)
+      questions = models.Question.query(models.Question.posed != None).order(-models.Question.posed)
     elif current:
       questions = models.Question.query(models.Question.is_current == True)
     else:
@@ -137,6 +137,12 @@ class PoseQuestion(baserequesthandler.RequestHandler):
                     queue_name='pose')
     else:
       question.season = models.Season.get_current().key
+      last_question = models.Question.query(
+          models.Question.season == question.season).order(-models.Question.week).get()
+      if last_question:
+        question.week = last_question.week + 1
+      else:
+        question.week = 1
       question.put()
 
       # TODO (adamjmcgrath) Batch the loop through users.

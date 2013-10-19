@@ -96,6 +96,8 @@ class Question(ndb.Model):
   imdb_url = ndb.StringProperty()
   email_msg = ndb.TextProperty()
   season = ndb.KeyProperty(kind=Season)
+  week = ndb.IntegerProperty()
+  answered = ndb.IntegerProperty(default=0)
 
   def clue_image_url(self, size=None, crop=False):
     clue = self.clues[0]

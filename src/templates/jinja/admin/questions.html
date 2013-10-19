@@ -15,10 +15,16 @@
 <table class="table">
   <tr>
     <th>title</th>
-    <th>clue 1</th>
-    <th>clue 2</th>
-    <th>clue 3</th>
-    <th>clue 4</th>
+    {% if posed %}
+      <th>Season</th>
+      <th>Week</th>
+      <th>Answered</th>
+    {% else %}
+      <th>clue 1</th>
+      <th>clue 2</th>
+      <th>clue 3</th>
+      <th>clue 4</th>
+    {% endif %}
     <th>edit</th>
     <th>view</th>
     {% if not posed and not current %}<th>pose</th>{% endif %}
@@ -26,21 +32,27 @@
   {% for q in questions %}
   <tr>
     <td>{{q.answer.get().title}}</td>
-    {% for clue in q.clues %}
-      <td>
-      {% if clue.get().text %}
-        {{clue.get().text}}
-      {% else %}
-        <img src="{{clue.get().image_url(80)}}">
-      {% endif %}
-      </td>
-    {% endfor %}
+    {% if posed %}
+      <td>{{ q.season.id() }}</td>
+      <td>{{ q.week }}</td>
+      <td>{{ q.answered }}</td>
+    {% else %}
+      {% for clue in q.clues %}
+        <td>
+        {% if clue.get().text %}
+          {{clue.get().text}}
+        {% else %}
+          <img src="{{clue.get().image_url(80)}}">
+        {% endif %}
+        </td>
+      {% endfor %}
+    {% endif %}
     <td><a href="{{ uri_for('admin-edit-question', key=q.key.id()) }}">edit</a></td>
     <td><a href="{{ uri_for('question', None, q.key.id()) }}">view</a></td>
     {% if not posed and not current %}<td><a href="{{ uri_for('admin-posequestion', key=q.key.id()) }}?debug=true">email</a></td>{% endif %}
   </tr>
   {% endfor %}
 </table>
- <p><a href="{{ uri_for('admin-add-question') }}">Add another question</a></p>
+ <p><span class="glyphicon glyphicon-plus"></span><a href="{{ uri_for('admin-add-question') }}"> Add another question</a></p>
 {% endblock %}
 

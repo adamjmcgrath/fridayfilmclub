@@ -30,6 +30,12 @@ indexes:
   - name: __key__
     direction: desc
 
+- kind: Question
+  properties:
+  - name: season
+  - name: week
+    direction: desc
+
 - kind: UserQuestion
   properties:
   - name: complete

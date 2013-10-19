@@ -70,7 +70,7 @@ ffc.template.quiz.answer = function(opt_data, opt_ignored) {
  * @notypecheck
  */
 ffc.template.quiz.score = function(opt_data, opt_ignored) {
-  var output = '<div class="well score"><h4>Points available:</h4><p class="points-available">';
+  var output = '<div><h4>Points available:</h4><p class="points-available">';
   var sList99 = opt_data.score;
   var sListLen99 = sList99.length;
   for (var sIndex99 = 0; sIndex99 < sListLen99; sIndex99++) {

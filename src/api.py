@@ -54,6 +54,7 @@ class Question(baserequesthandler.RequestHandler):
     user_season = models.UserSeason.get_or_insert(user_season_id,
       season=question.season, user=user.key)
 
+    to_put = []
     # Check if guess is correct, update UserQuestion.
     if guess and not user_question.complete:
       user_question.correct = (guess.strip() == str(question.answer.id()))
@@ -65,10 +66,13 @@ class Question(baserequesthandler.RequestHandler):
         user_season.score += user_question.calculate_score(posed)
         user.overall_score += user_question.score
         user.questions_answered += 1
-        user_season.put()
+        question.answered += 1
+        to_put.append(user_season)
+        to_put.append(question)
 
-      user_question.put()
-      user.put()
+      to_put.append(user_question)
+      to_put.append(user)
+      ndb.put_multi(to_put)
 
     # The number of the clues to show the user is one greater than the
     # number of guesses up to the maximum number of guesses.
