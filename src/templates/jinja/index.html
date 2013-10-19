@@ -14,27 +14,35 @@
       {% endif %}
     </p>
     <p class="text-muted">
-      We'll send you an email every Friday with a film quiz question and some clues.<br>
-      The quicker you answer the question - the more points you get. <a href="{{ uri_for('how-it-works') }}">More details</a>.
+      The invite only weekly film quiz. Identify a screenshot and compete against your friends.<br>
     </p>
   </div>
   <div class="row">
     <div class="col-md-4">
       <div class="panel panel-default">
+        {% if logged_in and question_image %}
+        <h5 class="panel-heading">This week</h5>
+        <div class="panel-body">
+          <img class="img-thumbnail" src="{{ question_image }}">
+          <p>Whether time is up or not, here’s this week’s current question.</p>
+          <p><a href="{{ uri_for('question', None, '') }}">This week's question</a></p>
+        </div>
+        {% else %}
         <h5 class="panel-heading">How it works</h5>
         <div class="panel-body">
           <img class="img-thumbnail" src="static/img/junior.jpg">
           <p>Find out the rules, how the scoring works and how to play the game.</p>
           <p><a href="{{ uri_for('how-it-works') }}">How to play</a></p>
         </div>
+        {% endif %}
       </div>
     </div>
     <div class="col-md-4">
       <div class="panel panel-default">
-        <h5 class="panel-heading">Play for fun</h5>
+        <h5 class="panel-heading">Previous weeks</h5>
         <div class="panel-body">
           <img class="img-thumbnail" src="static/img/wargames.jpg">
-          <p>Check out our old questions from the archives and play the quiz for fun.</p>
+          <p>Fancy a play without the pressure? Here are some questions from the past to cut your teeth on.</p>
           <p><a href="{{ uri_for('archive') }}">Old questions archive</a></p>
         </div>
       </div>
@@ -44,7 +52,7 @@
         <h5 class="panel-heading">Top the leader board</h5>
         <div class="panel-body">
           <img class="img-thumbnail" src="static/img/karatekid.jpg">
-          <p>Be the fastest film quizzer of the week, the year or of all time!</p>
+          <p>I FEEL THE NEED! THE NEED FOR... showing how you’re doing on the leaderboard.</p>
           <p><a href="{{ uri_for('leader-board') }}">Leaderboards</a></p>
         </div>
       </div>

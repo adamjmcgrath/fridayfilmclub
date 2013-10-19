@@ -50,7 +50,7 @@
 {template .guess}
 <div class="alert alert-warning failed-guess">
   {if $title}
-    <b>{$title} ({$year})</b> is incorrect!
+    <b>{$title} ({$year})</b> is incorrect. Try again!
   {else}
     <b>PASS</b>
   {/if}
@@ -84,10 +84,20 @@
  * @param correct Whether the question has been answered correctly.
  * @param title The answer title.
  * @param year The answer year.
+ * @param? numGuesses The number of guesses made
  */
 {template .answer}
 <div class="alert alert-{if $correct}success{else}danger{/if} clue">
-  <h4 class="alert-heading">{if $correct}Correct!{else}Incorrect!{/if}</h4>
+  <h4 class="alert-heading">
+    {if $correct}
+      {if $numGuesses == 1}BOOM!
+      {elseif $numGuesses == 2}Well played!
+      {elseif $numGuesses == 3}Correct!
+      {else}That’s the one!
+    {/if}
+    {else}
+        Incorrect!
+    {/if}</h4>
   <p>The answer is of course: <b>{$title}</b> ({$year})</p>
 </div>
 {/template}

@@ -22,20 +22,7 @@ ffc.quiz.Answer = function(model) {
    * @type {boolean}
    * @private
    */
-  this.correct_ = model.correct;
-
-  /**
-   * @type {string}
-   * @private
-   */
-  this.title_ = model.title;
-
-  /**
-   * @type {number}
-   * @private
-   */
-  this.year_ = model.year;
-
+  this.model_ = model;
 };
 goog.inherits(ffc.quiz.Answer, ffc.quiz.Component);
 
@@ -45,6 +32,10 @@ goog.inherits(ffc.quiz.Answer, ffc.quiz.Component);
  */
 ffc.quiz.Answer.prototype.createDom = function() {
   this.element_ = soy.renderAsFragment(
-      ffc.template.quiz.answer,
-      {correct: this.correct_, title: this.title_, year: this.year_});
+      ffc.template.quiz.answer, {
+        correct: this.model_.correct,
+        title: this.model_.title,
+        year: this.model_.year,
+        numGuesses: this.model_.numGuesses
+      });
 };

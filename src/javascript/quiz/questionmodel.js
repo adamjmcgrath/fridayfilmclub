@@ -102,7 +102,7 @@ ffc.quiz.QuestionModel.prototype.update = function(data) {
   var len = Math.max(clues.length, guesses.length);
 
   if (answer && !this.answer) {
-    this.answer = new ffc.quiz.AnswerModel(answer, data['correct']);
+    this.answer = new ffc.quiz.AnswerModel(answer, data['correct'], data['guesses'].length);
   }
 
   for (var i = 0; i < len; i++) {

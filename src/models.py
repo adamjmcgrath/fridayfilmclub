@@ -97,6 +97,13 @@ class Question(ndb.Model):
   email_msg = ndb.TextProperty()
   season = ndb.KeyProperty(kind=Season)
 
+  def clue_image_url(self, size=None, crop=False):
+    clue = self.clues[0]
+    if clue:
+      return clue.get().image_url(size=size, crop=crop)
+    else:
+      return None
+
 
 # pylint: disable=W0232
 class Clue(ndb.Model):
@@ -105,10 +112,10 @@ class Clue(ndb.Model):
   image = ndb.BlobKeyProperty()
   question = ndb.KeyProperty(kind=Question)
 
-  def image_url(self, size=None):
+  def image_url(self, size=None, crop=False):
     """Gets the image's url."""
     if self.image:
-      return images.get_serving_url(self.image, size=size)
+      return images.get_serving_url(self.image, size=size, crop=crop)
     else:
       return ''
 

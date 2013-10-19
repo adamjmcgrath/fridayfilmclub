@@ -56,7 +56,7 @@ routes = [
     webapp2.Route('/logout', handler='auth.AuthHandler:logout', name='logout'),
 
     # Main views (Authenticated).
-    webapp2.Route(r'/question/<:.+>', views.Question, name='question'),
+    webapp2.Route(r'/question/<:.*>', views.Question, name='question'),
     webapp2.Route(r'/profile', views.Profile, name='profile'),
     webapp2.Route(r'/login', views.Login, name='login'),
 

@@ -21,7 +21,12 @@ class HomePage(baserequesthandler.RequestHandler):
   """Shows the homepage."""
 
   def get(self):
-    return self.render_template('index.html', {})
+    current_question = models.Question.query(models.Question.is_current == True)
+    question_image = current_question.get().clue_image_url(size=260)
+    return self.render_template('index.html', {
+        'current_question': current_question,
+        'question_image': question_image
+    })
 
 
 class Question(baserequesthandler.RequestHandler):
@@ -33,7 +38,7 @@ class Question(baserequesthandler.RequestHandler):
     if question_id:
       question = models.Question.get_by_id(int(question_id))
     else:
-      question = models.Question.query().get()
+      question = models.Question.query(models.Question.is_current == True).get()
 
     # Only Admins can view a question before it's posed
     if not question.posed and not users.is_current_user_admin():
