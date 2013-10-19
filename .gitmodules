@@ -30,3 +30,6 @@
 	path = submodules/oauth2
 	url = git://github.com/simplegeo/python-oauth2.git
         ignore = untracked
+[submodule "src/twitter-bootstrap"]
+	path = src/twitter-bootstrap
+	url = https://github.com/twbs/bootstrap.git
