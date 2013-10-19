@@ -13,21 +13,21 @@
 	url = https://github.com/twbs/bootstrap.git
 [submodule "src/closure-templates"]
 	path = src/closure-templates
-	url = git@github.com:adamjmcgrath/closure-templates.git
+	url = https://github.com/adamjmcgrath/closure-templates.git
 [submodule "src/growjs"]
 	path = src/growjs
-	url = git@github.com:adamjmcgrath/growjs.git
+	url = https://github.com/adamjmcgrath/growjs.git
 [submodule "src/mapreduce"]
 	path = src/mapreduce
-	url = git@github.com:adamjmcgrath/appengine-mapreduce-python.git
+	url = https://github.com/adamjmcgrath/appengine-mapreduce-python.git
         ignore = untracked
 [submodule "submodules/simpleauth"]
 	path = submodules/simpleauth
-	url = git://github.com/crhym3/simpleauth.git
+	url = https://github.com/crhym3/simpleauth.git
         ignore = untracked
 [submodule "submodules/httplib2"]
 	path = submodules/httplib2
-	url = git@github.com:adamjmcgrath/httplib2.git
+	url = https://github.com/adamjmcgrath/httplib2.git
         ignore = untracked
 [submodule "submodules/oauth2"]
 	path = submodules/oauth2
