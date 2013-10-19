@@ -106,7 +106,7 @@ ffc.quiz.Score.prototype.enterDocument = function() {
   goog.base(this, 'enterDocument');
 
   this.eh_.listen(this.countDownTimer_, goog.Timer.TICK,
-      this.countDown_, false, this);
+      this.countDown, false, this);
 };
 
 
@@ -146,15 +146,13 @@ ffc.quiz.Score.prototype.stopClock = function() {
 
 /**
  * Animate the updating of the score board.
- * @private
  */
-ffc.quiz.Score.prototype.countDown_ = function() {
+ffc.quiz.Score.prototype.countDown = function() {
   if (!this.score_) {
     this.stopClock();
-    return;
+  } else {
+    this.score_ -= 1;
   }
-
-  this.score_ -= 1;
 
   var points = goog.string.padNumber(this.score_, 5);
   goog.array.forEach(this.pointEls_, function(el, i) {

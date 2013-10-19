@@ -236,7 +236,9 @@ ffc.quiz.Question.prototype.update = function() {
     } else {
       callback();
     }
-    this.score_.stopClock();
+	  // Update the score and stop the clock.
+    this.score_.countDown();
+	  this.score_.stopClock();
   } else {
     // Otherwise add more clues and guesses.
     this.answerForm.showIncorrect(goog.bind(this.addCluesAndGuesses, this));
