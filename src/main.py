@@ -59,6 +59,7 @@ routes = [
     webapp2.Route(r'/question/<:.*>', views.Question, name='question'),
     webapp2.Route(r'/settings', views.Settings, name='settings'),
     webapp2.Route(r'/login', views.Login, name='login'),
+    webapp2.Route(r'/register', views.Register, name='register'),
 
     # Main views.
     webapp2.Route(r'/archive', views.Archive, name='archive'),

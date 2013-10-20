@@ -24,6 +24,18 @@
     margin-bottom: 0;
   }
 
+  .alert-success {
+    -webkit-animation-name: pulsate;
+    -webkit-animation-duration: 1s;
+    -webkit-animation-iteration-count: 2;
+  }
+
+  @-webkit-keyframes pulsate {
+    0% {  -webkit-box-shadow: 0px 0px 0px @green; border:1px #d6e9c6 inset}
+    50% {  -webkit-box-shadow: 0px 0px 20px @green; border:1px #d6e9c6 inset}
+    100%{  -webkit-box-shadow: 0px 0px 0px @green; border:1px #d6e9c6 inset}
+  }
+
 }
 
 .suggestions {

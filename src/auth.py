@@ -85,6 +85,7 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
         u.put()
 
       else:
+        # TODO (adamjmcgrath) Creating a new user - need to validate the invite.
         logging.info('Creating a brand new user')
         ok, user = self.auth.store.user_model.create_user(
             auth_id, **self._to_user_model_attrs(data, provider))

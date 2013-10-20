@@ -1,0 +1,57 @@
+{% extends "templates/jinja/base.tpl" %}
+
+{% block page_id %}register-page{% endblock page_id %}
+
+{% block main %}
+  {% if not invitation_code %}
+    <div class="col-md-6 col-md-offset-3 alert alert-danger">
+      Friday Film Club is <strong>invitation only</strong>.
+    </div>
+  {% endif %}
+  <div class="col-md-6 col-md-offset-3 well" id="login-buttons">
+    <h4>Join the Friday Film Club:</h4>
+    <p class="text-muted">Enter your details:</p>
+    <form role="form">
+      <div class="form-group">
+        <label for="userName">Username:</label>
+        <input type="text" class="form-control" id="userName" placeholder="Your username">
+        <small class="help-block">Your username must be unique &amp; 3-16 characters (letters, numbers and '_' only).</small>
+      </div>
+      <div class="form-group">
+        <label for="invitationCode">Invitation code</label>
+        <input type="text" class="form-control" id="invitationCode" placeholder="Invitation code" value="{{ invitation_code|escape }}">
+        <small class="help-block">The Friday Film Club is invitation only.</small>
+      </div>
+      <p class="text-muted">Then login with one of these services:</p>
+      <div class="row">
+        <div class="col-md-4">
+          <button href="{{ uri_for('auth_login', provider='facebook') }}" class="btn btn-large btn-primary" type="button">
+            <img src="/static/img/facebook.png">
+            Facebook
+          </button>
+        </div>
+        <div class="col-md-4">
+          <button href="{{ uri_for('auth_login', provider='twitter') }}" class="btn btn-large btn-info" type="button">
+            <img src="/static/img/twitter.png">
+            Twitter
+          </button>
+        </div>
+        <div class="col-md-4">
+          <button href="{{ uri_for('auth_login', provider='google') }}" class="btn btn-large btn-default" type="button">
+            <img src="/static/img/google.png">
+            Google
+          </button>
+        </div>
+      </div>
+    </form>
+    <p class="after-form">Already a member? <a href="{{ uri_for('login') }}">Login</a></p>
+  </div>
+{% endblock %}
+
+{% block sidebar %}
+{% endblock %}
+
+{% block body_base %}
+{% endblock %}
+
+

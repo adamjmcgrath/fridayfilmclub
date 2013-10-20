@@ -8,6 +8,7 @@ __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 
 from datetime import datetime
 import logging
+import hashlib
 import re
 
 from webapp2_extras.appengine.auth.models import User as AuthUser
@@ -22,7 +23,10 @@ RE_SPECIAL_CHARS_ = re.compile(r'[^a-zA-Z0-9 ]')
 _MAX_SCORE = 20000
 # No. of seconds penalty per guess
 _TIME_PER_PENALTY = 2000
-
+# Number of invites each user gets
+_NUM_INVITES = 20
+# Secret invite code
+_INVITE_SECRET = 'L1f3M0v3sPr3ttyF4st1fY0uD0ntSt0p4ndL00k4r0und0nc31n4wh1l3Y0uC0uldM1ss1t'
 
 def slugify(my_string):
   """Remove special characters and replace spaces with hyphens."""
@@ -128,6 +132,11 @@ class Clue(ndb.Model):
     }
 
 
+class Invite(ndb.Model):
+  """We just use the hased id for reference"""
+  pass
+
+
 # pylint: disable=W0232
 class User(AuthUser):
   """A user.
@@ -149,6 +158,7 @@ class User(AuthUser):
   twitter_link = ndb.StringProperty()
   overall_score = ndb.IntegerProperty(default=0)
   questions_answered = ndb.IntegerProperty(default=0)
+  invites = ndb.KeyProperty(kind=Invite, repeated=True)
 
   @staticmethod
   def to_leaderboard_json(user):
@@ -159,6 +169,19 @@ class User(AuthUser):
       'score': user.overall_score,
       'answered': user.questions_answered,
     }
+
+  def create_invites(self):
+    """Create 20 invites for a new user."""
+    invites = []
+    for n in range(_NUM_INVITES):
+      m = hashlib.md5()
+      m.update(_INVITE_SECRET)
+      m.update(self.key.id())
+      m.update(str(n))
+      invites.append(Invite(id=m.hexdigest()))
+
+    self.invites = ndb.put_multi(invites)
+    self.put()
 
 
 # pylint: disable=W0232

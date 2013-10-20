@@ -3,25 +3,27 @@
 {% block page_id %}login-page{% endblock page_id %}
 
 {% block main %}
-<div class="row" id="login-buttons">
-  <div >
+<div class="col-md-4 col-md-offset-4 well" id="login-buttons">
+  <h4>Club members login:</h4>
+  <div class="login-button">
     <a href="{{ uri_for('auth_login', provider='facebook') }}" class="btn btn-large btn-primary" type="button">
       <img src="/static/img/facebook.png">
       Login with Facebook
     </a>
   </div>
-  <div >
+  <div class="login-button">
     <a href="{{ uri_for('auth_login', provider='twitter') }}" class="btn btn-large btn-info" type="button">
       <img src="/static/img/twitter.png">
       Login with Twitter
     </a>
   </div>
-  <div >
+  <div class="login-button">
     <a href="{{ uri_for('auth_login', provider='google') }}" class="btn btn-large btn-default" type="button">
       <img src="/static/img/google.png">
       Login with Google
     </a>
-  </div>  
+  </div>
+  <p>Not a member? <a href="{{ uri_for('register') }}">Register to play</a></p>
 </div>
 {% endblock %}
 

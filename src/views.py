@@ -65,6 +65,15 @@ class Login(baserequesthandler.RequestHandler):
     return self.render_template('login.html', {})
 
 
+class Register(baserequesthandler.RequestHandler):
+  """Shows the login page."""
+
+  def get(self):
+    return self.render_template('register.html', {
+      'invitation_code': self.request.get('invite')
+    })
+
+
 class Settings(baserequesthandler.RequestHandler):
   """Shows the Settings page."""
 

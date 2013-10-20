@@ -1,35 +1,63 @@
 
 #login-page {
   background: #eee;
+
+  h2 {
+    text-align: center;
+  }
+
+  hr,
+  #footer {
+    display: none;
+  }
 }
 
-#login-page h2 {
-  text-align: center;
+#login-buttons .login-button,
+#login-buttons .col-md-4  {
+
+  .btn-primary {
+    #gradient > .vertical(#2b4582, #243d79);
+  }
+
+  .btn-primary:hover {
+    background: #2b4582;
+    .transition(background-position .1s linear);
+  }
+
+  a {
+    display: block;
+    font-weight: bold;
+    margin: 10px auto 20px auto;
+    width: 200px;
+  }
+
+  img {
+    margin: -2px 2px 0 0;
+  }
 }
 
-#login-buttons .btn-primary {
-  #gradient > .vertical(#2b4582, #243d79);
+#login-page #login-buttons {
+
+  h4 {
+    text-align: center;
+    margin-bottom: 20px;
+    margin-top: 10px;
+  }
+
+  p {
+    text-align: center;
+  }
+
 }
 
-#login-buttons .btn-primary:hover {
-  background: #2b4582;
-  .transition(background-position .1s linear);
-}
+#register-page #login-buttons {
+  .col-md-4 {
+    margin: 5px 0 20px;
+  }
 
-#login-buttons a {
-  display: block;
-  font-weight: bold;
-  margin: 10px auto 20px auto;
-  width: 200px;
-}
-
-#login-buttons img {
-  margin: -2px 2px 0 0;
-}
-
-#login-page hr,
-#login-page #footer {
-  display: none;
+  .col-md-4 button {
+    width: 128px;
+  }
 }
 
 #sign-in {
@@ -45,4 +73,8 @@
 
 #sign-in img {
   float: right;
+}
+
+.after-form {
+  clear: both;
 }
