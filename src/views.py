@@ -7,12 +7,14 @@
 __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 
 import logging
+import urlparse
 
 
-from google.appengine.api import users
+from google.appengine.api import mail, users
 
 import auth
 import baserequesthandler
+import forms
 import models
 
 
@@ -66,12 +68,33 @@ class Login(baserequesthandler.RequestHandler):
 
 
 class Register(baserequesthandler.RequestHandler):
-  """Shows the login page."""
+  """Shows the registration page."""
 
   def get(self):
+    form = forms.Registration(invitation_code=self.request.get('invite'))
     return self.render_template('register.html', {
-      'invitation_code': self.request.get('invite')
+      'form': form
     })
+
+  def post(self):
+    provider = self.request.get('provider')
+    form = forms.Registration(self.request.POST)
+    if form.validate():
+      # Create a user the given username and delete the invite.
+      username = self.request.get('username')
+      invitation_code = self.request.get('invitation_code')
+      user = models.User(id=username, invites=models.Invite.create_invites(username))
+      invite = models.Invite.get_by_id(invitation_code)
+      user.put()
+      invite.key.delete()
+
+      # Set the username in the session and login to the auth provider.
+      self.session['username'] = username
+      self.redirect(self.uri_for('auth_login', provider=provider))
+    else:
+      return self.render_template('register.html', {
+        'form': form
+      })
 
 
 class Settings(baserequesthandler.RequestHandler):
@@ -80,6 +103,46 @@ class Settings(baserequesthandler.RequestHandler):
   @auth.login_required
   def get(self):
     return self.render_template('settings.html', {})
+
+
+class SendInvite(baserequesthandler.RequestHandler):
+
+  @auth.login_required
+  def post(self):
+    user = self.current_user
+    form = forms.Invite(self.request.POST)
+
+    if len(user.invites) and form.validate():
+      invite = user.invites.pop().id()
+      user.put()
+
+      # Send the invite.
+      email = form.invite_email.data
+      logging.info('Sending invite: %s, to: %s' % (invite, email))
+      body = self.generate_template('email/invite.txt', {
+        'invite': urlparse.urljoin(self.request.host_url, 'register?invite=%s' % invite),
+        'user': user.key.id()
+      })
+      mail.send_mail(sender='adamjmcgrath@gmail.com',
+                       to=email,
+                       subject='Friday Film Club invitation',
+                       body=body)
+
+      return self.render_json({
+        'success': True,
+        'invites': len(user.invites)
+      })
+
+    else:
+      if form.invite_email.errors:
+        error = form.invite_email.errors[0]
+      else:
+        error = 'You have no invites left.'
+
+      return self.render_json({
+        'success': False,
+        'error': error
+      })
 
 
 class Archive(baserequesthandler.RequestHandler):

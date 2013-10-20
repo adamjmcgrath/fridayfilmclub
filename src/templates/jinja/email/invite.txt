@@ -1,4 +1,4 @@
-You’ve just been invited to join the Friday Film Club.
+Your friend {{ user }} has invited you to join the Friday Film Club.
 
 Intrigued?
 Excited?
@@ -6,7 +6,8 @@ Nervous?
 
 Good. You should be.
 
-Click here to register and you’re in.
+Go here to register and you’re in:
+{{ invite }}
 
 Welcome to the Club!
 

@@ -9,6 +9,7 @@ __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 from cgi import escape
 import datetime
 import logging
+import re
 import posixpath
 
 import webapp2
@@ -22,6 +23,7 @@ import models
 import settings
 
 
+_USERNAME_RE = re.compile(r'^[\w\d_]{3,16}$')
 
 class FilmField(fields.HiddenField):
   """A film field."""
@@ -59,18 +61,6 @@ class ClueForm(Form):
   """A clue form."""
   text = fields.TextAreaField('Text')
   image = ImageField('Image')
-
-  # def validate_text(self, field):
-  #   """docstring for validate"""
-  #   if ((field.data and self.data['image']) or
-  #       (not field.data and not self.data['image'])):
-  #     raise validators.ValidationError('Invalid choices.')
-  # 
-  # def validate_image(self, field):
-  #   """docstring for validate"""
-  #   if ((field.data and self.data['text']) or
-  #       (not field.data and not self.data['text'])):
-  #     raise validators.ValidationError('Invalid choices.')
 
 
 class ClueFormField(fields.FormField):
@@ -116,3 +106,29 @@ class Question(Form):
   imdb_url = fields.TextField('IMDB Link',
                               default='http://www.imdb.com/title/XXX/')
 
+
+class Registration(Form):
+  """The registration form."""
+  invitation_code = fields.TextField()
+  username = fields.TextField()
+
+  def validate_username(self, field):
+    """Validate the username."""
+    username = field.data.strip()
+    logging.info(_USERNAME_RE.search(username))
+    if not _USERNAME_RE.search(username):
+      raise validators.ValidationError('Invalid username.')
+    elif models.User.get_by_id(username):
+      raise validators.ValidationError('This username is already taken.')
+
+  def validate_invitation_code(self, field):
+    """Validate the invite."""
+    invitation_code = field.data.strip()
+    if not invitation_code:
+      raise validators.ValidationError('You need an invitation code.')
+    elif not models.Invite.get_by_id(invitation_code):
+      raise validators.ValidationError('Not a valid invite.')
+
+
+class Invite(Form):
+  invite_email = fields.TextField(validators=[validators.Email()])

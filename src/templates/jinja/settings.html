@@ -10,7 +10,7 @@
     <div class="form-group">
       <label for="inputEmail1" class="col-lg-3 control-label">firdayfilmclub.com/u/</label>
       <div class="col-lg-9">
-        <input type="email" class="form-control" id="inputEmail1" value="{{user.name}}">
+        <input type="email" class="form-control" id="inputEmail1" value="{{user.key.id()}}">
         <p class="help-block">Your public username.</p>
       </div>
     </div>
@@ -18,7 +18,7 @@
       <label for="inputEmail" class="col-lg-3 control-label">Email</label>
       <div class="col-lg-9">
         <input type="email" class="form-control" id="inputEmail" value="{{user.email}}">
-        <p class="help-block">We need you email to send the weekly question to.</p>
+        <p class="help-block">We need your email to send you the weekly question.</p>
       </div>
     </div>
     <div class="form-group">
@@ -34,7 +34,19 @@
       </div>
     </div>
   </form>
-  <h4 class="text-muted">Add services</h4>
+
+  <h4 class="text-muted">Send invites</h4>
+  <form class="form" id="invite-form">
+    <div class="input-group">
+      <input name="invite_email" type="text" class="invite-email form-control" id="inviteEmail" placeholder="Add a friends email address to invite them">
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="submit">Send Invite</button>
+      </span>
+    </div>
+    <p class="help-block">Enter a valid email. You have <span class="num-invites">{{ user.invites|length }}</span> invite{% if user.invites|length != 1 %}s{% endif %} left.<br><br></p>
+  </form>
+
+  <h4 class="text-muted">Link your accounts</h4>
   <ul class="list-group">
     <li class="list-group-item">
       Google
@@ -80,6 +92,22 @@
 {% endblock %}
 
 {% block body_base %}
+{% if debug %}
+  <script src="/closure-library/closure/goog/base.js"></script>
+  <script src="/static/js/deps.js"></script>
+  <script>
+    goog.require('goog.ui.Component');
+    goog.require('ffc.settings.InviteForm');
+  </script>
+{% else %}
+  <script src="/static/js/settings.js"></script>
+{% endif %}
+<script>
+
+  var inviteForm = new ffc.settings.InviteForm();
+  inviteForm.decorate(document.getElementById('invite-form'));
+
+</script>
 {% endblock %}
 
 

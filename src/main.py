@@ -58,6 +58,7 @@ routes = [
     # Main views (Authenticated).
     webapp2.Route(r'/question/<:.*>', views.Question, name='question'),
     webapp2.Route(r'/settings', views.Settings, name='settings'),
+    webapp2.Route(r'/sendinvite', views.SendInvite, name='send_invite'),
     webapp2.Route(r'/login', views.Login, name='login'),
     webapp2.Route(r'/register', views.Register, name='register'),
 

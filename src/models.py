@@ -133,8 +133,21 @@ class Clue(ndb.Model):
 
 
 class Invite(ndb.Model):
-  """We just use the hased id for reference"""
+  """We just use the id (hashed) for reference"""
   pass
+
+  @staticmethod
+  def create_invites(user_id):
+    """Create invites for a new user."""
+    invites = []
+    for n in range(_NUM_INVITES):
+      m = hashlib.md5()
+      m.update(_INVITE_SECRET)
+      m.update(user_id)
+      m.update(str(n))
+      invites.append(Invite(id=m.hexdigest()))
+
+    return ndb.put_multi(invites)
 
 
 # pylint: disable=W0232
@@ -169,19 +182,6 @@ class User(AuthUser):
       'score': user.overall_score,
       'answered': user.questions_answered,
     }
-
-  def create_invites(self):
-    """Create 20 invites for a new user."""
-    invites = []
-    for n in range(_NUM_INVITES):
-      m = hashlib.md5()
-      m.update(_INVITE_SECRET)
-      m.update(self.key.id())
-      m.update(str(n))
-      invites.append(Invite(id=m.hexdigest()))
-
-    self.invites = ndb.put_multi(invites)
-    self.put()
 
 
 # pylint: disable=W0232

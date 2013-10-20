@@ -15,6 +15,7 @@ from webapp2_extras import auth, sessions
 
 from simpleauth.handler import SimpleAuthHandler
 
+import models
 
 def login_required(handler_method):
   """A decorator to require that a user be logged in to access a handler.
@@ -68,29 +69,34 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
     logging.info(data)
 
     user = self.auth.store.user_model.get_by_auth_id(auth_id)
+    username = self.session.get('username')
+
     if user:
       logging.info('Found existing user to log in')
       # existing user. just log them in.
       self.auth.set_session(self.auth.store.user_to_dict(user))
 
     else:
-      # check whether there's a user currently logged in
-      # then, create a new user if nobody's signed in, 
-      # otherwise add this auth_id to currently logged in user.
+      # check whether there is a user currently logged in
+      # or that their is a user with this username.
       if self.logged_in:
-        logging.info('Updating currently logged in user')
+        logging.info('Updating currently logged in user.')
         u = self.current_user
         u.auth_ids.append(auth_id)
         u.populate(**self._to_user_model_attrs(data, provider))
         u.put()
+        self.auth.set_session(self.auth.store.user_to_dict(u))
 
-      else:
-        # TODO (adamjmcgrath) Creating a new user - need to validate the invite.
-        logging.info('Creating a brand new user')
-        ok, user = self.auth.store.user_model.create_user(
-            auth_id, **self._to_user_model_attrs(data, provider))
-        if ok:
-          self.auth.set_session(self.auth.store.user_to_dict(user))
+      elif username:
+        logging.info('Creating a user for %s.' % username)
+        u = models.User.get_by_id(username)
+        if u:
+          u.auth_ids.append(auth_id)
+          u.populate(**self._to_user_model_attrs(data, provider))
+          u.put()
+          del self.session['username']
+          self.auth.set_session(self.auth.store.user_to_dict(u))
+          self.redirect('/settings')
 
     # Redirect them to the next page.
     target = self.session.get('original_url')
