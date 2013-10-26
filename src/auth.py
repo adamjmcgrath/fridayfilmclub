@@ -38,19 +38,19 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
 
   USER_ATTRS = {
     'google'   : {
-      'picture': 'avatar_url',
+      'picture': 'pic',
       'name'   : 'name',
       'link'   : 'link',
       'email'   : 'email',
     },
     'facebook' : {
-      'id': lambda id: ('avatar_url', 'http://graph.facebook.com/{0}/picture?type=large'.format(id)),
+      'id': lambda id: ('pic', 'http://graph.facebook.com/{0}/picture?type=large'.format(id)),
       'name'   : 'name',
       'link'   : 'link',
       'email'   : 'email',
     },
     'twitter'  : {
-      'profile_image_url': lambda url: ('avatar_url', url.replace('_normal','')),
+      'profile_image_url': lambda url: ('pic', url.replace('_normal','')),
       'screen_name'      : 'name',
       'link'             : 'link',
     },
@@ -83,7 +83,7 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
         logging.info('Updating currently logged in user.')
         u = self.current_user
         u.auth_ids.append(auth_id)
-        u.populate(**self._to_user_model_attrs(data, provider))
+        u.populate(**self._to_user_model_attrs(data, provider, False))
         u.put()
         self.auth.set_session(self.auth.store.user_to_dict(u))
 
@@ -92,7 +92,7 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
         u = models.User.get_by_id(username)
         if u:
           u.auth_ids.append(auth_id)
-          u.populate(**self._to_user_model_attrs(data, provider))
+          u.populate(**self._to_user_model_attrs(data, provider, True))
           u.put()
           del self.session['username']
           self.auth.set_session(self.auth.store.user_to_dict(u))
@@ -117,19 +117,24 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
     """Returns a tuple (key, secret) for auth init requests."""
     return secrets.AUTH_CONFIG[provider]
 
-  def _to_user_model_attrs(self, data, provider):
+  def _to_user_model_attrs(self, data, provider, new_user):
     attrs_map = self.USER_ATTRS[provider]
     user_attrs = {}
     for k, v in data.iteritems():
       if k in attrs_map:
-        key = attrs_map[k]
-        provider_key = '%s_%s' % (provider, key)
-        if isinstance(key, str):
-          user_attrs.setdefault(provider_key, v)
-          user_attrs.setdefault(key, v)
+        if isinstance(attrs_map[k], str):
+          key = attrs_map[k]
+          value = v
         else:
-          values = key(v)
-          user_attrs.setdefault('%s_%s' % (provider, values[0]), values[1])
-          user_attrs.setdefault(*values)
+          values = attrs_map[k](v)
+          key = values[0]
+          value = values[1]
+        provider_key = '%s_%s' % (provider, key)
+        user_attrs.setdefault(provider_key, value)
+
+        if new_user:
+          if key == 'pic':
+            value = models.User.blob_from_url(value)
+          user_attrs.setdefault(key, value)
 
     return user_attrs

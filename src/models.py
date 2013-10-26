@@ -13,7 +13,7 @@ import re
 
 from webapp2_extras.appengine.auth.models import User as AuthUser
 
-from google.appengine.api import images
+from google.appengine.api import files, images, urlfetch
 from google.appengine.ext import ndb
 
 
@@ -24,7 +24,7 @@ _MAX_SCORE = 20000
 # No. of seconds penalty per guess
 _TIME_PER_PENALTY = 2000
 # Number of invites each user gets
-_NUM_INVITES = 20
+_NUM_INVITES = 10
 # Secret invite code
 _INVITE_SECRET = 'L1f3M0v3sPr3ttyF4st1fY0uD0ntSt0p4ndL00k4r0und0nc31n4wh1l3Y0uC0uldM1ss1t'
 
@@ -157,7 +157,7 @@ class User(AuthUser):
   Attributes:
     films
   """
-  avatar_url = ndb.StringProperty()
+  pic = ndb.BlobKeyProperty()
   name = ndb.StringProperty()
   link = ndb.StringProperty()
   google_avatar_url = ndb.StringProperty()
@@ -172,6 +172,23 @@ class User(AuthUser):
   overall_score = ndb.IntegerProperty(default=0)
   questions_answered = ndb.IntegerProperty(default=0)
   invites = ndb.KeyProperty(kind=Invite, repeated=True)
+
+  def pic_url(self, size=None, crop=False):
+    """Gets the image's url."""
+    if self.pic:
+      return images.get_serving_url(self.pic, size=size, crop=crop)
+    else:
+      return ''
+
+  @staticmethod
+  def blob_from_url(url):
+    result = urlfetch.fetch(url)
+    if result.status_code == 200:
+      file_name = files.blobstore.create(mime_type='application/octet-stream')
+      with files.open(file_name, 'a') as f:
+        f.write(result.content)
+      files.finalize(file_name)
+      return files.blobstore.get_blob_key(file_name)
 
   @staticmethod
   def to_leaderboard_json(user):
