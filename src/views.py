@@ -24,7 +24,8 @@ class HomePage(baserequesthandler.RequestHandler):
 
   def get(self):
     current_question = models.Question.query(models.Question.is_current == True)
-    question_image = current_question.get().clue_image_url(size=260)
+    q = current_question.get()
+    question_image = q and q.clue_image_url(size=260)
     return self.render_template('index.html', {
         'current_question': current_question,
         'question_image': question_image
