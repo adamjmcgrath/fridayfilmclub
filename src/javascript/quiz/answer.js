@@ -36,6 +36,7 @@ ffc.quiz.Answer.prototype.createDom = function() {
         correct: this.model_.correct,
         title: this.model_.title,
         year: this.model_.year,
+        score: this.model_.score,
         numGuesses: this.model_.numGuesses
       });
 };

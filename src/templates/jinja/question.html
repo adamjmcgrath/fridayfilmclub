@@ -13,7 +13,7 @@
 <div class="col-md-3" id="sidebar">
   <div id="score-board" class="well">
     <p class="text-muted">
-      <b>Season <span class="text-warning">{{ question.season.id() }}</span></b>
+      <b>Season <span class="text-warning">{{ question.season and question.season.id() }}</span></b>
       <b class="pull-right">Week <span class="text-warning">{{ question.week }}</span></b>
     </p>
     <div id="score-wrap" class="score"></div>

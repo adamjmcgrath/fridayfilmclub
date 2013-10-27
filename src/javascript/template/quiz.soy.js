@@ -59,7 +59,7 @@ ffc.template.quiz.clue = function(opt_data, opt_ignored) {
  * @notypecheck
  */
 ffc.template.quiz.answer = function(opt_data, opt_ignored) {
-  return '<div class="alert alert-' + ((opt_data.correct) ? 'success' : 'danger') + ' clue"><h4 class="alert-heading">' + ((opt_data.correct) ? (opt_data.numGuesses == 1) ? 'BOOM!' : (opt_data.numGuesses == 2) ? 'Well played!' : (opt_data.numGuesses == 3) ? 'Correct!' : 'That’s the one!' : 'Incorrect!') + '</h4><p>The answer is of course: <b>' + soy.$$escapeHtml(opt_data.title) + '</b> (' + soy.$$escapeHtml(opt_data.year) + ')</p></div>';
+  return '<div class="alert alert-' + ((opt_data.correct) ? 'success' : 'danger') + ' clue"><h4 class="alert-heading">' + ((opt_data.correct) ? (opt_data.numGuesses == 1) ? 'BOOM!' : (opt_data.numGuesses == 2) ? 'Well played!' : (opt_data.numGuesses == 3) ? 'Correct!' : 'That’s the one!' : 'Incorrect!') + '<span class="pull-right">You scored ' + soy.$$escapeHtml(opt_data.score) + ' points.</span></h4><p>The answer is of course: <b>' + soy.$$escapeHtml(opt_data.title) + '</b> (' + soy.$$escapeHtml(opt_data.year) + ')</p></div>';
 };
 
 
@@ -71,11 +71,11 @@ ffc.template.quiz.answer = function(opt_data, opt_ignored) {
  */
 ffc.template.quiz.score = function(opt_data, opt_ignored) {
   var output = '<div><h4>Points available:</h4><p class="points-available">';
-  var sList99 = opt_data.score;
-  var sListLen99 = sList99.length;
-  for (var sIndex99 = 0; sIndex99 < sListLen99; sIndex99++) {
-    var sData99 = sList99[sIndex99];
-    output += '<span class="point">' + soy.$$escapeHtml(sData99) + '</span>';
+  var sList101 = opt_data.score;
+  var sListLen101 = sList101.length;
+  for (var sIndex101 = 0; sIndex101 < sListLen101; sIndex101++) {
+    var sData101 = sList101[sIndex101];
+    output += '<span class="point">' + soy.$$escapeHtml(sData101) + '</span>';
   }
   output += '<sub></sub></p><h4>Clues:</h4><div class="progress"><div class="bar bar-active bar-1">1</div><div class="bar' + ((opt_data.clueCount > 1) ? ' bar-active' : '') + ' bar-2">2</div><div class="bar' + ((opt_data.clueCount > 2) ? ' bar-active' : '') + ' bar-3">3</div><div class="bar' + ((opt_data.clueCount > 3) ? ' bar-active' : '') + ' bar-4">4</div></div></div>';
   return output;

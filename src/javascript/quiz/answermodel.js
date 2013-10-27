@@ -15,10 +15,11 @@ goog.provide('ffc.quiz.AnswerModel');
  *   {string} title The title of the answer.
  *   {string} year The year of the film answer.
  * @param {boolean} correct Whether the answer is correct.
+ * @param {number} score The final score.
  * @param {number} numGuesses The number of guesses required.
  * @constructor
  */
-ffc.quiz.AnswerModel = function(data, correct, numGuesses) {
+ffc.quiz.AnswerModel = function(data, correct, score, numGuesses) {
   /**
    * @type {string}
    */
@@ -33,6 +34,11 @@ ffc.quiz.AnswerModel = function(data, correct, numGuesses) {
    * @type {boolean}
    */
   this.correct = correct;
+
+  /**
+   * @type {number}
+   */
+  this.score = score;
 
   /**
    * @type {number}

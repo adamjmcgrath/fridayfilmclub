@@ -50,9 +50,6 @@ class Question(baserequesthandler.RequestHandler):
     user_question_id = '%s-%s' % (question_id, user.key.id())
     user_question = models.UserQuestion.get_or_insert(user_question_id,
       question=question.key, user=user.key)
-    user_season_id = '%s-%s' % (question.season.id(), user.key.id())
-    user_season = models.UserSeason.get_or_insert(user_season_id,
-      season=question.season, user=user.key)
 
     to_put = []
     # Check if guess is correct, update UserQuestion.
@@ -63,12 +60,17 @@ class Question(baserequesthandler.RequestHandler):
       if user_question.correct or len(user_question.guesses) >= _MAX_CLUES:
         user_question.complete = True
         user_question.score = user_question.calculate_score(posed)
-        user_season.score += user_question.calculate_score(posed)
         user.overall_score += user_question.score
         user.questions_answered += 1
         question.answered += 1
-        to_put.append(user_season)
         to_put.append(question)
+
+        if question.season:
+          user_season_id = '%s-%s' % (question.season.id(), user.key.id())
+          user_season = models.UserSeason.get_or_insert(user_season_id,
+            season=question.season, user=user.key)
+          user_season.score += user_question.calculate_score(posed)
+          to_put.append(user_season)
 
       to_put.append(user_question)
       to_put.append(user)
