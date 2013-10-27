@@ -159,6 +159,7 @@ class User(AuthUser):
   """
   pic = ndb.BlobKeyProperty()
   name = ndb.StringProperty()
+  username = ndb.StringProperty()
   link = ndb.StringProperty()
   google_avatar_url = ndb.StringProperty()
   google_name = ndb.StringProperty()
@@ -179,6 +180,10 @@ class User(AuthUser):
       return images.get_serving_url(self.pic, size=size, crop=crop)
     else:
       return ''
+
+  @staticmethod
+  def get_by_username(username):
+    return User.query().filter(User.username == username).get()
 
   @staticmethod
   def blob_from_url(url):

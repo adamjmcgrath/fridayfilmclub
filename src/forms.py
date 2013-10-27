@@ -13,6 +13,7 @@ import re
 import posixpath
 
 import webapp2
+from webapp2_extras import auth
 from google.appengine.api import files
 from google.appengine.api import images
 from google.appengine.ext import ndb
@@ -24,6 +25,22 @@ import settings
 
 
 _USERNAME_RE = re.compile(r'^[\w\d_]{3,16}$')
+
+def validate_username(form, field):
+  """Validate the username."""
+  auth_obj = auth.get_auth()
+  user_dict = auth_obj.get_user_by_session()
+  user = auth_obj.store.user_model.get_by_id(user_dict['user_id'])
+  original_username = user.username
+  username = field.data.strip()
+
+  if not _USERNAME_RE.search(username):
+    raise validators.ValidationError('Invalid username.')
+
+  # Only throw a name already exists error, if the user is trying to change their username.
+  elif (username != original_username) and models.User.get_by_username(username):
+    raise validators.ValidationError('This username is already taken.')
+
 
 class FilmField(fields.HiddenField):
   """A film field."""
@@ -54,7 +71,7 @@ class ImageField(fields.FileField):
       f.write(img_file)
     files.finalize(file_name)
 
-    obj.image = files.blobstore.get_blob_key(file_name)
+    setattr(obj, name, files.blobstore.get_blob_key(file_name))
 
 
 class ClueForm(Form):
@@ -110,16 +127,7 @@ class Question(Form):
 class Registration(Form):
   """The registration form."""
   invitation_code = fields.TextField()
-  username = fields.TextField()
-
-  def validate_username(self, field):
-    """Validate the username."""
-    username = field.data.strip()
-    logging.info(_USERNAME_RE.search(username))
-    if not _USERNAME_RE.search(username):
-      raise validators.ValidationError('Invalid username.')
-    elif models.User.get_by_id(username):
-      raise validators.ValidationError('This username is already taken.')
+  username = fields.TextField('', [validate_username])
 
   def validate_invitation_code(self, field):
     """Validate the invite."""
@@ -132,3 +140,9 @@ class Registration(Form):
 
 class Invite(Form):
   invite_email = fields.TextField(validators=[validators.Email()])
+
+
+class User(Form):
+  username = fields.TextField('', [validate_username])
+  email = fields.TextField(validators=[validators.Email()])
+  pic = ImageField('pic')

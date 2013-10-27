@@ -84,7 +84,7 @@ class Register(baserequesthandler.RequestHandler):
       # Create a user the given username and delete the invite.
       username = self.request.get('username')
       invitation_code = self.request.get('invitation_code')
-      user = models.User(id=username, invites=models.Invite.create_invites(username))
+      user = models.User(username=username, invites=models.Invite.create_invites(username))
       invite = models.Invite.get_by_id(invitation_code)
       user.put()
       invite.key.delete()
@@ -103,7 +103,21 @@ class Settings(baserequesthandler.RequestHandler):
 
   @auth.login_required
   def get(self):
-    return self.render_template('settings.html', {})
+    user = self.current_user
+    return self.render_template('settings.html', {
+      'form': forms.User(obj=user, username=user.key.id())
+    })
+
+  @auth.login_required
+  def post(self):
+    user = self.current_user
+    form = forms.User(formdata=self.request.POST)
+    if form.validate():
+      form.populate_obj(user)
+      user.put()
+    return self.render_template('settings.html', {
+      'form': form
+    })
 
 
 class SendInvite(baserequesthandler.RequestHandler):

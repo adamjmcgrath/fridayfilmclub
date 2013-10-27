@@ -89,7 +89,7 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
 
       elif username:
         logging.info('Creating a user for %s.' % username)
-        u = models.User.get_by_id(username)
+        u = models.User.get_by_username(username)
         if u:
           u.auth_ids.append(auth_id)
           u.populate(**self._to_user_model_attrs(data, provider, True))
