@@ -199,8 +199,8 @@ class User(AuthUser):
   def to_leaderboard_json(user):
     """Used to return json for the leader board api all."""
     return {
-      'user_name': user.pic_url(size=30),
-      'user_pic': user.avatar_url,
+      'user_name': user.username,
+      'user_pic': user.pic_url(size=30),
       'score': user.overall_score,
       'answered': user.questions_answered,
     }

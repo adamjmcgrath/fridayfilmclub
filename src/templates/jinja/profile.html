@@ -4,88 +4,35 @@
 
 {% block main %}
 <div class="col-md-9">
-  <h1>Your profile</h1>
-
-  <form class="form-horizontal" role="form">
-    <div class="form-group">
-      <label for="inputEmail1" class="col-lg-2 control-label">Username</label>
-      <div class="col-lg-10">
-        <input type="email" class="form-control" id="inputEmail1" value="{{user.name}}">
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="inputEmail" class="col-lg-2 control-label">Email</label>
-      <div class="col-lg-10">
-        <input type="email" class="form-control" id="inputEmail" value="{{user.email}}">
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="col-lg-offset-2 col-lg-10">
-        <button type="submit" class="btn btn-default pull-right">Save profile</button>
-      </div>
-    </div>
-  </form>
-  <p>{{user.email}}</p>
-  <p><a href="{{user.link}}">{{user.link}}</a></p>
-
-
-  <table class="table">
-    <tr>
-      <th>Service</th>
-      <th>Picture</th>
-      <th>Name</th>
-      <th>Link</th>
-      <th>Email</th>
-    <tr>
-    {% if user.google_name %}
-     <tr>
-       <td>Google</td>
-       <td><img src="{{user.google_avatar_url}}" width="30" alt="{{user.google_name}}"></td>
-       <td>{{user.google_name}}</td>
-       <td><a href="{{user.google_link}}">Google page</a></td>
-       <td>{{user.google_email}}</td>
-     </tr>
-    {% endif %}
-    {% if user.facebook_name %}
-    <tr>
-      <td>Facebook</td>
-       <td><img src="{{user.facebook_avatar_url}}" width="30" alt="{{user.facebook_name}}"></td>
-      <td>{{user.facebook_name}}</td>
-      <td><a href="{{user.facebook_link}}">Facebook page</a></td>
-      <td>{{user.facebook_email}}</td>
-    </tr>
-    {% endif %}
-    {% if user.twitter_name %}
-    <tr>
-      <td>Twitter</td>
-      <td><img src="{{user.twitter_avatar_url}}" width="30" alt="{{user.twitter_name}}"></td>
-      <td>{{user.twitter_name}}</td>
-      <td><a href="{{user.twitter_link}}">Twitter page</a></td>
-      <td>{{user.twitter_email}}</td>
-    </tr>
-    {% endif %}
-    {% if not user.google_name %}
-    <tr>
-      <td colspan="5"><a href="{{ uri_for('auth_login', provider='google') }}">Add Google account</td>
-    </tr>
-    {% endif %}
-    {% if not user.facebook_name %}
-    <tr>
-      <td colspan="5"><a href="{{ uri_for('auth_login', provider='facebook') }}">Add Facebook account</td>
-    </tr>
-    {% endif %}
-    {% if not user.twitter_name %}
-    <tr>
-      <td colspan="5"><a href="{{ uri_for('auth_login', provider='twitter') }}">Add Twitter account</td>
-    </tr>
-    {% endif %}
+  <h1>{{ user.username }}'s profile</h1>
+  <h4 class="text-muted">Favourite Film:</h4>
+  <p>Foo</p>
+  <h4 class="text-muted">Average score:</h4>
+  <p>All time: {{ (user.overall_score / user.questions_answered)|round(1) }}</p>
+  <h4 class="text-muted">Previous scores:</h4>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Season</th>
+        <th>Week</th>
+        <th>Score</th>
+      </tr>
+    </thead>
+    {% for uq in user_questions %}
+      <tr>
+        {% set season = uq.question.get().season %}
+        <td>{{ season and season.id() }}</td>
+        <td>{{ uq.question.get().week }}</td>
+        <td>{{ uq.score }}</td>
+      </tr>
+    {% endfor %}
   </table>
 </div>
 {% endblock %}
 
 {% block sidebar %}
 <div class="col-md-3" id="sidebar">
-  <img src="{{user.avatar_url}}" style="width: 100%">
+  <img src="{{ user.pic_url() }}" style="width: 100%">
 </div>
 {% endblock %}
 

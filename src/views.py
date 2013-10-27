@@ -98,6 +98,21 @@ class Register(baserequesthandler.RequestHandler):
       })
 
 
+class Profile(baserequesthandler.RequestHandler):
+  "The user profile page"
+
+  def get(self, username):
+    user = models.User.get_by_username(username)
+    if not user:
+      return self.error(404)
+    else:
+      return self.render_template('profile.html', {
+        'user': user,
+        'user_questions': models.UserQuestion.query(models.UserQuestion.user == user.key)
+      })
+
+
+
 class Settings(baserequesthandler.RequestHandler):
   """Shows the Settings page."""
 

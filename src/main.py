@@ -66,6 +66,7 @@ routes = [
     webapp2.Route(r'/archive', views.Archive, name='archive'),
     webapp2.Route(r'/leaderboard', views.LeaderBoard, name='leader-board'),
     webapp2.Route(r'/how', views.HowItWorks, name='how-it-works'),
+    webapp2.Route(r'/u/<:[\w\d_]+>', views.Profile, name='profile'),
     webapp2.Route(r'/', views.HomePage, name='home'),
 ]
 

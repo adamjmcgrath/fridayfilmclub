@@ -129,7 +129,8 @@ ffc.leaderboard.LeaderBoard.prototype.fillLeaderBoard_ = function() {
     args.push(this.dh_.createDom(TagName.TR, null,
         this.dh_.createDom(TagName.TD, null,
             this.dh_.createDom(TagName.IMG, user.picAttrs())),
-        this.dh_.createDom(TagName.TD, null, user.name),
+        this.dh_.createDom(TagName.TD, null,
+          this.dh_.createDom(TagName.A, {href: '/u/' + user.name}, user.name)),
         this.dh_.createDom(TagName.TD, 'leaderboard-score', user.score + ''),
         this.dh_.createDom(TagName.TD, 'leaderboard-answered', user.answered + ''),
         this.dh_.createDom(TagName.TD, 'leaderboard-average', user.averageScore() + '')));
