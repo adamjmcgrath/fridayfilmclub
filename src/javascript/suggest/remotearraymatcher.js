@@ -22,9 +22,12 @@ goog.require('goog.ui.ac.RemoteArrayMatcher');
  * RemoteArrayMatcher constructor.
  * @constructor
  * @param {string} url The endpoint to the suggest service.
+ * @param {string} fieldName
  */
-ffc.suggest.RemoteArrayMatcher = function(url) {
+ffc.suggest.RemoteArrayMatcher = function(url, fieldName) {
   goog.base(this, url);
+
+  this.fieldName = fieldName;
 };
 goog.inherits(ffc.suggest.RemoteArrayMatcher,
     goog.ui.ac.RemoteArrayMatcher);
@@ -82,7 +85,8 @@ ffc.suggest.RemoteArrayMatcher.rowRender = function(newRow, pos, node) {
     title: newRow['title'],
     key: newRow['key'],
     year: newRow['year'],
-    odd: (pos % 2) != 0
+    odd: (pos % 2) != 0,
+    fieldName: this.fieldName
   });
 };
 

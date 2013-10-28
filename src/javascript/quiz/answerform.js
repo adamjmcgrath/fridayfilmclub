@@ -88,7 +88,7 @@ ffc.quiz.AnswerForm.prototype.enterDocument = function() {
 
   this.acInput_ = this.getElementByClass('autocomplete');
   this.ac_ = new ffc.suggest.AutoComplete(this.acInput_,
-      this.getElementByClass('suggestions'));
+      this.getElementByClass('suggestions'), 'answer');
 
   this.eh_.listen(this.dom_.getElement('btn-clear'),
       goog.events.EventType.CLICK, this.onClear_);

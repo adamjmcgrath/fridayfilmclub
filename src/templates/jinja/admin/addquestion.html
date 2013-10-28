@@ -45,7 +45,7 @@
 {% include "templates/jinja/inc/questionjs.tpl" %}
 <script>
   var input = document.getElementById('ac');
-  var ac = new ffc.suggest.AutoComplete(input, input.parentNode);
+  var ac = new ffc.suggest.AutoComplete(input, input.parentNode, 'answer');
 
   // When you edit a form and don't change the answer, the answer field is not
   // populated by the auto complete - so do it manually.

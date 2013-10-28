@@ -47,14 +47,19 @@ class FilmField(fields.HiddenField):
 
   def process_formdata(self, valuelist):
     """Process data received over the wire from a form."""
-    try:
-      self.data = ndb.Key('Film', valuelist and valuelist[0]).get()
-    except BadKeyError:
+    film_key = valuelist and valuelist[0]
+    if not film_key:
       self.data = ''
+    else:
+      try:
+        self.data = ndb.Key('Film', film_key).get()
+      except BadKeyError:
+        self.data = ''
 
   def populate_obj(self, obj, name):
     """Populate the object represented by the film field."""
-    obj.answer = self.data.key
+    if self.data:
+      setattr(obj, name, self.data.key)
 
 
 class ImageField(fields.FileField):
@@ -89,14 +94,13 @@ class ClueFormField(fields.FormField):
 
 
 class CluesFieldList(fields.FieldList):
-  #
+
   def process(self, formdata, obj=None, **kwargs):
     if obj:
       clues = [clue.get() for clue in obj]
       super(CluesFieldList, self).process(formdata, clues, **kwargs)
     else:
       super(CluesFieldList, self).process(formdata, **kwargs)
-
 
   def populate_obj(self, entity, name):
     counter = 0
@@ -146,3 +150,4 @@ class User(Form):
   username = fields.TextField('', [validate_username])
   email = fields.TextField(validators=[validators.Email()])
   pic = ImageField('pic')
+  favourite_film = FilmField()

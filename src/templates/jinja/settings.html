@@ -6,7 +6,7 @@
 <div class="col-md-9">
   <h1>Settings</h1>
   <h4 class="text-muted">Edit your profile</h4>
-  <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
+  <form class="form-horizontal" id="user-settings-form" action="" method="post" enctype="multipart/form-data" onsubmit="return getAnswer()">
 
     {# Username #}
     <div class="form-group{% if form.errors.username %} has-error{% endif %}">
@@ -32,6 +32,15 @@
           <p class="help-block">We need your email to send you the weekly question.</p>
         {% endif %}
       </div>
+    </div>
+
+    {# Favourite Film #}
+    <div class="form-group{% if form.favourite_film.errors %} error{% endif %}">
+      <label for="ac" class="col-lg-3 control-label">Favourite Film</label>
+      <div class="col-lg-9">
+        <input id="ac" class="form-control" type="text" value="{{user.favourite_film and user.favourite_film.get().title or ''}}" autocomplete="off" placeholder="Start typing, then select a film below">
+      </div>
+      <input type="hidden" id="original-answer" name="favourite_film" value="{{ user.favourite_film and user.favourite_film.id() or '' }}">
     </div>
 
     {# Profile Pic #}
@@ -107,23 +116,42 @@
   <img src="{{ user.pic_url() }}" style="width: 100%">
 </div>
 {% endblock %}
+{##}
+{#{% block body_base %}#}
+{#{% if debug %}#}
+{#  <script src="/closure-library/closure/goog/base.js"></script>#}
+{#  <script src="/static/js/deps.js"></script>#}
+{#  <script>#}
+{#    goog.require('goog.ui.Component');#}
+{#    goog.require('ffc.settings.InviteForm');#}
+{#  </script>#}
+{#{% else %}#}
+{#  <script src="/static/js/settings.js"></script>#}
+{#{% endif %}#}
+{#<script>#}
+{##}
+{#  var inviteForm = new ffc.settings.InviteForm();#}
+{#  inviteForm.decorate(document.getElementById('invite-form'));#}
+{##}
+{#</script>#}
+{#{% endblock %}#}
+
 
 {% block body_base %}
-{% if debug %}
-  <script src="/closure-library/closure/goog/base.js"></script>
-  <script src="/static/js/deps.js"></script>
-  <script>
-    goog.require('goog.ui.Component');
-    goog.require('ffc.settings.InviteForm');
-  </script>
-{% else %}
-  <script src="/static/js/settings.js"></script>
-{% endif %}
+{% include "templates/jinja/inc/questionjs.tpl" %}
 <script>
+  var input = document.getElementById('ac');
+  var ac = new ffc.suggest.AutoComplete(input, input.parentNode, 'favourite_film');
 
-  var inviteForm = new ffc.settings.InviteForm();
-  inviteForm.decorate(document.getElementById('invite-form'));
-
+  // When you edit a form and don't change the answer, the answer field is not
+  // populated by the auto complete - so do it manually.
+  function getAnswer() {
+    var form = document.getElementById('add-question');
+    if (!form['favourite_film']) {
+      form['original-answer'].setAttribute('name', 'favourite_film');
+    }
+    return true;
+  }
 </script>
 {% endblock %}
 

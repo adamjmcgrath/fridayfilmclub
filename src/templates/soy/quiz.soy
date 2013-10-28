@@ -32,11 +32,12 @@
  * @param title The film title.
  * @param year The film year.
  * @param key The film key.
+ * @param fieldName The field name.
  * @param? odd Add a class of odd to the label.
  */
 {template .option}
 <label class="radio{if $odd} odd{/if}">
-  <input type="radio" name="answer" value="{$key}">
+  <input type="radio" name="{$fieldName}" value="{$key}">
   {$title}<span>{$year}</span>
 </label>
 {/template}

@@ -23,9 +23,10 @@ goog.require('goog.ui.ac.RichInputHandler');
  * AutoComplete constructor.
  * @param {HTMLInputElement} el The input element to decorate.
  * @param {Element} parent The element to render the autocomplete in.
+ * @param {string} fieldName The name of the field for the selected auto complete.
  * @constructor
  */
-ffc.suggest.AutoComplete = function(el, parent) {
+ffc.suggest.AutoComplete = function(el, parent, fieldName) {
   // Create a custom renderer that renders rich rows.
   // The renderer calls row.render(node, token) for each row.
   var customRenderer = {};
@@ -48,7 +49,7 @@ ffc.suggest.AutoComplete = function(el, parent) {
    * @private
    */
   this.matcher_ = new ffc.suggest.RemoteArrayMatcher(
-      ffc.suggest.AutoComplete.API_URL_);
+      ffc.suggest.AutoComplete.API_URL_, fieldName);
 
   var inputhandler = new goog.ui.ac.RichInputHandler(
       null, null, false, 300);

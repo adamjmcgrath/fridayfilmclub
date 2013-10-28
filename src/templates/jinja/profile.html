@@ -5,28 +5,36 @@
 {% block main %}
 <div class="col-md-9">
   <h1>{{ user.username }}'s profile</h1>
-  <h4 class="text-muted">Favourite Film:</h4>
-  <p>Foo</p>
-  <h4 class="text-muted">Average score:</h4>
-  <p>All time: {{ (user.overall_score / user.questions_answered)|round(1) }}</p>
-  <h4 class="text-muted">Previous scores:</h4>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Season</th>
-        <th>Week</th>
-        <th>Score</th>
-      </tr>
-    </thead>
-    {% for uq in user_questions %}
-      <tr>
-        {% set season = uq.question.get().season %}
-        <td>{{ season and season.id() }}</td>
-        <td>{{ uq.question.get().week }}</td>
-        <td>{{ uq.score }}</td>
-      </tr>
-    {% endfor %}
-  </table>
+  {% if user.favourite_film %}
+  <div class="well">
+    <h4 class="text-muted">Favourite Film:</h4>
+    <p>{{ user.favourite_film.get().title }}</p>
+  </div>
+  {% endif %}
+  {% if user.questions_answered > 1 %}
+  <div class="well">
+    <h4 class="text-muted">Previous scores:</h4>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Season</th>
+          <th>Week</th>
+          <th>Score</th>
+        </tr>
+      </thead>
+      {% for uq in user_questions %}
+        <tr>
+          {% set season = uq.question.get().season %}
+          <td>{{ season and season.id() }}</td>
+          <td>{{ uq.question.get().week }}</td>
+          <td>{{ uq.score }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+    <h4 class="text-muted">Average score:</h4>
+    <p>{{ (user.overall_score / user.questions_answered)|round(1) }}</p>
+  </div>
+  {% endif %}
 </div>
 {% endblock %}
 

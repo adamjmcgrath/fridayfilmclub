@@ -160,6 +160,7 @@ class User(AuthUser):
   pic = ndb.BlobKeyProperty()
   name = ndb.StringProperty()
   username = ndb.StringProperty()
+  favourite_film = ndb.KeyProperty(kind=Film)
   link = ndb.StringProperty()
   google_avatar_url = ndb.StringProperty()
   google_name = ndb.StringProperty()
