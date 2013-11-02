@@ -36,6 +36,12 @@ indexes:
   - name: week
     direction: desc
 
+- kind: User
+  properties:
+  - name: is_admin
+  - name: overall_score
+    direction: desc
+
 - kind: UserQuestion
   properties:
   - name: complete

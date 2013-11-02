@@ -120,7 +120,7 @@ class LeaderBoard(baserequesthandler.RequestHandler):
     response_obj = {}
 
     if is_all:
-      user_query = models.User.query().order(
+      user_query = models.User.query(models.User.is_admin == False).order(
                        -models.User.overall_score)
 
       response_obj['count'] = user_query.count()

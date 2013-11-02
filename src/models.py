@@ -157,6 +157,7 @@ class User(AuthUser):
   Attributes:
     films
   """
+  is_admin = ndb.BooleanProperty(default=False)
   pic = ndb.BlobKeyProperty()
   name = ndb.StringProperty()
   username = ndb.StringProperty()
@@ -201,6 +202,7 @@ class User(AuthUser):
     """Used to return json for the leader board api all."""
     return {
       'user_name': user.username,
+      'is_admin': user.is_admin,
       'user_pic': user.pic_url(size=30),
       'score': user.overall_score,
       'answered': user.questions_answered,
@@ -250,6 +252,7 @@ class UserQuestion(ndb.Model):
     user = user_question.user.get()
     return {
       'user_name': user.username,
+      'is_admin': user.is_admin,
       'user_pic': user.pic_url(size=30),
       'score': user_question.score,
       'answered': user.questions_answered,
@@ -268,6 +271,7 @@ class UserSeason(ndb.Model):
     user = user_season.user.get()
     return {
       'user_name': user.username,
+      'is_admin': user.is_admin,
       'user_pic': user.pic_url(size=30),
       'score': user_season.score,
       'answered': questions_in_season,

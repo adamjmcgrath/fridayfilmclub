@@ -122,7 +122,7 @@ ffc.leaderboard.LeaderBoard.prototype.exitDocument = function() {
 ffc.leaderboard.LeaderBoard.prototype.fillLeaderBoard_ = function() {
   this.dh_.removeChildren(this.tBodyEl_);
   var args = [this.tBodyEl_];
-  var users = this.model_.users;
+  var users = goog.array.filter(this.model_.users, function(u) { return !u.isAdmin });
   var TagName = goog.dom.TagName;
   for (var i = 0, len = users.length; i < len; i++) {
     var user = users[i];
