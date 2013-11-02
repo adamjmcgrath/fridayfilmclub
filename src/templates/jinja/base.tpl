@@ -10,7 +10,7 @@
     <div class="navbar" id="title-bar">
         <div class="container">
           <a class="navbar-brand custom-font-header" href="{{ uri_for('home') }}">{% block logo %}Friday Film Club{% endblock %}</a>
-          <div id="sign-in">
+          <div id="sign-in" class="hidden-xs">
             {% if logged_in %}
               <span>
                 <b>{{user.name}}</b><br>
@@ -22,6 +22,20 @@
             {% endif %}
           </div>
         </div>
+    </div>
+
+    <div class="navbar navbar-default visible-xs">
+      <div id="sign-in">
+        {% if logged_in %}
+          <span>
+            <b>{{user.name}}</b><br>
+            <a href="{{ uri_for('settings') }}">settings</a> - <a href="{{ uri_for('logout') }}">logout</a>
+          </span>
+          <img src="{{user.pic_url()}}" width="30" height="30">
+        {% else %}
+          <a href="{{ uri_for('login') }}" class="btn btn-primary">Login</a>
+        {% endif %}
+      </div>
     </div>
 
     <div class="navbar navbar-default" id="nav">
