@@ -107,7 +107,7 @@ class Profile(baserequesthandler.RequestHandler):
       return self.error(404)
     else:
       return self.render_template('profile.html', {
-        'user': user,
+        'user_profile': user,
         'user_questions': models.UserQuestion.query(models.UserQuestion.user == user.key)
       })
 
@@ -179,7 +179,10 @@ class Archive(baserequesthandler.RequestHandler):
   """An archive of old questions."""
 
   def get(self):
-    return self.render_template('archive.html', {})
+    questions = models.Question.query(models.Question.posed != None, models.Question.is_current == False)
+    return self.render_template('archive.html', {
+      'questions': questions
+    })
 
 
 class LeaderBoard(baserequesthandler.RequestHandler):

@@ -32,6 +32,11 @@ indexes:
 
 - kind: Question
   properties:
+  - name: is_current
+  - name: posed
+
+- kind: Question
+  properties:
   - name: season
   - name: week
     direction: desc

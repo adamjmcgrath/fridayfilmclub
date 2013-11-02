@@ -4,14 +4,14 @@
 
 {% block main %}
 <div class="col-md-9">
-  <h1>{{ user.username }}'s profile</h1>
-  {% if user.favourite_film %}
+  <h1>{{ user_profile.username }}'s profile</h1>
+  {% if user_profile.favourite_film %}
   <div class="well">
     <h4 class="text-muted">Favourite Film:</h4>
-    <p>{{ user.favourite_film.get().title }}</p>
+    <p>{{ user_profile.favourite_film.get().title }}</p>
   </div>
   {% endif %}
-  {% if user.questions_answered > 0 %}
+  {% if user_profile.questions_answered > 0 %}
   <div class="well">
     <h4 class="text-muted">Previous scores:</h4>
     <table class="table table-striped">
@@ -32,7 +32,7 @@
       {% endfor %}
     </table>
     <h4 class="text-muted">Average score:</h4>
-    <p>{{ (user.overall_score / user.questions_answered)|round(1) }}</p>
+    <p>{{ (user_profile.overall_score / user_profile.questions_answered)|round(1) }}</p>
   </div>
   {% endif %}
 </div>
@@ -40,7 +40,7 @@
 
 {% block sidebar %}
 <div class="col-md-3" id="sidebar">
-  <img src="{{ user.pic_url() }}" style="width: 100%">
+  <img src="{{ user_profile.pic_url() }}" style="width: 100%">
 </div>
 {% endblock %}
 

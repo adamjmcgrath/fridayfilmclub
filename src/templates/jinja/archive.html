@@ -4,14 +4,31 @@
 
 {% block page_id %}{{ page_id }}{% endblock page_id %}
 
-{% block main %}
-<div class="col-md-9">
+{% block content %}
+<div class="col-md-12">
   <h1>Old questions</h1>
-  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus iaculis tempus facilisis. Fusce suscipit, erat eu ornare volutpat, mi massa dignissim nulla, non vestibulum neque dui commodo lectus.</p>
-  <p>Aenean pretium molestie purus, sit amet mattis diam hendrerit in. In in viverra odio. Suspendisse sodales diam dapibus, scelerisque turpis at, dictum eros. In vel facilisis libero, eu tincidunt lectus.</p>
-  <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla et eros tempor, tristique lectus ac, volutpat diam. Integer eget bibendum purus.</p>
-  <p>Ut ultrices nisl vel nibh lacinia, sed consequat nibh fermentum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris ultrices dictum est, eu venenatis augue fermentum ut.</p>
-  <p>Pellentesque a gravida eros, et auctor odio. Vivamus commodo dignissim adipiscing. Curabitur rutrum nibh eget erat aliquam vehicula.</p></div>
+  <p class="intro">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi asperiores eum, harum hic itaque libero, modi molestiae odio odit provident quaerat quis, quo quos sapiente voluptates.</p>
+  {% if not questions.get() %}
+  <div class="alert alert-warning">There are no questions in the archive yet.</div>
+  {% endif %} 
+  {% for q in questions %}
+    {% if not loop.index0 % 3 %}
+      {% if not loop.first %}
+        </div>
+      {% endif %}
+    <div class="row">
+    {% endif %} 
+      <div class="col-md-4">
+        <div class="well">
+          <h4 class="list-group-item-heading">Season {{ q.season.id() }}, Week {{ q.week }}</h4>
+          <img src="{{ q.clue_image_url(size=243) }}">
+          <p><a class="btn btn-default" href="/question/{{ q.key.id() }}">Play for fun</a></p>
+        </div>
+      </div>
+    {% if loop.last %}
+      </div>
+    {% endif %}
+  {% endfor %}
 {% endblock %}
 
 {% block sidebar %}
