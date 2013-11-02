@@ -154,7 +154,7 @@ ffc.quiz.Question.prototype.enterDocument = function() {
     this.eh_.listen(this.answerForm, ffc.quiz.AnswerForm.MAKE_GUESS,
         this.onGuess_, false, this);
   }
-  this.scrollfloater_.decorate(this.scoreParentEl_);
+  this.scrollfloater_.decorate(goog.dom.getAncestorByClass(this.scoreParentEl_, 'well'));
 
   // Clean up after unload.
   this.eh_.listen(window, goog.events.EventType.UNLOAD,

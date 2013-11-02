@@ -35,6 +35,9 @@
     </div>
 
     {# Favourite Film #}
+    {% if not user.favourite_film %}
+      <div class="alert alert-danger">I'd really like to know your favourite film <span class="glyphicon glyphicon-hand-down"></span></div>
+    {% endif %}
     <div class="form-group{% if form.favourite_film.errors %} error{% endif %}">
       <label for="ac" class="col-lg-3 control-label">Favourite Film</label>
       <div class="col-lg-9">
@@ -116,30 +119,26 @@
   <img src="{{ user.pic_url() }}" style="width: 100%">
 </div>
 {% endblock %}
-{##}
-{#{% block body_base %}#}
-{#{% if debug %}#}
-{#  <script src="/closure-library/closure/goog/base.js"></script>#}
-{#  <script src="/static/js/deps.js"></script>#}
-{#  <script>#}
-{#    goog.require('goog.ui.Component');#}
-{#    goog.require('ffc.settings.InviteForm');#}
-{#  </script>#}
-{#{% else %}#}
-{#  <script src="/static/js/settings.js"></script>#}
-{#{% endif %}#}
-{#<script>#}
-{##}
-{#  var inviteForm = new ffc.settings.InviteForm();#}
-{#  inviteForm.decorate(document.getElementById('invite-form'));#}
-{##}
-{#</script>#}
-{#{% endblock %}#}
-
 
 {% block body_base %}
-{% include "templates/jinja/inc/questionjs.tpl" %}
+{% if debug %}
+  <script src="/closure-library/closure/goog/base.js"></script>
+  <script src="/static/js/deps.js"></script>
+  <script>
+    goog.require('goog.ui.Component');
+    goog.require('ffc.settings.InviteForm');
+    goog.require('ffc.suggest.AutoComplete');
+  </script>
+{% else %}
+  <script src="/static/js/settings.js"></script>
+{% endif %}
 <script>
+
+  // Invite form.
+  var inviteForm = new ffc.settings.InviteForm();
+  inviteForm.decorate(document.getElementById('invite-form'));
+
+  // Favourite film auto complete.
   var input = document.getElementById('ac');
   var ac = new ffc.suggest.AutoComplete(input, input.parentNode, 'favourite_film');
 
@@ -152,7 +151,10 @@
     }
     return true;
   }
+
 </script>
 {% endblock %}
+
+
 
 

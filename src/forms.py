@@ -30,8 +30,11 @@ def validate_username(form, field):
   """Validate the username."""
   auth_obj = auth.get_auth()
   user_dict = auth_obj.get_user_by_session()
-  user = auth_obj.store.user_model.get_by_id(user_dict['user_id'])
-  original_username = user.username
+  original_username = None
+  if user_dict:
+    user = auth_obj.store.user_model.get_by_id(user_dict['user_id'])
+    original_username = user.username
+
   username = field.data.strip()
 
   if not _USERNAME_RE.search(username):

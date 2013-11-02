@@ -9,7 +9,7 @@
   <body id="{% block page_id %}{% endblock %}">
     <div class="navbar" id="title-bar">
         <div class="container">
-          <a class="navbar-brand custom-font" href="{{ uri_for('home') }}">{% block logo %}Friday Film Club{% endblock %}</a>
+          <a class="navbar-brand custom-font-header" href="{{ uri_for('home') }}">{% block logo %}Friday Film Club{% endblock %}</a>
           <div id="sign-in">
             {% if logged_in %}
               <span>

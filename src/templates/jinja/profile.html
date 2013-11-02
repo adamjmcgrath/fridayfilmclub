@@ -11,7 +11,7 @@
     <p>{{ user.favourite_film.get().title }}</p>
   </div>
   {% endif %}
-  {% if user.questions_answered > 1 %}
+  {% if user.questions_answered > 0 %}
   <div class="well">
     <h4 class="text-muted">Previous scores:</h4>
     <table class="table table-striped">
