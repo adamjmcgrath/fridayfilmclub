@@ -24,6 +24,9 @@ ffc.settings.InviteForm = function(model) {
   goog.base(this);
 };
 goog.inherits(ffc.settings.InviteForm, ffc.quiz.Component);
+goog.exportSymbol('ffc.settings.InviteForm', ffc.settings.InviteForm);
+goog.exportProperty(ffc.settings.InviteForm.prototype, 'decorate',
+    ffc.settings.InviteForm.prototype.decorate);
 
 
 /**

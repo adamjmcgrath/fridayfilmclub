@@ -145,7 +145,7 @@
   // When you edit a form and don't change the answer, the answer field is not
   // populated by the auto complete - so do it manually.
   function getAnswer() {
-    var form = document.getElementById('add-question');
+    var form = document.getElementById('user-settings-form');
     if (!form['favourite_film']) {
       form['original-answer'].setAttribute('name', 'favourite_film');
     }
