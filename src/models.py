@@ -10,6 +10,7 @@ from datetime import datetime
 import logging
 import hashlib
 import re
+import time
 
 from webapp2_extras.appengine.auth.models import User as AuthUser
 
@@ -133,19 +134,21 @@ class Clue(ndb.Model):
 
 
 class Invite(ndb.Model):
-  """We just use the id (hashed) for reference"""
-  pass
+  """A user invite"""
+  owner = ndb.KeyProperty(kind='User')
 
   @staticmethod
-  def create_invites(user_id):
+  def create_invites(user):
     """Create invites for a new user."""
     invites = []
+    now = time.time()
     for n in range(_NUM_INVITES):
       m = hashlib.md5()
-      m.update(_INVITE_SECRET)
-      m.update(user_id)
-      m.update(str(n))
-      invites.append(Invite(id=m.hexdigest()))
+      m.update(_INVITE_SECRET) # Add secret key
+      m.update(user.username) # Make unique to user
+      m.update(str(n)) # Make unique to other batch of invites
+      m.update(str(now)) # So we can give users additional batches
+      invites.append(Invite(id=m.hexdigest(), owner=user.key))
 
     return ndb.put_multi(invites)
 
@@ -175,6 +178,7 @@ class User(AuthUser):
   overall_score = ndb.IntegerProperty(default=0)
   questions_answered = ndb.IntegerProperty(default=0)
   invites = ndb.KeyProperty(kind=Invite, repeated=True)
+  invited_by = ndb.KeyProperty(kind='User')
 
   def pic_url(self, size=None, crop=False):
     """Gets the image's url."""

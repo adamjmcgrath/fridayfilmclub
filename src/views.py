@@ -85,8 +85,12 @@ class Register(baserequesthandler.RequestHandler):
       # Create a user the given username and delete the invite.
       username = self.request.get('username')
       invitation_code = self.request.get('invitation_code')
-      user = models.User(username=username, invites=models.Invite.create_invites(username))
+      user = models.User(username=username)
+      user.put() # Have to put this here so invites has a user key to reference.
+      user.invites = models.Invite.create_invites(user)
       invite = models.Invite.get_by_id(invitation_code)
+      if invite.owner:
+        user.invited_by = invite.owner
       user.put()
       invite.key.delete()
 
