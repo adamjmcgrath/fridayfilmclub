@@ -59,7 +59,7 @@ ffc.leaderboard.User.prototype.picAttrs = function() {
  * @return {number} The average score over all games played.
  */
 ffc.leaderboard.User.prototype.averageScore = function() {
-  return (this.score / this.answered).toFixed(1) || 0;
+  return ((this.score / this.answered)|| 0).toFixed(1);
 };
 
 
