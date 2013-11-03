@@ -156,7 +156,7 @@ class SendInvite(baserequesthandler.RequestHandler):
       logging.info('Sending invite: %s, to: %s' % (invite, email))
       body = self.generate_template('email/invite.txt', {
         'invite': urlparse.urljoin(self.request.host_url, 'register?invite=%s' % invite),
-        'user': user.key.id()
+        'user': user.username
       })
       mail.send_mail(sender='fmj@fridayfilmclub.com',
                        to=email,
