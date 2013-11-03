@@ -158,7 +158,7 @@ class SendInvite(baserequesthandler.RequestHandler):
         'invite': urlparse.urljoin(self.request.host_url, 'register?invite=%s' % invite),
         'user': user.key.id()
       })
-      mail.send_mail(sender='adamjmcgrath@gmail.com',
+      mail.send_mail(sender='fmj@fridayfilmclub.com',
                        to=email,
                        subject='Friday Film Club invitation',
                        body=body)

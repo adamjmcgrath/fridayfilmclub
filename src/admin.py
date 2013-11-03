@@ -173,7 +173,7 @@ class PoseQuestion(baserequesthandler.RequestHandler):
       'msg': self.request.get('email_msg'),
       'name': self.request.get('username')
     })
-    mail.send_mail(sender='adamjmcgrath@gmail.com',
+    mail.send_mail(sender='fmj@fridayfilmclub.com',
                      to=email,
                      subject='This weeks Friday Film Club question',
                      body=body)
