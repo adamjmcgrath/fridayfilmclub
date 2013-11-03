@@ -27,7 +27,8 @@ FFC_SETTINGS_JS_OUTPUT=$FFC_PATH/static/js/settings.js
 FFC_DEPS_OUTPUT=$FFC_PATH/static/js/deps.js
 
 
-if [ $1 == "deps" ]; then
+if [ $1 == "deps" ] || [ $1 == "all" ]; then
+  echo 'Building deps'
   $CLOSURE_DEPSWRITER_PATH \
     --root_with_prefix="$FFC_SOURCE ../../../javascript/"\
     --root_with_prefix="$CLOSURE_TEMPLATES ../../../closure-templates/javascript/"\
@@ -36,8 +37,17 @@ if [ $1 == "deps" ]; then
   echo 'Written deps to '$FFC_DEPS_OUTPUT
 fi
 
+if [ $1 == "template" ] || [ $1 == "all" ]; then
+  echo 'Building template'
+  java -jar $CLOSURE_TEMPLATES_COMPILER_PATH \
+    --shouldProvideRequireSoyNamespaces \
+    --shouldGenerateJsdoc \
+    --outputPathFormat src/javascript/template/{INPUT_FILE_NAME_NO_EXT}.soy.js \
+    src/templates/soy/*.soy
+fi
 
-if [ $1 == "build_quiz" ]; then
+if [ $1 == "build_quiz" ] || [ $1 == "all" ]; then
+  echo 'Building quiz'
   $CLOSURE_BUILDER_PATH \
     --root=$CLOSURE_LIB \
     --root=$CLOSURE_TEMPLATES \
@@ -54,7 +64,8 @@ if [ $1 == "build_quiz" ]; then
     > $FFC_QUIZ_JS_OUTPUT
 fi
 
-if [ $1 == "build_leaderboard" ]; then
+if [ $1 == "build_leaderboard" ] || [ $1 == "all" ]; then
+  echo 'Building leaderboard'
   $CLOSURE_BUILDER_PATH \
     --root=$CLOSURE_LIB \
     --root=$CLOSURE_TEMPLATES \
@@ -71,7 +82,8 @@ if [ $1 == "build_leaderboard" ]; then
     > $FFC_LEADERBOARD_JS_OUTPUT
 fi
 
-if [ $1 == "build_settings" ]; then
+if [ $1 == "build_settings" ] || [ $1 == "all" ]; then
+  echo 'Building settings'
   $CLOSURE_BUILDER_PATH \
     --root=$CLOSURE_LIB \
     --root=$CLOSURE_TEMPLATES \
@@ -89,10 +101,3 @@ if [ $1 == "build_settings" ]; then
     > $FFC_SETTINGS_JS_OUTPUT
 fi
 
-if [ $1 == "template" ]; then
-  java -jar $CLOSURE_TEMPLATES_COMPILER_PATH \
-    --shouldProvideRequireSoyNamespaces \
-    --shouldGenerateJsdoc \
-    --outputPathFormat src/javascript/template/{INPUT_FILE_NAME_NO_EXT}.soy.js \
-    src/templates/soy/*.soy
-fi
