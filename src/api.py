@@ -49,7 +49,7 @@ class Question(baserequesthandler.RequestHandler):
     # Construct/get the user key.
     user_question_id = '%s-%s' % (question_id, user.key.id())
     user_question = models.UserQuestion.get_or_insert(user_question_id,
-      question=question.key, user=user.key)
+      question=question.key, user=user.key, user_is_admin=user.is_admin)
 
     to_put = []
     # Check if guess is correct, update UserQuestion.
@@ -134,7 +134,8 @@ class LeaderBoard(baserequesthandler.RequestHandler):
       question_key = question_query.get(keys_only=True)
       user_question_query = models.UserQuestion.query(
           models.UserQuestion.question == question_key,
-          models.UserQuestion.complete == True).order(
+          models.UserQuestion.complete == True,
+          models.UserQuestion.user_is_admin == False).order(
               -models.UserQuestion.score)
       response_obj['count'] = user_question_query.count()
       response_obj['users'] = user_question_query.map(
@@ -143,7 +144,8 @@ class LeaderBoard(baserequesthandler.RequestHandler):
     else: # Should be the Season number.
       season = models.Season.get_by_id(duration)
       user_season_query = models.UserSeason.query(
-          models.UserSeason.season == season.key).order(
+          models.UserSeason.season == season.key,
+          models.UserSeason.user_is_admin == False).order(
               -models.UserSeason.score)
       questions_in_season = models.Question.query(
           models.Question.season == season.key).count()

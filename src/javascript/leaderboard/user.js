@@ -23,11 +23,6 @@ ffc.leaderboard.User = function() {
  */
 ffc.leaderboard.User.prototype.name = null;
 
-/**
- * @type {boolean}
- */
-ffc.leaderboard.User.prototype.isAdmin = null;
-
 
 /**
  * @type {string}
@@ -75,7 +70,6 @@ ffc.leaderboard.User.prototype.averageScore = function() {
 ffc.leaderboard.User.build = function(jsonObj) {
   var user = new ffc.leaderboard.User();
   user.name = jsonObj['user_name'];
-  user.isAdmin = jsonObj['is_admin'];
   user.pic = jsonObj['user_pic'];
   user.score = jsonObj['score'];
   user.answered = jsonObj['answered'];

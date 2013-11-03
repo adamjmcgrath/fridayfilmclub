@@ -202,7 +202,6 @@ class User(AuthUser):
     """Used to return json for the leader board api all."""
     return {
       'user_name': user.username,
-      'is_admin': user.is_admin,
       'user_pic': user.pic_url(size=30),
       'score': user.overall_score,
       'answered': user.questions_answered,
@@ -225,6 +224,7 @@ class UserQuestion(ndb.Model):
   question = ndb.KeyProperty(kind=Question)
   score = ndb.IntegerProperty()
   user = ndb.KeyProperty(kind=User)
+  user_is_admin = ndb.BooleanProperty(default=False)
 
   def incorrect_guesses(self):
     if self.correct:
@@ -252,7 +252,6 @@ class UserQuestion(ndb.Model):
     user = user_question.user.get()
     return {
       'user_name': user.username,
-      'is_admin': user.is_admin,
       'user_pic': user.pic_url(size=30),
       'score': user_question.score,
       'answered': user.questions_answered,
@@ -264,6 +263,7 @@ class UserSeason(ndb.Model):
   score = ndb.IntegerProperty(default=0)
   season = ndb.KeyProperty(kind=Season)
   user = ndb.KeyProperty(kind=User)
+  user_is_admin = ndb.BooleanProperty(default=False)
 
   @staticmethod
   def to_leaderboard_json(questions_in_season, user_season):
@@ -271,7 +271,6 @@ class UserSeason(ndb.Model):
     user = user_season.user.get()
     return {
       'user_name': user.username,
-      'is_admin': user.is_admin,
       'user_pic': user.pic_url(size=30),
       'score': user_season.score,
       'answered': questions_in_season,

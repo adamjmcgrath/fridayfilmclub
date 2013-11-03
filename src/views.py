@@ -52,7 +52,8 @@ class Question(baserequesthandler.RequestHandler):
     user_question_id = '%d-%s' % (question.key.id(), user.key.id())
     user_question = models.UserQuestion.get_or_insert(user_question_id,
       question=question.key,
-      user=user.key
+      user=user.key,
+      user_is_admin=user.is_admin
     )
 
     return self.render_template('question.html', {
