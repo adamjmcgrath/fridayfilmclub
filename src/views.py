@@ -66,7 +66,9 @@ class Login(baserequesthandler.RequestHandler):
   """Shows the login page."""
 
   def get(self):
-    return self.render_template('login.html', {})
+    return self.render_template('login.html', {
+      'no_invite_warning': str(self.request.referer).endswith('/login')
+    })
 
 
 class Register(baserequesthandler.RequestHandler):
