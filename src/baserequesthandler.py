@@ -67,8 +67,9 @@ class RequestHandler(webapp2.RequestHandler):
 
   def is_debug_mode(self):
     """docstring for is_debug_mode"""
-    return (os.environ['SERVER_SOFTWARE'].startswith('Development') and
-        self.request.get('debug') != 'false')
+    debug_param = self.request.get('debug')
+    debug_env = os.environ['SERVER_SOFTWARE'].startswith('Development')
+    return debug_param == 'true' or (debug_env and debug_param != 'false')
 
   def generate_template(self, template_path, template_obj):
     """Create the template output."""
