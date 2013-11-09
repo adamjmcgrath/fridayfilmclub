@@ -73,4 +73,7 @@ skip_files:
 - ^(.*/)?.*~
 - ^(.*/)?.*\.py[co]
 - ^(.*/)?\..*
-- ^(.*/)?data/.*
+- ^(.*/)?closure-library/closure/bin/.*
+- ^(.*/)?closure-templates/.*
+- ^(.*/)?less/bin/.*
+- ^(.*/)?stylesheets/.*
