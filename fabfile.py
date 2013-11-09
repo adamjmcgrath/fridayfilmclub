@@ -78,6 +78,13 @@ def deploy(tag=None):
   commit()
 
 
+@include_appcfg
+def shell():
+  with lcd(env.gae_src):
+    local('%s %s/remote_api_shell.py -s ffcapp.appspot.com' %
+            (PYTHON, APPENGINE_PATH))
+
+
 def run(port='8080', clear_datastore=False, send_mail=True):
   command = '%s --port %s'
 
