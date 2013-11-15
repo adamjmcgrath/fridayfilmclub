@@ -1,7 +1,5 @@
 Hello {{ name }},
 
-It's Friday Film Club time!
-
 {{ msg }}
 
 {{ url }}
