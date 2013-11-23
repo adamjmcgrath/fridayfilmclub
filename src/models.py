@@ -152,6 +152,15 @@ class Invite(ndb.Model):
 
     return ndb.put_multi(invites)
 
+  @staticmethod
+  def create_single_invite():
+    """Create a single invite - for use in the admin console."""
+    m = hashlib.md5()
+    m.update(_INVITE_SECRET)
+    m.update(str(time.time()))
+    i = Invite(id=m.hexdigest(), owner=User.get_by_username('FMJ'))
+    return i.put()
+
 
 # pylint: disable=W0232
 class User(AuthUser):
