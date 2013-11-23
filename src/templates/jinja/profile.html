@@ -20,6 +20,7 @@
           <th>Season</th>
           <th>Week</th>
           <th>Score</th>
+          <th>Clues</th>
         </tr>
       </thead>
       {% for uq in user_questions %}
@@ -28,11 +29,14 @@
           <td>{{ season and season.id() }}</td>
           <td>{{ uq.question.get().week }}</td>
           <td>{{ uq.score }}</td>
+          <td>{{ uq.guesses|length }}</td>
         </tr>
       {% endfor %}
     </table>
     <h4 class="text-muted">Average score:</h4>
     <p>{{ (user_profile.overall_score / user_profile.questions_answered)|round(1) }}</p>
+    <h4 class="text-muted">Average clues used:</h4>
+    <p>{{ (user_profile.overall_clues / user_profile.questions_answered)|round(1) }}</p>
   </div>
   {% endif %}
 </div>
