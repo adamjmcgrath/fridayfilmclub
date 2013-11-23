@@ -84,20 +84,9 @@ class Register(baserequesthandler.RequestHandler):
     provider = self.request.get('provider')
     form = forms.Registration(self.request.POST)
     if form.validate():
-      # Create a user the given username and delete the invite.
-      username = self.request.get('username')
-      invitation_code = self.request.get('invitation_code')
-      user = models.User(username=username)
-      user.put() # Have to put this here so invites has a user key to reference.
-      user.invites = models.Invite.create_invites(user)
-      invite = models.Invite.get_by_id(invitation_code)
-      if invite.owner:
-        user.invited_by = invite.owner
-      user.put()
-      invite.key.delete()
-
-      # Set the username in the session and login to the auth provider.
-      self.session['username'] = username
+      # Set the username and invitation in the session and login to the auth provider.
+      self.session['username'] = self.request.get('username')
+      self.session['invitation_code'] = self.request.get('invitation_code')
       self.redirect(self.uri_for('auth_login', provider=provider))
     else:
       return self.render_template('register.html', {

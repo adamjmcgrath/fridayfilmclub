@@ -69,7 +69,6 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
     logging.info(data)
 
     user = self.auth.store.user_model.get_by_auth_id(auth_id)
-    username = self.session.get('username')
 
     if user:
       logging.info('Found existing user to log in')
@@ -79,6 +78,10 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
     else:
       # check whether there is a user currently logged in
       # or that their is a user with this username.
+
+      username = self.session.get('username')
+      invitation_code = self.session.get('invitation_code')
+
       if self.logged_in:
         logging.info('Updating currently logged in user.')
         u = self.current_user
@@ -87,16 +90,29 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
         u.put()
         self.auth.set_session(self.auth.store.user_to_dict(u))
 
-      elif username:
+      elif username and invitation_code:
         logging.info('Creating a user for %s.' % username)
-        u = models.User.get_by_username(username)
-        if u:
+        invite = models.Invite.get_by_id(invitation_code)
+
+        if invite:
+          # Create a user the given username and delete the invite.
+          u = models.User(username=username)
+          u.put() # Have to put this here so invites has a user key to reference.
+          u.invites = models.Invite.create_invites(u)
+          invite = models.Invite.get_by_id(invitation_code)
+          if invite.owner:
+            u.invited_by = invite.owner
+          invite.key.delete()
+
+          # Authenticate the new user.
           u.auth_ids.append(auth_id)
           u.populate(**self._to_user_model_attrs(data, provider, True))
           u.put()
-          del self.session['username']
           self.auth.set_session(self.auth.store.user_to_dict(u))
           self.redirect('/settings')
+
+        del self.session['username']
+        del self.session['invitation_code']
 
     # Redirect them to the next page.
     target = self.session.get('original_url')
