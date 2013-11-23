@@ -164,6 +164,7 @@ class User(AuthUser):
   pic = ndb.BlobKeyProperty()
   name = ndb.StringProperty()
   username = ndb.StringProperty()
+  username_lower = ndb.ComputedProperty(lambda self: self.username.lower())
   favourite_film = ndb.KeyProperty(kind=Film)
   link = ndb.StringProperty()
   google_avatar_url = ndb.StringProperty()
@@ -189,7 +190,7 @@ class User(AuthUser):
 
   @staticmethod
   def get_by_username(username):
-    return User.query().filter(User.username == username).get()
+    return User.query().filter(User.username_lower == username.lower()).get()
 
   @staticmethod
   def blob_from_url(url):
