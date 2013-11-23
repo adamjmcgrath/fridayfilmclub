@@ -132,8 +132,10 @@ ffc.leaderboard.LeaderBoard.prototype.fillLeaderBoard_ = function() {
         this.dh_.createDom(TagName.TD, null,
           this.dh_.createDom(TagName.A, {href: '/u/' + user.name}, user.name)),
         this.dh_.createDom(TagName.TD, 'leaderboard-score', user.score + ''),
+        this.dh_.createDom(TagName.TD, 'leaderboard-clues', user.clues + ''),
         this.dh_.createDom(TagName.TD, 'leaderboard-answered', user.answered + ''),
-        this.dh_.createDom(TagName.TD, 'leaderboard-average', user.averageScore() + '')));
+        this.dh_.createDom(TagName.TD, 'leaderboard-average', user.averageScore() + ''),
+        this.dh_.createDom(TagName.TD, 'leaderboard-averageclues', user.averageClues() + '')));
   }
   this.dh_.append.apply(this._dh, args);
 };

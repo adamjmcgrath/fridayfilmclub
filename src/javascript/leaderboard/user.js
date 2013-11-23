@@ -37,9 +37,15 @@ ffc.leaderboard.User.prototype.answered = null;
 
 
 /**
- * @type {string}
+ * @type {number}
  */
 ffc.leaderboard.User.prototype.score = null;
+
+
+/**
+ * @type {number}
+ */
+ffc.leaderboard.User.prototype.clues = null;
 
 
 /**
@@ -56,10 +62,18 @@ ffc.leaderboard.User.prototype.picAttrs = function() {
 
 
 /**
- * @return {number} The average score over all games played.
+ * @return {string} The average score over all games played.
  */
 ffc.leaderboard.User.prototype.averageScore = function() {
   return ((this.score / this.answered)|| 0).toFixed(1);
+};
+
+
+/**
+ * @return {string} The average clues used over all games played.
+ */
+ffc.leaderboard.User.prototype.averageClues = function() {
+  return ((this.clues / this.answered)|| 0).toFixed(1);
 };
 
 
@@ -73,5 +87,6 @@ ffc.leaderboard.User.build = function(jsonObj) {
   user.pic = jsonObj['user_pic'];
   user.score = jsonObj['score'];
   user.answered = jsonObj['answered'];
+  user.clues = jsonObj['clues'];
   return user;
 };

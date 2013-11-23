@@ -186,6 +186,7 @@ class User(AuthUser):
   twitter_name = ndb.StringProperty()
   twitter_link = ndb.StringProperty()
   overall_score = ndb.IntegerProperty(default=0)
+  overall_clues = ndb.IntegerProperty(default=0)
   questions_answered = ndb.IntegerProperty(default=0)
   invites = ndb.KeyProperty(kind=Invite, repeated=True)
   invited_by = ndb.KeyProperty(kind='User')
@@ -218,6 +219,7 @@ class User(AuthUser):
       'user_name': user.username,
       'user_pic': user.pic_url(size=30),
       'score': user.overall_score,
+      'clues': user.overall_clues,
       'answered': user.questions_answered,
     }
 
@@ -268,13 +270,14 @@ class UserQuestion(ndb.Model):
       'user_name': user.username,
       'user_pic': user.pic_url(size=30),
       'score': user_question.score,
-      'answered': user.questions_answered,
+      'clues': len(user_question.guesses)
     }
 
 
 class UserSeason(ndb.Model):
   """Keep track of a users score over a season."""
   score = ndb.IntegerProperty(default=0)
+  clues = ndb.IntegerProperty(default=0)
   season = ndb.KeyProperty(kind=Season)
   user = ndb.KeyProperty(kind=User)
   user_is_admin = ndb.BooleanProperty(default=False)
@@ -287,5 +290,6 @@ class UserSeason(ndb.Model):
       'user_name': user.username,
       'user_pic': user.pic_url(size=30),
       'score': user_season.score,
+      'clues': user_season.clues,
       'answered': questions_in_season,
     }
