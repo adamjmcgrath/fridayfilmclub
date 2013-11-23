@@ -68,7 +68,7 @@ class Question(baserequesthandler.RequestHandler):
         if question.season:
           user_season_id = '%s-%s' % (question.season.id(), user.key.id())
           user_season = models.UserSeason.get_or_insert(user_season_id,
-            season=question.season, user=user.key)
+            season=question.season, user=user.key, user_is_admin=user.is_admin)
           user_season.score += user_question.calculate_score(posed)
           to_put.append(user_season)
 
