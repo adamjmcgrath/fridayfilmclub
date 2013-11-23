@@ -108,8 +108,8 @@ ffc.leaderboard.LeaderBoard.prototype.enterDocument = function() {
 ffc.leaderboard.LeaderBoard.prototype.exitDocument = function() {
   goog.base(this, 'exitDocument');
 
-  this.model_.unsubscribe();
-  this.eh_.unlisten();
+  this.model_.clear();
+  this.eh_.removeAll();
 
   this.dh_.removeChildren(this.element_);
   this.element_ = null;
@@ -149,6 +149,11 @@ ffc.leaderboard.LeaderBoard.prototype.fillPagination_ = function() {
   var args = [this.paginationEl_];
   var pages = goog.array.range(
       Math.ceil(this.model_.totalScores / this.model_.pageSize));
+
+  // Only make pagination if >1 page.
+  if (!(pages.length > 1)) {
+    return;
+  }
   for (var i = 0, len = pages.length; i < len; i++) {
     args.push(soy.renderAsElement(ffc.template.leaderboard.page,
         {number: pages[i], active: i == this.model_.page}));
@@ -164,7 +169,8 @@ ffc.leaderboard.LeaderBoard.prototype.fillPagination_ = function() {
 ffc.leaderboard.LeaderBoard.prototype.handlePaginationClick_ = function(e) {
   e.preventDefault();
   if (e.target.nodeName == goog.dom.TagName.A) {
-    var pageNumber = parseInt(e.target.innerHTML, 10);
+    // Display page numbers are 1 indexed.
+    var pageNumber = parseInt(e.target.innerHTML, 10) - 1;
     if (pageNumber != this.model_.page) {
       this.model_.page = pageNumber;
       this.model_.getData();
