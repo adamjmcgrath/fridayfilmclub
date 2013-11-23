@@ -15,6 +15,7 @@ goog.require('ffc.quiz.Guess');
 goog.require('ffc.quiz.QuestionModel');
 goog.require('ffc.quiz.Score');
 goog.require('goog.array');
+goog.require('goog.fx.dom.Scroll');
 goog.require('goog.net.EventType');
 goog.require('goog.net.XhrIo');
 goog.require('goog.ui.Component');
@@ -186,6 +187,7 @@ ffc.quiz.Question.prototype.addCluesAndGuesses = function() {
       this.addClue(new ffc.quiz.Clue(clue), index + 1);
     }
   }
+  this.scrollToBottom();
 };
 
 
@@ -195,6 +197,7 @@ ffc.quiz.Question.prototype.addCluesAndGuesses = function() {
 ffc.quiz.Question.prototype.addAnswer = function() {
   this.removeChild(this.answerForm, true);
   this.addChild(new ffc.quiz.Answer(this.model_.answer), true);
+  this.scrollToBottom();
 };
 
 
@@ -269,6 +272,17 @@ ffc.quiz.Question.prototype.onResponse_ = function(e) {
   } else {
     this.render(this.parentEl_);
   }
+};
+
+
+/**
+ * Scroll to the bottom of the page
+ */
+ffc.quiz.Question.prototype.scrollToBottom = function() {
+    var body = document.body;
+    var scrollLeft = document.body.scrollLeft;
+    (new goog.fx.dom.Scroll(body, [scrollLeft, body.scrollTop],
+        [body.scrollLeft, body.scrollHeight - window.innerHeight], 500)).play()
 };
 
 

@@ -15,7 +15,7 @@ goog.addDependency('../../../javascript/quiz/cluemodel.js', ['ffc.quiz.ClueModel
 goog.addDependency('../../../javascript/quiz/component.js', ['ffc.quiz.Component'], ['goog.fx.dom.FadeInAndShow', 'goog.ui.Component']);
 goog.addDependency('../../../javascript/quiz/guess.js', ['ffc.quiz.Guess'], ['ffc.quiz.Component', 'ffc.template.quiz']);
 goog.addDependency('../../../javascript/quiz/guessmodel.js', ['ffc.quiz.GuessModel'], []);
-goog.addDependency('../../../javascript/quiz/question.js', ['ffc.quiz.Question'], ['ffc.quiz.Answer', 'ffc.quiz.AnswerForm', 'ffc.quiz.Clue', 'ffc.quiz.Guess', 'ffc.quiz.QuestionModel', 'ffc.quiz.Score', 'goog.array', 'goog.net.EventType', 'goog.net.XhrIo', 'goog.ui.Component', 'goog.ui.ScrollFloater', 'goog.uri.utils']);
+goog.addDependency('../../../javascript/quiz/question.js', ['ffc.quiz.Question'], ['ffc.quiz.Answer', 'ffc.quiz.AnswerForm', 'ffc.quiz.Clue', 'ffc.quiz.Guess', 'ffc.quiz.QuestionModel', 'ffc.quiz.Score', 'goog.array', 'goog.fx.dom.Scroll', 'goog.net.EventType', 'goog.net.XhrIo', 'goog.ui.Component', 'goog.ui.ScrollFloater', 'goog.uri.utils']);
 goog.addDependency('../../../javascript/quiz/questionmodel.js', ['ffc.quiz.QuestionModel'], ['ffc.quiz.AnswerModel', 'ffc.quiz.ClueModel', 'ffc.quiz.GuessModel', 'goog.array']);
 goog.addDependency('../../../javascript/quiz/score.js', ['ffc.quiz.Score'], ['ffc.quiz.Component', 'ffc.template.quiz', 'goog.Timer', 'goog.dom.classes', 'goog.string']);
 goog.addDependency('../../../javascript/settings/inviteform.js', ['ffc.settings.InviteForm'], ['ffc.quiz.Component', 'goog.dom', 'goog.dom.classes', 'goog.dom.forms', 'goog.events.EventType', 'goog.net.XhrIo']);
