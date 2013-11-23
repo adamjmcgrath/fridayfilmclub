@@ -50,5 +50,6 @@ goog.inherits(ffc.quiz.Clue, ffc.quiz.Component);
 ffc.quiz.Clue.prototype.createDom = function() {
   this.element_ = soy.renderAsFragment(
       ffc.template.quiz.clue,
-      {position: this.position_, text: this.text_, image: this.image_});
+      // The screenshot is not considered a clue in the UI - then clue 2 is clue 1, etc..
+      {position: this.position_ - 1, text: this.text_, image: this.image_});
 };

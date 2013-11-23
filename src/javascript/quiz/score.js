@@ -119,7 +119,7 @@ ffc.quiz.Score.prototype.updateScore = function(score, numClues) {
   this.score_ = score;
   this.numClues_ = numClues;
 
-  for (var i = 0; i < this.numClues_; i++) {
+  for (var i = 0; i < (this.numClues_ - 1); i++) {
     var clueBar = this.clueBars_[i];
     if (clueBar) {
       goog.dom.classes.add(clueBar, 'bar-active');

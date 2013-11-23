@@ -70,7 +70,7 @@
   {if $image}
   <img src="{$image}" width="910" height="343">
   <div class="caption">
-    <h4>Clue #{$position}</h4>
+    {if $position}<h4>Clue #{$position}</h4>{/if}
     {if $text}<p>{$text}</p>{/if}
   </div>
   {else}
@@ -124,10 +124,9 @@
   </p>
   <h4>Clues:</h4>
   <div class="progress">
-    <div class="bar bar-active bar-1">1</div>
-    <div class="bar{if $clueCount > 1} bar-active{/if} bar-2">2</div>
-    <div class="bar{if $clueCount > 2} bar-active{/if} bar-3">3</div>
-    <div class="bar{if $clueCount > 3} bar-active{/if} bar-4">4</div>
+    <div class="bar{if $clueCount > 1} bar-active{/if} bar-1">1</div>
+    <div class="bar{if $clueCount > 2} bar-active{/if} bar-2">2</div>
+    <div class="bar{if $clueCount > 3} bar-active{/if} bar-3">3</div>
   </div>
 </div>
 {/template}

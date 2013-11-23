@@ -48,7 +48,7 @@ ffc.template.quiz.guess = function(opt_data, opt_ignored) {
  * @notypecheck
  */
 ffc.template.quiz.clue = function(opt_data, opt_ignored) {
-  return '<div class="' + ((opt_data.image) ? 'thumbnail' : 'alert alert-info clue') + '">' + ((opt_data.image) ? '<img src="' + soy.$$escapeHtml(opt_data.image) + '" width="910" height="343"><div class="caption"><h4>Clue #' + soy.$$escapeHtml(opt_data.position) + '</h4>' + ((opt_data.text) ? '<p>' + soy.$$escapeHtml(opt_data.text) + '</p>' : '') + '</div>' : (opt_data.text) ? '<p><b>Clue #' + soy.$$escapeHtml(opt_data.position) + ': </b>' + soy.$$escapeHtml(opt_data.text) + '</p>' : '') + '</div>';
+  return '<div class="' + ((opt_data.image) ? 'thumbnail' : 'alert alert-info clue') + '">' + ((opt_data.image) ? '<img src="' + soy.$$escapeHtml(opt_data.image) + '" width="910" height="343"><div class="caption">' + ((opt_data.position) ? '<h4>Clue #' + soy.$$escapeHtml(opt_data.position) + '</h4>' : '') + ((opt_data.text) ? '<p>' + soy.$$escapeHtml(opt_data.text) + '</p>' : '') + '</div>' : (opt_data.text) ? '<p><b>Clue #' + soy.$$escapeHtml(opt_data.position) + ': </b>' + soy.$$escapeHtml(opt_data.text) + '</p>' : '') + '</div>';
 };
 
 
@@ -71,12 +71,12 @@ ffc.template.quiz.answer = function(opt_data, opt_ignored) {
  */
 ffc.template.quiz.score = function(opt_data, opt_ignored) {
   var output = '<div><h4>Points available:</h4><p class="points-available">';
-  var sList103 = opt_data.score;
-  var sListLen103 = sList103.length;
-  for (var sIndex103 = 0; sIndex103 < sListLen103; sIndex103++) {
-    var sData103 = sList103[sIndex103];
-    output += '<span class="point">' + soy.$$escapeHtml(sData103) + '</span>';
+  var sList106 = opt_data.score;
+  var sListLen106 = sList106.length;
+  for (var sIndex106 = 0; sIndex106 < sListLen106; sIndex106++) {
+    var sData106 = sList106[sIndex106];
+    output += '<span class="point">' + soy.$$escapeHtml(sData106) + '</span>';
   }
-  output += '<sub></sub></p><h4>Clues:</h4><div class="progress"><div class="bar bar-active bar-1">1</div><div class="bar' + ((opt_data.clueCount > 1) ? ' bar-active' : '') + ' bar-2">2</div><div class="bar' + ((opt_data.clueCount > 2) ? ' bar-active' : '') + ' bar-3">3</div><div class="bar' + ((opt_data.clueCount > 3) ? ' bar-active' : '') + ' bar-4">4</div></div></div>';
+  output += '<sub></sub></p><h4>Clues:</h4><div class="progress"><div class="bar' + ((opt_data.clueCount > 1) ? ' bar-active' : '') + ' bar-1">1</div><div class="bar' + ((opt_data.clueCount > 2) ? ' bar-active' : '') + ' bar-2">2</div><div class="bar' + ((opt_data.clueCount > 3) ? ' bar-active' : '') + ' bar-3">3</div></div></div>';
   return output;
 };
