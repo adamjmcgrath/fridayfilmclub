@@ -270,7 +270,7 @@ class UserQuestion(ndb.Model):
       'user_name': user.username,
       'user_pic': user.pic_url(size=30),
       'score': user_question.score,
-      'clues': len(user_question.guesses)
+      'clues': len(user_question.guesses) - 1
     }
 
 

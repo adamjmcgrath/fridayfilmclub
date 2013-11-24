@@ -62,7 +62,7 @@ class Question(baserequesthandler.RequestHandler):
         user_question.complete = True
         user_question.score = user_question.calculate_score(posed)
         user.overall_score += user_question.score
-        user.overall_clues += num_guesses
+        user.overall_clues += num_guesses - 1
         user.questions_answered += 1
         question.answered += 1
         to_put.append(question)
@@ -72,7 +72,7 @@ class Question(baserequesthandler.RequestHandler):
           user_season = models.UserSeason.get_or_insert(user_season_id,
             season=question.season, user=user.key, user_is_admin=user.is_admin)
           user_season.score += user_question.calculate_score(posed)
-          user_season.clues += num_guesses
+          user_season.clues += num_guesses - 1
           to_put.append(user_season)
 
       to_put.append(user_question)
