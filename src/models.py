@@ -161,7 +161,7 @@ class Invite(ndb.Model):
     user = User.get_by_username('FMJ')
     i = Invite(id=m.hexdigest())
     if user:
-      i.owner = user.key()
+      i.owner = user.key
     return i.put()
 
 
