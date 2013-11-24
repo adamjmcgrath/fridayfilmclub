@@ -158,7 +158,10 @@ class Invite(ndb.Model):
     m = hashlib.md5()
     m.update(_INVITE_SECRET)
     m.update(str(time.time()))
-    i = Invite(id=m.hexdigest(), owner=User.get_by_username('FMJ'))
+    user = User.get_by_username('FMJ')
+    i = Invite(id=m.hexdigest())
+    if user:
+      i.owner = user.key()
     return i.put()
 
 
