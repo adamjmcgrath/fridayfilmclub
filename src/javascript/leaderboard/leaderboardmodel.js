@@ -9,7 +9,7 @@
 goog.provide('ffc.leaderboard.LeaderBoardModel');
 
 goog.require('ffc.api.Client');
-goog.require('ffc.leaderboard.User');
+goog.require('ffc.api.User');
 
 goog.require('goog.Uri');
 goog.require('goog.array');
@@ -70,7 +70,7 @@ ffc.leaderboard.LeaderBoardModel.prototype.handleResult = function(result) {
   this.totalScores = data['count'];
   this.publish(ffc.leaderboard.LeaderBoardModel.TOTAL_UPDATED_EVENT);
 
-  this.users = goog.array.map(data['users'], ffc.leaderboard.User.build);
+  this.users = goog.array.map(data['users'], ffc.api.User.build);
   this.publish(ffc.leaderboard.LeaderBoardModel.USERS_UPDATED_EVENT);
 };
 

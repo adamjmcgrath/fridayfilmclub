@@ -127,6 +127,7 @@ class Question(Form):
   answer = FilmField('Film', [validators.Required()], id='film')
   clues = CluesFieldList(ClueFormField(ClueForm), min_entries=4)
   email_msg = fields.TextAreaField('Email Message')
+  packshot = ImageField('Image')
   imdb_url = fields.TextField('IMDB Link',
                               default='http://www.imdb.com/title/XXX/')
 

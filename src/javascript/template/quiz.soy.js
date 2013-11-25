@@ -14,7 +14,7 @@ goog.require('soydata');
  * @notypecheck
  */
 ffc.template.quiz.answerForm = function(opt_data, opt_ignored) {
-  return '<form class="well answer-form"><div class="form-inline"><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-film"></span></span><input class="autocomplete input-lg form-control" size="16" type="text" autocomplete="off"></div><a href="#" class="btn btn-lg btn-success" id="btn-search">Search</a><a href="#" class="btn btn-lg btn-warning" id="btn-clear">Clear</a></div><div class="controls rows"><div class="suggestions"><p class="suggest-info">Search for a film, select your answer then submit.</p></div></div><div class="guess-buttons"><a href="#" class="btn btn-primary" id="btn-submit">Submit</a><a href="#" class="btn btn-danger pull-left" id="btn-pass">No idea</a></div></form>';
+  return '<form class="well answer-form"><div class="form-inline"><div class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-film"></span></span><input class="autocomplete input-lg form-control" size="16" type="text" autocomplete="off"></div><a href="#" class="btn btn-lg btn-success" id="btn-search">Search</a><a href="#" class="btn btn-lg btn-warning" id="btn-clear">Clear</a></div><div class="controls rows"><div class="suggestions"><p class="suggest-info">Search for a film, select your answer then submit.</p></div></div><div class="guess-buttons"><a href="#" class="btn btn-primary" id="btn-submit">Submit</a><a href="#" class="btn btn-danger pull-left" id="btn-pass">No idea, another clue please</a></div></form>';
 };
 
 
@@ -48,7 +48,7 @@ ffc.template.quiz.guess = function(opt_data, opt_ignored) {
  * @notypecheck
  */
 ffc.template.quiz.clue = function(opt_data, opt_ignored) {
-  return '<div class="' + ((opt_data.image) ? 'thumbnail' : 'alert alert-info clue') + '">' + ((opt_data.image) ? '<img src="' + soy.$$escapeHtml(opt_data.image) + '" width="910" height="343"><div class="caption">' + ((opt_data.position) ? '<h4>Clue #' + soy.$$escapeHtml(opt_data.position) + '</h4>' : '') + ((opt_data.text) ? '<p>' + soy.$$escapeHtml(opt_data.text) + '</p>' : '') + '</div>' : (opt_data.text) ? '<p><b>Clue #' + soy.$$escapeHtml(opt_data.position) + ': </b>' + soy.$$escapeHtml(opt_data.text) + '</p>' : '') + '</div>';
+  return '<div class="' + ((opt_data.image) ? 'thumbnail' : 'alert alert-info clue') + '">' + ((opt_data.image) ? '<img src="' + soy.$$escapeHtml(opt_data.image) + '" width="910" height="343">' + ((opt_data.position) ? '<div class="caption">' + ((opt_data.position) ? '<h4>Clue #' + soy.$$escapeHtml(opt_data.position) + '</h4>' : '') + ((opt_data.text) ? '<p>' + soy.$$escapeHtml(opt_data.text) + '</p>' : '') + '</div>' : '') : (opt_data.text) ? '<p><b>Clue #' + soy.$$escapeHtml(opt_data.position) + ': </b>' + soy.$$escapeHtml(opt_data.text) + '</p>' : '') + '</div>';
 };
 
 
@@ -59,7 +59,7 @@ ffc.template.quiz.clue = function(opt_data, opt_ignored) {
  * @notypecheck
  */
 ffc.template.quiz.answer = function(opt_data, opt_ignored) {
-  return '<div class="alert alert-' + ((opt_data.correct) ? 'success' : 'danger') + ' clue"><h4 class="alert-heading">' + ((opt_data.correct) ? (opt_data.numGuesses == 1) ? 'BOOM!' : (opt_data.numGuesses == 2) ? 'Well played!' : (opt_data.numGuesses == 3) ? 'Correct!' : 'That’s the one!' : 'Incorrect!') + '<span class="pull-right">You scored ' + soy.$$escapeHtml(opt_data.score) + ' points.</span></h4><p>The answer is of course: <b>' + soy.$$escapeHtml(opt_data.title) + '</b> (' + soy.$$escapeHtml(opt_data.year) + ')</p></div>';
+  return '<div class="alert clearfix alert-' + ((opt_data.correct) ? 'success' : 'danger') + ' clue"><h4 class="alert-heading">' + ((opt_data.correct) ? (opt_data.numGuesses == 1) ? 'BOOM!' : (opt_data.numGuesses == 2) ? 'Well played!' : (opt_data.numGuesses == 3) ? 'Correct!' : 'That’s the one!' : 'Incorrect!') + '</h4><img src="' + soy.$$escapeHtml(opt_data.packshot) + '" class="pull-left packshot thumbnail"><p>The answer is of course: <b>' + soy.$$escapeHtml(opt_data.title) + '</b> (' + soy.$$escapeHtml(opt_data.year) + ')</p><p>You used <b>' + soy.$$escapeHtml(opt_data.numGuesses - 1) + '</b> clues and scored <b>' + soy.$$escapeHtml(opt_data.score) + '</b> points</p><p>Your average score is now <b>' + soy.$$escapeHtml(opt_data.averageScore) + '</b> and your average clues used is <b>' + soy.$$escapeHtml(opt_data.averageClues) + '</b></p><p>Check out the <a href="/leaderboard">Leaderboard</a></p><p>Check out the film on <a hre="' + soy.$$escapeHtml(opt_data.imdb_url) + '">IMDB</a></p></div>';
 };
 
 
@@ -71,11 +71,11 @@ ffc.template.quiz.answer = function(opt_data, opt_ignored) {
  */
 ffc.template.quiz.score = function(opt_data, opt_ignored) {
   var output = '<div><h4>Points available:</h4><p class="points-available">';
-  var sList106 = opt_data.score;
-  var sListLen106 = sList106.length;
-  for (var sIndex106 = 0; sIndex106 < sListLen106; sIndex106++) {
-    var sData106 = sList106[sIndex106];
-    output += '<span class="point">' + soy.$$escapeHtml(sData106) + '</span>';
+  var sList119 = opt_data.score;
+  var sListLen119 = sList119.length;
+  for (var sIndex119 = 0; sIndex119 < sListLen119; sIndex119++) {
+    var sData119 = sList119[sIndex119];
+    output += '<span class="point">' + soy.$$escapeHtml(sData119) + '</span>';
   }
   output += '<sub></sub></p><h4>Clues:</h4><div class="progress"><div class="bar' + ((opt_data.clueCount > 1) ? ' bar-active' : '') + ' bar-1">1</div><div class="bar' + ((opt_data.clueCount > 2) ? ' bar-active' : '') + ' bar-2">2</div><div class="bar' + ((opt_data.clueCount > 3) ? ' bar-active' : '') + ' bar-3">3</div></div></div>';
   return output;

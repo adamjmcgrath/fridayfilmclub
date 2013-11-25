@@ -99,6 +99,7 @@ class Question(ndb.Model):
   updated = ndb.DateTimeProperty(auto_now=True)
   is_current = ndb.BooleanProperty(default=False)
   imdb_url = ndb.StringProperty()
+  packshot = ndb.BlobKeyProperty()
   email_msg = ndb.TextProperty()
   season = ndb.KeyProperty(kind=Season)
   week = ndb.IntegerProperty()
@@ -110,6 +111,13 @@ class Question(ndb.Model):
       return clue.get().image_url(size=size, crop=crop)
     else:
       return None
+
+  def packshot_url(self, size=None, crop=False):
+    """Gets the packshot url."""
+    if self.packshot:
+      return images.get_serving_url(self.packshot, size=size, crop=crop)
+    else:
+      return ''
 
 
 # pylint: disable=W0232

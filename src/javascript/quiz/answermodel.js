@@ -16,10 +16,13 @@ goog.provide('ffc.quiz.AnswerModel');
  *   {string} year The year of the film answer.
  * @param {boolean} correct Whether the answer is correct.
  * @param {number} score The final score.
+ * @param {string} packshot The url of the packshot.
+ * @param {string} imdb_url The url of the packshot.
+ * @param {ffc.api.User} user The user.
  * @param {number} numGuesses The number of guesses required.
  * @constructor
  */
-ffc.quiz.AnswerModel = function(data, correct, score, numGuesses) {
+ffc.quiz.AnswerModel = function(data, correct, score, packshot, imdb_url, user, numGuesses) {
   /**
    * @type {string}
    */
@@ -39,6 +42,21 @@ ffc.quiz.AnswerModel = function(data, correct, score, numGuesses) {
    * @type {number}
    */
   this.score = score;
+
+  /**
+   * @type {string}
+   */
+  this.packshot = packshot;
+
+  /**
+   * @type {string}
+   */
+  this.imdb_url = imdb_url;
+
+  /**
+   * @type {string}
+   */
+  this.user = user;
 
   /**
    * @type {number}

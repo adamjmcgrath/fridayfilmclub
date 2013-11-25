@@ -37,6 +37,10 @@ ffc.quiz.Answer.prototype.createDom = function() {
         title: this.model_.title,
         year: this.model_.year,
         score: this.model_.score,
+        packshot: this.model_.packshot,
+        imdb_url: this.model_.imdb_url,
+        averageScore: this.model_.user.averageScore(),
+        averageClues: this.model_.user.averageClues(),
         numGuesses: this.model_.numGuesses
       });
 };

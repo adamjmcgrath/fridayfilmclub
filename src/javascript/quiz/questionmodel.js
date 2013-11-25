@@ -8,6 +8,7 @@
 
 goog.provide('ffc.quiz.QuestionModel');
 
+goog.require('ffc.api.User');
 goog.require('ffc.quiz.AnswerModel');
 goog.require('ffc.quiz.ClueModel');
 goog.require('ffc.quiz.GuessModel');
@@ -102,7 +103,8 @@ ffc.quiz.QuestionModel.prototype.update = function(data) {
   var len = Math.max(clues.length, guesses.length);
 
   if (answer && !this.answer) {
-    this.answer = new ffc.quiz.AnswerModel(answer, data['correct'], data['score'], data['guesses'].length);
+    this.answer = new ffc.quiz.AnswerModel(answer, data['correct'], data['score'], data['packshot'],
+        data['imdb_url'], ffc.api.User.build(data['user']), data['guesses'].length);
   }
 
   for (var i = 0; i < len; i++) {

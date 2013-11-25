@@ -3,10 +3,10 @@
 goog.addDependency('../../../closure-templates/javascript/soyutils_usegoog.js', ['soy', 'soy.StringBuilder', 'soy.esc', 'soydata', 'soydata.SanitizedHtml', 'soydata.SanitizedHtmlAttribute', 'soydata.SanitizedJsStrChars', 'soydata.SanitizedUri'], ['goog.asserts', 'goog.dom.DomHelper', 'goog.format', 'goog.i18n.BidiFormatter', 'goog.i18n.bidi', 'goog.soy', 'goog.string', 'goog.string.StringBuffer']);
 goog.addDependency('../../../growjs/grow/fx/dom/shake.js', ['grow.fx.dom.Shake'], ['goog.fx.dom.Slide']);
 goog.addDependency('../../../javascript/api/client.js', ['ffc.api.Client'], ['goog.labs.net.xhr', 'goog.result.Result']);
+goog.addDependency('../../../javascript/api/user.js', ['ffc.api.User'], []);
 goog.addDependency('../../../javascript/leaderboard/leaderboard.js', ['ffc.leaderboard.LeaderBoard'], ['ffc.leaderboard.LeaderBoardModel', 'ffc.template.leaderboard', 'goog.array', 'goog.dom', 'goog.dom.TagName', 'goog.string', 'goog.ui.Component', 'goog.uri.utils', 'soy']);
-goog.addDependency('../../../javascript/leaderboard/leaderboardmodel.js', ['ffc.leaderboard.LeaderBoardModel'], ['ffc.api.Client', 'ffc.leaderboard.User', 'goog.Uri', 'goog.array', 'goog.pubsub.PubSub']);
+goog.addDependency('../../../javascript/leaderboard/leaderboardmodel.js', ['ffc.leaderboard.LeaderBoardModel'], ['ffc.api.Client', 'ffc.api.User', 'goog.Uri', 'goog.array', 'goog.pubsub.PubSub']);
 goog.addDependency('../../../javascript/leaderboard/leaderboardtoggler.js', ['ffc.leaderboard.LeaderBoardToggler'], ['goog.dom.TagName', 'goog.dom.classes', 'goog.dom.dataset']);
-goog.addDependency('../../../javascript/leaderboard/user.js', ['ffc.leaderboard.User'], []);
 goog.addDependency('../../../javascript/quiz/answer.js', ['ffc.quiz.Answer'], ['ffc.quiz.Component']);
 goog.addDependency('../../../javascript/quiz/answerform.js', ['ffc.quiz.AnswerForm', 'ffc.quiz.AnswerFormEvent'], ['ffc.quiz.Component', 'ffc.suggest.AutoComplete', 'ffc.template.quiz', 'goog.dom.forms', 'goog.events.Event', 'goog.events.EventType', 'goog.fx.Transition.EventType', 'grow.fx.dom.Shake', 'soy']);
 goog.addDependency('../../../javascript/quiz/answermodel.js', ['ffc.quiz.AnswerModel'], []);
@@ -16,7 +16,7 @@ goog.addDependency('../../../javascript/quiz/component.js', ['ffc.quiz.Component
 goog.addDependency('../../../javascript/quiz/guess.js', ['ffc.quiz.Guess'], ['ffc.quiz.Component', 'ffc.template.quiz']);
 goog.addDependency('../../../javascript/quiz/guessmodel.js', ['ffc.quiz.GuessModel'], []);
 goog.addDependency('../../../javascript/quiz/question.js', ['ffc.quiz.Question'], ['ffc.quiz.Answer', 'ffc.quiz.AnswerForm', 'ffc.quiz.Clue', 'ffc.quiz.Guess', 'ffc.quiz.QuestionModel', 'ffc.quiz.Score', 'goog.array', 'goog.fx.dom.Scroll', 'goog.net.EventType', 'goog.net.XhrIo', 'goog.ui.Component', 'goog.ui.ScrollFloater', 'goog.uri.utils']);
-goog.addDependency('../../../javascript/quiz/questionmodel.js', ['ffc.quiz.QuestionModel'], ['ffc.quiz.AnswerModel', 'ffc.quiz.ClueModel', 'ffc.quiz.GuessModel', 'goog.array']);
+goog.addDependency('../../../javascript/quiz/questionmodel.js', ['ffc.quiz.QuestionModel'], ['ffc.api.User', 'ffc.quiz.AnswerModel', 'ffc.quiz.ClueModel', 'ffc.quiz.GuessModel', 'goog.array']);
 goog.addDependency('../../../javascript/quiz/score.js', ['ffc.quiz.Score'], ['ffc.quiz.Component', 'ffc.template.quiz', 'goog.Timer', 'goog.dom.classes', 'goog.string']);
 goog.addDependency('../../../javascript/settings/inviteform.js', ['ffc.settings.InviteForm'], ['ffc.quiz.Component', 'goog.dom', 'goog.dom.classes', 'goog.dom.forms', 'goog.events.EventType', 'goog.net.XhrIo']);
 goog.addDependency('../../../javascript/suggest/autocomplete.js', ['ffc.suggest.AutoComplete'], ['ffc.suggest.RemoteArrayMatcher', 'goog.array', 'goog.dom', 'goog.ui.ac.AutoComplete', 'goog.ui.ac.Renderer', 'goog.ui.ac.RichInputHandler']);

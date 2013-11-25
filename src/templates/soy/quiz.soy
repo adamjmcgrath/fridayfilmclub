@@ -69,10 +69,12 @@
 <div class="{if $image}thumbnail{else}alert alert-info clue{/if}">
   {if $image}
   <img src="{$image}" width="910" height="343">
-  <div class="caption">
-    {if $position}<h4>Clue #{$position}</h4>{/if}
-    {if $text}<p>{$text}</p>{/if}
-  </div>
+  {if $position}
+    <div class="caption">
+      {if $position}<h4>Clue #{$position}</h4>{/if}
+      {if $text}<p>{$text}</p>{/if}
+    </div>
+  {/if}
   {else}
   {if $text}<p><b>Clue #{$position}: </b>{$text}</p>{/if}
   {/if}
@@ -86,10 +88,14 @@
  * @param title The answer title.
  * @param year The answer year.
  * @param score The final score
+ * @param imdb_url The IMDB url
+ * @param packshot The packshot image
+ * @param averageScore The user object
+ * @param averageClues The user object
  * @param? numGuesses The number of guesses made
  */
 {template .answer}
-<div class="alert alert-{if $correct}success{else}danger{/if} clue">
+<div class="alert clearfix alert-{if $correct}success{else}danger{/if} clue">
   <h4 class="alert-heading">
     {if $correct}
       {if $numGuesses == 1}
@@ -101,9 +107,13 @@
     {else}
         Incorrect!
     {/if}
-    <span class="pull-right">You scored {$score} points.</span>
   </h4>
+  <img src="{$packshot}" class="pull-left packshot thumbnail">
   <p>The answer is of course: <b>{$title}</b> ({$year})</p>
+  <p>You used <b>{$numGuesses - 1}</b> clues and scored <b>{$score}</b> points</p>
+  <p>Your average score is now <b>{$averageScore}</b> and your average clues used is <b>{$averageClues}</b></p>
+  <p>Check out the <a href="/leaderboard">Leaderboard</a></p>
+  <p>Check out the film on <a hre="{$imdb_url}">IMDB</a></p>
 </div>
 {/template}
 

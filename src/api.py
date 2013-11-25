@@ -101,12 +101,15 @@ class Question(baserequesthandler.RequestHandler):
         'clues': [clue.get().to_json() for clue in question.clues[:clue_number]],
         'correct': user_question.correct,
         'guesses': guesses,
-        'score': user_question.score or user_question.calculate_score(posed)
+        'score': user_question.score or user_question.calculate_score(posed),
+        'user': models.User.to_leaderboard_json(user)
     }
 
     # If the question is complete, reveal the correct answer to the user.
     if user_question.complete:
       response_obj['answer'] = question.answer.get().to_dict()
+      response_obj['packshot'] = question.packshot_url(size=150)
+      response_obj['imdb_url'] = question.imdb_url
 
     return self.render_json(response_obj)
 
