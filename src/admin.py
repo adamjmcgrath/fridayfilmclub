@@ -133,7 +133,11 @@ class PoseQuestion(baserequesthandler.RequestHandler):
 
     if (debug):
       taskqueue.add(url=self.request.path,
-                    params={'email': users.get_current_user().email()},
+                    params={
+	                    'email': users.get_current_user().email(),
+                        'email_msg': question.email_msg,
+                        'username': 'TEST'
+                    },
                     queue_name='pose')
     else:
       question.season = models.Season.get_current().key
