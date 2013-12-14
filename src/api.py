@@ -73,6 +73,7 @@ class Question(baserequesthandler.RequestHandler):
             season=question.season, user=user.key, user_is_admin=user.is_admin)
           user_season.score += user_question.calculate_score(posed)
           user_season.clues += num_guesses - 1
+          user_season.questions_answered += 1
           to_put.append(user_season)
 
       to_put.append(user_question)

@@ -292,6 +292,7 @@ class UserSeason(ndb.Model):
   season = ndb.KeyProperty(kind=Season)
   user = ndb.KeyProperty(kind=User)
   user_is_admin = ndb.BooleanProperty(default=False)
+  questions_answered = ndb.IntegerProperty(default=0)
 
   @staticmethod
   def to_leaderboard_json(questions_in_season, user_season):
@@ -302,5 +303,5 @@ class UserSeason(ndb.Model):
       'user_pic': user.pic_url(size=30),
       'score': user_season.score,
       'clues': user_season.clues,
-      'answered': questions_in_season,
+      'answered': user_season.questions_answered,
     }
