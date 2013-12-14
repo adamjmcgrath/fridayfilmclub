@@ -156,7 +156,7 @@ ffc.leaderboard.LeaderBoard.prototype.fillPagination_ = function() {
   }
   for (var i = 0, len = pages.length; i < len; i++) {
     args.push(soy.renderAsElement(ffc.template.leaderboard.page,
-        {number: pages[i], active: i == this.model_.page}));
+        {number: pages[i] + 1, active: i == this.model_.page}));
   }
   this.dh_.append.apply(this._dh, args);
 };
