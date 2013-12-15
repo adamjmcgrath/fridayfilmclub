@@ -13,6 +13,7 @@ goog.require('ffc.template.leaderboard');
 
 goog.require('goog.array');
 goog.require('goog.dom');
+goog.require('goog.dom.classes');
 goog.require('goog.dom.TagName');
 goog.require('goog.string');
 goog.require('goog.ui.Component');
@@ -99,6 +100,7 @@ ffc.leaderboard.LeaderBoard.prototype.enterDocument = function() {
   this.model_.getData();
 
   this.element_.style.display = 'block';
+  goog.dom.classes.add(this.element_, 'loading');
 };
 
 
@@ -137,6 +139,7 @@ ffc.leaderboard.LeaderBoard.prototype.fillLeaderBoard_ = function() {
         this.dh_.createDom(TagName.TD, 'leaderboard-averageclues', user.averageClues() + ''),
         this.dh_.createDom(TagName.TD, 'leaderboard-average', user.averageScore() + '')));
   }
+  goog.dom.classes.remove(this.element_, 'loading');
   this.dh_.append.apply(this._dh, args);
 };
 
