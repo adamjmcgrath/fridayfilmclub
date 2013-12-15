@@ -46,7 +46,7 @@ from google.appengine.api import datastore
 
 import models
 
-APP_NAME = 's~ffcapp'
+APP_NAME = 'dev~ffcapp'
 os.environ['AUTH_DOMAIN'] = 'gmail.com'
 os.environ['USER_EMAIL'] = 'adamjmcgrath@gmail.com'
 
@@ -70,11 +70,16 @@ def main():
         entity_proto = entity_pb.EntityProto(contents=record)
       except:
         break
-      entity_proto.key().set_app('dev~ffcapp')
+
+      entity_proto.key().set_app(APP_NAME)
+      for p in entity_proto.property_list():
+        p.value().referencevalue().set_app(APP_NAME)
+
       entities.append(ndb.Model._from_pb(entity_proto))
+
     if len(entities):
       ndb.put_multi(entities)
-    print 'restored: %s' % backup_file
+      print 'restored: %s' % backup_file
 
 
 if __name__ == '__main__':
