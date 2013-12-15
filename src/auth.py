@@ -96,7 +96,7 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
 
         if invite:
           # Create a user the given username and delete the invite.
-          u = models.User(username=username)
+          u = models.User(username=username.strip())
           u.put() # Have to put this here so invites has a user key to reference.
           u.invites = models.Invite.create_invites(u)
           invite = models.Invite.get_by_id(invitation_code)
