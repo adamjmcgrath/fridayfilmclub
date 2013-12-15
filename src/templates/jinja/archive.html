@@ -21,7 +21,7 @@
       <div class="col-md-4">
         <div class="well">
           <h4 class="list-group-item-heading">Season {{ q.season.id() }}, Week {{ q.week }}</h4>
-          <img src="{{ q.clue_image_url(size=243) }}">
+          <img src="{{ q.clue_image_url() }}=w243-h140-c">
           <p><a class="btn btn-default" href="/question/{{ q.key.id() }}">Play for fun</a></p>
         </div>
       </div>
