@@ -11,7 +11,7 @@
   {% if not questions.get() %}
   <div class="alert alert-warning">There are no questions in the archive yet.</div>
   {% endif %} 
-  {% for q in questions %}
+  {% for q in questions|reverse %}
     {% if not loop.index0 % 3 %}
       {% if not loop.first %}
         </div>
