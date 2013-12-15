@@ -73,7 +73,7 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
     if user:
       logging.info('Found existing user to log in')
       # existing user. just log them in.
-      self.auth.set_session(self.auth.store.user_to_dict(user))
+      self.auth.set_session(self.auth.store.user_to_dict(user), remember=True)
 
     else:
       # check whether there is a user currently logged in
@@ -88,7 +88,7 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
         u.auth_ids.append(auth_id)
         u.populate(**self._to_user_model_attrs(data, provider, False))
         u.put()
-        self.auth.set_session(self.auth.store.user_to_dict(u))
+        self.auth.set_session(self.auth.store.user_to_dict(u), remember=True)
 
       elif username and invitation_code:
         logging.info('Creating a user for %s.' % username)
@@ -108,7 +108,7 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
           u.auth_ids.append(auth_id)
           u.populate(**self._to_user_model_attrs(data, provider, True))
           u.put()
-          self.auth.set_session(self.auth.store.user_to_dict(u))
+          self.auth.set_session(self.auth.store.user_to_dict(u), remember=True)
           self.redirect('/settings')
 
         del self.session['username']
