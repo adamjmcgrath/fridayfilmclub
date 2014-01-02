@@ -4,6 +4,6 @@ Hello {{ name }},
 
 {{ url }}
 
-Good Luck!
+Talk to me, Goose!
 
-FMJ
+FMJ @filmmasterjack
