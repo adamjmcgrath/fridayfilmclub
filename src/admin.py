@@ -134,9 +134,10 @@ class PoseQuestion(baserequesthandler.RequestHandler):
     if (debug):
       taskqueue.add(url=self.request.path,
                     params={
-	                    'email': users.get_current_user().email(),
+                        'email': users.get_current_user().email(),
                         'email_msg': question.email_msg,
-                        'username': 'TEST'
+                        'username': 'TEST',
+                        'subject': 'Friday Film Club TEST'
                     },
                     queue_name='pose')
     else:
@@ -156,6 +157,7 @@ class PoseQuestion(baserequesthandler.RequestHandler):
                         'email': user_entity.email,
                         'email_msg': question.email_msg,
                         'username': user_entity.name,
+                        'subject': 'Friday Film Club: Season %s, Week %d' % (question.season.id(), question.week)
                       },
                       queue_name='pose')
 
@@ -179,7 +181,7 @@ class PoseQuestion(baserequesthandler.RequestHandler):
     })
     mail.send_mail(sender='fmj@fridayfilmclub.com',
                      to=email,
-                     subject='This weeks Friday Film Club question',
+                     subject=self.request.get('subject'),
                      body=body)
 
 
