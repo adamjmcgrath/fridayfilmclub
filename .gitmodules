@@ -33,3 +33,6 @@
 [submodule "src/twitter-bootstrap"]
 	path = src/twitter-bootstrap
 	url = https://github.com/twbs/bootstrap.git
+[submodule "submodules/python-dateutil"]
+	path = submodules/python-dateutil
+	url = https://github.com/paxan/python-dateutil.git

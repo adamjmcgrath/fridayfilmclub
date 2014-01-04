@@ -81,7 +81,7 @@ app_config = {
   }
 }
 
-app = webapp2.WSGIApplication(routes=routes, debug=settings.debug, config=app_config)
+app = webapp2.WSGIApplication(routes=routes, debug=settings.DEBUG, config=app_config)
 
 def main():
   app.run()
