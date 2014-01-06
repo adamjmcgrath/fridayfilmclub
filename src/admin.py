@@ -5,16 +5,14 @@
 
 __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 
-from datetime import datetime
+import datetime
 import logging
-import os
-import re
 import urlparse
 
 import webapp2
 from google.appengine.api import memcache, taskqueue, users, mail
-from google.appengine.ext import blobstore
-from google.appengine.ext import ndb
+from google.appengine.datastore.datastore_query import Cursor
+from google.appengine.ext import blobstore, ndb
 from google.appengine.ext.webapp import blobstore_handlers
 
 from mapreduce import control, mapreduce_pipeline
@@ -24,8 +22,8 @@ import baserequesthandler
 import forms
 import map_reduce
 import models
-import settings
 
+EMAIL_BATCH_SIZE = 10
 
 
 class HomePage(baserequesthandler.RequestHandler):
@@ -109,80 +107,92 @@ class Questions(baserequesthandler.RequestHandler):
 class PoseQuestion(baserequesthandler.RequestHandler):
   """Email the question out to the users and post it on the twitter/FB feed."""
 
-  def get(self, key):
-    """Create a queue for sending out the emails."""
-    debug = self.request.get('debug')
-    user_entities = models.User.query()
-    old_question = models.Question.query(
-                       models.Question.is_current == True).get()
-    if old_question:
-      old_question.is_current = False
-      old_question.put()
+  def get(self):
+    """Create a queue for sending out the emails. Triggered weekly by a cron."""
+    if not self.request.headers.get('X-Appengine-Cron'):
+      return self.error(403)
 
-    question = models.Question.get_by_id(int(key))
-    now = datetime.now()
-    url = self.request.path
+    prev_question = models.Question.get_current()
+    next_question = models.Question.get_next()
+    now = datetime.datetime.now()
 
-    if question.posed and not debug:
-      return self.response.out.write('You\'ve already posed this question.')
+    if not (prev_question and next_question):
+      return logging.error('There is no next question to pose.')
 
-    if not debug:
-      question.posed = now
-      question.is_current = True
-      question.put()
+    last_posed_delta = now - prev_question.posed
+    if last_posed_delta.days < 6:
+      return logging.error('The last question was posed less than a week ago.')
 
-    if (debug):
-      taskqueue.add(url=self.request.path,
-                    params={
-                        'email': users.get_current_user().email(),
-                        'email_msg': question.email_msg,
-                        'username': 'TEST',
-                        'subject': 'Friday Film Club TEST'
-                    },
-                    queue_name='pose')
-    else:
-      question.season = models.Season.get_current().key
-      last_question = models.Question.query(
-          models.Question.season == question.season).order(-models.Question.week).get()
-      if last_question:
-        question.week = last_question.week + 1
-      else:
-        question.week = 1
-      question.put()
+    prev_question.is_current = False
+    next_question.is_current = True
+    next_question.posed = now
+    ndb.put_multi([prev_question, next_question])
 
-      # TODO (adamjmcgrath) Batch the loop through users.
-      for user_entity in user_entities:
-        taskqueue.add(url=url,
-                      params={
-                        'email': user_entity.email,
-                        'email_msg': question.email_msg,
-                        'username': user_entity.name,
-                        'subject': 'Friday Film Club: Season %s, Week %d' % (question.season.id(), question.week)
-                      },
-                      queue_name='pose')
+    subject = ('Friday Film Club: Season %s, Week %d' %
+               (next_question.season.id(), next_question.week))
+    taskqueue.add(url=self.request.path,
+                  params={
+                    'msg': next_question.email_msg,
+                    'subject': subject,
+                    'question': next_question.key.id()
+                  },
+                  queue_name='pose')
 
-    logging.info('Question: %s, posed at: %s', question.answer.id(),
-        now.strftime('%H:%M.%s on %d/%M/%Y'))
+    logging.info('Question: %s, posed', next_question.answer.id())
 
-    return self.render_template('admin/posed.html', {
-      'all_users': not debug,
-      'question': question,
-      'url': url
-    })
-
-  def post(self, key):
+  def post(self):
     """Queue handler for sending out each email."""
-    email = self.request.get('email')
+    cursor = self.request.get('cursor') or None
+    if cursor:
+      cursor = Cursor(urlsafe=cursor)
+    q = models.User.query()
+    user_entities, next_cursor, more = q.fetch_page(EMAIL_BATCH_SIZE,
+                                                    start_cursor=cursor)
+    subject = self.request.get('subject')
+    msg = self.request.get('msg')
+    question = self.request.get('question')
 
     body = self.generate_template('email/question.txt', {
-      'url': urlparse.urljoin(self.request.host_url, 'question/%s' % key),
-      'msg': self.request.get('email_msg'),
-      'name': self.request.get('username')
+      'url': urlparse.urljoin(self.request.host_url, 'question/%s' % question),
+      'msg': msg
     })
-    mail.send_mail(sender='fmj@fridayfilmclub.com',
-                     to=email,
-                     subject=self.request.get('subject'),
+
+    for user_entity in user_entities:
+      mail.send_mail(sender='fmj@fridayfilmclub.com',
+                     to=user_entity.email,
+                     subject=subject,
                      body=body)
+
+    if more:
+      taskqueue.add(url=self.request.path,
+                    params={
+                      'msg': msg,
+                      'subject': subject,
+                      'question': question,
+                      'cursor': next_cursor.urlsafe()
+                    },
+                    queue_name='pose')
+
+
+class PoseQuestionTest(baserequesthandler.RequestHandler):
+
+  def get(self, key):
+    """Sends a test email to the admins."""
+    question = models.Question.get_by_id(int(key))
+
+    body = self.generate_template('email/question.txt', {
+      'url': urlparse.urljoin(self.request.host_url,
+                              'question/%s' % key),
+      'msg': question.email_msg,
+      'name': 'Admin'
+    })
+
+    mail.send_mail(sender='fmj@fridayfilmclub.com',
+                   to=users.get_current_user().email(),
+                   subject='Friday Film Club TEST',
+                   body=body)
+
+    self.redirect(self.uri_for('admin-homepage'))
 
 
 class SendInvites(baserequesthandler.RequestHandler):

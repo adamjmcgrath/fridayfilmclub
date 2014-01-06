@@ -121,6 +121,31 @@ class CluesFieldList(fields.FieldList):
         entity.clues.append(clue.key)
       counter += 1
 
+class WeekField(fields.SelectField):
+
+  def populate_obj(self, entity, name):
+    entity.week = int(self.data)
+
+  @staticmethod
+  def week_choices():
+    return [(str(x), str(x)) for x in range(1, models.WEEKS_PER_SEASON + 1)]
+
+  @staticmethod
+  def week_default():
+    return models.Question.get_next_season_week()[1]
+
+
+class SeasonField(fields.SelectField):
+
+  def populate_obj(self, entity, name):
+    season = self.data
+    entity.season = models.Season.get_or_insert(season, number=int(season)).key
+
+  @staticmethod
+  def season_choices():
+    season, week = models.Question.get_next_season_week()
+    return [(str(x), str(x)) for x in range(season, season + 10)]
+
 
 class Question(Form):
   """A question form."""
@@ -130,6 +155,9 @@ class Question(Form):
   packshot = ImageField('Image')
   imdb_url = fields.TextField('IMDB Link',
                               default='http://www.imdb.com/title/XXX/')
+  week = WeekField(choices=WeekField.week_choices(),
+                   default=WeekField.week_default())
+  season = SeasonField(choices=SeasonField.season_choices())
 
 
 class Registration(Form):

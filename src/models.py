@@ -6,7 +6,7 @@
 
 __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 
-from datetime import datetime
+import datetime
 import logging
 import hashlib
 import re
@@ -17,6 +17,7 @@ from webapp2_extras.appengine.auth.models import User as AuthUser
 from google.appengine.api import files, images, urlfetch
 from google.appengine.ext import ndb
 
+import settings
 
 RE_SPECIAL_CHARS_ = re.compile(r'[^a-zA-Z0-9 ]')
 
@@ -28,6 +29,7 @@ _TIME_PER_PENALTY = 2000
 _NUM_INVITES = 10
 # Secret invite code
 _INVITE_SECRET = 'L1f3M0v3sPr3ttyF4st1fY0uD0ntSt0p4ndL00k4r0und0nc31n4wh1l3Y0uC0uldM1ss1t'
+WEEKS_PER_SEASON = 12
 
 def slugify(my_string):
   """Remove special characters and replace spaces with hyphens."""
@@ -77,11 +79,8 @@ class Season(ndb.Model):
 
   @staticmethod
   def get_current():
-    season = Season.query().order(-Season.number).get()
-    if not season:
-      season = Season(id='1', number=1)
-      season.put()
-    return season
+    season, week = settings.get_current_season_week()
+    return Season.get_by_id(str(season))
 
 
 # pylint: disable=W0232
@@ -118,6 +117,35 @@ class Question(ndb.Model):
       return images.get_serving_url(self.packshot, size=size, crop=crop)
     else:
       return ''
+
+  @staticmethod
+  def get_current():
+    """ Given a question, get the next one. """
+    return Question.query(Question.is_current == True).get()
+
+  @staticmethod
+  def get_next():
+    """ Given a question, get the next one. """
+    season, week = Question.get_next_season_week()
+    return Question.query(Question.season == ndb.Key('Season', str(season)),
+                          Question.week == week).get()
+
+  @staticmethod
+  def get_current_season_week():
+    q = Question.query(Question.is_current == True).get()
+    if q:
+      return q.season.get().number, q.week
+    else:
+      return 1, 0
+
+  @staticmethod
+  def get_next_season_week():
+    (season, week) = Question.get_current_season_week()
+    week += 1
+    if week > WEEKS_PER_SEASON: #  12 weeks per season
+      season += 1
+      week = 1
+    return season, week
 
 
 # pylint: disable=W0232
@@ -260,7 +288,7 @@ class UserQuestion(ndb.Model):
       return self.guesses
 
   def calculate_score(self, posed):
-    now = int(datetime.now().strftime('%s'))
+    now = int(datetime.datetime.now().strftime('%s'))
     posed = int(posed.strftime('%s'))
     penalties = len(self.incorrect_guesses()) *  _TIME_PER_PENALTY
     if self.complete and not self.correct:

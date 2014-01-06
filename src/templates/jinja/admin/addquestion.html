@@ -16,6 +16,10 @@
       <input type="hidden" id="original-answer" name="original-answer" value="{{ question and question.answer and question.answer.id() }}">
     </div>
   </fieldset>
+  <h3>Season:</h3>
+  <p>{{ form.season(class_='form-control') }}</p>
+  <h3>Week:</h3>
+  <p>{{ form.week(class_='form-control') }}</p>
   {% for clue_form in form.clues %}
   <h3>Clue {{loop.index}}:</h3>
   <fieldset>

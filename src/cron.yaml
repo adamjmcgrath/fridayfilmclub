@@ -1,0 +1,5 @@
+cron:
+- description: weekly question pose
+  url: /admin/posequestion
+  schedule: every friday 15:00
+  timezone: Europe/London

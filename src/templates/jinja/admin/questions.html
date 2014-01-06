@@ -15,9 +15,9 @@
 <table class="table">
   <tr>
     <th>title</th>
+    <th>Season</th>
+    <th>Week</th>
     {% if posed %}
-      <th>Season</th>
-      <th>Week</th>
       <th>Answered</th>
     {% else %}
       <th>clue 1</th>
@@ -32,6 +32,8 @@
   {% for q in questions %}
   <tr>
     <td>{{q.answer.get().title}}</td>
+    <td>{{q.season.id()}}</td>
+    <td>{{q.week}}</td>
     {% if posed %}
       <td>{{ q.season.id() }}</td>
       <td>{{ q.week }}</td>
@@ -49,7 +51,7 @@
     {% endif %}
     <td><a href="{{ uri_for('admin-edit-question', key=q.key.id()) }}">edit</a></td>
     <td><a href="{{ uri_for('question', None, q.key.id()) }}">view</a></td>
-    {% if not posed and not current %}<td><a href="{{ uri_for('admin-posequestion', key=q.key.id()) }}?debug=true">email</a></td>{% endif %}
+    {% if not posed and not current %}<td><a href="{{ uri_for('admin-posequestiontest', key=q.key.id()) }}">email</a></td>{% endif %}
   </tr>
   {% endfor %}
 </table>
