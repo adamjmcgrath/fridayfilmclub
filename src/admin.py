@@ -88,19 +88,11 @@ class Questions(baserequesthandler.RequestHandler):
   """Adds a question to the datastore."""
 
   def get(self):
-    posed = bool(self.request.get('posed'))
-    current = bool(self.request.get('current'))
-    if posed:
-      questions = models.Question.query(models.Question.posed != None).order(-models.Question.posed)
-    elif current:
-      questions = models.Question.query(models.Question.is_current == True)
-    else:
-      questions = models.Question.query(models.Question.posed == None)
+    questions = models.Question.query().order(
+      models.Question.season, models.Question.week)
 
     return self.render_template('admin/questions.html', {
-      'questions': questions,
-      'posed': posed,
-      'current': current
+      'questions': questions
     })
 
 

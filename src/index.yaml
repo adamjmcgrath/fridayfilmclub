@@ -39,6 +39,11 @@ indexes:
   properties:
   - name: season
   - name: week
+
+- kind: Question
+  properties:
+  - name: season
+  - name: week
     direction: desc
 
 - kind: User

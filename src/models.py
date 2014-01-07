@@ -79,7 +79,7 @@ class Season(ndb.Model):
 
   @staticmethod
   def get_current():
-    season, week = settings.get_current_season_week()
+    season, week = Question.get_current_season_week()
     return Season.get_by_id(str(season))
 
 
