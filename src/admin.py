@@ -88,7 +88,7 @@ class Questions(baserequesthandler.RequestHandler):
   """Adds a question to the datastore."""
 
   def get(self):
-    questions = models.Question.query().order(
+    questions = models.Question.query(models.Question.season != None).order(
       models.Question.season, models.Question.week)
 
     return self.render_template('admin/questions.html', {
