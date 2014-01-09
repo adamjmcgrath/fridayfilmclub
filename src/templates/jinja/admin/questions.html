@@ -19,9 +19,9 @@
     <th>Email</th>
   </tr>
   {% for q in questions %}
-  <tr{% if last_week == q.week and last_season == q.season.id() %} class="danger"{% endif %}>
+  <tr{% if last_week == q.week and and q.season and last_season == q.season.id() %} class="danger"{% endif %}>
     <td><img src="{{ q.packshot_url(40) }}"> {{q.answer.get().title}}</td>
-    <td>{{q.season.id()}}</td>
+    <td>{{q.season and q.season.id()}}</td>
     <td>{{ q.week }}</td>
     <td>{{ q.posed and q.posed.strftime('%d/%m/%Y') or '' }}</td>
     <td>{% if q.is_current %}<span class="glyphicon glyphicon-check"></span>{% endif %} </td>
@@ -31,7 +31,7 @@
     <td><a href="{{ uri_for('admin-posequestiontest', key=q.key.id()) }}"><span class="glyphicon glyphicon-envelope"></span></a></td>
   </tr>
   {% set last_week = q.week %}
-  {% set last_season = q.season.id() %}
+  {% set last_season = q.season and q.season.id() %}
   {% endfor %}
 </table>
  <p><span class="glyphicon glyphicon-plus"></span><a href="{{ uri_for('admin-add-question') }}"> Add another question</a></p>
