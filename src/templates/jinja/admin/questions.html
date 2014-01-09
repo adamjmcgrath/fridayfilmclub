@@ -19,7 +19,7 @@
     <th>Email</th>
   </tr>
   {% for q in questions %}
-  <tr{% if last_week == q.week and and q.season and last_season == q.season.id() %} class="danger"{% endif %}>
+  <tr{% if last_week == q.week and q.season and last_season == q.season.id() %} class="danger"{% endif %}>
     <td><img src="{{ q.packshot_url(40) }}"> {{q.answer.get().title}}</td>
     <td>{{q.season and q.season.id()}}</td>
     <td>{{ q.week }}</td>
