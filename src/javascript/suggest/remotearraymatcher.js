@@ -79,6 +79,7 @@ ffc.suggest.RemoteArrayMatcher.prototype.augmentMatchHandler =
  * @param {Object} newRow The new row.
  * @param {number} pos The index of the row.
  * @param {Element} node The element in which to render the row.
+ * @this {ffc.suggest.RemoteArrayMatcher}
  */
 ffc.suggest.RemoteArrayMatcher.rowRender = function(newRow, pos, node) {
   soy.renderElement(node, ffc.template.quiz.option, {

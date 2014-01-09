@@ -4,7 +4,7 @@ goog.addDependency('../../../closure-templates/javascript/soyutils_usegoog.js', 
 goog.addDependency('../../../growjs/grow/fx/dom/shake.js', ['grow.fx.dom.Shake'], ['goog.fx.dom.Slide']);
 goog.addDependency('../../../javascript/api/client.js', ['ffc.api.Client'], ['goog.labs.net.xhr', 'goog.result.Result']);
 goog.addDependency('../../../javascript/api/user.js', ['ffc.api.User'], []);
-goog.addDependency('../../../javascript/leaderboard/leaderboard.js', ['ffc.leaderboard.LeaderBoard'], ['ffc.leaderboard.LeaderBoardModel', 'ffc.template.leaderboard', 'goog.array', 'goog.dom', 'goog.dom.TagName', 'goog.string', 'goog.ui.Component', 'goog.uri.utils', 'soy']);
+goog.addDependency('../../../javascript/leaderboard/leaderboard.js', ['ffc.leaderboard.LeaderBoard'], ['ffc.leaderboard.LeaderBoardModel', 'ffc.template.leaderboard', 'goog.array', 'goog.dom', 'goog.dom.TagName', 'goog.dom.classes', 'goog.string', 'goog.ui.Component', 'goog.uri.utils', 'soy']);
 goog.addDependency('../../../javascript/leaderboard/leaderboardmodel.js', ['ffc.leaderboard.LeaderBoardModel'], ['ffc.api.Client', 'ffc.api.User', 'goog.Uri', 'goog.array', 'goog.pubsub.PubSub']);
 goog.addDependency('../../../javascript/leaderboard/leaderboardtoggler.js', ['ffc.leaderboard.LeaderBoardToggler'], ['goog.dom.TagName', 'goog.dom.classes', 'goog.dom.dataset']);
 goog.addDependency('../../../javascript/quiz/answer.js', ['ffc.quiz.Answer'], ['ffc.quiz.Component']);

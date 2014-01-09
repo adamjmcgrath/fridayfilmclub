@@ -87,6 +87,7 @@ if [ $1 == "build_settings" ] || [ $1 == "all" ]; then
   $CLOSURE_BUILDER_PATH \
     --root=$CLOSURE_LIB \
     --root=$CLOSURE_TEMPLATES \
+    --root=$API_SOURCE \
     --root=$SUGGEST_SOURCE \
     --root=$QUIZ_SOURCE \
     --root=$SETTINGS_SOURCE \
