@@ -29,7 +29,7 @@
         <label class="control-label" for="{{clue_field.name}}">{{clue_field.name}}</label>
         <div class="controls">
           {# Target the screenshot field (the second clue field of the first clue) #}
-          {% if not clueloop.index0 and loop.index0 and question.clue_image_url() %}
+          {% if not clueloop.index0 and loop.index0 and question and question.clue_image_url() %}
           <p><img src="{{ question.clue_image_url() }}=w100" width="100"></p>
           {% endif %} 
           {{clue_field(class_='form-control')}}
@@ -42,7 +42,7 @@
   <h3>Email Message:</h3>
   <p>{{ form.email_msg(class_='form-control') }}</p>
   <h3>Packshot:</h3>
-  {% if question.packshot_url() %}
+  {% if question and question.packshot_url() %}
   <p><img src="{{ question.packshot_url() }}=h100" height="100"></p>
   {% endif %}
   <p>{{ form.packshot(class_='form-control') }}</p>
