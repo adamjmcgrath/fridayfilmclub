@@ -118,6 +118,23 @@ class Question(ndb.Model):
     else:
       return ''
 
+  def errors(self):
+    """Checks that the question is ready to send."""
+    errors = []
+    if not self.clue_image_url():
+      errors.append('Missing screenshot.')
+    if not self.answer:
+      errors.append('Missing answer.')
+    if self.posed:
+      errors.append('Already posed.')
+    if not self.imdb_url or 'XXX' in self.imdb_url:
+      errors.append('Missing IMDB url.')
+    if not self.packshot_url():
+      errors.append('Missing Packshot.')
+    if not self.email_msg:
+      errors.append('Missing Email Message.')
+    return errors
+
   @staticmethod
   def get_current():
     """ Given a question, get the next one. """

@@ -1,4 +1,10 @@
 cron:
+
+- description: weekly question dry run
+  url: /admin/dryrun
+  schedule: every friday 14:00
+  timezone: Europe/London
+
 - description: weekly question pose
   url: /admin/posequestion
   schedule: every friday 15:00

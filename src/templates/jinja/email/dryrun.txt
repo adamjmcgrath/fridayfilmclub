@@ -1,0 +1,7 @@
+The next Friday Film Club is not ready:{% if question %}
+{% for error in question.errors() %}
+{{ error }}{% endfor %}
+{% else %}
+
+The next question is missing.
+{% endif %}

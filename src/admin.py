@@ -195,6 +195,35 @@ class PoseQuestionTest(baserequesthandler.RequestHandler):
     self.redirect(self.uri_for('admin-homepage'))
 
 
+class DryRun(baserequesthandler.RequestHandler):
+
+  def get(self):
+    """Sends a test email to the admins."""
+    key = self.request.get('key')
+    if key:
+      question = models.Question.get_by_id(int(key))
+    else:
+      question = models.Question.get_next()
+
+    if question and not len(question.errors()):
+      email_body = self.generate_template('email/question.txt', {
+        'url': get_question_url(self.request.host_url, question.key.id()),
+        'msg': question.email_msg,
+        'name': 'Admin'
+      })
+      subject = ('Friday Film Club: Season %s, Week %d (DRY RUN)' %
+                 (question.season.id(), question.week))
+    else:
+      email_body = self.generate_template('email/dryrun.txt',
+                                          {'question': question})
+      subject = 'Friday Film Club (FAILURE)'
+
+    mail.send_mail_to_admins('fmj@fridayfilmclub.com', subject, email_body)
+
+    self.response.headers['content-type'] = 'text/plain'
+    self.response.out.write(email_body)
+
+
 class SendInvites(baserequesthandler.RequestHandler):
   """Send invites to users from admin section"""
 

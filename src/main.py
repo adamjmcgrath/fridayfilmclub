@@ -41,6 +41,7 @@ routes = [
         webapp2.Route('/posequestion', admin.PoseQuestion, 'admin-posequestion'),
         webapp2.Route('/posequestiontest/<key>', admin.PoseQuestionTest,
             'admin-posequestiontest'),
+        webapp2.Route('/dryrun', admin.DryRun, 'admin-dryrun'),
         webapp2.Route('/sendinvites', admin.SendInvites, 'admin-send-invites'),
     ]),
     webapp2.Route(r'/admin', admin.HomePage, 'admin-homepage'),
