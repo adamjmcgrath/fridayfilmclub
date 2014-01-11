@@ -22,11 +22,16 @@
   <p>{{ form.week(class_='form-control') }}</p>
   {% for clue_form in form.clues %}
   <h3>Clue {{loop.index}}:</h3>
+  {% set clueloop = loop %}
   <fieldset>
     {% for clue_field in clue_form %}
       <div class="control-group{% if clue_field.errors %} error{% endif %}">
         <label class="control-label" for="{{clue_field.name}}">{{clue_field.name}}</label>
         <div class="controls">
+          {# Target the screenshot field (the second clue field of the first clue) #}
+          {% if not clueloop.index0 and loop.index0 and question.clue_image_url() %}
+          <p><img src="{{ question.clue_image_url() }}=w100" width="100"></p>
+          {% endif %} 
           {{clue_field(class_='form-control')}}
           <span class="help-inline">{{clue_field.errors[0]}}</span>
         </div>
@@ -37,6 +42,9 @@
   <h3>Email Message:</h3>
   <p>{{ form.email_msg(class_='form-control') }}</p>
   <h3>Packshot:</h3>
+  {% if question.packshot_url() %}
+  <p><img src="{{ question.packshot_url() }}=h100" height="100"></p>
+  {% endif %}
   <p>{{ form.packshot(class_='form-control') }}</p>
   <h3>IMDB Link:</h3>
   <p>{{ form.imdb_url(class_='form-control') }}</p>
