@@ -7,8 +7,8 @@
 
 To get entities from prod backup:
 
-1. cp gs://ffcapp/backups/* . (to data/backups)
-2. Run update_films.py
+1. gsutil cp gs://ffcapp/backups/* data/backups/.
+2. Run restore_dev_data.py
 """
 
 import getpass
