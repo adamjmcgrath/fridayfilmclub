@@ -25,6 +25,15 @@ import models
 
 EMAIL_BATCH_SIZE = 10
 
+def get_question_url(host_url, question_key):
+    # Make sure the live cron job doesn't use the appspot.com url.
+    if 'localhost' not in host_url:
+      url = host_url
+    else:
+      url = 'http://www.fridayfilmclub.com'
+
+    return urlparse.urljoin(url, 'question/%s' % question_key)
+
 
 class HomePage(baserequesthandler.RequestHandler):
   """Shows the homepage."""
@@ -145,7 +154,7 @@ class PoseQuestion(baserequesthandler.RequestHandler):
     question = self.request.get('question')
 
     body = self.generate_template('email/question.txt', {
-      'url': urlparse.urljoin(self.request.host_url, 'question/%s' % question),
+      'url': get_question_url(self.request.host_url, question),
       'msg': msg
     })
 
@@ -173,8 +182,7 @@ class PoseQuestionTest(baserequesthandler.RequestHandler):
     question = models.Question.get_by_id(int(key))
 
     body = self.generate_template('email/question.txt', {
-      'url': urlparse.urljoin(self.request.host_url,
-                              'question/%s' % key),
+      'url': get_question_url(self.request.host_url, key),
       'msg': question.email_msg,
       'name': 'Admin'
     })
