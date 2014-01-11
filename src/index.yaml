@@ -49,6 +49,22 @@ indexes:
 - kind: User
   properties:
   - name: is_admin
+  - name: overall_clues
+
+- kind: User
+  properties:
+  - name: is_admin
+  - name: overall_clues
+    direction: desc
+
+- kind: User
+  properties:
+  - name: is_admin
+  - name: overall_score
+
+- kind: User
+  properties:
+  - name: is_admin
   - name: overall_score
     direction: desc
 
@@ -64,6 +80,28 @@ indexes:
   - name: complete
   - name: question
   - name: user_is_admin
+  - name: clues_used
+
+- kind: UserQuestion
+  properties:
+  - name: complete
+  - name: question
+  - name: user_is_admin
+  - name: clues_used
+    direction: desc
+
+- kind: UserQuestion
+  properties:
+  - name: complete
+  - name: question
+  - name: user_is_admin
+  - name: score
+
+- kind: UserQuestion
+  properties:
+  - name: complete
+  - name: question
+  - name: user_is_admin
   - name: score
     direction: desc
 
@@ -72,6 +110,25 @@ indexes:
   - name: season
   - name: score
     direction: desc
+
+- kind: UserSeason
+  properties:
+  - name: season
+  - name: user_is_admin
+  - name: clues
+
+- kind: UserSeason
+  properties:
+  - name: season
+  - name: user_is_admin
+  - name: clues
+    direction: desc
+
+- kind: UserSeason
+  properties:
+  - name: season
+  - name: user_is_admin
+  - name: score
 
 - kind: UserSeason
   properties:

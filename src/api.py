@@ -19,6 +19,23 @@ from google.appengine.ext import ndb
 
 _MAX_CLUES = 4
 _PASS = 'pass'
+# Property map for normalising sorting across the different model.
+_PROP_MAP = {
+  'all': {
+    'score': 'overall_score',
+    'clues': 'overall_clues',
+    'answered': 'questions_answered'
+  },
+  'week': {
+    'score': 'score',
+    'clues': 'clues_used'
+  },
+  'season': {
+    'score': 'score',
+    'clues': 'clues',
+    'answered': 'questions_answered',
+  }
+}
 
 
 class Question(baserequesthandler.RequestHandler):
@@ -123,12 +140,22 @@ class LeaderBoard(baserequesthandler.RequestHandler):
     is_week = duration == 'week'
     offset = self.request.get('offset') or 0
     limit = self.request.get('limit') or 20
+    try:
+      sort_props = _PROP_MAP[duration]
+    except KeyError:
+      sort_props = _PROP_MAP['season']
+    sort = self.request.get('sort') or 'score'
+    asc = self.request.get('dir') == 'asc'
+    if sort:
+      sort = ndb.GenericProperty(sort_props[sort])
+      if not asc:
+        sort = -sort
+
     qo = ndb.QueryOptions(offset=int(offset), limit=int(limit))
     response_obj = {}
 
     if is_all:
-      user_query = models.User.query(models.User.is_admin == False).order(
-                       -models.User.overall_score)
+      user_query = models.User.query(models.User.is_admin == False).order(sort)
 
       response_obj['count'] = user_query.count()
       response_obj['users'] = user_query.map(
@@ -142,8 +169,7 @@ class LeaderBoard(baserequesthandler.RequestHandler):
       user_question_query = models.UserQuestion.query(
           models.UserQuestion.question == question_key,
           models.UserQuestion.complete == True,
-          models.UserQuestion.user_is_admin == False).order(
-              -models.UserQuestion.score)
+          models.UserQuestion.user_is_admin == False).order(sort)
       response_obj['count'] = user_question_query.count()
       response_obj['users'] = user_question_query.map(
           models.UserQuestion.to_leaderboard_json, options=qo)
@@ -152,8 +178,7 @@ class LeaderBoard(baserequesthandler.RequestHandler):
       season = models.Season.get_by_id(duration)
       user_season_query = models.UserSeason.query(
           models.UserSeason.season == season.key,
-          models.UserSeason.user_is_admin == False).order(
-              -models.UserSeason.score)
+          models.UserSeason.user_is_admin == False).order(sort)
       questions_in_season = models.Question.query(
           models.Question.season == season.key).count()
       response_obj['count'] = user_season_query.count()
@@ -163,5 +188,3 @@ class LeaderBoard(baserequesthandler.RequestHandler):
 
 
     return self.render_json(response_obj)
-
-

@@ -293,6 +293,7 @@ class UserQuestion(ndb.Model):
   complete = ndb.BooleanProperty(default=False)
   correct = ndb.BooleanProperty(default=False)
   guesses = ndb.StringProperty(repeated=True)
+  clues_used = ndb.ComputedProperty(lambda self: max(len(self.guesses) - 1, 0))
   question = ndb.KeyProperty(kind=Question)
   score = ndb.IntegerProperty()
   user = ndb.KeyProperty(kind=User)
