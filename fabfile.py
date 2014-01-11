@@ -70,7 +70,10 @@ def tgz():
 def deploy(tag=None):
   if not is_working_directory_clean():
     abort('Working directory should be clean before deploying.')
-  
+
+  compile_css()
+  compile_js()
+
   prepare_deploy(tag)
   local('%s %s -A %s -V %s --email=%s update %s' % (PYTHON, APPENGINE_APP_CFG,
       env.app.application, env.app.version, env.gae_email, env.gae_src))
@@ -202,7 +205,6 @@ def is_working_directory_clean():
 
 
 def get_tags_name():
-  num = 1
   today = datetime.date.today()
   next_tag_name = ('%i-%.2i-%.2i' %
       (today.year, today.month, today.day))
@@ -220,3 +222,19 @@ def get_tags_name():
   print yellow('Next tag name: %s' % next_tag_name)
   return (last_tag_name, next_tag_name)
 
+
+# Compile CSS/JS
+
+def compile_css():
+  print 'Compiling CSS'
+  local('mkdir -p src/static/css/')
+  local('lessc --compress src/stylesheets/main.less > src/static/css/main.css')
+
+
+def compile_js(part=None):
+  parts = ['deps', 'template', 'quiz', 'leaderboard', 'settings']
+  local('mkdir -p src/static/js/')
+  if part:
+    parts = [part]
+  for p in parts:
+    local('scripts/compilejs.sh %s' % p)

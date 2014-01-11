@@ -46,7 +46,7 @@ if [ $1 == "template" ] || [ $1 == "all" ]; then
     src/templates/soy/*.soy
 fi
 
-if [ $1 == "build_quiz" ] || [ $1 == "all" ]; then
+if [ $1 == "quiz" ] || [ $1 == "all" ]; then
   echo 'Building quiz'
   $CLOSURE_BUILDER_PATH \
     --root=$CLOSURE_LIB \
@@ -64,7 +64,7 @@ if [ $1 == "build_quiz" ] || [ $1 == "all" ]; then
     > $FFC_QUIZ_JS_OUTPUT
 fi
 
-if [ $1 == "build_leaderboard" ] || [ $1 == "all" ]; then
+if [ $1 == "leaderboard" ] || [ $1 == "all" ]; then
   echo 'Building leaderboard'
   $CLOSURE_BUILDER_PATH \
     --root=$CLOSURE_LIB \
@@ -82,7 +82,7 @@ if [ $1 == "build_leaderboard" ] || [ $1 == "all" ]; then
     > $FFC_LEADERBOARD_JS_OUTPUT
 fi
 
-if [ $1 == "build_settings" ] || [ $1 == "all" ]; then
+if [ $1 == "settings" ] || [ $1 == "all" ]; then
   echo 'Building settings'
   $CLOSURE_BUILDER_PATH \
     --root=$CLOSURE_LIB \
