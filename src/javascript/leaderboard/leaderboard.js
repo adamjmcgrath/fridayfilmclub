@@ -14,6 +14,7 @@ goog.require('ffc.template.leaderboard');
 goog.require('goog.array');
 goog.require('goog.dom');
 goog.require('goog.dom.classes');
+goog.require('goog.dom.dataset');
 goog.require('goog.dom.TagName');
 goog.require('goog.string');
 goog.require('goog.ui.Component');
@@ -96,6 +97,8 @@ ffc.leaderboard.LeaderBoard.prototype.enterDocument = function() {
 
   this.eh_.listen(this.paginationEl_, goog.events.EventType.CLICK,
       this.handlePaginationClick_, true, this);
+  this.eh_.listen(this.element_, goog.events.EventType.CLICK,
+      this.handleMainClick_, true, this);
 
   this.model_.getData();
 
@@ -178,6 +181,27 @@ ffc.leaderboard.LeaderBoard.prototype.handlePaginationClick_ = function(e) {
       this.model_.page = pageNumber;
       this.model_.getData();
     }
+  }
+};
+
+
+/**
+ * @param {goog.events.Event} e The click event.
+ * @private
+ */
+ffc.leaderboard.LeaderBoard.prototype.handleMainClick_ = function(e) {
+  var TH = goog.dom.TagName.TH;
+  var th = goog.dom.getAncestorByTagNameAndClass(e.target, TH);
+  if (th) {
+    var dir = goog.dom.classes.has(th, 'asc') ? 'dsc' : 'asc';
+    var sort = goog.dom.dataset.get(th, 'sort');
+    var ths = goog.dom.getElementsByTagNameAndClass(TH, null, this.element_);
+    goog.array.forEach(ths, function(thitem) {
+      goog.dom.classes.remove(thitem, 'asc');
+      goog.dom.classes.remove(thitem, 'dsc');
+    });
+    goog.dom.classes.add(th, dir);
+    this.model_.sort(sort, dir);
   }
 };
 

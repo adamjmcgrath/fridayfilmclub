@@ -54,10 +54,12 @@ ffc.api.Client.prototype.post_ = function(url, data, opt_options) {
  * @param {string} type Should be 'all' or 'week', for all time and this week.
  * @param {number=} opt_page The page number.
  * @param {number=} opt_pageSize The page size.
+ * @param {string=} opt_sort The sort field.
+ * @param {string=} opt_dir The direction: asc or dsc.
  * @return {goog.result.Result} The ajax result.
  */
 ffc.api.Client.prototype.getLeaderBoard = function(type,
-    opt_page, opt_pageSize) {
+    opt_page, opt_pageSize, opt_sort, opt_dir) {
   var uri = goog.Uri.parse(
       goog.string.subs(ffc.api.Client.LEADER_BOARD_PATH_, type));
 
@@ -66,6 +68,12 @@ ffc.api.Client.prototype.getLeaderBoard = function(type,
   }
   if (opt_pageSize) {
     uri.setParameterValue('limit', opt_pageSize);
+  }
+  if (opt_sort) {
+    uri.setParameterValue('sort', opt_sort);
+  }
+  if (opt_dir) {
+    uri.setParameterValue('dir', opt_dir);
   }
 
   return this.get_(uri);

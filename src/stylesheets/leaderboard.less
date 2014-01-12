@@ -15,7 +15,7 @@
 .leaderboard-clues,
 .leaderboard-averageclues,
 .leaderboard-average {
-  width: 80px;
+  width: 100px;
   text-align: center;
 }
 
@@ -40,4 +40,22 @@
     color: @grayDark;
   }
 
+}
+
+#leaderboard-page th[data-sort] {
+  cursor: pointer;
+
+  .glyphicon {
+    display: none;
+    margin-left: 3px;
+  }
+
+}
+
+#leaderboard-page th.asc .glyphicon-chevron-up {
+  display: inline;
+}
+
+#leaderboard-page th.dsc .glyphicon-chevron-down {
+  display: inline;
 }

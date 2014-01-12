@@ -42,6 +42,16 @@ ffc.leaderboard.LeaderBoardModel = function(id, client) {
   this.pageSize = ffc.leaderboard.LeaderBoardModel.DEFAULT_PAGE_SIZE_;
 
   /**
+   * @type {string}
+   */
+  this.sortField = ffc.leaderboard.LeaderBoardModel.DEFAULT_SORT;
+
+  /**
+   * @type {string}
+   */
+  this.sortDir = ffc.leaderboard.LeaderBoardModel.DEFAULT_DIR;
+
+  /**
    * @type {Function}
    * @private
    */
@@ -56,8 +66,20 @@ goog.exportSymbol('ffc.leaderboard.LeaderBoardModel',
  * Get a new page of scores.
  */
 ffc.leaderboard.LeaderBoardModel.prototype.getData = function() {
-  this.getData_(this.page * this.pageSize, this.pageSize)
-      .wait(this.handleResult.bind(this));
+  this.getData_(this.page * this.pageSize, this.pageSize,
+      this.sortField, this.sortDir).wait(this.handleResult.bind(this));
+};
+
+
+/**
+ * Sort the leaderboard.
+ * @param {string} sort The sort field.
+ * @param {string} dir The direction 'asc' or 'dsc'.
+ */
+ffc.leaderboard.LeaderBoardModel.prototype.sort = function(sort, dir) {
+  this.sortField = sort;
+  this.sortDir = dir;
+  this.getData();
 };
 
 
@@ -102,3 +124,15 @@ ffc.leaderboard.LeaderBoardModel.USERS_UPDATED_EVENT = 'usersUpdated';
  * @type {string}
  */
 ffc.leaderboard.LeaderBoardModel.TOTAL_UPDATED_EVENT = 'totalUpdated';
+
+
+/**
+ * @type {string}
+ */
+ffc.leaderboard.LeaderBoardModel.DEFAULT_SORT = 'score';
+
+
+/**
+ * @type {string}
+ */
+ffc.leaderboard.LeaderBoardModel.DEFAULT_DIR = 'dsc';
