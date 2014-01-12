@@ -100,7 +100,7 @@ ffc.leaderboard.LeaderBoard.prototype.enterDocument = function() {
   this.eh_.listen(this.element_, goog.events.EventType.CLICK,
       this.handleMainClick_, true, this);
 
-  this.model_.getData();
+  this.model_.sort('score', 'dsc');
 
   this.element_.style.display = 'block';
   goog.dom.classes.add(this.element_, 'loading');
