@@ -25,3 +25,5 @@ Sub-modules and libraries:
 - Httplib2
 - Oauth2
 - Simpleauth
+
+It uses the films-data api as it's source of films data
