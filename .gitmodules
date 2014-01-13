@@ -35,3 +35,4 @@
 [submodule "submodules/closure-library"]
 	path = submodules/closure-library
 	url = https://code.google.com/p/closure-library/
+	ignore = dirty
