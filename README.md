@@ -26,4 +26,4 @@ Sub-modules and libraries:
 - Oauth2
 - Simpleauth
 
-It uses the films-data api as it's source of films data
+It uses the films-data api as it's source of films data.
