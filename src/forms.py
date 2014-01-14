@@ -9,13 +9,14 @@ __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 from cgi import escape
 import datetime
 import logging
+import json
 import re
 import posixpath
 
 import webapp2
 from webapp2_extras import auth
 from google.appengine.api import files
-from google.appengine.api import images
+from google.appengine.api import urlfetch
 from google.appengine.ext import ndb
 from google.appengine.ext.db import BadKeyError
 from wtforms import fields, Form, validators, widgets
@@ -55,14 +56,17 @@ class FilmField(fields.HiddenField):
       self.data = ''
     else:
       try:
-        self.data = ndb.Key('Film', film_key).get()
+        url = 'http://films-data.appspot.com/api?id=' + film_key
+        self.data = json.loads(urlfetch.fetch(url=url, follow_redirects=False).content)
       except BadKeyError:
         self.data = ''
 
   def populate_obj(self, obj, name):
     """Populate the object represented by the film field."""
     if self.data:
-      setattr(obj, name, self.data.key)
+      setattr(obj, name + '_id', self.data['key'])
+      setattr(obj, name + '_year', self.data['year'])
+      setattr(obj, name + '_title', self.data['title'])
 
 
 class ImageField(fields.FileField):
