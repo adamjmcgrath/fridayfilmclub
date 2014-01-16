@@ -23,7 +23,7 @@ class SuggestHandler(baserequesthandler.RequestHandler):
   """Returns JSON suggesting film titles given a starting string."""
 
   def get(self, prefix):
-    """foo"""
+    """Use the films data api to get film suggestions."""
     prefix = prefix and prefix.strip()
 
     if not prefix:
@@ -31,18 +31,10 @@ class SuggestHandler(baserequesthandler.RequestHandler):
 
     self.set_json_content_type()
 
+    memcached = memcache.get(prefix)
+    if memcached and not self.is_debug_mode():
+      return webapp2.Response(memcached)
+
     url = 'http://films-data.appspot.com/api?q=' + prefix
     content = urlfetch.fetch(url=url, follow_redirects=False).content
     return self.response.out.write(content)
-
-    # memcached = memcache.get(prefix + callback)
-    # if memcached and self.is_debug_mode():
-    #   return webapp2.Response(memcached)
-    #
-    # film_index = models.FilmIndex.get_by_id(prefix)
-    #
-    # if film_index:
-    #   films = ndb.get_multi(film_index.films)
-    #   return self.render_json([f.to_dict() for f in films])
-    # else:
-    #   return self.render_empty()
