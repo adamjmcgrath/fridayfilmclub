@@ -13,7 +13,7 @@
         <input id="ac" class="input-lg form-control focused" type="text" value="{{question and question.answer_title or ''}}" autocomplete="off">
         <span class="help-inline">{{form.answer.errors[0]}}</span>
       </div>
-      <input type="hidden" id="original-answer" name="original-answer" value="{{ question and question.answer_key }}">
+      <input type="hidden" id="original-answer" name="original-answer" value="{{ question and question.answer_id }}">
     </div>
   </fieldset>
   <h3>Season:</h3>

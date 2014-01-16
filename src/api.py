@@ -12,9 +12,10 @@ import logging
 import auth
 import baserequesthandler
 from functools import partial
+import json
 import models
 
-from google.appengine.api import users
+from google.appengine.api import users, urlfetch
 from google.appengine.ext import ndb
 
 _MAX_CLUES = 4
@@ -71,7 +72,7 @@ class Question(baserequesthandler.RequestHandler):
     to_put = []
     # Check if guess is correct, update UserQuestion.
     if guess and not user_question.complete:
-      user_question.correct = (guess.strip() == str(question.answer.id()))
+      user_question.correct = (guess.strip() == str(question.answer_id))
       user_question.guesses.append(guess)
       num_guesses = len(user_question.guesses)
 
@@ -109,10 +110,11 @@ class Question(baserequesthandler.RequestHandler):
         # A blank guess is a "pass".
         guesses.append({})
       else:
-        film_entity = models.Film.get_by_id(g)
+        url = 'http://films-data.appspot.com/api?id=' + g
+        film_dict = json.loads(urlfetch.fetch(url=url, follow_redirects=False).content)
         guesses.append({
-          'title': film_entity.title,
-          'year': str(film_entity.year)
+          'title': film_dict['title'],
+          'year': str(film_dict['year'])
         })
 
     response_obj = {
@@ -125,7 +127,11 @@ class Question(baserequesthandler.RequestHandler):
 
     # If the question is complete, reveal the correct answer to the user.
     if user_question.complete:
-      response_obj['answer'] = question.answer.get().to_dict()
+      response_obj['answer'] = {
+        'key': question.answer_id,
+        'title': question.answer_title,
+        'year': question.answer_year,
+      }
       response_obj['packshot'] = question.packshot_url(size=150)
       response_obj['imdb_url'] = question.imdb_url
 
