@@ -125,7 +125,7 @@ class Question(ndb.Model):
     errors = []
     if not self.clue_image_url():
       errors.append('Missing screenshot.')
-    if not self.answer:
+    if not self.answer_id:
       errors.append('Missing answer.')
     if self.posed:
       errors.append('Already posed.')

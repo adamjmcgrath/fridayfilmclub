@@ -13,6 +13,7 @@ goog.require('ffc.template.quiz');
 goog.require('goog.dom');
 goog.require('goog.dom.dataset');
 goog.require('goog.events');
+goog.require('goog.string');
 goog.require('goog.string.path');
 goog.require('goog.ui.ac.RemoteArrayMatcher');
 
@@ -106,5 +107,8 @@ ffc.suggest.RemoteArrayMatcher.rowSelect = function(newRow, target) {
  * @return {string} The slugified text.
  */
 ffc.suggest.RemoteArrayMatcher.slugify = function(text) {
-  return (text.replace(/[^-a-zA-Z0-9]+/ig, '')).toLowerCase();
+  return goog.string.trim(text)
+                    .replace(/[^ -a-zA-Z0-9]+/ig, '')
+                    .replace(/ /g, '-')
+                    .toLowerCase();
 };
