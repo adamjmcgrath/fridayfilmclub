@@ -27,10 +27,10 @@ EMAIL_BATCH_SIZE = 10
 
 def get_question_url(host_url, question_key):
     # Make sure the live cron job doesn't use the appspot.com url.
-    if 'localhost' not in host_url:
-      url = host_url
-    else:
+    if 'appspot.com' in host_url:
       url = 'http://www.fridayfilmclub.com'
+    else:
+      url = host_url
 
     return urlparse.urljoin(url, 'question/%s' % question_key)
 
