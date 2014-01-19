@@ -5,10 +5,10 @@
 {% block main %}
 <div class="col-md-9">
   <h1>{{ user_profile.username }}'s profile</h1>
-  {% if user_profile.favourite_film %}
+  {% if user_profile.favourite_film_title %}
   <div class="well">
     <h4 class="text-muted">Favourite Film:</h4>
-    <p>{{ user_profile.favourite_film.get().title }}</p>
+    <p>{{ user_profile.favourite_film_title }}</p>
   </div>
   {% endif %}
   {% if user_profile.questions_answered > 0 %}

@@ -139,7 +139,7 @@ class PoseQuestion(baserequesthandler.RequestHandler):
                   },
                   queue_name='pose')
 
-    logging.info('Question: %s, posed', next_question.answer.id())
+    logging.info('Question: %s, posed', next_question.answer_title)
 
   def post(self):
     """Queue handler for sending out each email."""

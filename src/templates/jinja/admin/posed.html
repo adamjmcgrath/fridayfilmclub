@@ -4,7 +4,7 @@
 
 {% block main %}
 {{super()}}
-<p>Question "{{ question.answer.id() }}" Posed</p>
+<p>Question "{{ question.answer_id }}" Posed</p>
 {% if not all_users and not question.posed %}
   <p>Pose the question to <a href="{{ url }}">all users</a>.</p>
 {% endif %}

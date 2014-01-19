@@ -10,10 +10,10 @@
     <div class="control-group{% if form.answer.errors %} error{% endif %}">
       <label class="control-label" for="ac">Film</label>
       <div class="controls">
-        <input id="ac" class="input-lg form-control focused" type="text" value="{{question and question.answer and question.answer.get().title or ''}}" autocomplete="off">
+        <input id="ac" class="input-lg form-control focused" type="text" value="{{question and question.answer_title or ''}}" autocomplete="off">
         <span class="help-inline">{{form.answer.errors[0]}}</span>
       </div>
-      <input type="hidden" id="original-answer" name="original-answer" value="{{ question and question.answer and question.answer.id() }}">
+      <input type="hidden" id="original-answer" name="original-answer" value="{{ question and question.answer_id }}">
     </div>
   </fieldset>
   <h3>Season:</h3>
@@ -31,7 +31,7 @@
           {# Target the screenshot field (the second clue field of the first clue) #}
           {% if not clueloop.index0 and loop.index0 and question and question.clue_image_url() %}
           <p><img src="{{ question.clue_image_url() }}=w100" width="100"></p>
-          {% endif %} 
+          {% endif %}
           {{clue_field(class_='form-control')}}
           <span class="help-inline">{{clue_field.errors[0]}}</span>
         </div>

@@ -94,6 +94,9 @@ class Question(ndb.Model):
   clues = ndb.KeyProperty(repeated=True)
   created = ndb.DateTimeProperty(auto_now_add=True)
   answer = ndb.KeyProperty(kind=Film)
+  answer_id = ndb.StringProperty()
+  answer_title = ndb.StringProperty()
+  answer_year = ndb.IntegerProperty()
   posed = ndb.DateTimeProperty()
   updated = ndb.DateTimeProperty(auto_now=True)
   is_current = ndb.BooleanProperty(default=False)
@@ -123,7 +126,7 @@ class Question(ndb.Model):
     errors = []
     if not self.clue_image_url():
       errors.append('Missing screenshot.')
-    if not self.answer:
+    if not self.answer_id:
       errors.append('Missing answer.')
     if self.posed:
       errors.append('Already posed.')
@@ -230,7 +233,9 @@ class User(AuthUser):
   name = ndb.StringProperty()
   username = ndb.StringProperty()
   username_lower = ndb.ComputedProperty(lambda self: self.username.lower())
-  favourite_film = ndb.KeyProperty(kind=Film)
+  favourite_film_id = ndb.StringProperty()
+  favourite_film_title = ndb.StringProperty()
+  favourite_film_year = ndb.IntegerProperty()
   link = ndb.StringProperty()
   google_avatar_url = ndb.StringProperty()
   google_name = ndb.StringProperty()
