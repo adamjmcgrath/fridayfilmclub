@@ -453,14 +453,14 @@ def main():
     q.answer_title = f_obj['title']
     q.answer_year = f_obj['year']
     q.answer_id = f_obj['key']
-    # print q.put()
+    print q.put()
 
   for f in FAV_FILMS:
     u = models.User.get_by_id(f['user'])
     u.favourite_film_title = f['fav_film']
     u.favourite_film_year = f['film_year']
     u.favourite_film_id = f['film_id']
-    # print u.put()
+    print u.put()
 
 if __name__ == '__main__':
   main()
