@@ -93,7 +93,7 @@ class Question(ndb.Model):
   """
   clues = ndb.KeyProperty(repeated=True)
   created = ndb.DateTimeProperty(auto_now_add=True)
-  answer = ndb.KeyProperty(kind=Film)
+  answer = ndb.KeyProperty(kind=Film) # Temp
   answer_id = ndb.StringProperty()
   answer_title = ndb.StringProperty()
   answer_year = ndb.IntegerProperty()
@@ -233,6 +233,7 @@ class User(AuthUser):
   name = ndb.StringProperty()
   username = ndb.StringProperty()
   username_lower = ndb.ComputedProperty(lambda self: self.username.lower())
+  favourite_film = ndb.KeyProperty(kind=Film) # Temp
   favourite_film_id = ndb.StringProperty()
   favourite_film_title = ndb.StringProperty()
   favourite_film_year = ndb.IntegerProperty()
