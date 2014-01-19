@@ -65,7 +65,7 @@
   </form>
 
   <h4 class="text-muted">Send invites</h4>
-  {% if user.favourite_film and user.invites|length %}
+  {% if user.favourite_film_title and user.invites|length %}
     <div class="alert alert-danger">invite a friend to play <span class="glyphicon glyphicon-hand-down"></span></div>
   {% endif %}
   <form class="form" id="invite-form">
