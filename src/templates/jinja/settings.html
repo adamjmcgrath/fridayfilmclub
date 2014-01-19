@@ -35,13 +35,13 @@
     </div>
 
     {# Favourite Film #}
-    {% if not user.favourite_film %}
+    {% if not user.favourite_film_title %}
       <div class="alert alert-danger">I'd really like to know your favourite film <span class="glyphicon glyphicon-hand-down"></span></div>
     {% endif %}
     <div class="form-group{% if form.favourite_film.errors %} error{% endif %}">
       <label for="ac" class="col-lg-3 control-label">Favourite Film</label>
       <div class="col-lg-9">
-        <input id="ac" class="form-control" type="text" value="{{user.favourite_film and user.favourite_film_title or ''}}" autocomplete="off" placeholder="Start typing, then select a film below">
+        <input id="ac" class="form-control" type="text" value="{{user.favourite_film_title or ''}}" autocomplete="off" placeholder="Start typing, then select a film below">
       </div>
       <input type="hidden" id="original-answer" name="favourite_film" value="{{ user.favourite_film_key or '' }}">
     </div>
