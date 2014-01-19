@@ -194,8 +194,7 @@ def need_to_tag(version1, version2):
 
 
 def is_working_directory_clean():
-  # @TODO(adamjmcgrath) Update git so submodule ignore config is picked up.
-  status = local('git status --short --ignore-submodules=untracked',
+  status = local('git status --short',
       capture=True)
   if status: # There are pending files.
     print red('Working directory not clean.')
