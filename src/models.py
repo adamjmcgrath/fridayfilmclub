@@ -93,6 +93,7 @@ class Question(ndb.Model):
   """
   clues = ndb.KeyProperty(repeated=True)
   created = ndb.DateTimeProperty(auto_now_add=True)
+  answer = ndb.KeyProperty(kind=Film)
   answer_id = ndb.StringProperty()
   answer_title = ndb.StringProperty()
   answer_year = ndb.IntegerProperty()
