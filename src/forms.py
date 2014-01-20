@@ -187,3 +187,7 @@ class User(Form):
   email = fields.TextField(validators=[validators.Email()])
   pic = ImageField('pic')
   favourite_film = FilmField()
+
+
+class RequestInvite(Form):
+  email = fields.TextField(validators=[validators.Email()])

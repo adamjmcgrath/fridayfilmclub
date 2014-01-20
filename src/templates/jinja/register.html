@@ -5,7 +5,8 @@
 {% block main %}
   {% if not form.invitation_code.data %}
     <div class="col-md-6 col-md-offset-3 alert alert-danger">
-      Friday Film Club is <strong>invitation only</strong>.
+      Friday Film Club is <strong>invitation only</strong>...
+      <span class="pull-right">But you can <a href="{{ uri_for('requestinvite') }}">request an invite</a>.</span>
     </div>
   {% endif %}
   <div class="col-md-6 col-md-offset-3 well" id="login-buttons">

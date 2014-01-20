@@ -1,0 +1,31 @@
+{% extends "templates/jinja/base.tpl" %}
+
+{% block page_id %}requestinvite-page{% endblock page_id %}
+
+{% block main %}
+    {% if sent_to %}
+    <div class="col-md-6 col-md-offset-3 alert alert-success">
+      Your request has been sent for <strong>{{ sent_to }}</strong>.
+    </div>
+    {% endif %}
+    <div class="col-md-6 col-md-offset-3">
+      <p>Request an invite from Film Master Jack:</p>
+      <form action="" method="post">
+        <div class="form-group{% if form.errors.email %} has-error{% endif %}">
+          {% if form.errors.email %}
+            <small class="text-danger pull-right">Please enter a valid email.</small>
+          {% endif %}
+          {{ form.email(class_='form-control', id='email', placeholder='Your email') }}
+        </div>
+        <div>
+          <button type="submit" class="btn btn-primary pull-right">Send Request</button>
+        </div>
+      </form>
+    </div>
+{% endblock %}
+
+{% block sidebar %}
+{% endblock %}
+
+{% block body_base %}
+{% endblock %}

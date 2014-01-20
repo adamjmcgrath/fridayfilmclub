@@ -67,6 +67,7 @@ routes = [
     webapp2.Route(r'/register', views.Register, name='register'),
 
     # Main views.
+    webapp2.Route(r'/requestinvite', views.RequestInvite, name='requestinvite'),
     webapp2.Route(r'/archive', views.Archive, name='archive'),
     webapp2.Route(r'/leaderboard', views.LeaderBoard, name='leader-board'),
     webapp2.Route(r'/how', views.HowItWorks, name='how-it-works'),

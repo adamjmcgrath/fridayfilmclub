@@ -94,6 +94,33 @@ class Register(baserequesthandler.RequestHandler):
       })
 
 
+class RequestInvite(baserequesthandler.RequestHandler):
+  """Shows the request invite page."""
+
+  def get(self):
+    return self.render_template('requestinvite.html', {
+      'form': forms.RequestInvite()
+    })
+
+  def post(self):
+    form = forms.RequestInvite(self.request.POST)
+    sent_to = None
+    if form.validate():
+      sent_to = form.email.data
+      mail.send_mail(sender=sent_to,
+                     to='fmj@fridayfilmclub.com',
+                     subject='Invite request',
+                     body='Please can I get an invite')
+
+      # Reset the form.
+      form.process()
+
+    return self.render_template('requestinvite.html', {
+      'form': form,
+      'sent_to': sent_to
+    })
+
+
 class Profile(baserequesthandler.RequestHandler):
   "The user profile page"
 
