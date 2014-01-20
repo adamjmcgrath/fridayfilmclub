@@ -29,7 +29,10 @@
           <td>{{ season and season.id() }}</td>
           <td>{{ uq.question.get().week }}</td>
           <td>{{ uq.score }}</td>
-          <td>{{ uq.guesses|length - 1 }}</td>
+          <td>
+            {% if uq.guesses|length %}{{ uq.guesses|length - 1 }}
+            {% else %}{{ uq.guesses|length }}{% endif %}
+          </td>
         </tr>
       {% endfor %}
     </table>
