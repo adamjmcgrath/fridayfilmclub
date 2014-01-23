@@ -107,10 +107,10 @@ class RequestInvite(baserequesthandler.RequestHandler):
     sent_to = None
     if form.validate():
       sent_to = form.email.data
-      mail.send_mail(sender=sent_to,
+      mail.send_mail(sender='fmj@fridayfilmclub.com',
                      to='fmj@fridayfilmclub.com',
                      subject='Invite request',
-                     body='Please can I get an invite')
+                     body='Please can I get an invite sent to %s' % sent_to)
 
       # Reset the form.
       form.process()
@@ -202,7 +202,8 @@ class Archive(baserequesthandler.RequestHandler):
   """An archive of old questions."""
 
   def get(self):
-    questions = models.Question.query(models.Question.posed != None, models.Question.is_current == False)
+    questions = models.Question.query(models.Question.posed != None,
+                                      models.Question.is_current == False)
     return self.render_template('archive.html', {
       'questions': questions
     })
