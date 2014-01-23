@@ -194,3 +194,11 @@ class LeaderBoard(baserequesthandler.RequestHandler):
 
 
     return self.render_json(response_obj)
+
+
+class Contacts(baserequesthandler.RequestHandler):
+
+  def get(self):
+    return self.render_json({
+      'token': self.request.get('token', '')
+    })

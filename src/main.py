@@ -50,6 +50,7 @@ routes = [
     webapp2.Route(r'/api/question/<:.+>', api.Question, 'api-question'),
     webapp2.Route(r'/api/leaderboard/<:(week|all|\d+)>', api.LeaderBoard,
         'api-leaderboard'),
+    webapp2.Route(r'/api/contacts', api.Contacts, 'api-contacts'),
     webapp2.Route(r'/suggest/<:.+>', suggest.SuggestHandler, name='suggest'),
 
     # Authentication.
