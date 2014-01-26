@@ -39,20 +39,25 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
   USER_ATTRS = {
     'google'   : {
       'picture': 'pic',
-      'name'   : 'name',
-      'link'   : 'link',
-      'email'   : 'email',
+      'name': 'name',
+      'link': 'link',
+      'email': 'email',
+      'token': 'token'
     },
     'facebook' : {
       'id': lambda id: ('pic', 'http://graph.facebook.com/{0}/picture?type=large'.format(id)),
-      'name'   : 'name',
-      'link'   : 'link',
-      'email'   : 'email',
+      'name': 'name',
+      'link': 'link',
+      'email': 'email',
+      'token': 'token',
+      'uid': 'uid'
     },
     'twitter'  : {
       'profile_image_url': lambda url: ('pic', url.replace('_normal','')),
-      'screen_name'      : 'name',
-      'link'             : 'link',
+      'screen_name': 'name',
+      'link': 'link',
+      'token': 'token',
+      'token_secret': 'token_secret',
     },
   }
 
@@ -65,14 +70,23 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
       provider: the id of the oauth provider.
     """
     auth_id = '%s:%s' % (provider, data['id'])
+    # Hack: to add facebook uid as well as derive facebook profile pic
+    data['uid'] = data['id']
+    try:
+      data['token'] = auth_info['access_token']
+    except KeyError: # Twitter
+      data['token'] = auth_info['oauth_token']
+      data['token_secret'] = auth_info['oauth_token_secret']
+
     logging.info('Looking for a user with id %s' % auth_id)
-    logging.info(data)
 
     user = self.auth.store.user_model.get_by_auth_id(auth_id)
 
     if user:
       logging.info('Found existing user to log in')
-      # existing user. just log them in.
+      # existing user. just log them in and update token.
+      user.populate(**self._to_user_model_attrs(data, provider, False))
+      user.put()
       self.auth.set_session(self.auth.store.user_to_dict(user), remember=True)
 
     else:

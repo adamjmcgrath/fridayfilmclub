@@ -10,10 +10,15 @@ from datetime import datetime
 import logging
 
 import auth
-import baserequesthandler
+from datetime import datetime
 from functools import partial
 import json
+import urllib
+
+import baserequesthandler
 import models
+import twitter
+
 
 from google.appengine.api import users, urlfetch
 from google.appengine.ext import ndb
@@ -199,6 +204,96 @@ class LeaderBoard(baserequesthandler.RequestHandler):
 class Contacts(baserequesthandler.RequestHandler):
 
   def get(self):
-    return self.render_json({
-      'token': self.request.get('token', '')
-    })
+
+    provider = self.request.get('provider')
+    json_list = []
+
+    if provider == 'google':
+      json_list = self.get_google_contacts()
+
+    if provider == 'facebook':
+      json_list = self.get_facebook_friends()
+
+    if provider == 'twitter':
+      json_list = self.get_twitter_followers()
+
+    return self.render_json(json_list)
+
+  def get_google_contacts(self):
+    google_token = self.current_user.google_token
+    json_list = []
+    if google_token:
+      response = urlfetch.fetch(
+        'https://www.google.com/m8/feeds/contacts/default/full/?alt=json&max-results=9999',
+        headers={'Authorization': 'Bearer %s' % google_token})
+
+
+      for entry in json.loads(response.content)['feed']['entry']:
+        email = None
+        try:
+          logging.info(entry['gd$email'])
+          email = (x['address'] for x in entry['gd$email'] if x['primary'] == 'true').next()
+        except KeyError:
+          pass
+
+        name = entry['title']['$t']
+
+        if name and email:
+          json_list.append({
+            'name': entry['title']['$t'],
+            'email': email
+          })
+
+    return json_list
+
+  def get_facebook_friends(self):
+    u = self.current_user
+    facebook_token = u.facebook_token
+    facebook_uid = u.facebook_uid
+    json_list = []
+    if facebook_token:
+      url = ('https://graph.facebook.com/%s/friends?access_token=%s&limit=500'
+             % (facebook_uid, facebook_token))
+      while url:
+        logging.info('Getting facebook url: %s', url)
+        json_obj = json.loads(urlfetch.fetch(url).content)
+        json_list = json_list + json_obj['data']
+        url = json_obj['paging'].get('next')
+      self.set_json_content_type()
+
+    return json_list
+
+  def get_twitter_followers(self):
+    u = self.current_user
+    twitter_token = self.current_user.twitter_token
+    twitter_token_secret = self.current_user.twitter_token_secret
+    json_list = []
+    if twitter_token and twitter_token_secret:
+      cursor = -1
+
+      while cursor:
+        url = 'https://api.twitter.com/1.1/followers/list.json'
+        params = {
+          'screen_name': u.twitter_name,
+          'skip_status': 'true',
+          'include_user_entities': 'false',
+          'cursor': str(cursor)
+        }
+
+        auth_header = twitter.header_string_for_request(url, params, 'GET',
+                                                        twitter_token,
+                                                        twitter_token_secret)
+
+        url += '?' + urllib.urlencode(params)
+        response = urlfetch.fetch(url, headers={'Authorization': auth_header})
+
+        json_obj = json.loads(response.content)
+        cursor = json_obj.get('next_cursor')
+        json_list += json_obj['users']
+
+    return [{
+      'pic': u['profile_image_url'],
+      'id': u['screen_name'],
+      'name': u['name']
+    } for u in json_list]
+
