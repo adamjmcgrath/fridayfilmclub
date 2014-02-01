@@ -1,0 +1,16 @@
+{namespace ffc.template.contacts}
+
+
+/**
+ * Contact.
+ * @param id The id.
+ * @param img The img url.
+ * @param name The name.
+ */
+{template .contact}
+<span class="contact" data-row="{$id}">
+  <img src="{$img}">
+  &nbsp;&nbsp;{$name}&nbsp;&nbsp;
+  <span class="glyphicon glyphicon-remove remove"></span>
+</span>
+{/template}

@@ -16,7 +16,7 @@
         ignore = untracked
 [submodule "submodules/simpleauth"]
 	path = submodules/simpleauth
-	url = https://github.com/crhym3/simpleauth.git
+	url = https://github.com/adamjmcgrath/simpleauth.git
         ignore = untracked
 [submodule "submodules/httplib2"]
 	path = submodules/httplib2

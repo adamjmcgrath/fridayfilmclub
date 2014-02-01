@@ -158,7 +158,32 @@ class Settings(baserequesthandler.RequestHandler):
     })
 
 
-class SendInvite(baserequesthandler.RequestHandler):
+class SendInvites(baserequesthandler.RequestHandler):
+
+  @auth.login_required
+  def get(self):
+    providers = [
+      {
+        'id': 'google',
+        'noun': 'Contacts',
+        'has_token': self.current_user.google_refresh_token
+      },
+      {
+        'id': 'facebook',
+        'noun': 'Friends',
+        'has_token': self.current_user.facebook_uid
+      },
+      {
+        'id': 'twitter',
+        'noun': 'Followers',
+        'has_token': self.current_user.twitter_token
+      },
+    ]
+
+    return self.render_template('sendinvites.html', {
+        'user': self.current_user,
+        'providers': providers
+    })
 
   @auth.login_required
   def post(self):
@@ -223,3 +248,49 @@ class HowItWorks(baserequesthandler.RequestHandler):
 
   def get(self):
     return self.render_template('how.html', {})
+
+
+class SendInviteLegacy(baserequesthandler.RequestHandler):
+  """Old send invites handler."""
+
+  @auth.login_required
+  def post(self):
+    user = self.current_user
+    form = forms.Invite(self.request.POST)
+
+    if len(user.invites) and form.validate():
+      invite = user.invites.pop().id()
+      user.put()
+
+      # Send the invite.
+      email = form.invite_email.data
+      logging.info('Sending invite: %s, to: %s' % (invite, email))
+      body = self.generate_template('email/invite.txt', {
+        'invite': urlparse.urljoin(self.request.host_url, 'register?invite=%s' % invite),
+        'user': user.name
+      })
+      try:
+        sender = user.email
+      except AttributeError:
+        sender = 'fmj@fridayfilmclub.com'
+
+      mail.send_mail(sender=sender,
+                     to=email,
+                     subject='Friday Film Club invitation',
+                     body=body)
+
+      return self.render_json({
+        'success': True,
+        'invites': len(user.invites)
+      })
+
+    else:
+      if form.invite_email.errors:
+        error = form.invite_email.errors[0]
+      else:
+        error = 'You have no invites left.'
+
+      return self.render_json({
+        'success': False,
+        'error': error
+      })

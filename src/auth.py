@@ -37,22 +37,21 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
   """Authentication handler for OAuth 2.0, 1.0(a) and OpenID."""
 
   USER_ATTRS = {
-    'google'   : {
+    'google': {
       'picture': 'pic',
       'name': 'name',
       'link': 'link',
       'email': 'email',
-      'token': 'token'
+      'refresh_token': 'refresh_token'
     },
-    'facebook' : {
+    'facebook': {
       'id': lambda id: ('pic', 'http://graph.facebook.com/{0}/picture?type=large'.format(id)),
       'name': 'name',
       'link': 'link',
       'email': 'email',
-      'token': 'token',
       'uid': 'uid'
     },
-    'twitter'  : {
+    'twitter': {
       'profile_image_url': lambda url: ('pic', url.replace('_normal','')),
       'screen_name': 'name',
       'link': 'link',
@@ -70,11 +69,14 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
       provider: the id of the oauth provider.
     """
     auth_id = '%s:%s' % (provider, data['id'])
-    # Hack: to add facebook uid as well as derive facebook profile pic
-    data['uid'] = data['id']
-    try:
-      data['token'] = auth_info['access_token']
-    except KeyError: # Twitter
+
+    if provider == 'facebook':
+      data['uid'] = data['id']
+
+    if provider == 'google' and 'refresh_token' in auth_info:
+      data['refresh_token'] = auth_info['refresh_token']
+
+    if provider == 'twitter':
       data['token'] = auth_info['oauth_token']
       data['token_secret'] = auth_info['oauth_token_secret']
 

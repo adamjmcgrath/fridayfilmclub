@@ -71,11 +71,11 @@ ffc.template.quiz.answer = function(opt_data, opt_ignored) {
  */
 ffc.template.quiz.score = function(opt_data, opt_ignored) {
   var output = '<div><h4>Points available:</h4><p class="points-available">';
-  var sList119 = opt_data.score;
-  var sListLen119 = sList119.length;
-  for (var sIndex119 = 0; sIndex119 < sListLen119; sIndex119++) {
-    var sData119 = sList119[sIndex119];
-    output += '<span class="point">' + soy.$$escapeHtml(sData119) + '</span>';
+  var sList128 = opt_data.score;
+  var sListLen128 = sList128.length;
+  for (var sIndex128 = 0; sIndex128 < sListLen128; sIndex128++) {
+    var sData128 = sList128[sIndex128];
+    output += '<span class="point">' + soy.$$escapeHtml(sData128) + '</span>';
   }
   output += '<sub></sub></p><h4>Clues:</h4><div class="progress"><div class="bar' + ((opt_data.clueCount > 1) ? ' bar-active' : '') + ' bar-1">1</div><div class="bar' + ((opt_data.clueCount > 2) ? ' bar-active' : '') + ' bar-2">2</div><div class="bar' + ((opt_data.clueCount > 3) ? ' bar-active' : '') + ' bar-3">3</div></div></div>';
   return output;

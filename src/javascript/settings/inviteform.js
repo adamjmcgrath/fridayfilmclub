@@ -94,7 +94,7 @@ ffc.settings.InviteForm.prototype.onResponse_ = function(e) {
 /**
  * @type {string}
  */
-ffc.settings.InviteForm.URL_ = '/sendinvite';
+ffc.settings.InviteForm.URL_ = '/sendinvite_legacy';
 
 
 /**

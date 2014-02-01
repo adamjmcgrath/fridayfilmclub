@@ -50,7 +50,7 @@ routes = [
     webapp2.Route(r'/api/question/<:.+>', api.Question, 'api-question'),
     webapp2.Route(r'/api/leaderboard/<:(week|all|\d+)>', api.LeaderBoard,
         'api-leaderboard'),
-    webapp2.Route(r'/api/contacts', api.Contacts, 'api-contacts'),
+    webapp2.Route(r'/api/contacts/<:.+>', api.Contacts, 'api-contacts'),
     webapp2.Route(r'/suggest/<:.+>', suggest.SuggestHandler, name='suggest'),
 
     # Authentication.
@@ -63,11 +63,13 @@ routes = [
     # Main views (Authenticated).
     webapp2.Route(r'/question/<:.*>', views.Question, name='question'),
     webapp2.Route(r'/settings', views.Settings, name='settings'),
-    webapp2.Route(r'/sendinvite', views.SendInvite, name='send_invite'),
-    webapp2.Route(r'/login', views.Login, name='login'),
-    webapp2.Route(r'/register', views.Register, name='register'),
+    webapp2.Route(r'/sendinvites', views.SendInvites, name='send_invites'),
+    webapp2.Route(r'/sendinvite_legacy', views.SendInviteLegacy,
+        name='send_invite_legacy'),
 
     # Main views.
+    webapp2.Route(r'/login', views.Login, name='login'),
+    webapp2.Route(r'/register', views.Register, name='register'),
     webapp2.Route(r'/requestinvite', views.RequestInvite, name='requestinvite'),
     webapp2.Route(r'/archive', views.Archive, name='archive'),
     webapp2.Route(r'/leaderboard', views.LeaderBoard, name='leader-board'),

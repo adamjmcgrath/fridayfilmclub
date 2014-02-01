@@ -17,10 +17,11 @@ import urllib
 
 import baserequesthandler
 import models
+import secrets
 import twitter
 
 
-from google.appengine.api import users, urlfetch
+from google.appengine.api import memcache, users, urlfetch
 from google.appengine.ext import ndb
 
 _MAX_CLUES = 4
@@ -203,10 +204,16 @@ class LeaderBoard(baserequesthandler.RequestHandler):
 
 class Contacts(baserequesthandler.RequestHandler):
 
-  def get(self):
+  def get(self, provider):
 
-    provider = self.request.get('provider')
-    json_list = []
+    cache_key = '%s:%s' % (
+      self.current_user.to_dict().get(provider + '_token'), provider)
+    cached = memcache.get(cache_key)
+
+    if cached:
+      return self.render_json(json.loads(cached))
+    else:
+      json_list = []
 
     if provider == 'google':
       json_list = self.get_google_contacts()
@@ -217,12 +224,29 @@ class Contacts(baserequesthandler.RequestHandler):
     if provider == 'twitter':
       json_list = self.get_twitter_followers()
 
+    memcache.add(cache_key, json.dumps(json_list), time=3600)
     return self.render_json(json_list)
 
   def get_google_contacts(self):
-    google_token = self.current_user.google_token
+    refresh_token = self.current_user.google_refresh_token
     json_list = []
-    if google_token:
+    if refresh_token:
+
+      #  Convert the access token to refresh_token
+      app_id, app_secret, app_scope = secrets.AUTH_CONFIG['google']
+      data = urllib.urlencode({
+            'client_id': app_id,
+            'client_secret': app_secret,
+            'refresh_token': refresh_token,
+            'grant_type': 'refresh_token'
+      })
+      token_response = urlfetch.fetch(method='POST',
+          url='https://accounts.google.com/o/oauth2/token', payload=data)
+      logging.info(token_response.content)
+      tokens = json.loads(token_response.content)
+      google_token = tokens['access_token']
+
+      # Request the contacts
       response = urlfetch.fetch(
         'https://www.google.com/m8/feeds/contacts/default/full/?alt=json&max-results=9999',
         headers={'Authorization': 'Bearer %s' % google_token})
@@ -231,29 +255,38 @@ class Contacts(baserequesthandler.RequestHandler):
       for entry in json.loads(response.content)['feed']['entry']:
         email = None
         try:
-          logging.info(entry['gd$email'])
           email = (x['address'] for x in entry['gd$email'] if x['primary'] == 'true').next()
         except KeyError:
           pass
 
         name = entry['title']['$t']
 
+        try:
+          pic_type = 'http://schemas.google.com/contacts/2008/rel#photo'
+          pic = (x['href'] for x in entry['link'] if x['rel'] == pic_type).next()
+          pic += '?access_token=' + google_token
+        except:
+          pic = '/static/img/anon.gif'
+
         if name and email:
           json_list.append({
             'name': entry['title']['$t'],
-            'email': email
+            'email': email,
+            'pic': pic
           })
 
     return json_list
 
   def get_facebook_friends(self):
     u = self.current_user
-    facebook_token = u.facebook_token
+    app_id, app_secret, app_scope = secrets.AUTH_CONFIG['facebook']
+    # facebook_token = u.facebook_token
+    facebook_token = app_id + '|' + app_secret
     facebook_uid = u.facebook_uid
     json_list = []
     if facebook_token:
       url = ('https://graph.facebook.com/%s/friends?access_token=%s&limit=500'
-             % (facebook_uid, facebook_token))
+             % (facebook_uid, facebook_token.strip()))
       while url:
         logging.info('Getting facebook url: %s', url)
         json_obj = json.loads(urlfetch.fetch(url).content)

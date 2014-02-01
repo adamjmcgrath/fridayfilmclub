@@ -10,6 +10,7 @@ goog.provide('ffc.api.Client');
 
 goog.require('goog.labs.net.xhr');
 goog.require('goog.result.Result');
+goog.require('goog.Uri');
 
 
 
@@ -81,6 +82,17 @@ ffc.api.Client.prototype.getLeaderBoard = function(type,
 
 
 /**
+ * @param {String} provider 'google','facebook' or 'twitter'
+ */
+ffc.api.Client.prototype.getContacts = function(provider) {
+  var uri = goog.Uri.parse(
+      goog.string.subs(ffc.api.Client.CONTACTS_PATH_, provider));
+
+  return this.get_(uri);
+};
+
+
+/**
  * @type {string}
  * @private
  */
@@ -100,3 +112,11 @@ ffc.api.Client.QUESTION_PATH_ = ffc.api.Client.BASE_PATH_ + '/question';
  */
 ffc.api.Client.LEADER_BOARD_PATH_ =
     ffc.api.Client.BASE_PATH_ + '/leaderboard/%s';
+
+
+/**
+ * @type {string}
+ * @private
+ */
+ffc.api.Client.CONTACTS_PATH_ =
+    ffc.api.Client.BASE_PATH_ + '/contacts/%s';
