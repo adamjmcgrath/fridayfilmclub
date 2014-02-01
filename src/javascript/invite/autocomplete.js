@@ -8,11 +8,13 @@
  */
 
 goog.provide('ffc.invite.AutoComplete');
+goog.provide('ffc.invite.AutoComplete.Event');
 
 goog.require('ffc.api.Client');
 goog.require('ffc.invite.GoogleRow');
 goog.require('ffc.invite.FacebookRow');
 goog.require('ffc.invite.TwitterRow');
+goog.require('ffc.invite.InputHandler');
 
 goog.require('goog.array');
 goog.require('goog.dom');
@@ -22,7 +24,6 @@ goog.require('goog.object');
 goog.require('goog.ui.ac.AutoComplete');
 goog.require('goog.ui.ac.ArrayMatcher');
 goog.require('goog.ui.ac.Renderer');
-goog.require('goog.ui.ac.RichInputHandler');
 
 
 
@@ -87,14 +88,15 @@ ffc.invite.AutoComplete = function(el, provider, parent, valueInput) {
    */
   this.matcher_ = new goog.ui.ac.ArrayMatcher();
 
-  var inputHandler = new goog.ui.ac.RichInputHandler(
-      null, null, true, 300);
+  var inputHandler = new ffc.invite.InputHandler(
+      null, ',', true, 300);
 
   goog.ui.ac.AutoComplete.call(this, this.matcher_,
       this.renderer_, inputHandler);
 
   inputHandler.attachAutoComplete(this);
   inputHandler.attachInputs(el);
+  inputHandler.setSeparatorSelects(false);
 
   ffc.api.Client.getInstance()
                 .getContacts(provider)
@@ -133,6 +135,14 @@ ffc.invite.AutoComplete.prototype.handleContactsResponse_ = function(response) {
  */
 ffc.invite.AutoComplete.prototype.setLoading = function(isLoading) {
   goog.dom.classes.enable(this.container_, 'loading', !!isLoading);
+};
+
+
+/**
+ * @param {ffc.invite.AbstractRow} row
+ */
+ffc.invite.AutoComplete.prototype.selectRow = function(row) {
+  this.handleRowSelected_(row);
 };
 
 
@@ -188,9 +198,13 @@ ffc.invite.AutoComplete.prototype.enable = function(enable) {
  * @param {goog.events.Event} e
  */
 ffc.invite.AutoComplete.prototype.getValue = function(e) {
-  return goog.object.getKeys(this.selectedRows_);
+  return goog.object.getKeys(goog.object.filter(this.selectedRows_,
+      function(row) {
+        return !row.isInvalidEmail;
+      }
+    )
+  );
 };
-
 
 /**
  * @enum {String}

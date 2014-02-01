@@ -22,6 +22,7 @@ goog.require('ffc.invite.AutoComplete.Event');
 ffc.invite.Counter = function(numInvites, dom, acs) {
   this.dom_ = dom;
   this.acs_ = acs;
+  this.numInvites_ = numInvites;
 
   this.setCount(numInvites);
 
@@ -43,18 +44,14 @@ ffc.invite.Counter.prototype.setCount = function(count) {
 
 
 /**
- * Increment count.
+ * Update count.
  */
-ffc.invite.Counter.prototype.incrementCount = function() {
-  this.setCount(this.count_ + 1);
-};
-
-
-/**
- * Increment count.
- */
-ffc.invite.Counter.prototype.decrementCount = function() {
-  this.setCount(Math.max(this.count_ - 1, 0));
+ffc.invite.Counter.prototype.updateCount = function() {
+  var count = 0;
+  this.acs_.forEach(function(ac) {
+    count += ac.getValue().length;
+  });
+  this.setCount(Math.max(this.numInvites_ - count, 0));
 };
 
 
@@ -64,7 +61,7 @@ ffc.invite.Counter.prototype.decrementCount = function() {
  */
 ffc.invite.Counter.prototype.decorateAc_ = function(ac) {
   goog.events.listen(ac, ffc.invite.AutoComplete.Event.ITEM_SELECTED,
-      this.decrementCount, null, this);
+      this.updateCount, null, this);
   goog.events.listen(ac, ffc.invite.AutoComplete.Event.ITEM_REMOVED,
-      this.incrementCount, null, this);
+      this.updateCount, null, this);
 };

@@ -10,10 +10,11 @@
 goog.provide('ffc.invite.GoogleRow');
 
 goog.require('ffc.template.contacts');
+goog.require('ffc.invite.AbstractRow');
 
 goog.require('goog.dom');
 goog.require('goog.dom.TagName');
-goog.require('ffc.invite.AbstractRow');
+goog.require('goog.format.EmailAddress');
 goog.require('goog.string');
 
 goog.require('soy');
@@ -32,6 +33,7 @@ ffc.invite.GoogleRow = function(name, email, pic) {
   this.name = name;
   this.email = this.id = email;
   this.pic = pic;
+  this.isInvalidEmail = !goog.format.EmailAddress.isValidAddrSpec(email);
 };
 goog.inherits(ffc.invite.GoogleRow, ffc.invite.AbstractRow);
 
@@ -43,7 +45,8 @@ ffc.invite.GoogleRow.prototype.createDom = function() {
   return soy.renderAsElement(ffc.template.contacts.contact, {
     name: this.name,
     img: this.pic,
-    id: this.id
+    id: this.id,
+    cls: this.isInvalidEmail ? 'invalid' : ''
   })
 };
 

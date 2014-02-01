@@ -14,5 +14,5 @@ goog.require('soydata');
  * @notypecheck
  */
 ffc.template.contacts.contact = function(opt_data, opt_ignored) {
-  return '<span class="contact" data-row="' + soy.$$escapeHtml(opt_data.id) + '"><img src="' + soy.$$escapeHtml(opt_data.img) + '">&nbsp;&nbsp;' + soy.$$escapeHtml(opt_data.name) + '&nbsp;&nbsp;<span class="glyphicon glyphicon-remove remove"></span></span>';
+  return '<span class="contact' + ((opt_data.cls) ? ' ' + soy.$$escapeHtml(opt_data.cls) : '') + '" data-row="' + soy.$$escapeHtml(opt_data.id) + '">' + ((opt_data.img) ? '<img src="' + soy.$$escapeHtml(opt_data.img) + '">' : '') + '<span class="name">' + soy.$$escapeHtml(opt_data.name) + '</span><span class="glyphicon glyphicon-remove remove"></span></span>';
 };
