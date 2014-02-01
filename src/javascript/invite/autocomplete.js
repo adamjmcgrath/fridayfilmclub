@@ -169,6 +169,8 @@ ffc.invite.AutoComplete.prototype.handleClick_ = function(e) {
     dom.remove();
     this.dispatchEvent(ffc.invite.AutoComplete.Event.ITEM_REMOVED);
     this.updateValueInput();
+  } else {
+    this.element_.focus();
   }
 };
 
