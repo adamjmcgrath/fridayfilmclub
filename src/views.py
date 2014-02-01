@@ -187,40 +187,7 @@ class SendInvites(baserequesthandler.RequestHandler):
 
   @auth.login_required
   def post(self):
-    user = self.current_user
-    form = forms.Invite(self.request.POST)
-
-    if len(user.invites) and form.validate():
-      invite = user.invites.pop().id()
-      user.put()
-
-      # Send the invite.
-      email = form.invite_email.data
-      logging.info('Sending invite: %s, to: %s' % (invite, email))
-      body = self.generate_template('email/invite.txt', {
-        'invite': urlparse.urljoin(self.request.host_url, 'register?invite=%s' % invite),
-        'user': user.name
-      })
-      mail.send_mail(sender='fmj@fridayfilmclub.com',
-                       to=email,
-                       subject='Friday Film Club invitation',
-                       body=body)
-
-      return self.render_json({
-        'success': True,
-        'invites': len(user.invites)
-      })
-
-    else:
-      if form.invite_email.errors:
-        error = form.invite_email.errors[0]
-      else:
-        error = 'You have no invites left.'
-
-      return self.render_json({
-        'success': False,
-        'error': error
-      })
+    pass
 
 
 class Archive(baserequesthandler.RequestHandler):
