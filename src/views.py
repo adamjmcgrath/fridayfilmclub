@@ -8,7 +8,7 @@ __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 
 import logging
 import urlparse
-
+import posixpath
 
 from google.appengine.api import mail, users
 
@@ -16,7 +16,9 @@ import auth
 import baserequesthandler
 import forms
 import models
+import twitter
 
+HOST_URL = 'http://www.fridayfilmclub.com'
 
 
 class HomePage(baserequesthandler.RequestHandler):
@@ -187,7 +189,31 @@ class SendInvites(baserequesthandler.RequestHandler):
 
   @auth.login_required
   def post(self):
-    pass
+
+    user = self.current_user
+    google_contacts = self.request.get('google-contacts').split(',')
+    facebook_contacts = self.request.get('facebook-contacts').split(',')
+    twitter_contacts = self.request.get('twitter-contacts').split(',')
+
+    for google_contact in google_contacts:
+      if google_contact:
+        invite = user.invites.pop().id()
+        success = send_invite_email(invite, user.google_name,
+                                    user.google_email, google_contact)
+
+    for facebook_contact in facebook_contacts:
+      if facebook_contact:
+        invite = user.invites.pop().id()
+        email = facebook_contact + '@facebook.com'
+        success = send_invite_email(invite, user.facebook_name,
+                                    user.facebook_email, email)
+
+    for twitter_contact in twitter_contacts:
+      if twitter_contact:
+        invite = user.invites.pop().id()
+        success = send_invite_dm(invite, user, twitter_contact)
+
+    # user.put()
 
 
 class Archive(baserequesthandler.RequestHandler):
@@ -261,3 +287,46 @@ class SendInviteLegacy(baserequesthandler.RequestHandler):
         'success': False,
         'error': error
       })
+
+
+def send_invite_email(invite, from_name, from_email, to_email):
+
+  # Send the invite.
+  logging.info('Sending invite: %s, to: %s' % (invite, to_email))
+  template = baserequesthandler.JINJA_ENV.get_template(
+        posixpath.join(baserequesthandler.TEMPLATE_PATH, 'email/invite.txt'))
+  body = template.render({
+    'invite': urlparse.urljoin(HOST_URL, 'register?invite=%s' % invite),
+    'user': from_name
+  })
+
+  try:
+    sender = from_email
+  except AttributeError:
+    sender = 'fmj@fridayfilmclub.com'
+
+  try:
+    mail.send_mail(sender=sender,
+                   to=to_email,
+                   subject='Friday Film Club invitation',
+                   body=body)
+    return True
+
+  except mail.Error:
+    return False
+
+
+def send_invite_dm(invite, from_user, to_handle):
+
+  from_handle = from_user.twitter_name
+
+  logging.info('Sending invite: %s, to: %s' % (invite, to_handle))
+
+  try:
+    msg = ('%s has invited you to Friday Film Club: http://www.fridayfilmclub' +
+           '.com/register?invite=%s')
+    twitter.send_dm(from_user, to_handle, msg % (from_handle, invite))
+    return True
+
+  except IndexError:
+    return False

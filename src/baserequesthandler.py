@@ -19,11 +19,11 @@ from webapp2_extras import auth, sessions
 
 import settings
 
-_JINJA_ENV = jinja2.Environment(
+JINJA_ENV = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
-_JINJA_ENV.globals.update({'uri_for': webapp2.uri_for})
-_TEMPLATE_PATH = '/templates/jinja/'
-_VALID_CALLBACK = re.compile('^\w+(\.\w+)*$')
+JINJA_ENV.globals.update({'uri_for': webapp2.uri_for})
+TEMPLATE_PATH = '/templates/jinja/'
+VALID_CALLBACK = re.compile('^\w+(\.\w+)*$')
 
 
 
@@ -73,8 +73,8 @@ class RequestHandler(webapp2.RequestHandler):
 
   def generate_template(self, template_path, template_obj):
     """Create the template output."""
-    template = _JINJA_ENV.get_template(
-        posixpath.join(_TEMPLATE_PATH, template_path))
+    template = JINJA_ENV.get_template(
+        posixpath.join(TEMPLATE_PATH, template_path))
     values = {
       'url_for': self.uri_for,
       'logged_in': self.logged_in,
@@ -93,7 +93,7 @@ class RequestHandler(webapp2.RequestHandler):
   def get_json_callback(self):
     """Get json callback"""
     callback = self.request.get('callback')
-    if callback and _VALID_CALLBACK.match(callback):
+    if callback and VALID_CALLBACK.match(callback):
       return callback
     else:
       return ''

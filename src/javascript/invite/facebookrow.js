@@ -60,6 +60,7 @@ ffc.invite.FacebookRow.prototype.toString = function() {
  * @param {Object} rowData
  */
 ffc.invite.FacebookRow.fromRowData = function(rowData) {
-  return new ffc.invite.FacebookRow(rowData['name'], rowData['id'],
+  return new ffc.invite.FacebookRow(rowData['name'],
+      rowData['username'] || rowData['id'],
       'http://graph.facebook.com/' + rowData['id'] + '/picture');
 };

@@ -5,7 +5,7 @@
 {% block page_id %}{{ page_id }}{% endblock page_id %}
 
 {% block content %}
-  <h3>Send invites to:<span class="pull-right">Invites left: <span id="invite-count">{{ user.invites|length }}</span></span></h3>
+  <h3>Send invites to:<span class="pull-right label label-danger">Invites left: <span id="invite-count">{{ user.invites|length }}</span></span></h3>
   <form action="" method="post">
     {% for provider in providers %}
       <div class="input-group {{ provider.id }}{% if provider.has_token %} loading{% endif %}">
@@ -14,6 +14,7 @@
           <img src="/static/img/ajax-loader-sm.gif" class="loader">
            {{ provider.noun }}
         </span>
+        <div id="{{ provider.id }}-ac-picker" class="picker"></div>
         <p class="input-lg form-control"{% if not provider.has_token %} disabled{% endif %}>
           {% if provider.has_token %}
             <input id="{{ provider.id }}-ac" type="text" value="" autocomplete="off">
@@ -22,7 +23,6 @@
             <a href="">Click here to add your {{ provider.id|title }} account.</a>
           {% endif %}
         </p>
-        <div id="{{ provider.id }}-ac-picker" class="picker"></div>
       </div>
     {% endfor %}
     <div class="form-actions">

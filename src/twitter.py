@@ -2,6 +2,7 @@
 
 """Create Twitter Oauth header."""
 
+import logging
 import random
 import string
 import time
@@ -12,6 +13,8 @@ import hmac
 import hashlib
 
 import secrets
+
+from google.appengine.api import urlfetch
 
 
 consumer_token, consumer_token_secret = secrets.AUTH_CONFIG['twitter']
@@ -101,3 +104,32 @@ def header_string_for_request(url, params, method, access_token,
 
   header_string = header_string[:-2]  # remove the ', '
   return header_string
+
+
+def send_dm(from_user, to_handle, msg):
+  url = 'https://api.twitter.com/1.1/direct_messages/new.json'
+
+  # TODO: Twitter doesn't currently allow links in DMs
+  twitter_token = from_user.twitter_token
+  twitter_token_secret = from_user.twitter_token_secret
+  auth_header = header_string_for_request(url,
+                                          {
+                                            'text': urllib.quote(msg, safe='').encode('utf-8'),
+                                            'screen_name': to_handle,
+                                          },
+                                          'POST',
+                                          twitter_token,
+                                          twitter_token_secret)
+
+  response = urlfetch.fetch(url,
+                            method=urlfetch.POST,
+                            payload=urllib.urlencode({
+                                  'screen_name': to_handle,
+                                  'text': msg,
+                                }, doseq=1),
+                            headers={
+                              'Authorization': auth_header,
+                            })
+
+  logging.info(response.status_code) # Currently 403
+

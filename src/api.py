@@ -285,7 +285,7 @@ class Contacts(baserequesthandler.RequestHandler):
     facebook_uid = u.facebook_uid
     json_list = []
     if facebook_token:
-      url = ('https://graph.facebook.com/%s/friends?access_token=%s&limit=500'
+      url = ('https://graph.facebook.com/%s/friends?access_token=%s&limit=500&fields=username,name'
              % (facebook_uid, facebook_token.strip()))
       while url:
         logging.info('Getting facebook url: %s', url)
