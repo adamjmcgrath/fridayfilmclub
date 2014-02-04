@@ -300,10 +300,7 @@ def send_invite_email(invite, from_name, from_email, to_email):
     'user': from_name
   })
 
-  try:
-    sender = from_email
-  except AttributeError:
-    sender = 'fmj@fridayfilmclub.com'
+  sender = from_email or 'fmj@fridayfilmclub.com'
 
   try:
     mail.send_mail(sender=sender,

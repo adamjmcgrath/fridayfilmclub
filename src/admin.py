@@ -92,7 +92,6 @@ class AddEditQuestion(baserequesthandler.RequestHandler):
       })
 
 
-
 class Questions(baserequesthandler.RequestHandler):
   """Adds a question to the datastore."""
 
