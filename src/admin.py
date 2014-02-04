@@ -159,8 +159,13 @@ class PoseQuestion(baserequesthandler.RequestHandler):
     })
 
     for user_entity in user_entities:
+      try:
+        email = user_entity.email
+      except AttributeError:
+        continue
+
       mail.send_mail(sender='fmj@fridayfilmclub.com',
-                     to=user_entity.email,
+                     to=email,
                      subject=subject,
                      body=body)
 
