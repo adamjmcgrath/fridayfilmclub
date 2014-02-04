@@ -68,6 +68,17 @@ indexes:
   - name: overall_score
     direction: desc
 
+- kind: User
+  properties:
+  - name: is_admin
+  - name: questions_answered
+
+- kind: User
+  properties:
+  - name: is_admin
+  - name: questions_answered
+    direction: desc
+
 - kind: UserQuestion
   properties:
   - name: complete
