@@ -142,6 +142,7 @@ ffc.quiz.Question.prototype.render = function(parent) {
   }
 
   goog.base(this, 'render', parent);
+  this.updateAnswerForm();
 };
 
 
@@ -187,7 +188,22 @@ ffc.quiz.Question.prototype.addCluesAndGuesses = function() {
       this.addClue(new ffc.quiz.Clue(clue), index + 1);
     }
   }
+  this.updateAnswerForm();
   this.scrollToBottom();
+};
+
+
+/**
+ * Update the answer form.
+ */
+ffc.quiz.Question.prototype.updateAnswerForm = function() {
+  if (!this.answerForm) {
+    return;
+  }
+  var lastGuess = this.guesses_.length == 3;
+  if (lastGuess && this.answerForm) {
+    this.answerForm.setLastGuess();
+  }
 };
 
 

@@ -182,6 +182,17 @@ ffc.quiz.AnswerForm.prototype.onSubmit_ = function(e) {
 
 
 /**
+ * Change the answer form to reflect that it is the users last guess.
+ */
+ffc.quiz.AnswerForm.prototype.setLastGuess = function() {
+  var passBtn = this.dom_.getElement('btn-pass');
+  if (passBtn) {
+    passBtn.innerHTML = 'No idea, I give up';
+  }
+};
+
+
+/**
  * Submit a guess.
  * @param {string} guess The users guess.
  * @private
