@@ -267,10 +267,16 @@ class SendInviteLegacy(baserequesthandler.RequestHandler):
       except AttributeError:
         sender = 'fmj@fridayfilmclub.com'
 
-      mail.send_mail(sender=sender,
-                     to=email,
-                     subject='Friday Film Club invitation',
-                     body=body)
+      try:
+        mail.send_mail(sender=sender,
+                       to=email,
+                       subject='Friday Film Club invitation',
+                       body=body)
+      except mail.InvalidSenderError:
+        mail.send_mail(sender='fmj@fridayfilmclub.com',
+                       to=email,
+                       subject='Friday Film Club invitation',
+                       body=body)
 
       return self.render_json({
         'success': True,
