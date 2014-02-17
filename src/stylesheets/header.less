@@ -11,18 +11,12 @@ h1 {
 }
 
 .navbar-brand {
-  color: @white;
+  color: @white !important;
   float: none;
   font-size: 40px;
   line-height: 20px;
   display: block;
   text-align: center;
-}
-
-@media (max-width: 460px) {
-  .navbar-brand {
-    font-size: 25px;
-  }
 }
 
 .navbar-brand:hover {
@@ -61,5 +55,39 @@ h1 {
 
   #sign-in {
     top: 0;
+  }
+}
+
+/* remove responsive nav behaviour. */
+.navbar-nav {
+  float: left;
+  margin: 0;
+}
+.navbar-nav > li {
+  float: left;
+}
+
+@media (max-width:460px) {
+  .navbar {
+    margin-bottom: 0;
+  }
+
+  #title-bar {
+    display: none;
+  }
+
+  .navbar-brand {
+    float: left;
+    font-size: 25px;
+    padding: 20px;
+  }
+
+   #sign-in {
+     top: 13px !important;
+   }
+
+  #nav a {
+    font-size: 13px;
+    padding: 14px 13px;
   }
 }
