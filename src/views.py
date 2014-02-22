@@ -181,7 +181,7 @@ class SendInvites(baserequesthandler.RequestHandler):
         'has_token': self.current_user.twitter_token
       },
     ]
-
+    self.session['original_url'] = self.request.url
     return self.render_template('sendinvites.html', {
         'user': self.current_user,
         'providers': providers
@@ -194,19 +194,22 @@ class SendInvites(baserequesthandler.RequestHandler):
     google_contacts = self.request.get('google-contacts').split(',')
     facebook_contacts = self.request.get('facebook-contacts').split(',')
     twitter_contacts = self.request.get('twitter-contacts').split(',')
+    google_sent = []
 
     for google_contact in google_contacts:
       if google_contact:
         invite = user.invites.pop().id()
         success = send_invite_email(invite, user.google_name,
                                     user.google_email, google_contact)
+        if success:
+          google_sent.append(google_contact)
 
     for facebook_contact in facebook_contacts:
       if facebook_contact:
         invite = user.invites.pop().id()
         email = facebook_contact + '@facebook.com'
         success = send_invite_email(invite, user.facebook_name,
-                                    user.facebook_email, email)
+                     'fmj@fridayfilmclub.com', email)
 
     for twitter_contact in twitter_contacts:
       if twitter_contact:
@@ -214,6 +217,12 @@ class SendInvites(baserequesthandler.RequestHandler):
         success = send_invite_dm(invite, user, twitter_contact)
 
     # user.put()
+    return self.render_template('sendinvites.html', {
+        'user': self.current_user,
+        'fail': not len(google_sent),
+        'sent': google_sent,
+        'providers': []
+    })
 
 
 class Archive(baserequesthandler.RequestHandler):
@@ -326,8 +335,8 @@ def send_invite_dm(invite, from_user, to_handle):
   logging.info('Sending invite: %s, to: %s' % (invite, to_handle))
 
   try:
-    msg = ('%s has invited you to Friday Film Club: http://www.fridayfilmclub' +
-           '.com/register?invite=%s')
+    msg = ('%s has invited you to Friday Film Club: ' +
+           'www.fridayfilmclub.com/register?invite=%s')
     twitter.send_dm(from_user, to_handle, msg % (from_handle, invite))
     return True
 
