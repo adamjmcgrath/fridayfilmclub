@@ -34,15 +34,23 @@ h1 {
   border-radius: 0;
   border-width: 1px 0;
   text-align: center;
+  position: relative;
 
   .navbar-nav {
     display: inline-block;
     float: none;
     margin-bottom: -5px;
+
+    a {
+      padding: 15px 30px;
+    }
   }
 
-  a {
-    padding: 15px 30px;
+  .btn-xs {
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin: 13px 18px 0 0;
   }
 }
 
@@ -86,8 +94,21 @@ h1 {
      top: 13px !important;
    }
 
-  #nav a {
+  #nav .navbar-nav a {
     font-size: 13px;
     padding: 14px 13px;
+  }
+
+  .btn-xs {
+    position: static !important;
+    float: right;
+  }
+
+}
+
+
+@media (max-width:430px) {
+  .hide-xs {
+    display: none;
   }
 }

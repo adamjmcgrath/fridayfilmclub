@@ -42,10 +42,11 @@
 
       <div class="navbar navbar-default" id="nav">
         <ul class="nav navbar-nav">
-          <li{% if page_id == 'how-page' %} class="active"{% endif %}><a href="/how">How to play</a></li>
-          <li{% if page_id == 'archive-page' %} class="active"{% endif %}><a href="/archive">Old questions</a></li>
+          <li{% if page_id == 'how-page' %} class="active"{% endif %}><a href="/how">How<span class="hide-xs"> to play</span></a></li>
+          <li class="hidden-xs {% if page_id == 'archive-page' %} active{% endif %}"><a href="/archive">Old questions</a></li>
           <li{% if page_id == 'leaderboard-page' %} class="active"{% endif %}><a href="/leaderboard">Leaderboard</a></li>
         </ul>
+        <a href="{{ uri_for('settings') }}#invite" class="btn btn-xs btn-danger">Invite your friends</a>
       </div>
     {% endblock %}
 
