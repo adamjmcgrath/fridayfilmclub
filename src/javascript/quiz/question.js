@@ -246,6 +246,7 @@ ffc.quiz.Question.prototype.addGuess = function(guess, opt_index) {
  */
 ffc.quiz.Question.prototype.update = function() {
   this.score_.updateScore(this.model_.score, this.model_.clues.length);
+  this.answerForm.setLoading(false);
 
   if (this.model_.answer) {
     // If the question is complete add the answer.
@@ -271,6 +272,7 @@ ffc.quiz.Question.prototype.update = function() {
  */
 ffc.quiz.Question.prototype.onGuess_ = function(e) {
   var guess = e.guess;
+  this.answerForm.setLoading(true);
   // Post the guess to the question api.
   this.xhr_.send(this.url_, 'POST',
       goog.uri.utils.buildQueryDataFromMap({'guess': guess}));

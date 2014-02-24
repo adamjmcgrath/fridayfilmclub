@@ -123,6 +123,15 @@ ffc.quiz.AnswerForm.prototype.showIncorrect = function(callback) {
 
 
 /**
+ * Show a loading indicator.
+ * @param {boolean} isLoading
+ */
+ffc.quiz.AnswerForm.prototype.setLoading = function(isLoading) {
+  goog.dom.classes.enable(this.element_, 'is-loading', !!isLoading)
+};
+
+
+/**
  * Clear the form.
  */
 ffc.quiz.AnswerForm.prototype.clearForm = function() {
