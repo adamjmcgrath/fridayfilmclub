@@ -1,5 +1,5 @@
 #sidebar {
-  margin-top: (@baseLineHeight * 2.5) - 10;
+  margin-top: (@baseLineHeight * 2.5) - 25;
   position: relative;
 }
 
@@ -70,6 +70,15 @@
 }
 
 #score-board {
-  width: 210px !important;
+  margin-top: 15px;
+  width: 210px;
 }
 
+@media (max-width:991px) {
+  #sidebar, #score-board {
+    margin-top: 0;
+  }
+  #score-board {
+    width: 100% !important;
+  }
+}

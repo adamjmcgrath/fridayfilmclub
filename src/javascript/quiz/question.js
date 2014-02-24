@@ -83,7 +83,8 @@ ffc.quiz.Question = function(key, parent, scoreParent) {
    * @type {goog.ui.ScrollFloater}
    * @private
    */
-  this.scrollfloater_ = new goog.ui.ScrollFloater();
+  this.scrollfloater_ = new goog.ui.ScrollFloater(
+      document.getElementById('sidebar'));
 
   /**
    * @type {goog.net.XhrIo}
@@ -157,7 +158,7 @@ ffc.quiz.Question.prototype.enterDocument = function() {
     this.eh_.listen(this.answerForm, ffc.quiz.AnswerForm.MAKE_GUESS,
         this.onGuess_, false, this);
   }
-  this.scrollfloater_.decorate(goog.dom.getAncestorByClass(this.scoreParentEl_, 'well'));
+  this.scrollfloater_.decorate(document.getElementById('scroll-float'));
 
   // Clean up after unload.
   this.eh_.listen(window, goog.events.EventType.UNLOAD,
@@ -269,6 +270,7 @@ ffc.quiz.Question.prototype.update = function() {
     // Otherwise add more clues and guesses.
     this.answerForm.showIncorrect(goog.bind(this.addCluesAndGuesses, this));
   }
+
 };
 
 
@@ -296,6 +298,10 @@ ffc.quiz.Question.prototype.onResponse_ = function(e) {
   } else {
     this.render(this.parentEl_);
   }
+  // Hack, when the image loads update the scrollFloater, remove when we can use
+  // position: sticky.
+  var img = goog.dom.getElementByClass('thumbnail').getElementsByTagName('img')[0];
+  goog.events.listen(img, 'load', goog.bind(this.scrollfloater_.update, this.scrollfloater_));
 };
 
 
