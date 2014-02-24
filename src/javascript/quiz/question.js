@@ -18,6 +18,7 @@ goog.require('goog.array');
 goog.require('goog.fx.dom.Scroll');
 goog.require('goog.net.EventType');
 goog.require('goog.net.XhrIo');
+goog.require('goog.style');
 goog.require('goog.ui.Component');
 goog.require('goog.ui.ScrollFloater');
 goog.require('goog.uri.utils');
@@ -168,6 +169,7 @@ ffc.quiz.Question.prototype.enterDocument = function() {
  * Add clues and guesses to the question.
  */
 ffc.quiz.Question.prototype.addCluesAndGuesses = function() {
+  var guess;
   var clues = this.model_.lastClues;
   var guesses = this.model_.lastGuesses;
   // If the answer form is present, we add the child at the childCount - 1,
@@ -182,14 +184,17 @@ ffc.quiz.Question.prototype.addCluesAndGuesses = function() {
 
   for (i = 0, len = guesses.length; i < len; i++) {
     var index = this.getChildCount() + addIndex;
-    this.addGuess(new ffc.quiz.Guess(guesses[i]), index);
+    this.addGuess(guess = new ffc.quiz.Guess(guesses[i]), index);
     clue = clues[i];
     if (clue) {
       this.addClue(new ffc.quiz.Clue(clue), index + 1);
     }
   }
   this.updateAnswerForm();
-  this.scrollToBottom();
+  if (guess && guess.isInDocument()) {
+    this.scrollTo(guess.getElement());
+  }
+
 };
 
 
@@ -211,9 +216,10 @@ ffc.quiz.Question.prototype.updateAnswerForm = function() {
  * Add the answer, remove the answer form.
  */
 ffc.quiz.Question.prototype.addAnswer = function() {
+  var answer = new ffc.quiz.Answer(this.model_.answer);
   this.removeChild(this.answerForm, true);
-  this.addChild(new ffc.quiz.Answer(this.model_.answer), true);
-  this.scrollToBottom();
+  this.addChild(answer, true);
+  this.scrollTo(answer.getElement());
 };
 
 
@@ -296,11 +302,12 @@ ffc.quiz.Question.prototype.onResponse_ = function(e) {
 /**
  * Scroll to the bottom of the page
  */
-ffc.quiz.Question.prototype.scrollToBottom = function() {
+ffc.quiz.Question.prototype.scrollTo = function(el) {
     var body = document.body;
     var scrollLeft = document.body.scrollLeft;
+    var scrollTop = goog.style.getPageOffsetTop(el) - 15;
     (new goog.fx.dom.Scroll(body, [scrollLeft, body.scrollTop],
-        [body.scrollLeft, body.scrollHeight - window.innerHeight], 500)).play()
+        [body.scrollLeft, scrollTop], 500)).play()
 };
 
 
