@@ -179,7 +179,7 @@ class Registration(Form):
 
 
 class Invite(Form):
-  invite_email = fields.TextField(validators=[validators.Email()])
+  email = fields.TextField(validators=[validators.Email()])
 
 
 class User(Form):

@@ -13,6 +13,7 @@ goog.require('goog.dom.classes');
 goog.require('goog.dom.forms');
 goog.require('goog.events.EventType');
 goog.require('goog.net.XhrIo');
+goog.require('goog.string');
 
 
 
@@ -26,6 +27,8 @@ ffc.settings.InviteForm = function(model) {
 goog.inherits(ffc.settings.InviteForm, ffc.quiz.Component);
 goog.exportSymbol('ffc.settings.InviteForm', ffc.settings.InviteForm);
 goog.exportProperty(ffc.settings.InviteForm.prototype, 'decorate',
+    ffc.settings.InviteForm.prototype.decorate);
+goog.exportProperty(ffc.settings.InviteForm.prototype, 'populateAutoComplete',
     ffc.settings.InviteForm.prototype.decorate);
 
 
@@ -52,6 +55,15 @@ ffc.settings.InviteForm.prototype.enterDocument = function() {
 
   eh.listen(this.element_, goog.events.EventType.SUBMIT,
         this.onSubmit_, false, this);
+};
+
+
+/**
+ * Populate the autocomplete dataset.
+ */
+ffc.settings.InviteForm.prototype.populateAutoComplete = function() {
+    goog.net.XhrIo.send(ffc.settings.InviteForm.GOOGLE_CONTACTS_URL_,
+      this.onEmailsResponse_.bind(this));
 };
 
 
@@ -92,9 +104,34 @@ ffc.settings.InviteForm.prototype.onResponse_ = function(e) {
 
 
 /**
+ * @param {goog.events.Event} e
+ */
+ffc.settings.InviteForm.prototype.onEmailsResponse_ = function(e) {
+  var contacts = e.target.getResponseJson(),
+      datalist = document.getElementById('emailAutoComplete'),
+      tpl = '<option value="%s" label="%s" />',
+      html = [],
+      contact, i, len;
+
+  for (i = 0, len = contacts.length; i < len; i++) {
+    contact = contacts[i];
+    html[i] = goog.string.subs(tpl, contact['email'], contact['name']);
+  }
+
+  datalist.innerHTML = html.join('');
+};
+
+
+/**
  * @type {string}
  */
 ffc.settings.InviteForm.URL_ = '/sendinvite_legacy';
+
+
+/**
+ * @type {string}
+ */
+ffc.settings.InviteForm.GOOGLE_CONTACTS_URL_ = '/api/contacts/google';
 
 
 /**

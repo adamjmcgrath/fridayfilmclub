@@ -265,7 +265,7 @@ class SendInviteLegacy(baserequesthandler.RequestHandler):
       user.put()
 
       # Send the invite.
-      email = form.invite_email.data
+      email = form.email.data
       logging.info('Sending invite: %s, to: %s' % (invite, email))
       body = self.generate_template('email/invite.txt', {
         'invite': urlparse.urljoin(self.request.host_url, 'register?invite=%s' % invite),
