@@ -28,8 +28,6 @@ goog.inherits(ffc.settings.InviteForm, ffc.quiz.Component);
 goog.exportSymbol('ffc.settings.InviteForm', ffc.settings.InviteForm);
 goog.exportProperty(ffc.settings.InviteForm.prototype, 'decorate',
     ffc.settings.InviteForm.prototype.decorate);
-goog.exportProperty(ffc.settings.InviteForm.prototype, 'populateAutoComplete',
-    ffc.settings.InviteForm.prototype.populateAutoComplete);
 
 
 /**
@@ -65,6 +63,8 @@ ffc.settings.InviteForm.prototype.populateAutoComplete = function() {
     goog.net.XhrIo.send(ffc.settings.InviteForm.GOOGLE_CONTACTS_URL_,
       this.onEmailsResponse_.bind(this));
 };
+goog.exportProperty(ffc.settings.InviteForm.prototype, 'populateAutoComplete',
+    ffc.settings.InviteForm.prototype.populateAutoComplete);
 
 
 /**
