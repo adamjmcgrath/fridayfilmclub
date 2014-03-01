@@ -15,16 +15,6 @@ indexes:
   - name: __key__
     direction: desc
 
-- kind: Film
-  properties:
-  - name: __key__
-    direction: desc
-
-- kind: FilmIndex
-  properties:
-  - name: __key__
-    direction: desc
-
 - kind: Question
   properties:
   - name: __key__
@@ -159,29 +149,4 @@ indexes:
   - name: season
   - name: user_is_admin
   - name: score
-    direction: desc
-
-- kind: _AE_MR_MapreduceState
-  properties:
-  - name: __key__
-    direction: desc
-
-- kind: _AE_Pipeline_Barrier
-  properties:
-  - name: __key__
-    direction: desc
-
-- kind: _AE_Pipeline_Record
-  properties:
-  - name: __key__
-    direction: desc
-
-- kind: _AE_Pipeline_Slot
-  properties:
-  - name: __key__
-    direction: desc
-
-- kind: _AE_Pipeline_Status
-  properties:
-  - name: __key__
     direction: desc

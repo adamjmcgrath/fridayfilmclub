@@ -12,15 +12,10 @@ import urlparse
 import webapp2
 from google.appengine.api import memcache, taskqueue, users, mail
 from google.appengine.datastore.datastore_query import Cursor
-from google.appengine.ext import blobstore, ndb
-from google.appengine.ext.webapp import blobstore_handlers
-
-from mapreduce import control, mapreduce_pipeline
-from mapreduce.model import MapreduceState
+from google.appengine.ext import ndb
 
 import baserequesthandler
 import forms
-import map_reduce
 import models
 
 EMAIL_BATCH_SIZE = 10
@@ -40,17 +35,6 @@ class HomePage(baserequesthandler.RequestHandler):
 
   def get(self):
     return self.render_template('admin/index.html', {})
-
-
-class AddFilms(baserequesthandler.RequestHandler):
-  """Form for uploading films as a CSV file as '{Year}, {Title}'."""
-
-  def get(self):
-    upload_url = blobstore.create_upload_url('/admin/addfilmshandler')
-
-    return self.render_template('admin/addfilms.html', {
-        'upload_url': upload_url
-    })
 
 
 class AddEditQuestion(baserequesthandler.RequestHandler):
@@ -259,64 +243,3 @@ class SendInvites(baserequesthandler.RequestHandler):
       'form': form,
       'sent_to': sent_to
     })
-
-
-class AddFilmsHandler(blobstore_handlers.BlobstoreUploadHandler):
-  """Processes the uploaded films and creates a blob to upload and index."""
-
-  def post(self):
-    upload_files = self.get_uploads('file')
-    blob_info = upload_files[0]
-
-    batch = 1
-    last_add = models.Film.query().order(-models.Film.batch).get()
-    if last_add:
-      batch += last_add.batch
-
-    logging.info('Uploading film batch: %d.' % batch)
-
-    mapreduce_parameters = {
-      'blob_key': str(blob_info.key()),
-      'done_callback': '/admin/addfilmsdone',
-    }
-    
-    mapper_parameters = {
-      'blob_keys': str(blob_info.key()),
-      'batch': batch
-    }
-
-    map_reduce_id = control.start_map(
-        'Add films to datastore.', # Name
-        'map_reduce.add_film_map', # handler_spec
-        'mapreduce.input_readers.BlobstoreLineInputReader', # reader_spec
-        mapper_parameters, # mapper_parameters
-        mapreduce_parameters=mapreduce_parameters)
-
-    return webapp2.redirect('/admin')
-
-
-class AddFilmsDone(baserequesthandler.RequestHandler):
-  """Delete the blob once the films have been added to the datastore."""
-
-  def post(self):
-    logging.info('Add Movies Complete.')
-    mr_id = self.request.headers['Mapreduce-Id']
-    mr_state = MapreduceState.get_by_key_name(mr_id)
-    mr_spec = mr_state.mapreduce_spec
-    json_spec = mr_spec.to_json()
-    json_params = json_spec['params']
-    blob_key = json_params['blob_key']
-    blob_info = blobstore.BlobInfo.get(blob_key)
-    blob_info.delete()
-    logging.info('Temp blob deleted for mapreduce: %s' % mr_id)
-
-
-class IndexFilms(baserequesthandler.RequestHandler):
-  """Index's the films."""
-
-  def post(self):
-    logging.info('Start indexing films.')
-    pipeline = map_reduce.IndexerPipeline()
-    pipeline.start()
-
-    return webapp2.redirect('/admin')

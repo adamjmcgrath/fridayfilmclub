@@ -28,15 +28,9 @@ routes = [
 
     # Admin section.
     webapp_routes.PathPrefixRoute('/admin', [
-        webapp2.Route('/addfilms', admin.AddFilms, 'admin-add-films'),
-        webapp2.Route('/addfilmshandler', admin.AddFilmsHandler,
-            'admin-add-films-handler'),
-        webapp2.Route('/addfilmsdone', admin.AddFilmsDone,
-            'admin-add-films-done'),
         webapp2.Route('/addquestion', admin.AddEditQuestion, 'admin-add-question'),
         webapp2.Route(r'/editquestion/<key>', admin.AddEditQuestion,
             'admin-edit-question'),
-        webapp2.Route('/indexfilms', admin.IndexFilms, 'admin-index-films'),
         webapp2.Route('/questions', admin.Questions, 'admin-questions'),
         webapp2.Route('/posequestion', admin.PoseQuestion, 'admin-posequestion'),
         webapp2.Route('/posequestiontest/<key>', admin.PoseQuestionTest,

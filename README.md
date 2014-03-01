@@ -21,7 +21,6 @@ Sub-modules and libraries:
 ### Python
 
 - Wtform
-- Appengine Mapreduce
 - Httplib2
 - Oauth2
 - Simpleauth

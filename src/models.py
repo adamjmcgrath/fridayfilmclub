@@ -37,42 +37,6 @@ def slugify(my_string):
 
 
 
-class Film(ndb.Model):
-  """A Film.
-
-  Attributes:
-    batch: An id for identifiying in which group the film was added.
-    grossing: The dallar amount the film made.
-    title: The title of the Film.
-    title_slug: The slugified title of the Film.
-    year: The year the Film came out.
-  """
-  batch = ndb.IntegerProperty()
-  grossing = ndb.IntegerProperty()
-  title = ndb.StringProperty()
-  title_slug = ndb.StringProperty()
-  year = ndb.IntegerProperty()
-
-  def to_dict(self):
-    return {
-      'key': self.key.string_id(),
-      'batch': self.batch,
-      'grossing': self.grossing,
-      'title': self.title,
-      'title_slug': self.title_slug,
-      'year': self.year,
-    }
-
-
-class FilmIndex(ndb.Model):
-  """An index to search for Films.
-
-  Attributes:
-    films: a list of films that the index matches.
-  """
-  films = ndb.KeyProperty(repeated=True)
-
-
 class Season(ndb.Model):
   """Group questions into seasons."""
   number = ndb.IntegerProperty()
@@ -93,7 +57,6 @@ class Question(ndb.Model):
   """
   clues = ndb.KeyProperty(repeated=True)
   created = ndb.DateTimeProperty(auto_now_add=True)
-  answer = ndb.KeyProperty(kind=Film) # Temp
   answer_id = ndb.StringProperty()
   answer_title = ndb.StringProperty()
   answer_year = ndb.IntegerProperty()
@@ -233,7 +196,6 @@ class User(AuthUser):
   name = ndb.StringProperty()
   username = ndb.StringProperty()
   username_lower = ndb.ComputedProperty(lambda self: self.username.lower())
-  favourite_film = ndb.KeyProperty(kind=Film) # Temp
   favourite_film_id = ndb.StringProperty()
   favourite_film_title = ndb.StringProperty()
   favourite_film_year = ndb.IntegerProperty()

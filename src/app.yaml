@@ -47,10 +47,6 @@ handlers:
 - url: /stylesheets
   static_dir: stylesheets
   
-- url: /mapreduce(/.*)?
-  script: mapreduce.main.APP 
-  login: admin
-
 - url: /admin/?.*
   script: main.app
   login: admin

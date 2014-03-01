@@ -10,10 +10,6 @@
 [submodule "src/growjs"]
 	path = src/growjs
 	url = https://github.com/adamjmcgrath/growjs.git
-[submodule "src/mapreduce"]
-	path = src/mapreduce
-	url = https://github.com/adamjmcgrath/appengine-mapreduce-python.git
-        ignore = untracked
 [submodule "submodules/simpleauth"]
 	path = submodules/simpleauth
 	url = https://github.com/adamjmcgrath/simpleauth.git
@@ -36,6 +32,3 @@
 	path = submodules/closure-library
 	url = https://code.google.com/p/closure-library/
 	ignore = dirty
-[submodule "submodules/gdata-python-client"]
-	path = submodules/gdata-python-client
-	url = https://github.com/adamjmcgrath/gdata-python-client.git
