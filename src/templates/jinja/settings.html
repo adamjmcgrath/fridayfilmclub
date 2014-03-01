@@ -7,9 +7,6 @@
   {# Invite #}
   <div class="alert alert-info">
   <h4 class="text-muted" id="invite">Invite your friends:</h4>
-  {% if user.favourite_film_title and user.invites|length %}
-    <div class="alert alert-danger">invite a friend to play <span class="glyphicon glyphicon-hand-down"></span></div>
-  {% endif %}
   <form class="form" id="invite-form">
     <div class="input-group">
       <input name="email" type="text" class="invite-email form-control" id="inviteEmail" placeholder="name@example.com" list="emailAutoComplete">
