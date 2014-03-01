@@ -106,6 +106,12 @@ indexes:
   - name: score
     direction: desc
 
+- kind: UserQuestion
+  properties:
+  - name: user
+  - name: season
+  - name: week
+
 - kind: UserSeason
   properties:
   - name: season

@@ -46,7 +46,9 @@
           <li class="hidden-xs {% if page_id == 'archive-page' %} active{% endif %}"><a href="/archive">Old questions</a></li>
           <li{% if page_id == 'leaderboard-page' %} class="active"{% endif %}><a href="/leaderboard">Leaderboard</a></li>
         </ul>
-        <a href="{{ uri_for('settings') }}#invite" class="btn btn-xs btn-danger">Invite your friends</a>
+        {% if logged_in %}
+        <a href="{{ uri_for('settings') }}#invite" class="btn btn-xs btn-danger" id="invite-nav-button">Invite your friends</a>
+        {% endif %}
       </div>
     {% endblock %}
 
