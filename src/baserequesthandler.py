@@ -102,11 +102,14 @@ class RequestHandler(webapp2.RequestHandler):
     """Set the content type to application/json."""
     self.response.headers['Content-Type'] = 'application/json; charset=utf-8'
 
-  def render_json(self, json_obj):
+  def render_json(self, json_obj, is_string=False):
     """docstring for render_json"""
     indent = 2 if self.is_debug_mode() else None
     callback = self.get_json_callback()
-    json_response = json.dumps(json_obj, indent=indent)
+    if is_string:
+      json_response = json_obj
+    else:
+      json_response = json.dumps(json_obj, indent=indent)
     if callback:
       json_response = '%s(%s)' % (callback, json_response)
     self.response.headers['Content-Type'] = 'application/json; charset=utf-8'

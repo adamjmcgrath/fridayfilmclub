@@ -43,6 +43,27 @@ _PROP_MAP = {
     'answered': 'questions_answered',
   }
 }
+_LB_CACHE = 'leaderboard_cache'
+
+
+def set_leaderboard_cache(key, value, existing_cache=''):
+  """Set the leaderboard cache."""
+  if not existing_cache:
+    existing_cache = memcache.get(_LB_CACHE) or ''
+  cache_keys = existing_cache.split('|')
+  cache_keys.append(key)
+  memcache.add_multi({
+    key: value,
+    _LB_CACHE: '|'.join(cache_keys)
+  })
+
+
+def delete_leaderboard_cache():
+  """Delete the leaderboard cache."""
+  mc = memcache.Client()
+  lb_cache = mc.get(_LB_CACHE)
+  if lb_cache:
+    mc.delete_multi_async(lb_cache.split('|') + [_LB_CACHE])
 
 
 class Question(baserequesthandler.RequestHandler):
@@ -90,6 +111,10 @@ class Question(baserequesthandler.RequestHandler):
         user.questions_answered += 1
         question.answered += 1
         to_put.append(question)
+        # Delete leaderboard memcache when a new score for the current
+        # question comes in.
+        if question.is_current:
+          delete_leaderboard_cache()
 
         if question.season:
           user_season_id = '%s-%s' % (question.season.id(), user.key.id())
@@ -157,10 +182,17 @@ class LeaderBoard(baserequesthandler.RequestHandler):
     except KeyError:
       sort_props = _PROP_MAP['season']
     sort = self.request.get('sort') or 'score'
-    asc = self.request.get('dir') == 'asc'
+    direction = self.request.get('dir') or 'asc'
+
+    cache_key = '%s:%s:%s:%s' % (str(duration), str(offset),
+                                 str(limit), direction)
+    cached = memcache.get_multi([_LB_CACHE, cache_key])
+    if cached.get(cache_key):
+      return self.render_json(cached.get(cache_key), is_string=True)
+
     if sort:
       sort = ndb.GenericProperty(sort_props[sort])
-      if not asc:
+      if not direction == 'asc':
         sort = -sort
 
     qo = ndb.QueryOptions(offset=int(offset), limit=int(limit))
@@ -198,8 +230,10 @@ class LeaderBoard(baserequesthandler.RequestHandler):
           partial(models.UserSeason.to_leaderboard_json, questions_in_season),
           options=qo)
 
-
-    return self.render_json(response_obj)
+    json_str = json.dumps(response_obj)
+    set_leaderboard_cache(cache_key, json_str,
+                          existing_cache=cached.get(_LB_CACHE, ''))
+    return self.render_json(json_str, is_string=True)
 
 
 class Contacts(baserequesthandler.RequestHandler):
