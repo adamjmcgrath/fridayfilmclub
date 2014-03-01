@@ -26,7 +26,7 @@ _MAX_SCORE = 20000
 # No. of seconds penalty per guess
 _TIME_PER_PENALTY = 2000
 # Number of invites each user gets
-_NUM_INVITES = 10
+_NUM_INVITES = 50
 # Secret invite code
 _INVITE_SECRET = 'L1f3M0v3sPr3ttyF4st1fY0uD0ntSt0p4ndL00k4r0und0nc31n4wh1l3Y0uC0uldM1ss1t'
 WEEKS_PER_SEASON = 12
