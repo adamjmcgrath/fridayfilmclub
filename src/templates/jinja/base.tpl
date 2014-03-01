@@ -62,7 +62,7 @@
       {% block footer %}
         <hr>
         <div id="footer">
-          <p>&copy; Friday Film Club</p>
+          <p>&copy; Friday Film Club <a href="https://twitter.com/FilmMasterJack" target="_blank" class="pull-right" id="follow-twitter">Follow us on Twitter</a></p>
         </div>
       {% endblock %}
     </div>
