@@ -184,8 +184,8 @@ class LeaderBoard(baserequesthandler.RequestHandler):
     sort = self.request.get('sort') or 'score'
     direction = self.request.get('dir') or 'asc'
 
-    cache_key = '%s:%s:%s:%s' % (str(duration), str(offset),
-                                 str(limit), direction)
+    cache_key = '%s:%s:%s:%s:%s' % (str(duration), str(offset),
+                                 str(limit), sort, direction)
     cached = memcache.get_multi([_LB_CACHE, cache_key])
     if cached.get(cache_key):
       return self.render_json(cached.get(cache_key), is_string=True)
