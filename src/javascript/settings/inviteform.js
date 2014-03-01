@@ -29,7 +29,7 @@ goog.exportSymbol('ffc.settings.InviteForm', ffc.settings.InviteForm);
 goog.exportProperty(ffc.settings.InviteForm.prototype, 'decorate',
     ffc.settings.InviteForm.prototype.decorate);
 goog.exportProperty(ffc.settings.InviteForm.prototype, 'populateAutoComplete',
-    ffc.settings.InviteForm.prototype.decorate);
+    ffc.settings.InviteForm.prototype.populateAutoComplete);
 
 
 /**
