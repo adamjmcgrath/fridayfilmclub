@@ -8,6 +8,7 @@ __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 
 import logging
 import urlparse
+from operator import itemgetter
 import posixpath
 
 from google.appengine.api import mail, users
@@ -128,14 +129,18 @@ class Profile(baserequesthandler.RequestHandler):
 
   def get(self, username):
     user = models.User.get_by_username(username)
+    user_questions = models.UserQuestion.query(
+        models.UserQuestion.user == user.key).map(
+          models.UserQuestion.get_profile_dict)
+
     if not user:
       return self.error(404)
     else:
       return self.render_template('profile.html', {
         'user_profile': user,
-        'user_questions': models.UserQuestion.query(models.UserQuestion.user == user.key)
+        'user_questions': sorted(user_questions,
+                                 key=itemgetter('season', 'week'))
       })
-
 
 
 class Settings(baserequesthandler.RequestHandler):

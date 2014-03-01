@@ -25,13 +25,16 @@
       </thead>
       {% for uq in user_questions %}
         <tr>
-          {% set season = uq.question.get().season %}
-          <td>{{ season and season.id() }}</td>
-          <td>{{ uq.question.get().week }}</td>
-          <td>{{ uq.score }}</td>
+          {% set season = uq.season %}
+          <td>{{ season }}</td>
+          <td>{{ uq.week }}</td>
+          <td>{{ uq.score or '0' }}</td>
           <td>
-            {% if uq.guesses|length %}{{ uq.guesses|length - 1 }}
-            {% else %}{{ uq.guesses|length }}{% endif %}
+            {% if uq.guesses|length %}
+              {{ uq.guesses|length - 1 }}
+            {% else %}
+              {{ uq.guesses|length }}
+            {% endif %}
           </td>
         </tr>
       {% endfor %}

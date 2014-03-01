@@ -292,6 +292,17 @@ class UserQuestion(ndb.Model):
     return score
 
   @staticmethod
+  def get_profile_dict(uq):
+    """Great a dictionary for use in the profile scoreboard."""
+    q = uq.question.get()
+    return {
+      'week': q.week,
+      'season': q.season.id(),
+      'score': uq.score,
+      'guesses': uq.guesses
+    }
+
+  @staticmethod
   def to_leaderboard_json(user_question):
     """Used to return json for the leader board api all."""
     user = user_question.user.get()
