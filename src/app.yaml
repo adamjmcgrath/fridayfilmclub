@@ -14,7 +14,6 @@ libraries:
 - name: webapp2
   version: latest
 
-
 handlers:
 - url: /favicon\.ico
   static_files: static/img/favicon.ico
@@ -59,6 +58,10 @@ handlers:
 
 builtins:
 - remote_api: on
+- deferred: on
+
+inbound_services:
+- channel_presence
 
 skip_files:
 - ^(.*/)?app\.yaml

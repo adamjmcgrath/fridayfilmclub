@@ -38,7 +38,6 @@ class RequestHandler(webapp2.RequestHandler):
       return webapp2.RequestHandler.dispatch(self)
     finally:
       # Save all sessions.
-      logging.info('Saving session.')
       self.session_store.save_sessions(self.response)
 
   @webapp2.cached_property

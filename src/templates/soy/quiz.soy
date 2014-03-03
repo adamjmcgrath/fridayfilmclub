@@ -142,3 +142,20 @@
   </div>
 </div>
 {/template}
+
+
+/**
+ * Realtime score.
+ * @param pic The users pic url.
+ * @param score The users score.
+ * @param user The user name.
+ */
+{template .realtimeScore}
+<div>
+  <a href="/u/{$user}">
+    <img src="{$pic}" width="20" height="20">
+    &nbsp;{$user}&nbsp;
+  </a>
+  ({$score})
+</div>
+{/template}
