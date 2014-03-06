@@ -25,6 +25,7 @@ FFC_QUIZ_JS_OUTPUT=$FFC_PATH/static/js/quiz.js
 FFC_LEADERBOARD_JS_OUTPUT=$FFC_PATH/static/js/leaderboard.js
 FFC_SETTINGS_JS_OUTPUT=$FFC_PATH/static/js/settings.js
 FFC_DEPS_OUTPUT=$FFC_PATH/static/js/deps.js
+EXTERNS_SOURCE=$FFC_SOURCE/externs
 
 
 if [ $1 == "deps" ] || [ $1 == "all" ]; then
@@ -57,9 +58,11 @@ if [ $1 == "quiz" ] || [ $1 == "all" ]; then
     --root=$TEMPLATE_SOURCE \
     --root=$GROW_SOURCE \
     --namespace="ffc.quiz.Question" \
+    --namespace="ffc.quiz.RealtimeScores" \
     --output_mode=compiled \
     --compiler_jar=$CLOSURE_COMPILER_PATH \
     --compiler_flags="--compilation_level=ADVANCED_OPTIMIZATIONS" \
+    --compiler_flags="--externs=$EXTERNS_SOURCE/channel.js" \
     --compiler_flags="--output_wrapper=\"(function() {%output%})();\"" \
     > $FFC_QUIZ_JS_OUTPUT
 fi

@@ -80,3 +80,14 @@ ffc.template.quiz.score = function(opt_data, opt_ignored) {
   output += '<sub></sub></p><h4>Clues:</h4><div class="progress"><div class="bar' + ((opt_data.clueCount > 1) ? ' bar-active' : '') + ' bar-1">1</div><div class="bar' + ((opt_data.clueCount > 2) ? ' bar-active' : '') + ' bar-2">2</div><div class="bar' + ((opt_data.clueCount > 3) ? ' bar-active' : '') + ' bar-3">3</div></div></div>';
   return output;
 };
+
+
+/**
+ * @param {Object.<string, *>=} opt_data
+ * @param {(null|undefined)=} opt_ignored
+ * @return {string}
+ * @notypecheck
+ */
+ffc.template.quiz.realtimeScore = function(opt_data, opt_ignored) {
+  return '<div><a href="/u/' + soy.$$escapeHtml(opt_data.user) + '"><img src="' + soy.$$escapeHtml(opt_data.pic) + '" width="20" height="20">&nbsp;' + soy.$$escapeHtml(opt_data.user) + '&nbsp;</a>(' + soy.$$escapeHtml(opt_data.score) + ')</div>';
+};

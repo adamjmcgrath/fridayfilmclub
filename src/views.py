@@ -11,12 +11,13 @@ import urlparse
 from operator import itemgetter
 import posixpath
 
-from google.appengine.api import mail, users
+from google.appengine.api import channel, mail, users
 
 import auth
 import baserequesthandler
 import forms
 import models
+import settings
 import twitter
 
 HOST_URL = 'http://www.fridayfilmclub.com'
@@ -59,10 +60,15 @@ class Question(baserequesthandler.RequestHandler):
       user_is_admin=user.is_admin
     )
 
-    return self.render_template('question.html', {
+    context = {
       'user_question': user_question,
       'question': question,
-    })
+    }
+    if question.is_current or settings.DEBUG:
+      # Add the realtime scores token.
+      context['channel_token'] = channel.create_channel(user_question_id)
+
+    return self.render_template('question.html', context)
 
 
 class Login(baserequesthandler.RequestHandler):

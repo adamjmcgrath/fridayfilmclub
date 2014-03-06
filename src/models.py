@@ -226,6 +226,14 @@ class User(AuthUser):
     else:
       return ''
 
+  def get_score_dict(self, score):
+    """Gets a dictionary for realtime scores."""
+    return {
+      'user': self.username,
+      'pic': self.pic_url(size=20),
+      'score': score
+    }
+
   @staticmethod
   def get_by_username(username):
     return User.query().filter(User.username_lower == username.lower()).get()

@@ -19,16 +19,25 @@
       </p>
       <div id="score-wrap" class="score"></div>
     </div>
+    <div id="live-scores"></div>
   </div>
 </div>
 {% endblock %}
 
 {% block body_base %}
+{% if channel_token %}
+  <script src="/_ah/channel/jsapi"></script>
+  <script>var appengine = goog.appengine;</script>
+{% endif %}
 {% include "templates/jinja/inc/questionjs.tpl" %}
 <script>
   var q = new ffc.quiz.Question('{{question.key.id()}}',
       document.getElementById('clues'),
       document.getElementById('score-wrap'));
+{% if channel_token %}
+  var r = new ffc.quiz.RealtimeScores('{{ channel_token }}',
+      document.getElementById('live-scores'));
+{% endif %}
 </script>
 {% endblock %}
 

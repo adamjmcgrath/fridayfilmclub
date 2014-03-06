@@ -18,6 +18,7 @@ if 'third_party' not in sys.path:
 
 import admin
 import api
+import realtime
 import settings
 import suggest
 import secrets
@@ -60,6 +61,10 @@ routes = [
     webapp2.Route(r'/sendinvites', views.SendInvites, name='send_invites'),
     webapp2.Route(r'/sendinvite_legacy', views.SendInviteLegacy,
         name='send_invite_legacy'),
+
+    # Realtime handlers.
+    webapp2.Route(r'/_ah/channel/connected/', realtime.Connect),
+    webapp2.Route(r'/_ah/channel/disconnected/', realtime.Disconnect),
 
     # Main views.
     webapp2.Route(r'/login', views.Login, name='login'),
