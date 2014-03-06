@@ -17,6 +17,7 @@ import urllib
 
 import baserequesthandler
 import models
+import realtime
 import secrets
 import twitter
 
@@ -115,6 +116,7 @@ class Question(baserequesthandler.RequestHandler):
         # question comes in.
         if question.is_current:
           delete_leaderboard_cache()
+          realtime.send_score_to_players(user, user_question.score)
 
         if question.season:
           user_season_id = '%s-%s' % (question.season.id(), user.key.id())

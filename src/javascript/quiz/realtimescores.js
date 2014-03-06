@@ -68,5 +68,5 @@ ffc.quiz.RealtimeScores.prototype.onMessage_ = function(msg) {
  * The length of time in ms to show a score.
  * @type {number}
  */
-ffc.quiz.RealtimeScores.TIMEOUT = 10 * 1000;
+ffc.quiz.RealtimeScores.TIMEOUT = 6 * 1000;
 

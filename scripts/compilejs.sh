@@ -57,12 +57,12 @@ if [ $1 == "quiz" ] || [ $1 == "all" ]; then
     --root=$SUGGEST_SOURCE \
     --root=$TEMPLATE_SOURCE \
     --root=$GROW_SOURCE \
-    --externs=$EXTERNS_SOURCE/channel.js
     --namespace="ffc.quiz.Question" \
     --namespace="ffc.quiz.RealtimeScores" \
     --output_mode=compiled \
     --compiler_jar=$CLOSURE_COMPILER_PATH \
     --compiler_flags="--compilation_level=ADVANCED_OPTIMIZATIONS" \
+    --compiler_flags="--externs=$EXTERNS_SOURCE/channel.js" \
     --compiler_flags="--output_wrapper=\"(function() {%output%})();\"" \
     > $FFC_QUIZ_JS_OUTPUT
 fi
