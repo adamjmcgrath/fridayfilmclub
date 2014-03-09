@@ -53,7 +53,7 @@ def set_leaderboard_cache(key, value, existing_cache=''):
     existing_cache = memcache.get(_LB_CACHE) or ''
   cache_keys = existing_cache.split('|')
   cache_keys.append(key)
-  memcache.add_multi({
+  memcache.set_multi({
     key: value,
     _LB_CACHE: '|'.join(cache_keys)
   })
