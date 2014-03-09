@@ -226,7 +226,7 @@ class SendInvites(baserequesthandler.RequestHandler):
     sent_to = False
     if form.validate():
       # Send invite
-      email = form.invite_email.data
+      email = form.email.data
       invite = models.Invite.create_single_invite().id()
       logging.info('Sending invite: %s, to: %s' % (invite, email))
       body = self.generate_template('email/invite.txt', {

@@ -7,11 +7,11 @@
 {% if sent_to %}
 <div class="alert alert-success">Your invite has been sent to <b>{{ sent_to }}</b></div>
 {% endif %} 
-<form id="add-question" action="" method="post"{% if form.errors.invite_email %}  class="has-error"{% endif %}>
+<form id="add-question" action="" method="post"{% if form.errors.email %}  class="has-error"{% endif %}>
   <div class="form-group">
     <label for="email">Email address</label>
-    {{ form.invite_email(class_='form-control', id='email', placeholder='Enter email') }}
-    {% if form.errors.invite_email %}
+    {{ form.email(class_='form-control', id='email', placeholder='Enter email') }}
+    {% if form.errors.email %}
       <small class="help-block">Must be a valid email.</small>
     {% endif %}
   </div>
