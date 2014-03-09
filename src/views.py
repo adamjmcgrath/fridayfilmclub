@@ -116,8 +116,8 @@ class RequestInvite(baserequesthandler.RequestHandler):
     sent_to = None
     if form.validate():
       sent_to = form.email.data
-      mail.send_mail(sender='fmj@fridayfilmclub.com',
-                     to='fmj@fridayfilmclub.com',
+      mail.send_mail(sender=settings.FMJ_EMAIL,
+                     to=settings.FMJ_EMAIL,
                      subject='Invite request',
                      body='Please can I get an invite sent to %s' % sent_to)
 
@@ -220,7 +220,7 @@ class SendInvites(baserequesthandler.RequestHandler):
         invite = user.invites.pop().id()
         email = facebook_contact + '@facebook.com'
         success = send_invite_email(invite, user.facebook_name,
-                     'fmj@fridayfilmclub.com', email)
+                     settings.FMJ_EMAIL, email)
 
     for twitter_contact in twitter_contacts:
       if twitter_contact:
@@ -285,7 +285,7 @@ class SendInviteLegacy(baserequesthandler.RequestHandler):
       try:
         sender = user.email
       except AttributeError:
-        sender = 'fmj@fridayfilmclub.com'
+        sender = settings.FMJ_EMAIL
 
       try:
         mail.send_mail(sender=sender,
@@ -293,7 +293,7 @@ class SendInviteLegacy(baserequesthandler.RequestHandler):
                        subject='Friday Film Club invitation',
                        body=body)
       except mail.InvalidSenderError:
-        mail.send_mail(sender='fmj@fridayfilmclub.com',
+        mail.send_mail(sender=settings.FMJ_EMAIL,
                        to=email,
                        subject='Friday Film Club invitation',
                        body=body)
@@ -326,7 +326,7 @@ def send_invite_email(invite, from_name, from_email, to_email):
     'user': from_name
   })
 
-  sender = from_email or 'fmj@fridayfilmclub.com'
+  sender = from_email or settings.FMJ_EMAIL
 
   try:
     mail.send_mail(sender=sender,

@@ -17,6 +17,7 @@ from google.appengine.ext import ndb
 import baserequesthandler
 import forms
 import models
+import settings
 
 EMAIL_BATCH_SIZE = 10
 
@@ -147,7 +148,7 @@ class PoseQuestion(baserequesthandler.RequestHandler):
       except AttributeError:
         continue
 
-      mail.send_mail(sender='fmj@fridayfilmclub.com',
+      mail.send_mail(sender=settings.FMJ_EMAIL,
                      to=email,
                      subject=subject,
                      body=body)
@@ -175,7 +176,7 @@ class PoseQuestionTest(baserequesthandler.RequestHandler):
       'name': 'Admin'
     })
 
-    mail.send_mail(sender='fmj@fridayfilmclub.com',
+    mail.send_mail(sender=settings.FMJ_EMAIL,
                    to=users.get_current_user().email(),
                    subject='Friday Film Club TEST',
                    body=body)
@@ -206,7 +207,7 @@ class DryRun(baserequesthandler.RequestHandler):
                                           {'question': question})
       subject = 'Friday Film Club (FAILURE)'
 
-    mail.send_mail_to_admins('fmj@fridayfilmclub.com', subject, email_body)
+    mail.send_mail_to_admins(settings.FMJ_EMAIL, subject, email_body)
 
     self.response.headers['content-type'] = 'text/plain'
     self.response.out.write(email_body)
@@ -232,7 +233,7 @@ class SendInvites(baserequesthandler.RequestHandler):
         'invite': urlparse.urljoin(self.request.host_url, 'register?invite=%s' % invite),
         'user': 'Film Master Jack'
       })
-      mail.send_mail(sender='fmj@fridayfilmclub.com',
+      mail.send_mail(sender=settings.FMJ_EMAIL,
                        to=email,
                        subject='Friday Film Club invitation',
                        body=body)

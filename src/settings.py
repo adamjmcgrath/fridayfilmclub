@@ -9,3 +9,5 @@ __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 import os
 
 DEBUG = os.environ.get('SERVER_SOFTWARE', '').startswith('Dev')
+FMJ_EMAIL_SHORT = 'fmj@fridayfilmclub.com'
+FMJ_EMAIL = 'Film Master Jack <%s>' % FMJ_EMAIL_SHORT
