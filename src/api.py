@@ -72,14 +72,14 @@ class Question(baserequesthandler.RequestHandler):
 
   @auth.login_required
   def get(self, question_id):
-    return self.get_or_post(question_id)
+    self.get_or_post(question_id)
 
   @auth.login_required
   def post(self, question_id):
     # Get the users guess
     guess = self.request.get('guess')
 
-    return self.get_or_post(question_id, guess=guess)
+    self.get_or_post(question_id, guess=guess)
 
   def get_or_post(self, question_id, guess=None):
 
@@ -168,7 +168,7 @@ class Question(baserequesthandler.RequestHandler):
       response_obj['packshot'] = question.packshot_url(size=150)
       response_obj['imdb_url'] = question.imdb_url
 
-    return self.render_json(response_obj)
+    self.render_json(response_obj)
 
 
 class LeaderBoard(baserequesthandler.RequestHandler):
@@ -190,7 +190,8 @@ class LeaderBoard(baserequesthandler.RequestHandler):
                                  str(limit), sort, direction)
     cached = memcache.get_multi([_LB_CACHE, cache_key])
     if cached.get(cache_key):
-      return self.render_json(cached.get(cache_key), is_string=True)
+      self.render_json(cached.get(cache_key), is_string=True)
+      return
 
     if sort:
       sort = ndb.GenericProperty(sort_props[sort])
@@ -235,7 +236,7 @@ class LeaderBoard(baserequesthandler.RequestHandler):
     json_str = json.dumps(response_obj)
     set_leaderboard_cache(cache_key, json_str,
                           existing_cache=cached.get(_LB_CACHE, ''))
-    return self.render_json(json_str, is_string=True)
+    self.render_json(json_str, is_string=True)
 
 
 class Contacts(baserequesthandler.RequestHandler):
@@ -247,7 +248,8 @@ class Contacts(baserequesthandler.RequestHandler):
     cached = memcache.get(cache_key)
 
     if cached:
-      return self.render_json(json.loads(cached))
+      self.render_json(json.loads(cached))
+      return
     else:
       json_list = []
 
@@ -261,7 +263,7 @@ class Contacts(baserequesthandler.RequestHandler):
       json_list = self.get_twitter_followers()
 
     memcache.add(cache_key, json.dumps(json_list), time=3600)
-    return self.render_json(json_list)
+    self.render_json(json_list)
 
   def get_google_contacts(self):
     refresh_token = self.current_user.google_refresh_token

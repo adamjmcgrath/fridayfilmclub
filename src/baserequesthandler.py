@@ -35,7 +35,7 @@ class RequestHandler(webapp2.RequestHandler):
     self.session_store = sessions.get_store(request=self.request)
     try:
       # Dispatch the request.
-      return webapp2.RequestHandler.dispatch(self)
+      webapp2.RequestHandler.dispatch(self)
     finally:
       # Save all sessions.
       self.session_store.save_sessions(self.response)
@@ -83,7 +83,7 @@ class RequestHandler(webapp2.RequestHandler):
 
   def render_template(self, template_path, template_obj):
     """docstring for render_template"""
-    return webapp2.Response(self.generate_template(template_path, template_obj))
+    self.response.write(self.generate_template(template_path, template_obj))
 
   def get_json_callback(self):
     """Get json callback"""
@@ -108,9 +108,9 @@ class RequestHandler(webapp2.RequestHandler):
     if callback:
       json_response = '%s(%s)' % (callback, json_response)
     self.response.headers['Content-Type'] = 'application/json; charset=utf-8'
-    return webapp2.Response(json_response)
+    self.response.write(json_response)
 
   def render_empty(self):
     """Render an empty response."""
-    return webapp2.Response('')
+    self.response.write('')
 

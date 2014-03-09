@@ -30,7 +30,7 @@ class HomePage(baserequesthandler.RequestHandler):
     current_question = models.Question.query(models.Question.is_current == True)
     q = current_question.get()
     question_image = q and q.clue_image_url(size=260)
-    return self.render_template('index.html', {
+    self.render_template('index.html', {
         'current_question': current_question,
         'question_image': question_image
     })
@@ -68,14 +68,14 @@ class Question(baserequesthandler.RequestHandler):
       # Add the realtime scores token.
       context['channel_token'] = channel.create_channel(user_question_id)
 
-    return self.render_template('question.html', context)
+    self.render_template('question.html', context)
 
 
 class Login(baserequesthandler.RequestHandler):
   """Shows the login page."""
 
   def get(self):
-    return self.render_template('login.html', {
+    self.render_template('login.html', {
       'no_invite_warning': str(self.request.referer).endswith('/login')
     })
 
@@ -85,7 +85,7 @@ class Register(baserequesthandler.RequestHandler):
 
   def get(self):
     form = forms.Registration(invitation_code=self.request.get('invite'))
-    return self.render_template('register.html', {
+    self.render_template('register.html', {
       'form': form
     })
 
@@ -98,7 +98,7 @@ class Register(baserequesthandler.RequestHandler):
       self.session['invitation_code'] = self.request.get('invitation_code')
       self.redirect(self.uri_for('auth_login', provider=provider))
     else:
-      return self.render_template('register.html', {
+      self.render_template('register.html', {
         'form': form
       })
 
@@ -107,7 +107,7 @@ class RequestInvite(baserequesthandler.RequestHandler):
   """Shows the request invite page."""
 
   def get(self):
-    return self.render_template('requestinvite.html', {
+    self.render_template('requestinvite.html', {
       'form': forms.RequestInvite()
     })
 
@@ -124,7 +124,7 @@ class RequestInvite(baserequesthandler.RequestHandler):
       # Reset the form.
       form.process()
 
-    return self.render_template('requestinvite.html', {
+    self.render_template('requestinvite.html', {
       'form': form,
       'sent_to': sent_to
     })
@@ -140,9 +140,9 @@ class Profile(baserequesthandler.RequestHandler):
           models.UserQuestion.get_profile_dict)
 
     if not user:
-      return self.error(404)
+      self.error(404)
     else:
-      return self.render_template('profile.html', {
+      self.render_template('profile.html', {
         'user_profile': user,
         'user_questions': sorted(user_questions,
                                  key=itemgetter('season', 'week'))
@@ -155,7 +155,7 @@ class Settings(baserequesthandler.RequestHandler):
   @auth.login_required
   def get(self):
     user = self.current_user
-    return self.render_template('settings.html', {
+    self.render_template('settings.html', {
       'form': forms.User(obj=user, username=user.key.id())
     })
 
@@ -166,7 +166,7 @@ class Settings(baserequesthandler.RequestHandler):
     if form.validate():
       form.populate_obj(user)
       user.put()
-    return self.render_template('settings.html', {
+    self.render_template('settings.html', {
       'form': form
     })
 
@@ -193,7 +193,7 @@ class SendInvites(baserequesthandler.RequestHandler):
       },
     ]
     self.session['original_url'] = self.request.url
-    return self.render_template('sendinvites.html', {
+    self.render_template('sendinvites.html', {
         'user': self.current_user,
         'providers': providers
     })
@@ -228,7 +228,7 @@ class SendInvites(baserequesthandler.RequestHandler):
         success = send_invite_dm(invite, user, twitter_contact)
 
     # user.put()
-    return self.render_template('sendinvites.html', {
+    self.render_template('sendinvites.html', {
         'user': self.current_user,
         'fail': not len(google_sent),
         'sent': google_sent,
@@ -242,7 +242,7 @@ class Archive(baserequesthandler.RequestHandler):
   def get(self):
     questions = models.Question.query(models.Question.posed != None,
                                       models.Question.is_current == False)
-    return self.render_template('archive.html', {
+    self.render_template('archive.html', {
       'questions': questions
     })
 
@@ -251,7 +251,7 @@ class LeaderBoard(baserequesthandler.RequestHandler):
   """The leader board / results page."""
 
   def get(self):
-    return self.render_template('leaderboard.html', {
+    self.render_template('leaderboard.html', {
       'season': models.Season.get_current()
     })
 
@@ -260,7 +260,7 @@ class HowItWorks(baserequesthandler.RequestHandler):
   """How it works / rules."""
 
   def get(self):
-    return self.render_template('how.html', {})
+    self.render_template('how.html', {})
 
 
 class SendInviteLegacy(baserequesthandler.RequestHandler):
@@ -298,7 +298,7 @@ class SendInviteLegacy(baserequesthandler.RequestHandler):
                        subject='Friday Film Club invitation',
                        body=body)
 
-      return self.render_json({
+      self.render_json({
         'success': True,
         'invites': len(user.invites)
       })
@@ -309,7 +309,7 @@ class SendInviteLegacy(baserequesthandler.RequestHandler):
       else:
         error = 'You have no invites left.'
 
-      return self.render_json({
+      self.render_json({
         'success': False,
         'error': error
       })

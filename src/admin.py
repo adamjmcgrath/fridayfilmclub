@@ -34,7 +34,7 @@ class HomePage(baserequesthandler.RequestHandler):
   """Shows the homepage."""
 
   def get(self):
-    return self.render_template('admin/index.html', {})
+    self.render_template('admin/index.html', {})
 
 
 class AddEditQuestion(baserequesthandler.RequestHandler):
@@ -49,7 +49,7 @@ class AddEditQuestion(baserequesthandler.RequestHandler):
       question_entity = None
       form = forms.Question()
 
-    return self.render_template('admin/addquestion.html', {
+    self.render_template('admin/addquestion.html', {
         'form': form,
         'question': question_entity,
     })
@@ -67,9 +67,9 @@ class AddEditQuestion(baserequesthandler.RequestHandler):
       question_entity.put()
       form.populate_obj(question_entity)
       question_entity.put()
-      return webapp2.redirect('/admin')
+      webapp2.redirect('/admin')
     else:
-      return self.render_template('admin/addquestion.html', {
+      self.render_template('admin/addquestion.html', {
           'form': form,
           'question': question_entity,
           'debug': self.request.get('debug')
@@ -83,7 +83,7 @@ class Questions(baserequesthandler.RequestHandler):
     questions = models.Question.query(models.Question.season != None).order(
       models.Question.season, models.Question.week)
 
-    return self.render_template('admin/questions.html', {
+    self.render_template('admin/questions.html', {
       'questions': questions
     })
 
@@ -216,7 +216,7 @@ class SendInvites(baserequesthandler.RequestHandler):
   """Send invites to users from admin section"""
 
   def get(self):
-    return self.render_template('admin/sendinvites.html', {
+    self.render_template('admin/sendinvites.html', {
       'form': forms.Invite()
     })
 
@@ -239,7 +239,7 @@ class SendInvites(baserequesthandler.RequestHandler):
       form = forms.Invite()
       sent_to = email
 
-    return self.render_template('admin/sendinvites.html', {
+    self.render_template('admin/sendinvites.html', {
       'form': form,
       'sent_to': sent_to
     })
