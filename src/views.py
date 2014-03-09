@@ -304,8 +304,8 @@ class SendInviteLegacy(baserequesthandler.RequestHandler):
       })
 
     else:
-      if form.invite_email.errors:
-        error = form.invite_email.errors[0]
+      if form.email.errors:
+        error = form.email.errors[0]
       else:
         error = 'You have no invites left.'
 
