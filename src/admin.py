@@ -68,7 +68,7 @@ class AddEditQuestion(baserequesthandler.RequestHandler):
       question_entity.put()
       form.populate_obj(question_entity)
       question_entity.put()
-      webapp2.redirect('/admin')
+      self.redirect('/admin')
     else:
       self.render_template('admin/addquestion.html', {
           'form': form,
