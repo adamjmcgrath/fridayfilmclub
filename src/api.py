@@ -23,7 +23,7 @@ import twitter
 
 
 from google.appengine.api import memcache, users, urlfetch
-from google.appengine.ext import ndb
+from google.appengine.ext import deferred, ndb
 
 _MAX_CLUES = 4
 _PASS = 'pass'
@@ -64,7 +64,7 @@ def delete_leaderboard_cache():
   mc = memcache.Client()
   lb_cache = mc.get(_LB_CACHE)
   if lb_cache:
-    mc.delete_multi_async(lb_cache.split('|') + [_LB_CACHE])
+    mc.delete_multi(lb_cache.split('|') + [_LB_CACHE])
 
 
 class Question(baserequesthandler.RequestHandler):
@@ -115,7 +115,7 @@ class Question(baserequesthandler.RequestHandler):
         # Delete leaderboard memcache when a new score for the current
         # question comes in.
         if question.is_current:
-          delete_leaderboard_cache()
+          deferred.defer(delete_leaderboard_cache)
           realtime.send_score_to_players(user, user_question.score)
 
         if question.season:
