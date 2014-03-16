@@ -132,7 +132,6 @@ class Question(baserequesthandler.RequestHandler):
                                            user_season.score,
                                            user.overall_score)
 
-
       to_put.append(user_question)
       to_put.append(user)
       ndb.put_multi(to_put)
