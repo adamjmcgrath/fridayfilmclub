@@ -19,6 +19,7 @@ import baserequesthandler
 import models
 import realtime
 import secrets
+import settings
 import twitter
 
 
@@ -116,7 +117,6 @@ class Question(baserequesthandler.RequestHandler):
         # question comes in.
         if question.is_current:
           deferred.defer(delete_leaderboard_cache)
-          realtime.send_score_to_players(user, user_question.score)
 
         if question.season:
           user_season_id = '%s-%s' % (question.season.id(), user.key.id())
@@ -126,6 +126,12 @@ class Question(baserequesthandler.RequestHandler):
           user_season.clues += num_guesses - 1
           user_season.questions_answered += 1
           to_put.append(user_season)
+          if question.is_current or settings.DEBUG:
+            realtime.send_score_to_players(user,
+                                           user_question.score,
+                                           user_season.score,
+                                           user.overall_score)
+
 
       to_put.append(user_question)
       to_put.append(user)

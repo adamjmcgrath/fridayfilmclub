@@ -226,12 +226,14 @@ class User(AuthUser):
     else:
       return ''
 
-  def get_score_dict(self, score):
+  def get_score_dict(self, score, season_score, overall_score):
     """Gets a dictionary for realtime scores."""
     return {
       'user': self.username,
       'pic': self.pic_url(size=20),
-      'score': score
+      'score': score,
+      'season_score': season_score,
+      'overall_score': overall_score
     }
 
   @staticmethod

@@ -15,17 +15,21 @@ from google.appengine.api import channel, memcache
 from google.appengine.ext import deferred
 
 
-def _send_score_to_players(from_user_key, score):
+def _send_score_to_players(from_user_key, score, season_score, overall_score):
   """Send a users score to all active players in a deferred."""
   from_user = from_user_key.get()
   channels = json.loads(memcache.get('channels') or '{}')
   for client_id in channels.iterkeys():
-    channel.send_message(client_id, json.dumps(from_user.get_score_dict(score)))
+    channel.send_message(client_id, json.dumps(
+      from_user.get_score_dict(score, season_score, overall_score)))
 
 
-def send_score_to_players(from_user, score):
+def send_score_to_players(from_user, score, season_score, overall_score):
   """Send a users score to all active players."""
-  deferred.defer(_send_score_to_players, from_user.key, score)
+  deferred.defer(_send_score_to_players,
+                 from_user.key,
+                 score, season_score,
+                 overall_score)
 
 
 class Connect(baserequesthandler.RequestHandler):
