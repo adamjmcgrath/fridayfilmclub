@@ -13,9 +13,6 @@ import sys
 import webapp2
 from webapp2_extras import routes as webapp_routes
 
-if 'third_party' not in sys.path:
-  sys.path[0:0] = ['third_party']
-
 import admin
 import api
 import realtime
