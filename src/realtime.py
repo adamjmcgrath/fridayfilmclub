@@ -15,21 +15,39 @@ from google.appengine.api import channel, memcache
 from google.appengine.ext import deferred
 
 
-def _send_score_to_players(from_user_key, score, season_score, overall_score):
+def _send_score_to_players(user_key, user_question_score,
+                           user_question_clues, user_season_score,
+                           user_season_clues, user_season_answered):
   """Send a users score to all active players in a deferred."""
-  from_user = from_user_key.get()
+  user = user_key.get()
   channels = json.loads(memcache.get('channels') or '{}')
+  msg = json.dumps({
+    'user': user.username,
+    'pic': user.pic_url(size=20),
+    'score': user_question_score,
+    'clues': user_question_clues,
+    'season_score': user_season_score,
+    'season_clues': user_season_clues,
+    'season_answered': user_season_answered,
+    'all_score': user.overall_score,
+    'all_clues': user.overall_clues,
+    'all_answered': user.questions_answered,
+  })
   for client_id in channels.iterkeys():
-    channel.send_message(client_id, json.dumps(
-      from_user.get_score_dict(score, season_score, overall_score)))
+    channel.send_message(client_id, msg)
 
 
-def send_score_to_players(from_user, score, season_score, overall_score):
+def send_score_to_players(user, user_question, user_season):
   """Send a users score to all active players."""
+
+  # score, clues, answered
   deferred.defer(_send_score_to_players,
-                 from_user.key,
-                 score, season_score,
-                 overall_score)
+                 user.key,
+                 user_question.score,
+                 user_question.clues_used,
+                 user_season.score,
+                 user_season.clues,
+                 user_season.questions_answered)
 
 
 class Connect(baserequesthandler.RequestHandler):

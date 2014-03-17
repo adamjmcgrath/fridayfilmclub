@@ -127,10 +127,7 @@ class Question(baserequesthandler.RequestHandler):
           user_season.questions_answered += 1
           to_put.append(user_season)
           if question.is_current or settings.DEBUG:
-            realtime.send_score_to_players(user,
-                                           user_question.score,
-                                           user_season.score,
-                                           user.overall_score)
+            realtime.send_score_to_players(user, user_question, user_season)
 
       to_put.append(user_question)
       to_put.append(user)
