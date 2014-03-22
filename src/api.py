@@ -179,8 +179,8 @@ class LeaderBoard(baserequesthandler.RequestHandler):
   def get(self, duration):
     is_all = duration == 'all'
     is_week = duration == 'week'
-    offset = self.request.get('offset') or 0
-    limit = self.request.get('limit') or 20
+    offset = int(self.request.get('offset') or 0)
+    limit = int(self.request.get('limit') or 20)
     try:
       sort_props = _PROP_MAP[duration]
     except KeyError:
@@ -195,20 +195,21 @@ class LeaderBoard(baserequesthandler.RequestHandler):
       self.render_json(cached.get(cache_key), is_string=True)
       return
 
-    if sort:
-      sort = ndb.GenericProperty(sort_props[sort])
-      if not direction == 'asc':
-        sort = -sort
+    sort_prop = ndb.GenericProperty(sort_props[sort])
+    if not direction == 'asc':
+      sort_prop = -sort_prop
 
-    qo = ndb.QueryOptions(offset=int(offset), limit=int(limit))
-    response_obj = {}
+    # To get the min max range of the values get a value either side of the
+    # query. If the offset is 0 the min is the first value.
+    min_offset = 1 if offset else 0
+    qo = ndb.QueryOptions(offset=offset - min_offset,
+                          limit=limit + 1 + min_offset)
 
     if is_all:
-      user_query = models.User.query(models.User.is_admin == False).order(sort)
+      user_query = models.User.query(models.User.is_admin == False).order(sort_prop)
 
-      response_obj['count'] = user_query.count()
-      response_obj['users'] = user_query.map(
-                                  models.User.to_leaderboard_json, options=qo)
+      count = user_query.count()
+      users_dicts = user_query.map(models.User.to_leaderboard_json, options=qo)
 
     elif is_week:
       question_query = models.Question.query(
@@ -218,24 +219,29 @@ class LeaderBoard(baserequesthandler.RequestHandler):
       user_question_query = models.UserQuestion.query(
           models.UserQuestion.question == question_key,
           models.UserQuestion.complete == True,
-          models.UserQuestion.user_is_admin == False).order(sort)
-      response_obj['count'] = user_question_query.count()
-      response_obj['users'] = user_question_query.map(
+          models.UserQuestion.user_is_admin == False).order(sort_prop)
+      count = user_question_query.count()
+      users_dicts = user_question_query.map(
           models.UserQuestion.to_leaderboard_json, options=qo)
 
     else: # Should be the Season number.
       season = models.Season.get_by_id(duration)
       user_season_query = models.UserSeason.query(
           models.UserSeason.season == season.key,
-          models.UserSeason.user_is_admin == False).order(sort)
+          models.UserSeason.user_is_admin == False).order(sort_prop)
       questions_in_season = models.Question.query(
           models.Question.season == season.key).count()
-      response_obj['count'] = user_season_query.count()
-      response_obj['users'] = user_season_query.map(
+      count = user_season_query.count()
+      users_dicts = user_season_query.map(
           partial(models.UserSeason.to_leaderboard_json, questions_in_season),
           options=qo)
 
-    json_str = json.dumps(response_obj)
+    json_str = json.dumps({
+      'prev': users_dicts[0].get(sort),
+      'next': users_dicts[-1].get(sort),
+      'users': users_dicts[-(len(users_dicts) - min_offset):-1],
+      'count': count
+    })
     set_leaderboard_cache(cache_key, json_str,
                           existing_cache=cached.get(_LB_CACHE, ''))
     self.render_json(json_str, is_string=True)

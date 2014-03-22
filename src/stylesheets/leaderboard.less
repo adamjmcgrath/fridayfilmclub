@@ -1,4 +1,25 @@
+@-webkit-keyframes yellow-fade{
+    0%{ background-color:#ff8; }
+    33%{ background-color:#ff8; }
+}
+
+@-moz-keyframes yellow-fade{
+    0%{ background-color:#ff8; }
+    33%{ background-color:#ff8; }
+}
+
+@keyframes yellow-fade{
+    0%{ background-color:#ff8; }
+    33%{ background-color:#ff8; }
+}
+
 .leaderboard-users {
+
+  tr.live td {
+    -webkit-animation: yellow-fade 1.5s;
+    -moz-animation: yellow-fade 1.5s;
+    animation: yellow-fade 1.5s;
+  }
 
   td:first-child {
     width: 26px;
@@ -6,8 +27,26 @@
 
 }
 
+.leaderboard-container {
+  position: relative;
+}
+
+.loadingDiv {
+  background: @grayLighter url('/static/img/ajax-loader.gif') no-repeat 50% 50%;
+  display: none;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  .opacity(0.5);
+  z-index: 10;
+}
+
+
 .loading {
-  background: url('/static/img/ajax-loader.gif') no-repeat 50% 60px;
+  .loadingDiv {
+    display: block;
+  }
 }
 
 .leaderboard-score,

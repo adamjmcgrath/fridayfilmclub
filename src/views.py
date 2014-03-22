@@ -10,6 +10,7 @@ import logging
 import urlparse
 from operator import itemgetter
 import posixpath
+import uuid
 
 from google.appengine.api import channel, mail, users
 
@@ -252,6 +253,7 @@ class LeaderBoard(baserequesthandler.RequestHandler):
 
   def get(self):
     self.render_template('leaderboard.html', {
+      'channel_token': channel.create_channel(str(uuid.uuid4())),
       'season': models.Season.get_current()
     })
 

@@ -27,10 +27,17 @@ goog.require('soy');
 /**
  * LeaderBoard constructor.
  * @param {ffc.leaderboard.LeaderBoardModel} model The leaderboard model.
+ * @param {String} opt_channelToken Token for the Channel API.
  * @constructor
  */
-ffc.leaderboard.LeaderBoard = function(model) {
+ffc.leaderboard.LeaderBoard = function(model, opt_channelToken) {
   goog.base(this);
+
+  if (opt_channelToken) {
+    var channel = new appengine.Channel(opt_channelToken),
+      socket = channel.open();
+    socket.onmessage = this.onMessage_.bind(this);
+  }
 
   /**
    * Event handler for this object.
@@ -55,6 +62,13 @@ goog.exportProperty(ffc.leaderboard.LeaderBoard.prototype, 'render',
 
 
 /**
+ * @type {ffc.leaderboard.LeaderBoardModel}
+ * @private
+ */
+ffc.leaderboard.LeaderBoard.prototype.model_ = null;
+
+
+/**
  * @return {string} The type of leaderboard, 'all' or 'week'.
  */
 ffc.leaderboard.LeaderBoard.prototype.getType = function() {
@@ -68,6 +82,7 @@ ffc.leaderboard.LeaderBoard.prototype.getType = function() {
 ffc.leaderboard.LeaderBoard.prototype.createDom = function() {
   var el = this.dh_.createDom(goog.dom.TagName.DIV);
   this.dh_.append(el, soy.renderAsElement(ffc.template.leaderboard.table));
+  this.dh_.append(el, soy.renderAsElement(ffc.template.leaderboard.loading));
   this.dh_.append(el,
       soy.renderAsElement(ffc.template.leaderboard.pagination));
   this.decorateInternal(el);
@@ -103,7 +118,7 @@ ffc.leaderboard.LeaderBoard.prototype.enterDocument = function() {
   this.model_.sort('score', 'dsc');
 
   this.element_.style.display = 'block';
-  goog.dom.classes.add(this.element_, 'loading');
+  this.setLoading(true);
 };
 
 
@@ -116,7 +131,7 @@ ffc.leaderboard.LeaderBoard.prototype.exitDocument = function() {
   this.model_.clear();
   this.eh_.removeAll();
 
-  this.dh_.removeChildren(this.element_);
+  this.dh_.removeNode(this.element_);
   this.element_ = null;
 };
 
@@ -126,24 +141,24 @@ ffc.leaderboard.LeaderBoard.prototype.exitDocument = function() {
  */
 ffc.leaderboard.LeaderBoard.prototype.fillLeaderBoard_ = function() {
   this.dh_.removeChildren(this.tBodyEl_);
-  var args = [this.tBodyEl_];
-  var users = this.model_.users;
-  var TagName = goog.dom.TagName;
-  for (var i = 0, len = users.length; i < len; i++) {
-    var user = users[i];
-    args.push(this.dh_.createDom(TagName.TR, null,
-        this.dh_.createDom(TagName.TD, null,
-            this.dh_.createDom(TagName.IMG, user.picAttrs())),
-        this.dh_.createDom(TagName.TD, null,
-          this.dh_.createDom(TagName.A, {href: '/u/' + user.name}, user.name)),
-        this.dh_.createDom(TagName.TD, 'leaderboard-clues', user.clues + ''),
-        this.dh_.createDom(TagName.TD, 'leaderboard-score', user.score + ''),
-        this.dh_.createDom(TagName.TD, 'leaderboard-answered', user.answered + ''),
+  var args = [this.tBodyEl_],
+      users = this.model_.users,
+      TagName = goog.dom.TagName,
+      i, len;
+  for (i = 0, len = users.getCount(); i < len; i++) {
+    var user = users.getByIndex(i);
+    args.push(this.dh_.createDom(TagName.TR, user.getChildNodeValue('live') ? 'live' : '',
+        this.dh_.createDom(TagName.TD, null, this.dh_.createDom(TagName.IMG, user.picAttrs())),
+        this.dh_.createDom(TagName.TD, null, this.dh_.createDom(TagName.A, {href: '/u/' + user.getDataName()}, user.getDataName())),
+        this.dh_.createDom(TagName.TD, 'leaderboard-clues', user.getChildNodeValue('clues') + ''),
+        this.dh_.createDom(TagName.TD, 'leaderboard-score', user.getScore() + ''),
+        this.dh_.createDom(TagName.TD, 'leaderboard-answered', user.getChildNodeValue('answered') + ''),
         this.dh_.createDom(TagName.TD, 'leaderboard-averageclues', user.averageClues() + ''),
         this.dh_.createDom(TagName.TD, 'leaderboard-average', user.averageScore() + '')));
+    user.setChildNode('live', false);
   }
-  goog.dom.classes.remove(this.element_, 'loading');
-  this.dh_.append.apply(this._dh, args);
+  this.setLoading(false);
+  this.dh_.append.apply(this.dh_, args);
 };
 
 
@@ -153,8 +168,7 @@ ffc.leaderboard.LeaderBoard.prototype.fillLeaderBoard_ = function() {
 ffc.leaderboard.LeaderBoard.prototype.fillPagination_ = function() {
   this.dh_.removeChildren(this.paginationEl_);
   var args = [this.paginationEl_];
-  var pages = goog.array.range(
-      Math.ceil(this.model_.totalScores / this.model_.pageSize));
+  var pages = goog.array.range(this.model_.pages);
 
   // Only make pagination if >1 page.
   if (!(pages.length > 1)) {
@@ -180,6 +194,7 @@ ffc.leaderboard.LeaderBoard.prototype.handlePaginationClick_ = function(e) {
     if (pageNumber != this.model_.page) {
       this.model_.page = pageNumber;
       this.model_.getData();
+      this.setLoading(true);
     }
   }
 };
@@ -190,11 +205,11 @@ ffc.leaderboard.LeaderBoard.prototype.handlePaginationClick_ = function(e) {
  * @private
  */
 ffc.leaderboard.LeaderBoard.prototype.handleMainClick_ = function(e) {
-  var TH = goog.dom.TagName.TH;
-  var th = goog.dom.getAncestorByTagNameAndClass(e.target, TH);
-  if (th) {
+  var TH = goog.dom.TagName.TH,
+      th = goog.dom.getAncestorByTagNameAndClass(e.target, TH),
+      sort = th && goog.dom.dataset.get(th, 'sort');
+  if (sort) {
     var dir = goog.dom.classes.has(th, 'asc') ? 'dsc' : 'asc';
-    var sort = goog.dom.dataset.get(th, 'sort');
     var ths = goog.dom.getElementsByTagNameAndClass(TH, null, this.element_);
     goog.array.forEach(ths, function(thitem) {
       goog.dom.classes.remove(thitem, 'asc');
@@ -202,6 +217,62 @@ ffc.leaderboard.LeaderBoard.prototype.handleMainClick_ = function(e) {
     });
     goog.dom.classes.add(th, dir);
     this.model_.sort(sort, dir);
+    this.setLoading(true);
   }
 };
 
+
+/**
+ * Handle the Channel message.
+ * @param {Object} msg
+ *   {string} user
+ *   {string} pic
+ *   {number} score Score for this week.
+ *   {number} clues Clues used this week.
+ *   {number} season_score Score this season.
+ *   {number} season_clues Clues used this season.
+ *   {number} season_answered Questions answered this season.
+ *   {number} all_score All time score.
+ *   {number} all_clues All time clues used.
+ *   {number} all_answered All time questions answered.
+ * @private
+ */
+ffc.leaderboard.LeaderBoard.prototype.onMessage_ = function(msg) {
+  if (!this.isInDocument()) {
+    return;
+  }
+  var msgObj = goog.json.parse(msg['data']),
+      score, clues, answered, user;
+
+  if (this.getType() == ffc.leaderboard.LeaderBoard.Type.WEEK) {
+    score = msgObj['score'];
+    clues = msgObj['clues'];
+  } else if (this.getType() == ffc.leaderboard.LeaderBoard.Type.ALL) {
+    score = msgObj['all_score'];
+    clues = msgObj['all_clues'];
+    answered = msgObj['all_answered'];
+  } else {
+    score = msgObj['season_score'];
+    clues = msgObj['season_clues'];
+    answered = msgObj['season_answered'];
+  }
+
+  user = ffc.api.User.buildFromRealtimeMessage(msgObj, score, clues, answered);
+  this.model_.insertUser(user);
+};
+
+/**
+ * @param {boolean} loading
+ */
+ffc.leaderboard.LeaderBoard.prototype.setLoading = function(loading) {
+  goog.dom.classes.enable(this.element_, 'loading', !!loading);
+};
+
+/**
+ * Leaderboard types.
+ * @enum {string}
+ */
+ffc.leaderboard.LeaderBoard.Type = {
+  WEEK: 'week',
+  ALL: 'all'
+};
