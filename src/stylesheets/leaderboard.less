@@ -27,8 +27,26 @@
 
 }
 
+.leaderboard-container {
+  position: relative;
+}
+
+.loadingDiv {
+  background: @grayLighter url('/static/img/ajax-loader.gif') no-repeat 50% 50%;
+  display: none;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  .opacity(0.5);
+  z-index: 10;
+}
+
+
 .loading {
-  background: url('/static/img/ajax-loader.gif') no-repeat 50% 60px;
+  .loadingDiv {
+    display: block;
+  }
 }
 
 .leaderboard-score,

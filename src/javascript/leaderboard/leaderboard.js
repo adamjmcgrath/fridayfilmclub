@@ -82,6 +82,7 @@ ffc.leaderboard.LeaderBoard.prototype.getType = function() {
 ffc.leaderboard.LeaderBoard.prototype.createDom = function() {
   var el = this.dh_.createDom(goog.dom.TagName.DIV);
   this.dh_.append(el, soy.renderAsElement(ffc.template.leaderboard.table));
+  this.dh_.append(el, soy.renderAsElement(ffc.template.leaderboard.loading));
   this.dh_.append(el,
       soy.renderAsElement(ffc.template.leaderboard.pagination));
   this.decorateInternal(el);
@@ -117,7 +118,7 @@ ffc.leaderboard.LeaderBoard.prototype.enterDocument = function() {
   this.model_.sort('score', 'dsc');
 
   this.element_.style.display = 'block';
-  goog.dom.classes.add(this.element_, 'loading');
+  this.setLoading(true);
 };
 
 
@@ -130,7 +131,7 @@ ffc.leaderboard.LeaderBoard.prototype.exitDocument = function() {
   this.model_.clear();
   this.eh_.removeAll();
 
-  this.dh_.removeChildren(this.element_);
+  this.dh_.removeNode(this.element_);
   this.element_ = null;
 };
 
@@ -156,7 +157,7 @@ ffc.leaderboard.LeaderBoard.prototype.fillLeaderBoard_ = function() {
         this.dh_.createDom(TagName.TD, 'leaderboard-average', user.averageScore() + '')));
     user.setChildNode('live', false);
   }
-  goog.dom.classes.remove(this.element_, 'loading');
+  this.setLoading(false);
   this.dh_.append.apply(this.dh_, args);
 };
 
@@ -193,6 +194,7 @@ ffc.leaderboard.LeaderBoard.prototype.handlePaginationClick_ = function(e) {
     if (pageNumber != this.model_.page) {
       this.model_.page = pageNumber;
       this.model_.getData();
+      this.setLoading(true);
     }
   }
 };
@@ -215,6 +217,7 @@ ffc.leaderboard.LeaderBoard.prototype.handleMainClick_ = function(e) {
     });
     goog.dom.classes.add(th, dir);
     this.model_.sort(sort, dir);
+    this.setLoading(true);
   }
 };
 
@@ -258,6 +261,12 @@ ffc.leaderboard.LeaderBoard.prototype.onMessage_ = function(msg) {
   this.model_.insertUser(user);
 };
 
+/**
+ * @param {boolean} loading
+ */
+ffc.leaderboard.LeaderBoard.prototype.setLoading = function(loading) {
+  goog.dom.classes.enable(this.element_, 'loading', !!loading);
+};
 
 /**
  * Leaderboard types.

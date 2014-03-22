@@ -15,11 +15,11 @@
     {% endfor %}
     <li><a href="#" data-leaderboard="all">All time</a></li>
   </ul>
-  <div id="leaderboard-container-all"></div>
+  <div class="leaderboard-container" id="leaderboard-container-all"></div>
   {% for season_number in range(season.number) %}
-  <div id="leaderboard-container-{{ loop.index }}"></div>
+  <div class="leaderboard-container" id="leaderboard-container-{{ loop.index }}"></div>
   {% endfor %}
-  <div id="leaderboard-container-week"></div>
+  <div class="leaderboard-container" id="leaderboard-container-week"></div>
 </div>
 {% endblock %}
 

@@ -24,6 +24,17 @@ ffc.template.leaderboard.table = function(opt_data, opt_ignored) {
  * @return {string}
  * @notypecheck
  */
+ffc.template.leaderboard.loading = function(opt_data, opt_ignored) {
+  return '<div class="loadingDiv"></div>';
+};
+
+
+/**
+ * @param {Object.<string, *>=} opt_data
+ * @param {(null|undefined)=} opt_ignored
+ * @return {string}
+ * @notypecheck
+ */
 ffc.template.leaderboard.pagination = function(opt_data, opt_ignored) {
   return '<div class="leaderboard-pagination"><ul class="pagination pagination-sm"></ul></div>';
 };
