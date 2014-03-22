@@ -146,7 +146,7 @@ ffc.leaderboard.LeaderBoard.prototype.fillLeaderBoard_ = function() {
       i, len;
   for (i = 0, len = users.getCount(); i < len; i++) {
     var user = users.getByIndex(i);
-    args.push(this.dh_.createDom(TagName.TR, null,
+    args.push(this.dh_.createDom(TagName.TR, user.getChildNodeValue('live') ? 'live' : '',
         this.dh_.createDom(TagName.TD, null, this.dh_.createDom(TagName.IMG, user.picAttrs())),
         this.dh_.createDom(TagName.TD, null, this.dh_.createDom(TagName.A, {href: '/u/' + user.getDataName()}, user.getDataName())),
         this.dh_.createDom(TagName.TD, 'leaderboard-clues', user.getChildNodeValue('clues') + ''),
@@ -166,8 +166,7 @@ ffc.leaderboard.LeaderBoard.prototype.fillLeaderBoard_ = function() {
 ffc.leaderboard.LeaderBoard.prototype.fillPagination_ = function() {
   this.dh_.removeChildren(this.paginationEl_);
   var args = [this.paginationEl_];
-  var pages = goog.array.range(
-      Math.ceil(this.model_.totalScores / this.model_.pageSize));
+  var pages = goog.array.range(this.model_.pages);
 
   // Only make pagination if >1 page.
   if (!(pages.length > 1)) {

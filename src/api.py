@@ -240,7 +240,7 @@ class LeaderBoard(baserequesthandler.RequestHandler):
 
     response_obj['prev'] = users_dicts[0].get(sort)
     response_obj['next'] = users_dicts[-1].get(sort)
-    response_obj['users'] = users_dicts[-(limit + 1):-1]
+    response_obj['users'] = users_dicts[-(len(users_dicts) - min_offset):-1]
     response_obj['count'] = count
     json_str = json.dumps(response_obj)
     set_leaderboard_cache(cache_key, json_str,

@@ -1,4 +1,25 @@
+@-webkit-keyframes yellow-fade{
+    0%{ background-color:#ff8; }
+    33%{ background-color:#ff8; }
+}
+
+@-moz-keyframes yellow-fade{
+    0%{ background-color:#ff8; }
+    33%{ background-color:#ff8; }
+}
+
+@keyframes yellow-fade{
+    0%{ background-color:#ff8; }
+    33%{ background-color:#ff8; }
+}
+
 .leaderboard-users {
+
+  tr.live td {
+    -webkit-animation: yellow-fade 1.5s;
+    -moz-animation: yellow-fade 1.5s;
+    animation: yellow-fade 1.5s;
+  }
 
   td:first-child {
     width: 26px;

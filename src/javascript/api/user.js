@@ -101,9 +101,11 @@ ffc.api.User.build = function(obj) {
  * @return {ffc.api.User} A user instance.
  */
 ffc.api.User.buildFromRealtimeMessage = function(obj, score, clues, answered) {
-  return new ffc.api.User(obj['user'],
-                          obj['pic'],
-                          score,
-                          clues,
-                          answered);
+  var user = new ffc.api.User(obj['user'],
+                              obj['pic'],
+                              score,
+                              clues,
+                              answered);
+  user.setChildNode('live', true);
+  return user;
 };

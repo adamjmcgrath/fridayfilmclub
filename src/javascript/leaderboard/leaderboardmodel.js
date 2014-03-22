@@ -40,6 +40,11 @@ ffc.leaderboard.LeaderBoardModel = function(id, client) {
   /**
    * @type {number}
    */
+  this.pages = 0;
+
+  /**
+   * @type {number}
+   */
   this.pageSize = ffc.leaderboard.LeaderBoardModel.DEFAULT_PAGE_SIZE_;
 
   /**
@@ -108,6 +113,7 @@ ffc.leaderboard.LeaderBoardModel.prototype.handleResult = function(result) {
   this.nextValue = data['next'];
 
   this.totalScores = data['count'];
+  this.pages = Math.ceil(this.totalScores / this.pageSize);
   this.publish(ffc.leaderboard.LeaderBoardModel.TOTAL_UPDATED_EVENT);
 
   this.users = new goog.ds.SortedNodeList(this.getCompareFn(),
@@ -138,9 +144,33 @@ ffc.leaderboard.LeaderBoardModel.prototype.getCompareFn = function() {
  * @param {ffc.api.User} newUser The user instance.
  */
 ffc.leaderboard.LeaderBoardModel.prototype.insertUser = function(newUser) {
-  var prevValue = this.previousValue,
-      nextValue = this.nextValue;
+  var dir = this.sortDir,
+      prev = this.page > 0 ? this.previousValue : dir == 'asc' ? 0 : Infinity,
+      next = !this.isLastPage ? this.nextValue : dir == 'asc' ? Infinity : 0,
+      range = [prev, next],
+      min = Math.min.apply(Math, range),
+      max = Math.max.apply(Math, range),
+      value = newUser.getChildNodeValue(this.sortField),
+      remove;
 
+  if (min <= value && value <= max) {
+    this.users.removeNode(newUser.getDataName());
+    this.users.add(newUser);
+    // Keep the page size correct.
+    remove = this.users.getByIndex(this.pageSize);
+    if (remove) {
+      this.users.removeNode(remove.getDataName());
+    }
+    this.publish(ffc.leaderboard.LeaderBoardModel.USERS_UPDATED_EVENT);
+  }
+
+};
+
+/**
+ * @return {boolean} If on last page.
+ */
+ffc.leaderboard.LeaderBoardModel.prototype.isLastPage = function() {
+  return this.page == this.pages - 1;
 };
 
 
