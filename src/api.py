@@ -204,7 +204,6 @@ class LeaderBoard(baserequesthandler.RequestHandler):
     min_offset = 1 if offset else 0
     qo = ndb.QueryOptions(offset=offset - min_offset,
                           limit=limit + 1 + min_offset)
-    response_obj = {}
 
     if is_all:
       user_query = models.User.query(models.User.is_admin == False).order(sort_prop)
@@ -237,12 +236,12 @@ class LeaderBoard(baserequesthandler.RequestHandler):
           partial(models.UserSeason.to_leaderboard_json, questions_in_season),
           options=qo)
 
-
-    response_obj['prev'] = users_dicts[0].get(sort)
-    response_obj['next'] = users_dicts[-1].get(sort)
-    response_obj['users'] = users_dicts[-(len(users_dicts) - min_offset):-1]
-    response_obj['count'] = count
-    json_str = json.dumps(response_obj)
+    json_str = json.dumps({
+      'prev': users_dicts[0].get(sort),
+      'next': users_dicts[-1].get(sort),
+      'users': users_dicts[-(len(users_dicts) - min_offset):-1],
+      'count': count
+    })
     set_leaderboard_cache(cache_key, json_str,
                           existing_cache=cached.get(_LB_CACHE, ''))
     self.render_json(json_str, is_string=True)

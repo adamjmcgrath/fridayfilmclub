@@ -144,9 +144,10 @@ ffc.leaderboard.LeaderBoardModel.prototype.getCompareFn = function() {
  * @param {ffc.api.User} newUser The user instance.
  */
 ffc.leaderboard.LeaderBoardModel.prototype.insertUser = function(newUser) {
-  var dir = this.sortDir,
-      prev = this.page > 0 ? this.previousValue : dir == 'asc' ? 0 : Infinity,
-      next = !this.isLastPage ? this.nextValue : dir == 'asc' ? Infinity : 0,
+  var isAsc = this.sortDir == 'asc',
+      isLastPage = this.isLastPage(),
+      prev = this.page > 0 ? this.previousValue : isAsc ? 0 : Infinity,
+      next = !lastPage ? this.nextValue : isAsc ? Infinity : 0,
       range = [prev, next],
       min = Math.min.apply(Math, range),
       max = Math.max.apply(Math, range),
@@ -156,11 +157,18 @@ ffc.leaderboard.LeaderBoardModel.prototype.insertUser = function(newUser) {
   if (min <= value && value <= max) {
     this.users.removeNode(newUser.getDataName());
     this.users.add(newUser);
-    // Keep the page size correct.
+
+    // Move the last user to a new page if users > page size. Add a new page if
+    // on the last page.
     remove = this.users.getByIndex(this.pageSize);
     if (remove) {
       this.users.removeNode(remove.getDataName());
+      if (isLastPage) {
+        this.pages++;
+        this.publish(ffc.leaderboard.LeaderBoardModel.TOTAL_UPDATED_EVENT);
+      }
     }
+
     this.publish(ffc.leaderboard.LeaderBoardModel.USERS_UPDATED_EVENT);
   }
 
