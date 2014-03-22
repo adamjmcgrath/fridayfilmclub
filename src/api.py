@@ -238,8 +238,8 @@ class LeaderBoard(baserequesthandler.RequestHandler):
           options=qo)
 
 
-    response_obj['min'] = users_dicts[0].get(sort)
-    response_obj['max'] = users_dicts[-1].get(sort)
+    response_obj['prev'] = users_dicts[0].get(sort)
+    response_obj['next'] = users_dicts[-1].get(sort)
     response_obj['users'] = users_dicts[-(limit + 1):-1]
     response_obj['count'] = count
     json_str = json.dumps(response_obj)

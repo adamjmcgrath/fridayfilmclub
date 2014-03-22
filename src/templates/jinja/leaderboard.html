@@ -23,8 +23,9 @@
 </div>
 {% endblock %}
 
-
 {% block body_base %}
+  <script src="/_ah/channel/jsapi"></script>
+  <script>var appengine = goog.appengine;</script>
 {% if debug %}
   <script src="/closure-library/closure/goog/base.js"></script>
   <script src="/static/js/deps.js"></script>
@@ -37,25 +38,29 @@
   <script src="/static/js/leaderboard.js"></script>
 {% endif %}
 <script>
+  (function() {
+    var channelToken = '{{ channel_token }}';
 
-  var lbmw = new ffc.leaderboard.LeaderBoardModel('week', ffc.api.Client.getInstance());
-  var lbw = new ffc.leaderboard.LeaderBoard(lbmw);
-  lbw.render(document.getElementById('leaderboard-container-week'));
+    var lbmw = new ffc.leaderboard.LeaderBoardModel('week', ffc.api.Client.getInstance());
+    var lbw = new ffc.leaderboard.LeaderBoard(lbmw, channelToken);
+    lbw.render(document.getElementById('leaderboard-container-week'));
 
-  var lbma = new ffc.leaderboard.LeaderBoardModel('all', ffc.api.Client.getInstance());
-  var lba = new ffc.leaderboard.LeaderBoard(lbma);
-  var lbs = [lbw, lba];
+    var lbma = new ffc.leaderboard.LeaderBoardModel('all', ffc.api.Client.getInstance());
+    var lba = new ffc.leaderboard.LeaderBoard(lbma, channelToken);
+    var leaderBoards = [lbw, lba];
 
-  {% for season_number in range(season.number) %}
-    lbs.push(
-      new ffc.leaderboard.LeaderBoard(
-        new ffc.leaderboard.LeaderBoardModel('{{ loop.index }}', ffc.api.Client.getInstance())
-      )
-    );
-  {% endfor %}
+    {% for season_number in range(season.number) %}
+      var lbms = new ffc.leaderboard.LeaderBoardModel('{{ loop.index }}', ffc.api.Client.getInstance());
+      {% if loop.last %}
+        var lbs = new ffc.leaderboard.LeaderBoard(lbms, channelToken);
+      {% else %}
+        var lbs = new ffc.leaderboard.LeaderBoard(lbms);
+      {%  endif %}
+      leaderBoards.push(lbs);
+    {% endfor %}
 
-  var lbt = new ffc.leaderboard.LeaderBoardToggler(lbs);
-  lbt.decorate(document.getElementById('leaderboard-tabs'));
-
+    var lbt = new ffc.leaderboard.LeaderBoardToggler(leaderBoards);
+    lbt.decorate(document.getElementById('leaderboard-tabs'));
+  })();
 </script>
 {% endblock %}

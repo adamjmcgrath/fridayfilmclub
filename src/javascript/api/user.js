@@ -8,53 +8,46 @@
 
 goog.provide('ffc.api.User');
 
+goog.require('goog.ds.FastDataNode');
+goog.require('goog.i18n.NumberFormat');
+goog.require('goog.i18n.NumberFormat.Format');
 
 
 /**
- * User constructor.
+ * A user object.
+ * @param {string} name
+ * @param {string} pic
+ * @param {number} score
+ * @param {number} clues
+ * @param {number} answered
  * @constructor
  */
-ffc.api.User = function() {
+ffc.api.User = function(name, pic, score, clues, answered) {
+    this.floatFormatter_ = new goog.i18n.NumberFormat('#,##0.0');
+    this.intFormatter_ = new goog.i18n.NumberFormat(
+      goog.i18n.NumberFormat.Format.DECIMAL);
+    goog.base(this, {
+      'name': name,
+      'pic': pic,
+      'score': score,
+      'clues': clues,
+      'answered': answered
+    }, name);
 };
-
-
-/**
- * @type {string}
- */
-ffc.api.User.prototype.name = null;
-
+goog.inherits(ffc.api.User, goog.ds.FastDataNode);
 
 /**
- * @type {string}
+ * @type {goog.i18n.NumberFormat}
  */
-ffc.api.User.prototype.pic = null;
-
-
-/**
- * @type {number}
- */
-ffc.api.User.prototype.answered = null;
-
-
-/**
- * @type {number}
- */
-ffc.api.User.prototype.score = null;
-
-
-/**
- * @type {number}
- */
-ffc.api.User.prototype.clues = null;
-
+ffc.api.User.prototype.formatter_ = null;
 
 /**
  * @return {Object} The attributes to display an image element.
  */
 ffc.api.User.prototype.picAttrs = function() {
   return {
-    src: this.pic,
-    alt: this.name,
+    src: this.getChildNodeValue('pic'),
+    alt: this.getDataName(),
     width: 20,
     height: 20
   };
@@ -64,8 +57,17 @@ ffc.api.User.prototype.picAttrs = function() {
 /**
  * @return {string} The average score over all games played.
  */
+ffc.api.User.prototype.getScore = function() {
+  return this.intFormatter_.format(this.getChildNodeValue('score'));
+};
+
+
+/**
+ * @return {string} The average score over all games played.
+ */
 ffc.api.User.prototype.averageScore = function() {
-  return ((this.score / this.answered)|| 0).toFixed(1);
+  return this.floatFormatter_.format(
+      (this.getChildNodeValue('score') / this.getChildNodeValue('answered')) || 0);
 };
 
 
@@ -73,20 +75,35 @@ ffc.api.User.prototype.averageScore = function() {
  * @return {string} The average clues used over all games played.
  */
 ffc.api.User.prototype.averageClues = function() {
-  return ((this.clues / this.answered)|| 0).toFixed(1);
+  return this.floatFormatter_.format(
+      (this.getChildNodeValue('clues') / this.getChildNodeValue('answered')) || 0);
 };
 
 
 /**
- * @param {Object} jsonObj Response from the REST api.
+ * @param {Object} obj Response from the REST api.
  * @return {ffc.api.User} A user instance.
  */
-ffc.api.User.build = function(jsonObj) {
-  var user = new ffc.api.User();
-  user.name = jsonObj['user_name'];
-  user.pic = jsonObj['user_pic'];
-  user.score = jsonObj['score'];
-  user.answered = jsonObj['answered'];
-  user.clues = jsonObj['clues'];
-  return user;
+ffc.api.User.build = function(obj) {
+  return new ffc.api.User(obj['user_name'],
+                          obj['user_pic'],
+                          obj['score'],
+                          obj['clues'],
+                          obj['answered']);
+};
+
+
+/**
+ * @param {Object} obj Response from the REST api.
+ * @param {number} score
+ * @param {number} clues
+ * @param {number} answered
+ * @return {ffc.api.User} A user instance.
+ */
+ffc.api.User.buildFromRealtimeMessage = function(obj, score, clues, answered) {
+  return new ffc.api.User(obj['user'],
+                          obj['pic'],
+                          score,
+                          clues,
+                          answered);
 };

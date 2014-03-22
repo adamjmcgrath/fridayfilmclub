@@ -13,6 +13,7 @@ goog.require('ffc.api.User');
 
 goog.require('goog.Uri');
 goog.require('goog.array');
+goog.require('goog.ds.SortedNodeList');
 goog.require('goog.pubsub.PubSub');
 
 
@@ -63,6 +64,20 @@ goog.exportSymbol('ffc.leaderboard.LeaderBoardModel',
 
 
 /**
+ * The value of the last user on the previous page.
+ * @type {number}
+ */
+ffc.leaderboard.LeaderBoardModel.prototype.previousValue = null;
+
+
+/**
+ * The value of the first user on the next page.
+ * @type {number}
+ */
+ffc.leaderboard.LeaderBoardModel.prototype.nextValue = null;
+
+
+/**
  * Get a new page of scores.
  */
 ffc.leaderboard.LeaderBoardModel.prototype.getData = function() {
@@ -89,11 +104,43 @@ ffc.leaderboard.LeaderBoardModel.prototype.sort = function(sort, dir) {
 ffc.leaderboard.LeaderBoardModel.prototype.handleResult = function(result) {
   var data = result.getValue();
 
+  this.previousValue = data['prev'];
+  this.nextValue = data['next'];
+
   this.totalScores = data['count'];
   this.publish(ffc.leaderboard.LeaderBoardModel.TOTAL_UPDATED_EVENT);
 
-  this.users = goog.array.map(data['users'], ffc.api.User.build);
+  this.users = new goog.ds.SortedNodeList(this.getCompareFn(),
+      goog.array.map(data['users'], ffc.api.User.build));
+
   this.publish(ffc.leaderboard.LeaderBoardModel.USERS_UPDATED_EVENT);
+};
+
+
+/**
+ * @return {Function} A compare function based on the current sort and direction.
+ */
+ffc.leaderboard.LeaderBoardModel.prototype.getCompareFn = function() {
+  var sort = this.sortField,
+      dir = this.sortDir;
+  return function(a, b) {
+    a = a.getChildNodeValue(sort);
+    b = b.getChildNodeValue(sort);
+    if (dir == 'asc') {
+      return goog.array.defaultCompare(a, b);
+    } else {
+      return goog.array.defaultCompare(b, a);
+    }
+  };
+};
+
+/**
+ * @param {ffc.api.User} newUser The user instance.
+ */
+ffc.leaderboard.LeaderBoardModel.prototype.insertUser = function(newUser) {
+  var prevValue = this.previousValue,
+      nextValue = this.nextValue;
+
 };
 
 
