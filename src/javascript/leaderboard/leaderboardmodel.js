@@ -147,7 +147,7 @@ ffc.leaderboard.LeaderBoardModel.prototype.insertUser = function(newUser) {
   var isAsc = this.sortDir == 'asc',
       isLastPage = this.isLastPage(),
       prev = this.page > 0 ? this.previousValue : isAsc ? 0 : Infinity,
-      next = !lastPage ? this.nextValue : isAsc ? Infinity : 0,
+      next = !isLastPage ? this.nextValue : isAsc ? Infinity : 0,
       range = [prev, next],
       min = Math.min.apply(Math, range),
       max = Math.max.apply(Math, range),
