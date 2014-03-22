@@ -153,7 +153,8 @@ ffc.leaderboard.LeaderBoard.prototype.fillLeaderBoard_ = function() {
         this.dh_.createDom(TagName.TD, 'leaderboard-score', user.getScore() + ''),
         this.dh_.createDom(TagName.TD, 'leaderboard-answered', user.getChildNodeValue('answered') + ''),
         this.dh_.createDom(TagName.TD, 'leaderboard-averageclues', user.averageClues() + ''),
-        this.dh_.createDom(TagName.TD, 'leaderboard-average', user.averageScore() + '')));
+        this.dh_.createDom(TagName.TD, 'leaderboard-average', user.averageScore() + '')))
+    user.setChildNode('live', false);
   }
   goog.dom.classes.remove(this.element_, 'loading');
   this.dh_.append.apply(this.dh_, args);
