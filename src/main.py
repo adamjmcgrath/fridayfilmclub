@@ -55,8 +55,7 @@ routes = [
     # Main views (Authenticated).
     webapp2.Route(r'/question/<:.*>', views.Question, name='question'),
     webapp2.Route(r'/settings', views.Settings, name='settings'),
-    webapp2.Route(r'/sendinvites', views.SendInvites, name='send_invites'),
-    webapp2.Route(r'/sendinvite_legacy', views.SendInviteLegacy,
+    webapp2.Route(r'/sendinvite_legacy', views.SendInvite,
         name='send_invite_legacy'),
 
     # Realtime handlers.

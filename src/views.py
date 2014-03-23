@@ -172,71 +172,6 @@ class Settings(baserequesthandler.RequestHandler):
     })
 
 
-class SendInvites(baserequesthandler.RequestHandler):
-
-  @auth.login_required
-  def get(self):
-    providers = [
-      {
-        'id': 'google',
-        'noun': 'Contacts',
-        'has_token': self.current_user.google_refresh_token
-      },
-      {
-        'id': 'facebook',
-        'noun': 'Friends',
-        'has_token': self.current_user.facebook_uid
-      },
-      {
-        'id': 'twitter',
-        'noun': 'Followers',
-        'has_token': self.current_user.twitter_token
-      },
-    ]
-    self.session['original_url'] = self.request.url
-    self.render_template('sendinvites.html', {
-        'user': self.current_user,
-        'providers': providers
-    })
-
-  @auth.login_required
-  def post(self):
-
-    user = self.current_user
-    google_contacts = self.request.get('google-contacts').split(',')
-    facebook_contacts = self.request.get('facebook-contacts').split(',')
-    twitter_contacts = self.request.get('twitter-contacts').split(',')
-    google_sent = []
-
-    for google_contact in google_contacts:
-      if google_contact:
-        invite = user.invites.pop().id()
-        success = send_invite_email(invite, user.google_name,
-                                    user.google_email, google_contact)
-        if success:
-          google_sent.append(google_contact)
-
-    for facebook_contact in facebook_contacts:
-      if facebook_contact:
-        invite = user.invites.pop().id()
-        email = facebook_contact + '@facebook.com'
-        success = send_invite_email(invite, user.facebook_name,
-                     settings.FMJ_EMAIL, email)
-
-    for twitter_contact in twitter_contacts:
-      if twitter_contact:
-        invite = user.invites.pop().id()
-        success = send_invite_dm(invite, user, twitter_contact)
-
-    # user.put()
-    self.render_template('sendinvites.html', {
-        'user': self.current_user,
-        'fail': not len(google_sent),
-        'sent': google_sent,
-        'providers': []
-    })
-
-
 class Archive(baserequesthandler.RequestHandler):
   """An archive of old questions."""
 
@@ -265,7 +200,7 @@ class HowItWorks(baserequesthandler.RequestHandler):
     self.render_template('how.html', {})
 
 
-class SendInviteLegacy(baserequesthandler.RequestHandler):
+class SendInvite(baserequesthandler.RequestHandler):
   """Old send invites handler."""
 
   @auth.login_required
@@ -338,20 +273,4 @@ def send_invite_email(invite, from_name, from_email, to_email):
     return True
 
   except mail.Error:
-    return False
-
-
-def send_invite_dm(invite, from_user, to_handle):
-
-  from_handle = from_user.twitter_name
-
-  logging.info('Sending invite: %s, to: %s' % (invite, to_handle))
-
-  try:
-    msg = ('%s has invited you to Friday Film Club: ' +
-           'www.fridayfilmclub.com/register?invite=%s')
-    twitter.send_dm(from_user, to_handle, msg % (from_handle, invite))
-    return True
-
-  except IndexError:
     return False
