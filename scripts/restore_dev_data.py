@@ -7,12 +7,10 @@
 
 To get entities from prod backup:
 
-1. gsutil cp gs://ffcapp/backups/* data/backups/.
+1. gsutil cp gs://ffcapp/backups/YYYYMMDD/** data/backups/YYYYMMDD/.
 2. Run restore_dev_data.py
 """
 
-import getpass
-import logging
 import os
 import sys
 
@@ -41,7 +39,6 @@ from google.appengine.ext import ndb
 from google.appengine.ext.remote_api import remote_api_stub
 from google.appengine.api.files import records
 from google.appengine.datastore import entity_pb
-from google.appengine.api import datastore
 
 
 import models
@@ -52,8 +49,17 @@ os.environ['USER_EMAIL'] = 'adamjmcgrath@gmail.com'
 
 
 def auth_func():
-  # return (os.environ['USER_EMAIL'], getpass.getpass('Password:'))
   return (os.environ['USER_EMAIL'], '')
+
+
+def fix_emails():
+  # TODO: Batch the datastore writes.
+  print 'Fixing emails'
+  for u in models.User.query():
+    u.email = 'adamjmcgrath+%s@gmail.com' % u.username
+    print u.email
+    u.put()
+  print 'Fixed emails'
 
 
 def main():
@@ -61,8 +67,11 @@ def main():
   remote_api_stub.ConfigureRemoteDatastore(APP_NAME, '/_ah/remote_api',
       auth_func, servername='localhost:8080')
 
-  for backup_file in os.listdir('data/backup'):
-    raw = open('data/backup/%s' % backup_file, 'r')
+  year = sys.argv[1]
+  base_dir = 'data/backups/%s' % year
+
+  for backup_file in os.listdir(base_dir):
+    raw = open('%s/%s' % (base_dir, backup_file), 'r')
     reader = records.RecordsReader(raw)
     entities = []
     for record in reader:
@@ -80,7 +89,7 @@ def main():
     if len(entities):
       ndb.put_multi(entities)
       print 'restored: %s' % backup_file
-
+  fix_emails()
 
 if __name__ == '__main__':
   main()

@@ -1,5 +1,5 @@
 *.pyc
 .DS_Store
-data/backup
+data/backups
 src/static/js
 src/static/css
