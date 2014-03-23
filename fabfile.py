@@ -231,7 +231,8 @@ def compile_css():
 
 
 def compile_js(part=None):
-  parts = ['deps', 'template', 'quiz', 'leaderboard', 'settings']
+  parts = ['deps', 'template', 'quiz', 'leaderboard', 'settings',
+           'requestinvite']
   local('mkdir -p src/static/js/')
   if part:
     parts = [part]

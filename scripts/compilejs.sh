@@ -17,6 +17,7 @@ FFC_SOURCE=$FFC_PATH/javascript
 API_SOURCE=$FFC_SOURCE/api
 QUIZ_SOURCE=$FFC_SOURCE/quiz
 LEADERBOARD_SOURCE=$FFC_SOURCE/leaderboard
+INVITE_SOURCE=$FFC_SOURCE/invite
 SUGGEST_SOURCE=$FFC_SOURCE/suggest
 SETTINGS_SOURCE=$FFC_SOURCE/settings
 TEMPLATE_SOURCE=$FFC_SOURCE/template
@@ -24,6 +25,7 @@ GROW_SOURCE=$FFC_PATH/growjs
 FFC_QUIZ_JS_OUTPUT=$FFC_PATH/static/js/quiz.js
 FFC_LEADERBOARD_JS_OUTPUT=$FFC_PATH/static/js/leaderboard.js
 FFC_SETTINGS_JS_OUTPUT=$FFC_PATH/static/js/settings.js
+FFC_REQUEST_INVITE_JS_OUTPUT=$FFC_PATH/static/js/requestinvitepopup.js
 FFC_DEPS_OUTPUT=$FFC_PATH/static/js/deps.js
 EXTERNS_SOURCE=$FFC_SOURCE/externs
 
@@ -104,5 +106,21 @@ if [ $1 == "settings" ] || [ $1 == "all" ]; then
     --compiler_flags="--compilation_level=ADVANCED_OPTIMIZATIONS" \
     --compiler_flags="--output_wrapper=\"(function() {%output%})();\"" \
     > $FFC_SETTINGS_JS_OUTPUT
+fi
+
+if [ $1 == "requestinvite" ] || [ $1 == "all" ]; then
+  echo 'Building requestinvite'
+  $CLOSURE_BUILDER_PATH \
+    --root=$CLOSURE_LIB \
+    --root=$CLOSURE_TEMPLATES \
+    --root=$API_SOURCE \
+    --root=$INVITE_SOURCE \
+    --root=$TEMPLATE_SOURCE \
+    --namespace="ffc.invite.ModalPopup" \
+    --output_mode=compiled \
+    --compiler_jar=$CLOSURE_COMPILER_PATH \
+    --compiler_flags="--compilation_level=ADVANCED_OPTIMIZATIONS" \
+    --compiler_flags="--output_wrapper=\"(function() {%output%})();\"" \
+    > $FFC_REQUEST_INVITE_JS_OUTPUT
 fi
 

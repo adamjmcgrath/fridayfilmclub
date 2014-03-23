@@ -1,0 +1,28 @@
+{namespace ffc.template.requestinvite}
+
+/**
+ * Form.
+ */
+{template .form}
+<form action="" method="post" class="request-invite-form clearfix">
+  <div class="form-group">
+    <small class="text-danger pull-right validation-message">Please enter a valid email.</small>
+    <input class="form-control email-field" name="email" placeholder="you@example.com" type="text" value="" />
+  </div>
+  <div>
+    <button type="submit" class="btn btn-primary pull-right send-request">Send Request</button>
+  </div>
+</form>
+{/template}
+
+/**
+ * Message.
+ * @param email
+ */
+{template .message}
+<div class="alert alert-success">
+  <p>An invite has been sent to <strong>{$email}</strong>.</p>
+  <p>Open the email and follow the instructions to join.</p>
+  <p>Welcome to the Friday Film Club!</p>
+</div>
+{/template}

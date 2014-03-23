@@ -107,11 +107,6 @@ class Register(baserequesthandler.RequestHandler):
 class RequestInvite(baserequesthandler.RequestHandler):
   """Shows the request invite page."""
 
-  def get(self):
-    self.render_template('requestinvite.html', {
-      'form': forms.RequestInvite()
-    })
-
   def post(self):
     form = forms.RequestInvite(self.request.POST)
     sent_to = None
@@ -125,8 +120,7 @@ class RequestInvite(baserequesthandler.RequestHandler):
       # Reset the form.
       form.process()
 
-    self.render_template('requestinvite.html', {
-      'form': form,
+    self.render_json({
       'sent_to': sent_to
     })
 
