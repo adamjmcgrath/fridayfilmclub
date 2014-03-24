@@ -201,13 +201,13 @@ class SendInvite(baserequesthandler.RequestHandler):
     form = forms.Invite(self.request.POST)
 
     if len(user.invites) and form.validate():
-      invite = user.invites.pop().id()
+      invite = user.invites.pop()
 
       # Send the invite.
       email = form.email.data
-      logging.info('Sending invite: %s, to: %s' % (invite, email))
+      logging.info('Sending invite: %s, to: %s' % (invite.id(), email))
       body = self.generate_template('email/invite.txt', {
-        'invite': urlparse.urljoin(self.request.host_url, 'register?invite=%s' % invite),
+        'invite': urlparse.urljoin(self.request.host_url, 'register?invite=%s' % invite.id()),
         'user': user.name
       })
       try:
