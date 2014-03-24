@@ -13,6 +13,7 @@ import posixpath
 import uuid
 
 from google.appengine.api import channel, mail, users
+from google.appengine.ext import ndb
 
 import auth
 import baserequesthandler
@@ -201,7 +202,6 @@ class SendInvite(baserequesthandler.RequestHandler):
 
     if len(user.invites) and form.validate():
       invite = user.invites.pop().id()
-      user.put()
 
       # Send the invite.
       email = form.email.data
@@ -226,6 +226,9 @@ class SendInvite(baserequesthandler.RequestHandler):
                        subject='Friday Film Club invitation',
                        body=body)
 
+      invite.to = email
+      ndb.put_multi([user, invite])
+
       self.render_json({
         'success': True,
         'invites': len(user.invites)
@@ -246,11 +249,11 @@ class SendInvite(baserequesthandler.RequestHandler):
 def send_invite_email(invite, from_name, from_email, to_email):
 
   # Send the invite.
-  logging.info('Sending invite: %s, to: %s' % (invite, to_email))
+  logging.info('Sending invite: %s, to: %s' % (invite.id(), to_email))
   template = baserequesthandler.JINJA_ENV.get_template(
         posixpath.join(baserequesthandler.TEMPLATE_PATH, 'email/invite.txt'))
   body = template.render({
-    'invite': urlparse.urljoin(HOST_URL, 'register?invite=%s' % invite),
+    'invite': urlparse.urljoin(HOST_URL, 'register?invite=%s' % invite.id()),
     'user': from_name
   })
 
