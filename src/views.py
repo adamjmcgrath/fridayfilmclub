@@ -108,6 +108,7 @@ class RequestInvite(baserequesthandler.RequestHandler):
   """Shows the request invite page."""
 
   def post(self):
+    # TODO: Create invite send it directly to user.
     form = forms.RequestInvite(self.request.POST)
     sent_to = None
     if form.validate():
