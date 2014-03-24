@@ -6,7 +6,7 @@
   {% if not form.invitation_code.data %}
     <div class="col-md-6 col-md-offset-3 alert alert-danger">
       Friday Film Club is <strong>invitation only</strong>...
-      <span class="pull-right">But you can <a href="{{ uri_for('requestinvite') }}">request an invite</a>.</span>
+      <span class="pull-right">But you can <a href="#" id="request-invite">request an invite</a>.</span>
     </div>
   {% endif %}
   <div class="col-md-6 col-md-offset-3 well" id="login-buttons">
@@ -60,6 +60,23 @@
 {% endblock %}
 
 {% block body_base %}
+  {% if debug %}
+    <script src="/closure-library/closure/goog/base.js"></script>
+    <script src="/static/js/deps.js"></script>
+    <script>
+      goog.require('goog.ui.Dialog');
+      goog.require('ffc.invite.ModalPopup');
+    </script>
+  {% else %}
+    <script src="/static/js/requestinvitepopup.js"></script>
+  {% endif %}
+
+  <script>
+    (function() {
+      var btn = document.getElementById('request-invite');
+      if (btn) {
+        new ffc.invite.ModalPopup(btn);
+      }
+    })();
+  </script>
 {% endblock %}
-
-

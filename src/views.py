@@ -107,26 +107,17 @@ class Register(baserequesthandler.RequestHandler):
 class RequestInvite(baserequesthandler.RequestHandler):
   """Shows the request invite page."""
 
-  def get(self):
-    self.render_template('requestinvite.html', {
-      'form': forms.RequestInvite()
-    })
-
   def post(self):
     form = forms.RequestInvite(self.request.POST)
     sent_to = None
     if form.validate():
       sent_to = form.email.data
-      mail.send_mail(sender=settings.FMJ_EMAIL,
-                     to=settings.FMJ_EMAIL,
-                     subject='Invite request',
-                     body='Please can I get an invite sent to %s' % sent_to)
-
+      send_invite_email(models.Invite.create_single_invite(),
+                        'Film Master Jack', settings.FMJ_EMAIL, sent_to)
       # Reset the form.
       form.process()
 
-    self.render_template('requestinvite.html', {
-      'form': form,
+    self.render_json({
       'sent_to': sent_to
     })
 
@@ -270,6 +261,9 @@ def send_invite_email(invite, from_name, from_email, to_email):
                    to=to_email,
                    subject='Friday Film Club invitation',
                    body=body)
+    invite = invite.get()
+    invite.to = to_email
+    invite.put()
     return True
 
   except mail.Error:
