@@ -155,6 +155,7 @@ class Clue(ndb.Model):
 class Invite(ndb.Model):
   """A user invite"""
   owner = ndb.KeyProperty(kind='User')
+  to = ndb.StringProperty()
 
   @staticmethod
   def create_invites(user):
@@ -172,7 +173,7 @@ class Invite(ndb.Model):
     return ndb.put_multi(invites)
 
   @staticmethod
-  def create_single_invite():
+  def create_single_invite(to=None):
     """Create a single invite - for use in the admin console."""
     m = hashlib.md5()
     m.update(_INVITE_SECRET)
