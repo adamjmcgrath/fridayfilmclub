@@ -39,20 +39,19 @@
 {% endif %}
 <script>
   (function() {
-    var channelToken = '{{ channel_token }}';
 
     var lbmw = new ffc.leaderboard.LeaderBoardModel('week', ffc.api.Client.getInstance());
-    var lbw = new ffc.leaderboard.LeaderBoard(lbmw, channelToken);
+    var lbw = new ffc.leaderboard.LeaderBoard(lbmw, true);
     lbw.render(document.getElementById('leaderboard-container-week'));
 
     var lbma = new ffc.leaderboard.LeaderBoardModel('all', ffc.api.Client.getInstance());
-    var lba = new ffc.leaderboard.LeaderBoard(lbma, channelToken);
+    var lba = new ffc.leaderboard.LeaderBoard(lbma, true);
     var leaderBoards = [lbw, lba];
 
     {% for season_number in range(season.number) %}
       var lbms = new ffc.leaderboard.LeaderBoardModel('{{ loop.index }}', ffc.api.Client.getInstance());
       {% if loop.last %}
-        var lbs = new ffc.leaderboard.LeaderBoard(lbms, channelToken);
+        var lbs = new ffc.leaderboard.LeaderBoard(lbms, true);
       {% else %}
         var lbs = new ffc.leaderboard.LeaderBoard(lbms);
       {%  endif %}
@@ -61,6 +60,16 @@
 
     var lbt = new ffc.leaderboard.LeaderBoardToggler(leaderBoards);
     lbt.decorate(document.getElementById('leaderboard-tabs'));
+
+    var channel = new appengine.Channel('{{ channel_token }}'),
+        socket = channel.open();
+
+    socket.onmessage = function(msg) {
+      for (var i = 0, len = leaderBoards.length; i < len; i++) {
+        leaderBoards[i].onMessage(msg);
+      }
+    };
+
   })();
 </script>
 {% endblock %}

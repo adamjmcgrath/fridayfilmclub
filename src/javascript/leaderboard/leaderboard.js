@@ -27,17 +27,13 @@ goog.require('soy');
 /**
  * LeaderBoard constructor.
  * @param {ffc.leaderboard.LeaderBoardModel} model The leaderboard model.
- * @param {String} opt_channelToken Token for the Channel API.
+ * @param {boolean} showLiveData
  * @constructor
  */
-ffc.leaderboard.LeaderBoard = function(model, opt_channelToken) {
+ffc.leaderboard.LeaderBoard = function(model, showLiveData) {
   goog.base(this);
 
-  if (opt_channelToken) {
-    var channel = new appengine.Channel(opt_channelToken),
-      socket = channel.open();
-    socket.onmessage = this.onMessage_.bind(this);
-  }
+  this.showLiveData_ = showLiveData;
 
   /**
    * Event handler for this object.
@@ -59,6 +55,13 @@ goog.inherits(ffc.leaderboard.LeaderBoard, goog.ui.Component);
 goog.exportSymbol('ffc.leaderboard.LeaderBoard', ffc.leaderboard.LeaderBoard);
 goog.exportProperty(ffc.leaderboard.LeaderBoard.prototype, 'render',
     ffc.leaderboard.LeaderBoard.prototype.render);
+
+
+/**
+ * @type {boolean}
+ * @private
+ */
+ffc.leaderboard.LeaderBoard.prototype.showLiveData_ = null;
 
 
 /**
@@ -237,8 +240,8 @@ ffc.leaderboard.LeaderBoard.prototype.handleMainClick_ = function(e) {
  *   {number} all_answered All time questions answered.
  * @private
  */
-ffc.leaderboard.LeaderBoard.prototype.onMessage_ = function(msg) {
-  if (!this.isInDocument()) {
+ffc.leaderboard.LeaderBoard.prototype.onMessage = function(msg) {
+  if (!this.isInDocument() || !this.showLiveData_) {
     return;
   }
   var msgObj = goog.json.parse(msg['data']),
@@ -260,6 +263,8 @@ ffc.leaderboard.LeaderBoard.prototype.onMessage_ = function(msg) {
   user = ffc.api.User.buildFromRealtimeMessage(msgObj, score, clues, answered);
   this.model_.insertUser(user);
 };
+goog.exportProperty(ffc.leaderboard.LeaderBoard.prototype, 'onMessage',
+    ffc.leaderboard.LeaderBoard.prototype.onMessage);
 
 /**
  * @param {boolean} loading
