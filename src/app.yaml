@@ -34,6 +34,11 @@ handlers:
 - url: /growjs
   static_dir: growjs
 
+- url: /(.*\.less)
+  mime_type: text/css
+  static_files: \1
+  upload: (.*\.less)
+
 - url: /less
   static_dir: less
 
@@ -73,6 +78,16 @@ skip_files:
 - ^(.*/)?.*\.py[co]
 - ^(.*/)?\..*
 - ^(.*/)?closure-library/closure/bin/.*
+- ^(.*/)?closure-library/.*\.data$
 - ^(.*/)?closure-templates/.*
 - ^(.*/)?less/bin/.*
 - ^(.*/)?stylesheets/.*
+- ^(.*/)?twitter-bootstrap/_config.yml$
+- ^(.*/)?README(.md)?$
+- ^(.*/)?AUTHORS$
+- ^(.*/)?CONTRIBUTING$
+- ^(.*/)?LICENSE$
+- ^(.*/)?CNAME$
+- ^(.*/)?CONTRIBUTING$
+- ^(.*/)?DOCS-LICENSE$
+- ^(.*/)?LICENSE-MIT$
