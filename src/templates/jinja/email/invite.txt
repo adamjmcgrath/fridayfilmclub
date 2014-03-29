@@ -1,4 +1,4 @@
-Your friend {{ user }} has invited you to join Friday Film Club: the invite only weekly film quiz.
+{{ user }} has invited you to join Friday Film Club: the invite only weekly film quiz.
 
 Intrigued?
 Excited?
