@@ -9,3 +9,7 @@ cron:
   url: /admin/posequestion
   schedule: every friday 15:00
   timezone: Europe/London
+
+- description: weekly backup
+  url: /_ah/datastore_admin/backup.create?kind=Clue&kind=Invite&kind=Question&kind=Season&kind=User&kind=UserQuestion&kind=UserSeason&kind=UserToken&filesystem=gs&gs_bucket_name=ffcapp/backups/weekly
+  schedule: every saturday 01:00
