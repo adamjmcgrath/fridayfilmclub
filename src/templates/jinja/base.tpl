@@ -74,6 +74,22 @@
       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
       ga('create', 'UA-46472389-1', 'fridayfilmclub.com');
       ga('send', 'pageview');
+
+      (function() {
+        var inviteBtn = document.getElementById('invite-nav-button'),
+            twitterBtn = document.getElementById('follow-twitter');
+
+        if (inviteBtn) {
+          inviteBtn.onclick = function() {
+            window['ga']('send', 'event', 'invite', 'click', 'invite-your-friends');
+          }
+        }
+        if (twitterBtn) {
+          twitterBtn.onclick = function() {
+            window['ga']('send', 'event', 'button', 'click', 'follow-us-on-twitter');
+          }
+        }
+      })();
     </script>
   </body>
 </html>

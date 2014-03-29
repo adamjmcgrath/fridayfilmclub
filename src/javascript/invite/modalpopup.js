@@ -125,6 +125,7 @@ ffc.invite.ModalPopup.prototype.onShow = function() {
 ffc.invite.ModalPopup.prototype.onBtnClick_ = function(e) {
   e.preventDefault();
   this.setVisible(true);
+  window['ga'] && window['ga']('send', 'event', 'invite', 'click', 'request-invite');
 };
 
 
@@ -140,6 +141,7 @@ ffc.invite.ModalPopup.prototype.onInviteFormSubmit_ = function(e) {
         goog.bind(this.onRequestInviteResponse_, this),
         'POST',
         'email=' + email);
+    window['ga'] && window['ga']('send', 'event', 'invite', 'request', email);
   }
   this.setValid(isValid);
 };

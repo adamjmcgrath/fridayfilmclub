@@ -84,6 +84,8 @@ ffc.settings.InviteForm.prototype.onSubmit_ = function(e) {
 
   goog.net.XhrIo.send(ffc.settings.InviteForm.URL_,
       this.onResponse_.bind(this), 'POST', data);
+
+  window['ga'] && window['ga']('send', 'event', 'invite', 'send', data['email']);
 };
 
 
