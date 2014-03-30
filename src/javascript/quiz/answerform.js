@@ -191,12 +191,13 @@ ffc.quiz.AnswerForm.prototype.onSubmit_ = function(e) {
 
 
 /**
- * Change the answer form to reflect that it is the users last guess.
+ * Change the answer form to reflect what guess the user is on.
+ * @param {number} numGuesses
  */
-ffc.quiz.AnswerForm.prototype.setLastGuess = function() {
+ffc.quiz.AnswerForm.prototype.setPassBtnMsg = function(numGuesses) {
   var passBtn = this.dom_.getElement('btn-pass');
   if (passBtn) {
-    passBtn.innerHTML = 'No idea, I give up';
+    passBtn.innerHTML = ffc.quiz.AnswerForm.passMessages_[numGuesses];
   }
 };
 
@@ -237,6 +238,18 @@ ffc.quiz.AnswerForm.MAKE_GUESS = 'makeguessevent';
  * @private
  */
 ffc.quiz.AnswerForm.PASS_ = 'pass';
+
+
+/**
+ * An ordered list of pass messages.
+ * @private
+ */
+ffc.quiz.AnswerForm.passMessages_ = [
+  'No idea, clue 1 please',
+  'No idea, clue 2 please',
+  'No idea, clue 3 please',
+  'No idea, I give up'
+];
 
 
 

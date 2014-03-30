@@ -206,10 +206,7 @@ ffc.quiz.Question.prototype.updateAnswerForm = function() {
   if (!this.answerForm) {
     return;
   }
-  var lastGuess = this.guesses_.length == 3;
-  if (lastGuess && this.answerForm) {
-    this.answerForm.setLastGuess();
-  }
+  this.answerForm.setPassBtnMsg(this.guesses_.length);
 };
 
 
