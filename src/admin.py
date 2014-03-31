@@ -244,3 +244,13 @@ class SendInvites(baserequesthandler.RequestHandler):
       'form': form,
       'sent_to': sent_to
     })
+
+
+class DeleteUserQuestion(baserequesthandler.RequestHandler):
+  """Delete a user question from the question page for debugging."""
+
+  def post(self):
+    uq_key = self.request.get('user_question')
+    if uq_key:
+      ndb.Key('UserQuestion', uq_key).delete()
+    self.redirect(self.request.referer)

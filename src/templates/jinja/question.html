@@ -4,7 +4,15 @@
 
 {% block main %}
 <div class="col-md-9">
-  <h1>What film is this from?</h1>
+  <h1>
+    What film is this from?
+    {% if user.is_admin %}
+    <form action="{{ uri_for('admin-delete-user-question') }}" method="post" class="pull-right">
+      <input type="hidden" value="{{ user_question.key.id() }}" name="user_question">
+      <input type="submit" class="btn btn-danger" value="Delete UserQuestion">
+    </form>
+    {% endif %}
+  </h1>
   <div id="clues"></div>
 </div>
 {% endblock %}
