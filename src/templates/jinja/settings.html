@@ -3,6 +3,9 @@
 {% block page_id %}settings-page{% endblock page_id %}
 
 {% block main %}
+{% if success %}
+<div class="alert alert-success edit-success">Thank you. Your changes have been saved.</div>
+{% endif %}
 <div class="col-md-9">
   {# Invite #}
   <div class="alert alert-info">

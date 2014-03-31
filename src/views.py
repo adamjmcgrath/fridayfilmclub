@@ -156,11 +156,14 @@ class Settings(baserequesthandler.RequestHandler):
   def post(self):
     user = self.current_user
     form = forms.User(formdata=self.request.POST)
+    success = False
     if form.validate():
       form.populate_obj(user)
       user.put()
+      success = True
     self.render_template('settings.html', {
-      'form': form
+      'form': form,
+      'success': success
     })
 
 
