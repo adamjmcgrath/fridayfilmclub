@@ -7,7 +7,7 @@
 
 To get entities from prod backup:
 
-1. gsutil cp gs://ffcapp/backups/YYYYMMDD/** data/backups/YYYYMMDD/.
+1. gsutil cp gs://ffcapp.appspot.com/** data/backups/YYYYMMDD/.
 2. Run restore_dev_data.py
 """
 
