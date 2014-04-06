@@ -11,7 +11,7 @@ cron:
   timezone: Europe/London
 
 - description: weekly backup
-  url: /_ah/datastore_admin/backup.create?kind=Clue&kind=Invite&kind=Question&kind=Season&kind=User&kind=UserQuestion&kind=UserSeason&kind=UserToken&filesystem=gs&gs_bucket_name=weekly
-  schedule: every sunday 15:30
+  url: /_ah/datastore_admin/backup.create?kind=Clue&kind=Invite&kind=Question&kind=Season&kind=User&kind=UserQuestion&kind=UserSeason&kind=UserToken&filesystem=gs&gs_bucket_name=ffcapp.appspot.com
+  schedule: every sunday 15:35
   target: ah-builtin-python-bundle
   timezone: Europe/London
