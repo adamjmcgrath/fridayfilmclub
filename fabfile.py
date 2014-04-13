@@ -238,3 +238,7 @@ def compile_js(part=None):
     parts = [part]
   for p in parts:
     local('scripts/compilejs.sh %s' % p)
+
+
+def run_tests():
+  local('nosetests --with-gae --gae-application=src/ --where=src/test/')
