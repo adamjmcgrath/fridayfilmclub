@@ -7,17 +7,23 @@
 
 __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 
+import datetime
+import os
 import sys
 import unittest
+import webtest
+import webapp2
 
 from google.appengine.api import memcache
 from google.appengine.ext import testbed
 
-# TODO(adamjmcgrath) better way of including the src
-sys.path.append('/Users/adammcgrath/dev/projects/ffc/src/')
-sys.path.append('/Users/adammcgrath/dev/projects/ffc/src/lib/')
-import api
+TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../lib'))
 
+import api
+import main
+import models
 
 class ApiTestCase(unittest.TestCase):
 
@@ -25,6 +31,22 @@ class ApiTestCase(unittest.TestCase):
     self.testbed = testbed.Testbed()
     self.testbed.activate()
     self.testbed.init_memcache_stub()
+    self.testbed.init_datastore_v3_stub()
+    self.testapp = webtest.TestApp(main.routes)
+    question = models.Question(
+        clues=[],
+        answer_id='foo',
+        answer_title='bar',
+        answer_year=2000,
+        posed=datetime.datetime.now(),
+        is_current=True,
+        imdb_url='http://imdb.com',
+        packshot=None,
+        email_msg='Message',
+        # season=models.Season,
+        week=1,
+        answered=0
+    )
 
   def tearDown(self):
     self.testbed.deactivate()
