@@ -23,7 +23,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../lib'))
 
 import api
 import main
-import models
+import mocks
 
 class ApiTestCase(unittest.TestCase):
 
@@ -33,20 +33,7 @@ class ApiTestCase(unittest.TestCase):
     self.testbed.init_memcache_stub()
     self.testbed.init_datastore_v3_stub()
     self.testapp = webtest.TestApp(main.routes)
-    question = models.Question(
-        clues=[],
-        answer_id='foo',
-        answer_title='bar',
-        answer_year=2000,
-        posed=datetime.datetime.now(),
-        is_current=True,
-        imdb_url='http://imdb.com',
-        packshot=None,
-        email_msg='Message',
-        # season=models.Season,
-        week=1,
-        answered=0
-    )
+    print mocks.question()
 
   def tearDown(self):
     self.testbed.deactivate()
