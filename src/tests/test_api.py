@@ -23,7 +23,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../lib'))
 
 import api
 import main
-import mocks
+import helpers
 
 class ApiTestCase(unittest.TestCase):
 
@@ -33,7 +33,7 @@ class ApiTestCase(unittest.TestCase):
     self.testbed.init_memcache_stub()
     self.testbed.init_datastore_v3_stub()
     self.testapp = webtest.TestApp(main.routes)
-    print mocks.question()
+    print helpers.question()
 
   def tearDown(self):
     self.testbed.deactivate()
