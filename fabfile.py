@@ -16,10 +16,9 @@ from fabric.colors import green, red, yellow
 import datetime
 import re
 
-APPENGINE_DEV_APPSERVER = '/usr/local/bin/dev_appserver.py'
-APPENGINE_PATH = '/usr/local/google_appengine/'
-APPENGINE_APP_CFG = '/usr/local/bin/appcfg.py'
-PYTHON = '/usr/bin/python'
+APPENGINE_PATH = os.environ['APPENGINE_SRC']
+APPENGINE_DEV_APPSERVER =  os.path.join(APPENGINE_PATH, 'dev_appserver.py')
+APPENGINE_APP_CFG =  os.path.join(APPENGINE_PATH, 'appcfg.py')
 
 env.gae_email = 'adamjmcgrath@gmail.com'
 env.gae_src = './src'
@@ -75,7 +74,7 @@ def deploy(tag=None):
   compile_js()
 
   prepare_deploy(tag)
-  local('%s %s -A %s -V %s --email=%s update %s' % (PYTHON, APPENGINE_APP_CFG,
+  local('python %s -A %s -V %s --email=%s update %s' % (APPENGINE_APP_CFG,
       env.app.application, env.app.version, env.gae_email, env.gae_src))
   end_deploy()
   commit()
@@ -84,8 +83,8 @@ def deploy(tag=None):
 @include_appcfg
 def shell():
   with lcd(env.gae_src):
-    local('%s %s/remote_api_shell.py -s ffcapp.appspot.com' %
-            (PYTHON, APPENGINE_PATH))
+    local('python %s/remote_api_shell.py -s ffcapp.appspot.com' %
+          APPENGINE_PATH)
 
 
 def run(port='8080', clear_datastore=False, send_mail=True):
