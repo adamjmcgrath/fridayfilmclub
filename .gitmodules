@@ -1,7 +1,7 @@
 [submodule "src/wtforms"]
   path = src/wtforms
   url = https://github.com/hoydaa/lib-wtforms.git
-  branch = master
+  branch = 0.6.3
 [submodule "src/less"]
   path = src/less
   url = https://github.com/less/less.js.git
