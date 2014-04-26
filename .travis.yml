@@ -28,10 +28,6 @@ before_script:
   - wget https://closure-templates.googlecode.com/files/closure-templates-for-javascript-latest.zip && unzip closure-templates-for-javascript-latest.zip -d vendors/closure-templates
   - export CLOSURE_TEMPLATES_COMPILER_PATH=vendors/closure-templates/SoyToJsSrcCompiler.jar
 
-  # Fix permissions
-  - chmod +x ./src/closure-library/closure/bin/build/*.py
-  - ls -l ./src/
-
 script:
   - fab compile_css
   - fab compile_js

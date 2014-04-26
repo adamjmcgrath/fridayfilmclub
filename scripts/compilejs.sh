@@ -32,7 +32,7 @@ EXTERNS_SOURCE=$FFC_SOURCE/externs
 
 if [ $1 == "deps" ] || [ $1 == "all" ]; then
   echo 'Building deps'
-  $CLOSURE_DEPSWRITER_PATH \
+  python $CLOSURE_DEPSWRITER_PATH \
     --root_with_prefix="$FFC_SOURCE ../../../javascript/"\
     --root_with_prefix="$CLOSURE_TEMPLATES ../../../closure-templates/javascript/"\
     --root_with_prefix="$GROW_SOURCE ../../../growjs/"\
@@ -51,7 +51,7 @@ fi
 
 if [ $1 == "quiz" ] || [ $1 == "all" ]; then
   echo 'Building quiz'
-  $CLOSURE_BUILDER_PATH \
+  python $CLOSURE_BUILDER_PATH \
     --root=$CLOSURE_LIB \
     --root=$CLOSURE_TEMPLATES \
     --root=$API_SOURCE \
@@ -71,7 +71,7 @@ fi
 
 if [ $1 == "leaderboard" ] || [ $1 == "all" ]; then
   echo 'Building leaderboard'
-  $CLOSURE_BUILDER_PATH \
+  python $CLOSURE_BUILDER_PATH \
     --root=$CLOSURE_LIB \
     --root=$CLOSURE_TEMPLATES \
     --root=$API_SOURCE \
@@ -90,7 +90,7 @@ fi
 
 if [ $1 == "settings" ] || [ $1 == "all" ]; then
   echo 'Building settings'
-  $CLOSURE_BUILDER_PATH \
+  python $CLOSURE_BUILDER_PATH \
     --root=$CLOSURE_LIB \
     --root=$CLOSURE_TEMPLATES \
     --root=$API_SOURCE \
@@ -110,7 +110,7 @@ fi
 
 if [ $1 == "requestinvite" ] || [ $1 == "all" ]; then
   echo 'Building requestinvite'
-  $CLOSURE_BUILDER_PATH \
+  python $CLOSURE_BUILDER_PATH \
     --root=$CLOSURE_LIB \
     --root=$CLOSURE_TEMPLATES \
     --root=$API_SOURCE \
