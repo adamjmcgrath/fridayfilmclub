@@ -1,0 +1,33 @@
+language: python
+
+python:
+  - "2.7"
+
+install:
+  - pip install -r requirements.txt
+  - npm install -g less
+
+before_script:
+  # app engine
+  - mkdir -p vendors
+  - wget https://commondatastorage.googleapis.com/appengine-sdks/featured/google_appengine_1.9.3.zip  -nv
+  - unzip -qd vendors google_appengine_1.9.3.zip
+  - export APPENGINE_SRC=vendors/google_appengine
+
+  # closure compiler
+  - mkdir -p vendors/closure
+  - wget http://dl.google.com/closure-compiler/compiler-latest.zip && unzip compiler-latest.zip -d vendors/closure
+  - export CLOSURE_JAR=vendors/closure/compiler.jar
+
+  # closure templates compiler
+  - mkdir -p vendors/closure-templates
+  - wget https://closure-templates.googlecode.com/files/closure-templates-for-javascript-latest.zip && unzip closure-templates-for-javascript-latest.zip -d vendors/closure-templates
+  - export CLOSURE_TEMPLATES_COMPILER_PATH=vendors/closure-templates/SoyToJsSrcCompiler.jar
+
+  # Fix permissions
+  - chmod +x ./src/closure-library/closure/bin/build/*.py
+  - ls -l ./src/
+
+script:
+  - fab compile_css
+  - fab compile_js
