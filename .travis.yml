@@ -29,5 +29,5 @@ before_script:
   - ls -l ./src/
 
 script:
-  - sudo fab compile_css
-  - sudo fab compile_js
+  - fab compile_css
+  - fab compile_js
