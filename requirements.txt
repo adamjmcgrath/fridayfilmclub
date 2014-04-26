@@ -1,4 +1,3 @@
 Fabric
 nose
 NoseGAE
-PIL
