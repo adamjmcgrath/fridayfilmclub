@@ -9,8 +9,8 @@ CLOSURE_TEMPLATES=./src/closure-templates/javascript
 CLOSURE_SRC=$CLOSURE_LIB/closure
 CLOSURE_BUILDER_PATH=$CLOSURE_LIB/closure/bin/build/closurebuilder.py
 CLOSURE_DEPSWRITER_PATH=$CLOSURE_LIB/closure/bin/build/depswriter.py
-CLOSURE_COMPILER_PATH=~/bin/compiler.jar
-CLOSURE_TEMPLATES_COMPILER_PATH=~/bin/SoyToJsSrcCompiler.jar
+CLOSURE_COMPILER_PATH=$CLOSURE_JAR
+CLOSURE_TEMPLATES_COMPILER_PATH=$SOY_JAR
 
 FFC_PATH=./src
 FFC_SOURCE=$FFC_PATH/javascript
