@@ -33,3 +33,6 @@ script:
   - fab compile_js
   - fab run_tests
 
+notifications:
+  email:
+    - adamjmcgrath@gmail.com
