@@ -3,9 +3,14 @@ language: python
 branches:
   only:
     - master
+    - devel
 
 python:
   - "2.7"
+
+env:
+  global:
+    secure: DXLD6sujA+tvf/xaBf83k53HTtypoqviz+V45CMuUu4JhjVMt2xKOM0j+IZS4FivhMVX+RO4cZAy6+72m/jofsMRMoqPVWZgZmGNnF8uLtSw9zFfbQGpe27f7d+1BFclLL7x0r1gdDx3p4yxNXjzoGGGT/4N//IVaVPNJf/MTFs=
 
 install:
   - pip install -r requirements.txt
@@ -32,6 +37,9 @@ script:
   - fab compile_css
   - fab compile_js
   - fab run_tests
+
+after_success:
+  - fab deploy:branch=$TRAVIS_BRANCH,token=$OAUTH2_REFRESH_TOKEN
 
 notifications:
   email:
