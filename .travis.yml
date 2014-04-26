@@ -38,7 +38,7 @@ script:
   - fab run_tests
 
 after_success:
-  - fab deploy:branch="%{branch}",token=$OAUTH2_REFRESH_TOKEN
+  - fab deploy:branch=$TRAVIS_BRANCH,token=$OAUTH2_REFRESH_TOKEN
 
 notifications:
   email:
