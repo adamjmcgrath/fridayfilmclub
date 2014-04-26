@@ -31,3 +31,5 @@ before_script:
 script:
   - fab compile_css
   - fab compile_js
+  - fab run_tests
+
