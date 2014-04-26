@@ -25,5 +25,5 @@ before_script:
   - export CLOSURE_TEMPLATES_COMPILER_PATH=vendors/closure-templates/SoyToJsSrcCompiler.jar
 
 script:
-  - fab compile_css
-  - fab compile_js
+  - sudo fab compile_css
+  - sudo fab compile_js
