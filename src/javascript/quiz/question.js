@@ -158,7 +158,11 @@ ffc.quiz.Question.prototype.enterDocument = function() {
     this.eh_.listen(this.answerForm, ffc.quiz.AnswerForm.MAKE_GUESS,
         this.onGuess_, false, this);
   }
-  this.scrollfloater_.decorate(document.getElementById('scroll-float'));
+
+  var size = goog.dom.getViewportSize();
+  if (size.width > ffc.quiz.Question.MIN_SCROLL_FLOAT_WIDTH) {
+    this.scrollfloater_.decorate(document.getElementById('scroll-float'));
+  }
 
   // Clean up after unload.
   this.eh_.listen(window, goog.events.EventType.UNLOAD,
@@ -329,3 +333,10 @@ ffc.quiz.Question.prototype.disposeInternal = function(e) {
   this.scoreParentEl_ = null;
   this.url_ = null;
 };
+
+
+/**
+ * This is the minimum with at which the scroll floater should display. If the
+ * viewport is smaller than this, we should not load the scroll floater.
+ */
+ffc.quiz.Question.MIN_SCROLL_FLOAT_WIDTH = 991;
