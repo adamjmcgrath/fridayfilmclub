@@ -39,7 +39,10 @@ def fix_appengine_path():
 fix_appengine_path()
 
 
-def deploy(branch='devel', token=''):
+def deploy(branch='devel', token='', pull_request='false'):
+  if pull_request != 'false':
+    return
+
   version = branch
   if branch == 'master':
     version = 'prod'
