@@ -87,7 +87,7 @@ ffc.leaderboard.LeaderBoardModel.prototype.nextValue = null;
  */
 ffc.leaderboard.LeaderBoardModel.prototype.getData = function() {
   this.getData_(this.page * this.pageSize, this.pageSize,
-      this.sortField, this.sortDir).wait(this.handleResult.bind(this));
+      this.sortField, this.sortDir).then(this.handleResult.bind(this));
 };
 
 
@@ -104,11 +104,9 @@ ffc.leaderboard.LeaderBoardModel.prototype.sort = function(sort, dir) {
 
 
 /**
- * @param {goog.result.Result} result The ajax result.
+ * @param {Object} result The service result.
  */
-ffc.leaderboard.LeaderBoardModel.prototype.handleResult = function(result) {
-  var data = result.getValue();
-
+ffc.leaderboard.LeaderBoardModel.prototype.handleResult = function(data) {
   this.previousValue = data['prev'];
   this.nextValue = data['next'];
 
