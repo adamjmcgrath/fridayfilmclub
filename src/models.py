@@ -219,6 +219,7 @@ class User(AuthUser):
   questions_answered = ndb.IntegerProperty(default=0)
   invites = ndb.KeyProperty(kind=Invite, repeated=True)
   invited_by = ndb.KeyProperty(kind='User')
+  joined = ndb.DateTimeProperty(auto_now_add=True)
 
   def pic_url(self, size=None, crop=False):
     """Gets the image's url."""
@@ -274,6 +275,7 @@ class UserQuestion(ndb.Model):
     score:
   """
   complete = ndb.BooleanProperty(default=False)
+  completed = ndb.DateTimeProperty(auto_now=True)
   correct = ndb.BooleanProperty(default=False)
   guesses = ndb.StringProperty(repeated=True)
   clues_used = ndb.ComputedProperty(lambda self: max(len(self.guesses) - 1, 0))
