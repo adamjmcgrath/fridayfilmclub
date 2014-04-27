@@ -100,7 +100,7 @@ ffc.invite.AutoComplete = function(el, provider, parent, valueInput) {
 
   ffc.api.Client.getInstance()
                 .getContacts(provider)
-                .wait(this.handleContactsResponse_, this);
+                .then(this.handleContactsResponse_, this);
 
   this.setLoading(true);
 
@@ -111,12 +111,11 @@ goog.exportSymbol('ffc.invite.AutoComplete', ffc.invite.AutoComplete);
 
 
 /**
- * @param {Object} response
+ * @param {Object} values
  * @private
  */
-ffc.invite.AutoComplete.prototype.handleContactsResponse_ = function(response) {
-  var values = response.getValue(),
-      rows = [],
+ffc.invite.AutoComplete.prototype.handleContactsResponse_ = function(values) {
+  var rows = [],
       i, len, row;
 
   for (i = 0, len = values.length; i < len; i++) {
