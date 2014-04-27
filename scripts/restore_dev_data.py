@@ -44,6 +44,7 @@ from google.appengine.datastore import entity_pb
 import models
 
 APP_NAME = 'dev~ffcapp'
+BATCH_SIZE = 100
 os.environ['AUTH_DOMAIN'] = 'gmail.com'
 os.environ['USER_EMAIL'] = 'adamjmcgrath@gmail.com'
 
@@ -52,14 +53,16 @@ def auth_func():
   return (os.environ['USER_EMAIL'], '')
 
 
-def fix_emails():
-  # TODO: Batch the datastore writes.
+def fix_emails(curs=None):
   print 'Fixing emails'
-  for u in models.User.query():
+  users, next_curs, more = models.User.query().fetch_page(BATCH_SIZE,
+                                                          start_cursor=curs)
+  for u in users:
     u.email = 'adamjmcgrath+%s@gmail.com' % u.username
-    print u.email
-    u.put()
-  print 'Fixed emails'
+  ndb.put_multi(users)
+
+  if more:
+    fix_emails(next_curs)
 
 
 def main():
