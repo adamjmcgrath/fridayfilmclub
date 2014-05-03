@@ -32,7 +32,7 @@
 [submodule "src/twitter-bootstrap"]
   path = src/twitter-bootstrap
   url = https://github.com/twbs/bootstrap.git
-  branch = v3.0.2
+  branch = master
 [submodule "submodules/python-dateutil"]
   path = submodules/python-dateutil
   url = https://github.com/paxan/python-dateutil.git

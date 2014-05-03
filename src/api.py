@@ -237,8 +237,8 @@ class LeaderBoard(baserequesthandler.RequestHandler):
           options=qo)
 
     json_str = json.dumps({
-      'prev': users_dicts[0].get(sort),
-      'next': users_dicts[-1].get(sort),
+      'prev': users_dicts and users_dicts[0].get(sort) or 0,
+      'next': users_dicts and users_dicts[-1].get(sort) or 0,
       'users': users_dicts[min_offset:][:limit],
       'count': count
     })
