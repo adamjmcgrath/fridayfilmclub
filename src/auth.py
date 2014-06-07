@@ -96,7 +96,6 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
       # or that their is a user with this username.
 
       username = self.session.get('username')
-      invitation_code = self.session.get('invitation_code')
 
       if self.logged_in:
         logging.info('Updating currently logged in user.')
@@ -106,29 +105,20 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
         u.put()
         self.auth.set_session(self.auth.store.user_to_dict(u), remember=True)
 
-      elif username and invitation_code:
+      elif username:
         logging.info('Creating a user for %s.' % username)
-        invite = models.Invite.get_by_id(invitation_code)
 
-        if invite:
-          # Create a user the given username and delete the invite.
-          u = models.User(username=username.strip())
-          u.put() # Have to put this here so invites has a user key to reference.
-          u.invites = models.Invite.create_invites(u)
-          invite = models.Invite.get_by_id(invitation_code)
-          if invite.owner:
-            u.invited_by = invite.owner
-          invite.key.delete()
+        # Create a user the given username.
+        u = models.User(username=username.strip())
 
-          # Authenticate the new user.
-          u.auth_ids.append(auth_id)
-          u.populate(**self._to_user_model_attrs(data, provider, True))
-          u.put()
-          self.auth.set_session(self.auth.store.user_to_dict(u), remember=True)
-          self.redirect('/settings')
+        # Authenticate the new user.
+        u.auth_ids.append(auth_id)
+        u.populate(**self._to_user_model_attrs(data, provider, True))
+        u.put()
+        self.auth.set_session(self.auth.store.user_to_dict(u), remember=True)
+        self.redirect('/settings')
 
         del self.session['username']
-        del self.session['invitation_code']
 
     # Redirect them to the next page.
     target = self.session.get('original_url')

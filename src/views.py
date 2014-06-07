@@ -95,7 +95,6 @@ class Register(baserequesthandler.RequestHandler):
     if form.validate():
       # Set the username and invitation in the session and login to the auth provider.
       self.session['username'] = self.request.get('username')
-      self.session['invitation_code'] = self.request.get('invitation_code')
       self.redirect(self.uri_for('auth_login', provider=provider))
     else:
       self.render_template('register.html', {
