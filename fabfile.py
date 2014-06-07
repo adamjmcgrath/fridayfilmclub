@@ -80,8 +80,7 @@ def compile_css():
 
 
 def compile_js(part=None):
-  parts = ['deps', 'template', 'quiz', 'leaderboard', 'settings',
-           'requestinvite']
+  parts = ['deps', 'template', 'quiz', 'leaderboard', 'settings']
   local('mkdir -p src/static/js/')
   if part:
     parts = [part]
@@ -90,5 +89,5 @@ def compile_js(part=None):
 
 
 def run_tests():
-  local('nosetests --with-gae --gae-application=src/ --where=src/tests/ '
-        '--gae-lib-root=%s' % APPENGINE_PATH)
+  local('nosetests  --logging-level=INFO --with-gae --gae-application=src/ '
+        '--where=src/tests/ --gae-lib-root=%s' % APPENGINE_PATH)

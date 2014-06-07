@@ -34,7 +34,6 @@ routes = [
         webapp2.Route('/posequestiontest/<key>', admin.PoseQuestionTest,
             'admin-posequestiontest'),
         webapp2.Route('/dryrun', admin.DryRun, 'admin-dryrun'),
-        webapp2.Route('/sendinvites', admin.SendInvites, 'admin-send-invites'),
         webapp2.Route('/deleteuserquestion', admin.DeleteUserQuestion,
             'admin-delete-user-question'),
     ]),
@@ -57,8 +56,6 @@ routes = [
     # Main views (Authenticated).
     webapp2.Route(r'/question/<:.*>', views.Question, name='question'),
     webapp2.Route(r'/settings', views.Settings, name='settings'),
-    webapp2.Route(r'/sendinvite_legacy', views.SendInvite,
-        name='send_invite_legacy'),
 
     # Realtime handlers.
     webapp2.Route(r'/_ah/channel/connected/', realtime.Connect),
@@ -67,7 +64,6 @@ routes = [
     # Main views.
     webapp2.Route(r'/login', views.Login, name='login'),
     webapp2.Route(r'/register', views.Register, name='register'),
-    webapp2.Route(r'/requestinvite', views.RequestInvite, name='requestinvite'),
     webapp2.Route(r'/archive', views.Archive, name='archive'),
     webapp2.Route(r'/leaderboard', views.LeaderBoard, name='leader-board'),
     webapp2.Route(r'/how', views.HowItWorks, name='how-it-works'),

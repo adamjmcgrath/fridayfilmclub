@@ -213,39 +213,6 @@ class DryRun(baserequesthandler.RequestHandler):
     self.response.out.write(email_body)
 
 
-class SendInvites(baserequesthandler.RequestHandler):
-  """Send invites to users from admin section"""
-
-  def get(self):
-    self.render_template('admin/sendinvites.html', {
-      'form': forms.Invite()
-    })
-
-  def post(self):
-    form = forms.Invite(self.request.POST)
-    sent_to = False
-    if form.validate():
-      # Send invite
-      email = form.email.data
-      invite = models.Invite.create_single_invite().id()
-      logging.info('Sending invite: %s, to: %s' % (invite, email))
-      body = self.generate_template('email/invite.txt', {
-        'invite': urlparse.urljoin(self.request.host_url, 'register?invite=%s' % invite),
-        'user': 'Film Master Jack'
-      })
-      mail.send_mail(sender=settings.FMJ_EMAIL,
-                       to=email,
-                       subject='Friday Film Club invitation',
-                       body=body)
-      form = forms.Invite()
-      sent_to = email
-
-    self.render_template('admin/sendinvites.html', {
-      'form': form,
-      'sent_to': sent_to
-    })
-
-
 class DeleteUserQuestion(baserequesthandler.RequestHandler):
   """Delete a user question from the question page for debugging."""
 

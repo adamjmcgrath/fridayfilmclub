@@ -7,20 +7,6 @@
 <div class="alert alert-success edit-success">Thank you. Your changes have been saved.</div>
 {% endif %}
 <div class="col-md-9">
-  {# Invite #}
-  <div class="alert alert-info">
-  <h4 class="text-muted" id="invite">Invite your friends:</h4>
-  <form class="form" id="invite-form">
-    <div class="input-group">
-      <input name="email" type="text" class="invite-email form-control" id="inviteEmail" placeholder="name@example.com" list="emailAutoComplete">
-      <span class="input-group-btn">
-        <button class="btn btn-primary" type="submit">Send Invite</button>
-      </span>
-    </div>
-    <p class="help-block">Enter a valid email. You have <span class="num-invites">{{ user.invites|length }}</span> invite{% if user.invites|length != 1 %}s{% endif %} left.</p>
-  </form>
-  </div>
-
   <h1>Settings</h1>
 
   <h4 class="text-muted">Edit your profile</h4>
@@ -134,20 +120,12 @@
   <script src="/static/js/deps.js"></script>
   <script>
     goog.require('goog.ui.Component');
-    goog.require('ffc.settings.InviteForm');
     goog.require('ffc.suggest.AutoComplete');
   </script>
 {% else %}
   <script src="/static/js/settings.js"></script>
 {% endif %}
 <script>
-
-  // Invite form.
-  var inviteForm = new ffc.settings.InviteForm();
-  inviteForm.decorate(document.getElementById('invite-form'));
-  {% if user.google_refresh_token %}
-  inviteForm.populateAutoComplete();
-  {% endif %} 
 
   // Favourite film auto complete.
   var input = document.getElementById('ac');
@@ -162,9 +140,6 @@
     }
     return true;
   }
-
-  // Focus the invite friends box
-  document.getElementById('inviteEmail').focus();
 
 </script>
 {% endblock %}

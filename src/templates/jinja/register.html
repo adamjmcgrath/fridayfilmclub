@@ -3,12 +3,6 @@
 {% block page_id %}register-page{% endblock page_id %}
 
 {% block main %}
-  {% if not form.invitation_code.data %}
-    <div class="col-md-6 col-md-offset-3 alert alert-danger">
-      Friday Film Club is <strong>invitation only</strong>...
-      <span class="pull-right">But you can <a href="#" id="request-invite">request an invite</a>.</span>
-    </div>
-  {% endif %}
   <div class="col-md-6 col-md-offset-3 well" id="login-buttons">
     <h4>Join Friday Film Club:</h4>
     <p class="text-muted">Enter your details:</p>
@@ -21,14 +15,6 @@
         {{ form.username(class_='form-control', id='userName', placeholder='Your username') }}
         <input type="hidden" name="register" value="true">
         <small class="help-block">Your username must be unique &amp; 3-16 characters (letters, numbers and '_' only).</small>
-      </div>
-      <div class="form-group{% if form.errors.invitation_code %} has-error{% endif %}">
-        <label for="invitationCode">Invitation code</label>
-        {% if form.errors.invitation_code %}
-          <small class="text-danger pull-right">{{ form.errors.invitation_code[0] }}</small>
-        {% endif %}
-        {{ form.invitation_code(class_='form-control', id='invitationCode', placeholder='Invitation code') }}
-        <small class="help-block">Friday Film Club is invitation only.</small>
       </div>
       <p class="text-muted">Then login with one of these services:</p>
       <div class="row">
@@ -57,26 +43,4 @@
 {% endblock %}
 
 {% block sidebar %}
-{% endblock %}
-
-{% block body_base %}
-  {% if debug %}
-    <script src="/closure-library/closure/goog/base.js"></script>
-    <script src="/static/js/deps.js"></script>
-    <script>
-      goog.require('goog.ui.Dialog');
-      goog.require('ffc.invite.ModalPopup');
-    </script>
-  {% else %}
-    <script src="/static/js/requestinvitepopup.js"></script>
-  {% endif %}
-
-  <script>
-    (function() {
-      var btn = document.getElementById('request-invite');
-      if (btn) {
-        new ffc.invite.ModalPopup(btn);
-      }
-    })();
-  </script>
 {% endblock %}

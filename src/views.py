@@ -77,16 +77,14 @@ class Login(baserequesthandler.RequestHandler):
   """Shows the login page."""
 
   def get(self):
-    self.render_template('login.html', {
-      'no_invite_warning': str(self.request.referer).endswith('/login')
-    })
+    self.render_template('login.html', {})
 
 
 class Register(baserequesthandler.RequestHandler):
   """Shows the registration page."""
 
   def get(self):
-    form = forms.Registration(invitation_code=self.request.get('invite'))
+    form = forms.Registration()
     self.render_template('register.html', {
       'form': form
     })
@@ -97,30 +95,11 @@ class Register(baserequesthandler.RequestHandler):
     if form.validate():
       # Set the username and invitation in the session and login to the auth provider.
       self.session['username'] = self.request.get('username')
-      self.session['invitation_code'] = self.request.get('invitation_code')
       self.redirect(self.uri_for('auth_login', provider=provider))
     else:
       self.render_template('register.html', {
         'form': form
       })
-
-
-class RequestInvite(baserequesthandler.RequestHandler):
-  """Shows the request invite page."""
-
-  def post(self):
-    form = forms.RequestInvite(self.request.POST)
-    sent_to = None
-    if form.validate():
-      sent_to = form.email.data
-      send_invite_email(models.Invite.create_single_invite(),
-                        'Film Master Jack', settings.FMJ_EMAIL, sent_to)
-      # Reset the form.
-      form.process()
-
-    self.render_json({
-      'sent_to': sent_to
-    })
 
 
 class Profile(baserequesthandler.RequestHandler):
@@ -193,85 +172,3 @@ class HowItWorks(baserequesthandler.RequestHandler):
 
   def get(self):
     self.render_template('how.html', {})
-
-
-class SendInvite(baserequesthandler.RequestHandler):
-  """Old send invites handler."""
-
-  @auth.login_required
-  def post(self):
-    user = self.current_user
-    form = forms.Invite(self.request.POST)
-
-    if len(user.invites) and form.validate():
-      invite = user.invites.pop().get()
-
-      # Send the invite.
-      email = form.email.data
-      logging.info('Sending invite: %s, to: %s' % (invite.key.id(), email))
-      body = self.generate_template('email/invite.txt', {
-        'invite': urlparse.urljoin(self.request.host_url,
-                                   'register?invite=%s' % invite.key.id()),
-        'user': user.name
-      })
-      try:
-        sender = user.email
-      except AttributeError:
-        sender = settings.FMJ_EMAIL
-
-      try:
-        mail.send_mail(sender=sender,
-                       to=email,
-                       subject='Friday Film Club invitation',
-                       body=body)
-      except mail.InvalidSenderError:
-        mail.send_mail(sender=settings.FMJ_EMAIL,
-                       to=email,
-                       subject='Friday Film Club invitation',
-                       body=body)
-
-      invite.to = email
-      ndb.put_multi([user, invite])
-
-      self.render_json({
-        'success': True,
-        'invites': len(user.invites)
-      })
-
-    else:
-      if form.email.errors:
-        error = form.email.errors[0]
-      else:
-        error = 'You have no invites left.'
-
-      self.render_json({
-        'success': False,
-        'error': error
-      })
-
-
-def send_invite_email(invite, from_name, from_email, to_email):
-
-  # Send the invite.
-  logging.info('Sending invite: %s, to: %s' % (invite.id(), to_email))
-  template = baserequesthandler.JINJA_ENV.get_template(
-        posixpath.join(baserequesthandler.TEMPLATE_PATH, 'email/invite.txt'))
-  body = template.render({
-    'invite': urlparse.urljoin(HOST_URL, 'register?invite=%s' % invite.id()),
-    'user': from_name
-  })
-
-  sender = from_email or settings.FMJ_EMAIL
-
-  try:
-    mail.send_mail(sender=sender,
-                   to=to_email,
-                   subject='Friday Film Club invitation',
-                   body=body)
-    invite = invite.get()
-    invite.to = to_email
-    invite.put()
-    return True
-
-  except mail.Error:
-    return False
