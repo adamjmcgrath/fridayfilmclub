@@ -8,6 +8,7 @@
   </head>
   <body id="{% block page_id %}{% endblock %}">
     {% block nav_bar %}
+
       <div class="navbar" id="title-bar">
           <div class="container">
             <a class="navbar-brand custom-font-header" href="{{ uri_for('home') }}">Friday Film Club</a>
@@ -42,13 +43,10 @@
 
       <div class="navbar navbar-default" id="nav">
         <ul class="nav navbar-nav">
-          <li{% if page_id == 'how-page' %} class="active"{% endif %}><a href="/how">How<span class="hide-xs"> to play</span></a></li>
-          <li class="hidden-xs {% if page_id == 'archive-page' %} active{% endif %}"><a href="/archive">Old questions</a></li>
+          <li{% if page_id == 'how-page' %} class="active"{% endif %}><a href="/how">How to play</a></li>
+          <li{% if page_id == 'archive-page' %} class="active"{% endif %}><a href="/archive">Old questions</a></li>
           <li{% if page_id == 'leaderboard-page' %} class="active"{% endif %}><a href="/leaderboard">Leaderboard</a></li>
         </ul>
-        {% if logged_in %}
-        <a href="{{ uri_for('settings') }}#invite" class="btn btn-xs btn-danger" id="invite-nav-button">Invite your friends</a>
-        {% endif %}
       </div>
     {% endblock %}
 
@@ -76,14 +74,7 @@
       ga('send', 'pageview');
 
       (function() {
-        var inviteBtn = document.getElementById('invite-nav-button'),
-            twitterBtn = document.getElementById('follow-twitter');
-
-        if (inviteBtn) {
-          inviteBtn.onclick = function() {
-            window['ga']('send', 'event', 'invite', 'click', 'invite-your-friends');
-          }
-        }
+        var twitterBtn = document.getElementById('follow-twitter');
         if (twitterBtn) {
           twitterBtn.onclick = function() {
             window['ga']('send', 'event', 'button', 'click', 'follow-us-on-twitter');

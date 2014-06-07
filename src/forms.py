@@ -166,20 +166,7 @@ class Question(Form):
 
 class Registration(Form):
   """The registration form."""
-  invitation_code = fields.TextField()
   username = fields.TextField('', [validate_username])
-
-  def validate_invitation_code(self, field):
-    """Validate the invite."""
-    invitation_code = field.data.strip()
-    if not invitation_code:
-      raise validators.ValidationError('You need an invitation code.')
-    elif not models.Invite.get_by_id(invitation_code):
-      raise validators.ValidationError('Not a valid invite.')
-
-
-class Invite(Form):
-  email = fields.TextField(validators=[validators.Email()])
 
 
 class User(Form):
@@ -187,7 +174,3 @@ class User(Form):
   email = fields.TextField(validators=[validators.Email()])
   pic = ImageField('pic')
   favourite_film = FilmField()
-
-
-class RequestInvite(Form):
-  email = fields.TextField(validators=[validators.Email()])
