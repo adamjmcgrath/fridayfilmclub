@@ -25,10 +25,6 @@ RE_SPECIAL_CHARS_ = re.compile(r'[^a-zA-Z0-9 ]')
 _MAX_SCORE = 20000
 # No. of seconds penalty per guess
 _TIME_PER_PENALTY = 2000
-# Number of invites each user gets
-_NUM_INVITES = 50
-# Secret invite code
-_INVITE_SECRET = 'L1f3M0v3sPr3ttyF4st1fY0uD0ntSt0p4ndL00k4r0und0nc31n4wh1l3Y0uC0uldM1ss1t'
 WEEKS_PER_SEASON = 12
 
 def slugify(my_string):
@@ -152,39 +148,6 @@ class Clue(ndb.Model):
     }
 
 
-class Invite(ndb.Model):
-  """A user invite"""
-  owner = ndb.KeyProperty(kind='User')
-  to = ndb.StringProperty()
-
-  @staticmethod
-  def create_invites(user):
-    """Create invites for a new user."""
-    invites = []
-    now = time.time()
-    for n in range(_NUM_INVITES):
-      m = hashlib.md5()
-      m.update(_INVITE_SECRET) # Add secret key
-      m.update(user.username) # Make unique to user
-      m.update(str(n)) # Make unique to other batch of invites
-      m.update(str(now)) # So we can give users additional batches
-      invites.append(Invite(id=m.hexdigest(), owner=user.key))
-
-    return ndb.put_multi(invites)
-
-  @staticmethod
-  def create_single_invite(to=None):
-    """Create a single invite - for use in the admin console."""
-    m = hashlib.md5()
-    m.update(_INVITE_SECRET)
-    m.update(str(time.time()))
-    user = User.get_by_username('FMJ')
-    i = Invite(id=m.hexdigest())
-    if user:
-      i.owner = user.key
-    return i.put()
-
-
 # pylint: disable=W0232
 class User(AuthUser):
   """A user.
@@ -217,7 +180,6 @@ class User(AuthUser):
   overall_score = ndb.IntegerProperty(default=0)
   overall_clues = ndb.IntegerProperty(default=0)
   questions_answered = ndb.IntegerProperty(default=0)
-  invites = ndb.KeyProperty(kind=Invite, repeated=True)
   invited_by = ndb.KeyProperty(kind='User')
   joined = ndb.DateTimeProperty(auto_now_add=True)
 

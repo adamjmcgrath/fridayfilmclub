@@ -178,16 +178,8 @@ class Registration(Form):
       raise validators.ValidationError('Not a valid invite.')
 
 
-class Invite(Form):
-  email = fields.TextField(validators=[validators.Email()])
-
-
 class User(Form):
   username = fields.TextField('', [validate_username])
   email = fields.TextField(validators=[validators.Email()])
   pic = ImageField('pic')
   favourite_film = FilmField()
-
-
-class RequestInvite(Form):
-  email = fields.TextField(validators=[validators.Email()])
