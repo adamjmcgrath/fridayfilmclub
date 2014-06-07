@@ -84,7 +84,7 @@ class Register(baserequesthandler.RequestHandler):
   """Shows the registration page."""
 
   def get(self):
-    form = forms.Registration(invitation_code=self.request.get('invite'))
+    form = forms.Registration()
     self.render_template('register.html', {
       'form': form
     })
