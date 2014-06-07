@@ -19,7 +19,7 @@ install:
 before_script:
   # app engine
   - mkdir -p vendors
-  - wget https://commondatastorage.googleapis.com/appengine-sdks/featured/google_appengine_1.9.3.zip  -nv
+  - wget https://commondatastorage.googleapis.com/appengine-sdks/featured/google_appengine_1.9.5.zip  -nv
   - unzip -qd vendors google_appengine_1.9.3.zip
   - export APPENGINE_SRC=vendors/google_appengine
 
