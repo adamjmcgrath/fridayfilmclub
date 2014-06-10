@@ -168,7 +168,7 @@ class LeaderBoard(baserequesthandler.RequestHandler):
 
 
 class HighScores(baserequesthandler.RequestHandler):
-  """The leader board / results page."""
+  """The high scores page."""
 
   def get(self):
     user_questions = models.UserQuestion.query().order(
