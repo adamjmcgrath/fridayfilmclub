@@ -167,6 +167,17 @@ class LeaderBoard(baserequesthandler.RequestHandler):
     })
 
 
+class HighScores(baserequesthandler.RequestHandler):
+  """The leader board / results page."""
+
+  def get(self):
+    user_questions = models.UserQuestion.query().order(
+        -models.UserQuestion.score).fetch(10)
+    self.render_template('highscores.html', {
+      'user_questions': user_questions
+    })
+
+
 class HowItWorks(baserequesthandler.RequestHandler):
   """How it works / rules."""
 

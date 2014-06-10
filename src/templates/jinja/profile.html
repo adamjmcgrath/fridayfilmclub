@@ -28,7 +28,13 @@
           {% set season = uq.season %}
           <td>{{ season }}</td>
           <td>{{ uq.week }}</td>
-          <td>{{ uq.score or '0' }}</td>
+          <td>
+            {% if uq.score %}
+              {{ '{0:,}'.format(uq.score) }}
+            {% else %}
+              0
+            {% endif %}
+          </td>
           <td>
             {% if uq.guesses|length %}
               {{ uq.guesses|length - 1 }}
