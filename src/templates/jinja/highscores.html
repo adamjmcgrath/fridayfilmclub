@@ -16,16 +16,27 @@
         <th class="leaderboard-score">Score</th>
       </tr>
     </thead>
+    {% set counter = 0 %}
     {% for uq in user_questions %}
       <tr>
         {% set user = uq.user.get() %}
         {% set question = uq.question.get() %}
-        <td class="leaderboard-count">{{ loop.index }}.</td>
+        {% set tie = False %}
+        {% if last_score != uq.score %}
+          {% set counter = counter + 1 %}
+        {% endif %}
+        {% if last_score == uq.score or (user_questions[loop.index] and user_questions[loop.index].score) == uq.score %}
+          {% set tie = True %}
+        {% else %}
+          {% set counter = loop.index %}
+        {% endif %}
+        <td class="leaderboard-count">{% if tie %}={% endif %}{{ counter }}.</td>
         <td class="leaderboard-pic"><img src="{{ user.pic_url() }}" width="20" height="20"></td>
         <td><a href="{{ uri_for('profile', None, user.username) }}">{{ user.username }}</a></td>
         <td class="leaderboard-question"><a href="{{ uri_for('question', None, question.key.id()) }}">S {{ question.season.id() }}, W: {{ question.week }}</a></td>
         <td class="leaderboard-score">{{ '{0:,}'.format(uq.score) }}</td>
       </tr>
+    {% set last_score = uq.score %}
     {% endfor %}
   </table>
 {% endblock %}
