@@ -11,7 +11,7 @@
   <table class="table table-striped leaderboard-users">
     <thead>
       <tr>
-        <th colspan="2">User</th>
+        <th colspan="3"></th>
         <th class="leaderboard-question">Question</th>
         <th class="leaderboard-score">Score</th>
       </tr>
@@ -20,7 +20,8 @@
       <tr>
         {% set user = uq.user.get() %}
         {% set question = uq.question.get() %}
-        <td><img src="{{ user.pic_url() }}" width="20" height="20"></td>
+        <td class="leaderboard-count">{{ loop.index }}.</td>
+        <td class="leaderboard-pic"><img src="{{ user.pic_url() }}" width="20" height="20"></td>
         <td><a href="{{ uri_for('profile', None, user.username) }}">{{ user.username }}</a></td>
         <td class="leaderboard-question"><a href="{{ uri_for('question', None, question.key.id()) }}">S {{ question.season.id() }}, W: {{ question.week }}</a></td>
         <td class="leaderboard-score">{{ '{0:,}'.format(uq.score) }}</td>
