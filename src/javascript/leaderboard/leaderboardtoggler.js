@@ -67,6 +67,9 @@ ffc.leaderboard.LeaderBoardToggler.prototype.enterDocument = function() {
  * @private
  */
 ffc.leaderboard.LeaderBoardToggler.prototype.handleTabClick_ = function(e) {
+  if (!e.target.hasAttribute('data-leaderboard')) {
+    return;
+  }
   e.preventDefault();
   var li = this.dh_.getAncestorByTagNameAndClass(e.target, goog.dom.TagName.LI);
   var cls = 'active';

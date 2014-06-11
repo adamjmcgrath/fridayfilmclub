@@ -1,0 +1,39 @@
+{% extends "templates/jinja/base.tpl" %}
+
+{% set page_id = 'highscores-page' %}
+
+{% block page_id %}{{ page_id }}{% endblock page_id %}
+
+{% block content %}
+<div class="col-md-12">
+  <h1>High Scores</h1>
+  <p class="intro">An on-going list for the most rapid answers of all time.</p>
+  <table class="table table-striped leaderboard-users">
+    <thead>
+      <tr>
+        <th colspan="2">User</th>
+        <th class="leaderboard-question">Question</th>
+        <th class="leaderboard-score">Score</th>
+      </tr>
+    </thead>
+    {% for uq in user_questions %}
+      <tr>
+        {% set user = uq.user.get() %}
+        {% set question = uq.question.get() %}
+        <td><img src="{{ user.pic_url() }}" width="20" height="20"></td>
+        <td><a href="{{ uri_for('profile', None, user.username) }}">{{ user.username }}</a></td>
+        <td class="leaderboard-question"><a href="{{ uri_for('question', None, question.key.id()) }}">S {{ question.season.id() }}, W: {{ question.week }}</a></td>
+        <td class="leaderboard-score">{{ '{0:,}'.format(uq.score) }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+{% endblock %}
+
+{% block sidebar %}
+<div class="col-md-3" id="sidebar">
+
+</div>
+{% endblock %}
+
+{% block body_base %}
+{% endblock %}

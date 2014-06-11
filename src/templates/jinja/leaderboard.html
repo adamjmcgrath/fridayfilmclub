@@ -14,6 +14,7 @@
     <li><a href="#" data-leaderboard="{{ loop.index }}">Season {{ loop.index }}</a></li>
     {% endfor %}
     <li><a href="#" data-leaderboard="all">All time</a></li>
+    <li class="pull-right"><a href="{{ uri_for('high-scores') }}">High Scores</a></li>
   </ul>
   <div class="leaderboard-container" id="leaderboard-container-all"></div>
   {% for season_number in range(season.number) %}
