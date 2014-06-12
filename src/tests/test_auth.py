@@ -31,6 +31,8 @@ class ApiTestCase(unittest.TestCase):
     self.testbed = testbed.Testbed()
     self.testbed.activate()
     self.testbed.init_datastore_v3_stub()
+    self.testbed.init_mail_stub()
+    self.mail_stub = self.testbed.get_stub('mail')
     self.testapp = webtest.TestApp(main.routes)
 
     app_config = {
@@ -79,6 +81,9 @@ class ApiTestCase(unittest.TestCase):
     self.assertEqual(user.refresh_token, 'quux')
     self.assertEqual(user.google_refresh_token, 'quux')
     self.assertIn('google:foo', user.auth_ids)
+
+    messages = self.mail_stub.get_sent_messages(to='quz@gmail.com')
+    self.assertEqual(1, len(messages))
 
   def testCreateNewFacebookUser(self):
     self.session['username'] = 'foo'
