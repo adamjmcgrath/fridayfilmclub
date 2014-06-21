@@ -29,8 +29,8 @@ def question(clues=[],
              # season=models.Season,
              week=1,
              answered=0):
-
   return models.Question(**locals())
+
 
 def user(is_admin=None,
          pic=None,
@@ -46,5 +46,14 @@ def user(is_admin=None,
          questions_answered=None,
          invited_by=None,
          joined=None):
-
   return models.User(**locals())
+
+
+def clue(text=None,
+         image=None,
+         question=None):
+  return models.Clue(**locals()).put()
+
+
+def clues(clue_list):
+  return map(lambda c: clue(text=c), clue_list)

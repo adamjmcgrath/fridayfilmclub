@@ -8,6 +8,7 @@
 __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 
 import datetime
+import json
 import os
 import sys
 import unittest
@@ -16,10 +17,11 @@ import webapp2
 
 from google.appengine.api import memcache
 
-
 import api
 import base
 import helpers
+import models
+
 
 class ApiTestCase(base.TestCase):
 
@@ -69,6 +71,41 @@ class ApiTestCase(base.TestCase):
     response = self.get('/api/question/%d' % question.put().id(),
                         user=user)
     self.assertEqual(response.status_int, 200)
+
+  def testCreateUserQuestion(self):
+    question = helpers.question(posed=datetime.datetime.now())
+    user = helpers.user()
+    question_id = question.put().id()
+    self.get('/api/question/%d' % question_id, user=user)
+
+    user_question_id = '%s-%s' % (question_id, user.key.id())
+    self.assertIsNotNone(models.UserQuestion.get_by_id(user_question_id))
+
+  def testQuestionStartResponse(self):
+    question = helpers.question(posed=datetime.datetime.now())
+    user = helpers.user()
+    question_id = question.put().id()
+    response = self.get('/api/question/%d' % question_id, user=user)
+    response_dict = json.loads(response.body)
+
+    # self.assertAlmostEqual(response_dict['score'], 20000)
+    self.assertEqual(len(response_dict['guesses']), 0)
+    self.assertEqual(len(response_dict['clues']), 0)
+    self.assertFalse(response_dict['correct'])
+
+  def testQuestionPass(self):
+    clues = ['foo', 'bar', 'baz', 'qux']
+    question = helpers.question(posed=datetime.datetime.now(),
+                                clues=helpers.clues(clues))
+    user = helpers.user()
+    question_id = question.put().id()
+    response = self.post('/api/question/%d' % question_id,
+                         user=user,
+                         params={'guess': 'pass'})
+    response_dict = json.loads(response.body)
+
+    print response
+
 
 
 if __name__ == '__main__':
