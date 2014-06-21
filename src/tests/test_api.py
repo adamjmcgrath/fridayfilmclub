@@ -177,5 +177,34 @@ class ApiTestCase(base.TestCase):
     self.assertTrue(response['correct'])
     self.assertTrue(response['answer']['title'], 'Top Gun')
 
+  @mock.patch('models.UserQuestion.now')
+  def testUserSeason(self, now_mock):
+    posed_date = datetime.datetime(2014, 1, 1, 0, 0, 0)
+    now_mock.return_value = posed_date
+    answer = '/en/top_gun'
+    question = helpers.question(
+      answer_id=answer,
+      posed=posed_date,
+      season=helpers.season().put()
+    )
+    user = helpers.user()
+    question_id = question.put().id()
+    guess = {
+      'guess': answer
+    }
+    response = json.loads(self.post('/api/question/%d' % question_id,
+                                    user=user, params=guess).body)
+    self.assertTrue(response['correct'])
+    self.assertTrue(response['answer']['title'], 'Top Gun')
+
+    user_season_id = '%s-%s' % (question.season.id(), user.key.id())
+    user_season = models.UserSeason.get_by_id(user_season_id)
+
+    self.assertIsNotNone(user_season)
+    self.assertEquals(user_season.score, 20000)
+    self.assertEquals(user_season.clues, 0)
+    self.assertEquals(user_season.questions_answered, 1)
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -26,7 +26,7 @@ def question(clues=[],
              imdb_url='http://imdb.com',
              packshot=None,
              email_msg='Message',
-             # season=models.Season,
+             season=None,
              week=1,
              answered=0):
   return models.Question(**locals())
@@ -52,8 +52,12 @@ def user(is_admin=None,
 def clue(text=None,
          image=None,
          question=None):
-  return models.Clue(**locals()).put()
+  return models.Clue(**locals())
 
 
 def clues(clue_list):
-  return map(lambda c: clue(text=c), clue_list)
+  return map(lambda c: clue(text=c).put(), clue_list)
+
+
+def season(number=1):
+  return models.Season(**locals())
