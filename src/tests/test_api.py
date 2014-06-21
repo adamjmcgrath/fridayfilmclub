@@ -15,28 +15,17 @@ import webtest
 import webapp2
 
 from google.appengine.api import memcache
-from google.appengine.ext import testbed
 
-TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../'))
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../lib'))
 
 import api
-import main
+import base
 import helpers
 
-class ApiTestCase(unittest.TestCase):
+class ApiTestCase(base.TestCase):
 
   def setUp(self):
-    self.testbed = testbed.Testbed()
-    self.testbed.activate()
-    self.testbed.init_memcache_stub()
+    super(ApiTestCase, self).setUp()
     self.testbed.init_datastore_v3_stub()
-    self.testapp = webtest.TestApp(main.routes)
-    print helpers.question()
-
-  def tearDown(self):
-    self.testbed.deactivate()
 
   def testLeaderBoardSetCache(self):
     api.set_leaderboard_cache('foo', 'bar')
@@ -59,6 +48,14 @@ class ApiTestCase(unittest.TestCase):
     self.assertEqual(memcache.get('foo'), None)
     self.assertEqual(memcache.get('bar'), None)
     self.assertEqual(memcache.get(api._LB_CACHE), None)
+
+  def testHandlers(self):
+    question = helpers.question()
+    user = helpers.user()
+    response = self.get('/api/question/%d' % question.put().id(),
+                        user=user)
+
+    self.assertEqual(response.status_int, 200)
 
 
 if __name__ == '__main__':

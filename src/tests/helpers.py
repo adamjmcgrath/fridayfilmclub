@@ -31,3 +31,19 @@ def question(clues=[],
              answered=0):
 
   return models.Question(**locals())
+
+def user(is_admin=None,
+         pic=None,
+         name='John Smith',
+         username='johnsmith',
+         favourite_film_id='topgun',
+         favourite_film_title='Top Gun',
+         favourite_film_year=1998,
+         link='http://www.google.com',
+         overall_score=0,
+         overall_clues=0,
+         questions_answered=None,
+         invited_by=None,
+         joined=None):
+
+  return models.User(**locals())
