@@ -205,6 +205,23 @@ class ApiTestCase(base.TestCase):
     self.assertEquals(user_season.clues, 0)
     self.assertEquals(user_season.questions_answered, 1)
 
+  @mock.patch('models.UserQuestion.now')
+  def testScoring(self, now_mock):
+    posed_date = datetime.datetime(2014, 1, 1, 10, 0, 0)
+    now_mock.return_value = datetime.datetime(2014, 1, 1, 11, 0, 0)
+    question = helpers.question(
+      posed=posed_date
+    )
+    user = helpers.user()
+    question_id = question.put().id()
+    guess = {
+      'guess': 'pass'
+    }
+    response = json.loads(self.post('/api/question/%d' % question_id,
+                                    user=user, params=guess).body)
+
+    self.assertEquals(response['score'], 20000 - 2000 - (60 * 60))
+
 
 if __name__ == '__main__':
     unittest.main()
