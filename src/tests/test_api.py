@@ -111,6 +111,7 @@ class ApiTestCase(base.TestCase):
     self.assertEqual(len(response['guesses']), 0)
     self.assertEqual(len(response['clues']), 1)
     self.assertFalse(response['correct'])
+    self.assertEqual(response['clues'][-1]['text'], 'foo')
 
     # 1st pass
     response = json.loads(self.post('/api/question/%d' % question_id,
@@ -119,6 +120,7 @@ class ApiTestCase(base.TestCase):
     self.assertEqual(len(response['guesses']), 1)
     self.assertEqual(len(response['clues']), 2)
     self.assertFalse(response['correct'])
+    self.assertEqual(response['clues'][-1]['text'], 'bar')
 
     # 2nd pass
     response = json.loads(self.post('/api/question/%d' % question_id,
@@ -127,6 +129,7 @@ class ApiTestCase(base.TestCase):
     self.assertEqual(len(response['guesses']), 2)
     self.assertEqual(len(response['clues']), 3)
     self.assertFalse(response['correct'])
+    self.assertEqual(response['clues'][-1]['text'], 'baz')
 
     # 3rd pass
     response = json.loads(self.post('/api/question/%d' % question_id,
@@ -135,6 +138,7 @@ class ApiTestCase(base.TestCase):
     self.assertEqual(len(response['guesses']), 3)
     self.assertEqual(len(response['clues']), 4)
     self.assertFalse(response['correct'])
+    self.assertEqual(response['clues'][-1]['text'], 'qux')
 
     # 4th pass - question is complete.
     response = json.loads(self.post('/api/question/%d' % question_id,
@@ -144,6 +148,32 @@ class ApiTestCase(base.TestCase):
     self.assertEqual(len(response['clues']), 4)
     self.assertFalse(response['correct'])
 
+  def testGuess(self):
+    question = helpers.question(posed=datetime.datetime.now())
+    user = helpers.user()
+    question_id = question.put().id()
+    guess = {
+      'guess': '/en/top_gun'
+    }
+    response = json.loads(self.post('/api/question/%d' % question_id,
+                                    user=user, params=guess).body)
+    self.assertEqual(response['guesses'][0]['title'], 'Top Gun')
+
+  def testCorrect(self):
+    answer = '/en/top_gun'
+    question = helpers.question(
+      answer_id=answer,
+      posed=datetime.datetime.now()
+    )
+    user = helpers.user()
+    question_id = question.put().id()
+    guess = {
+      'guess': answer
+    }
+    response = json.loads(self.post('/api/question/%d' % question_id,
+                                    user=user, params=guess).body)
+    self.assertTrue(response['correct'])
+    self.assertTrue(response['answer']['title'], 'Top Gun')
 
 if __name__ == '__main__':
     unittest.main()
