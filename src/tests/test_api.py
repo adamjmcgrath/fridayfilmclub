@@ -49,12 +49,25 @@ class ApiTestCase(base.TestCase):
     self.assertEqual(memcache.get('bar'), None)
     self.assertEqual(memcache.get(api._LB_CACHE), None)
 
-  def testHandlers(self):
+  def testQuestionRequiresAdminOrPosed(self):
     question = helpers.question()
     user = helpers.user()
     response = self.get('/api/question/%d' % question.put().id(),
                         user=user)
+    self.assertEqual(response.status_int, 401)
 
+  def testQuestionRequiresAdmin(self):
+    question = helpers.question()
+    user = helpers.user(is_admin=True)
+    response = self.get('/api/question/%d' % question.put().id(),
+                        user=user)
+    self.assertEqual(response.status_int, 200)
+
+  def testQuestionRequiresPosed(self):
+    question = helpers.question(posed=datetime.datetime.now())
+    user = helpers.user()
+    response = self.get('/api/question/%d' % question.put().id(),
+                        user=user)
     self.assertEqual(response.status_int, 200)
 
 

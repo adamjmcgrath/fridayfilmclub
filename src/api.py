@@ -90,8 +90,11 @@ class Question(baserequesthandler.RequestHandler):
     posed = question.posed
 
     # For debugging - create an arbitrary posed date for un-posed questions.
-    if not posed and users.is_current_user_admin():
-      posed = datetime.now()
+    if not posed:
+      if users.is_current_user_admin():
+        posed = datetime.now()
+      else:
+        return self.error(401)
 
     # Construct/get the user key.
     user_question_id = '%s-%s' % (question_id, user.key.id())

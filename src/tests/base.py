@@ -45,6 +45,8 @@ class TestCase(unittest.TestCase):
 
   def tearDown(self):
     self.testbed.deactivate()
+    os.environ['USER_EMAIL'] = ''
+    os.environ['USER_IS_ADMIN'] = ''
 
   def get(self, url, user=None):
     headers = {}
@@ -67,8 +69,12 @@ class TestCase(unittest.TestCase):
           '_simpleauth_sess', session
       )
       headers = {'Cookie': '_simpleauth_sess=%s' % serialized}
+      os.environ['USER_IS_ADMIN'] = '1' if user.is_admin else '0'
+      os.environ['USER_EMAIL'] = user.email
 
-    return self.testapp.get(url, headers=headers)
+    return self.testapp.get(url,
+                            headers=headers,
+                            expect_errors=True)
 
 
 if __name__ == '__main__':
