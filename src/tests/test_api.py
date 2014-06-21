@@ -9,11 +9,8 @@ __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 
 import datetime
 import json
-import os
-import sys
+import mock
 import unittest
-import webtest
-import webapp2
 
 from google.appengine.api import memcache
 
@@ -81,31 +78,71 @@ class ApiTestCase(base.TestCase):
     user_question_id = '%s-%s' % (question_id, user.key.id())
     self.assertIsNotNone(models.UserQuestion.get_by_id(user_question_id))
 
-  def testQuestionStartResponse(self):
-    question = helpers.question(posed=datetime.datetime.now())
+  @mock.patch('models.UserQuestion.now')
+  def testQuestionStartResponse(self, now_mock):
+    posed_date = datetime.datetime(2014, 1, 1, 0, 0, 0)
+    now_mock.return_value = posed_date
+    question = helpers.question(posed=posed_date)
     user = helpers.user()
     question_id = question.put().id()
-    response = self.get('/api/question/%d' % question_id, user=user)
-    response_dict = json.loads(response.body)
+    response = json.loads(
+      self.get('/api/question/%d' % question_id, user=user).body)
 
-    # self.assertAlmostEqual(response_dict['score'], 20000)
-    self.assertEqual(len(response_dict['guesses']), 0)
-    self.assertEqual(len(response_dict['clues']), 0)
-    self.assertFalse(response_dict['correct'])
+    self.assertEqual(response['score'], 20000)
+    self.assertEqual(len(response['guesses']), 0)
+    self.assertEqual(len(response['clues']), 0)
+    self.assertFalse(response['correct'])
 
-  def testQuestionPass(self):
+  @mock.patch('models.UserQuestion.now')
+  def testQuestionPass(self, now_mock):
+    posed_date = datetime.datetime(2014, 1, 1, 0, 0, 0)
+    now_mock.return_value = posed_date
     clues = ['foo', 'bar', 'baz', 'qux']
-    question = helpers.question(posed=datetime.datetime.now(),
+    question = helpers.question(posed=posed_date,
                                 clues=helpers.clues(clues))
     user = helpers.user()
+    pass_guess = {'guess': 'pass'}
     question_id = question.put().id()
-    response = self.post('/api/question/%d' % question_id,
-                         user=user,
-                         params={'guess': 'pass'})
-    response_dict = json.loads(response.body)
 
-    print response
+    # Get question
+    response = json.loads(
+      self.get('/api/question/%d' % question_id, user=user).body)
+    self.assertEqual(response['score'], 20000)
+    self.assertEqual(len(response['guesses']), 0)
+    self.assertEqual(len(response['clues']), 1)
+    self.assertFalse(response['correct'])
 
+    # 1st pass
+    response = json.loads(self.post('/api/question/%d' % question_id,
+                                    user=user, params=pass_guess).body)
+    self.assertEqual(response['score'], 18000)
+    self.assertEqual(len(response['guesses']), 1)
+    self.assertEqual(len(response['clues']), 2)
+    self.assertFalse(response['correct'])
+
+    # 2nd pass
+    response = json.loads(self.post('/api/question/%d' % question_id,
+                                    user=user, params=pass_guess).body)
+    self.assertEqual(response['score'], 16000)
+    self.assertEqual(len(response['guesses']), 2)
+    self.assertEqual(len(response['clues']), 3)
+    self.assertFalse(response['correct'])
+
+    # 3rd pass
+    response = json.loads(self.post('/api/question/%d' % question_id,
+                                    user=user, params=pass_guess).body)
+    self.assertEqual(response['score'], 14000)
+    self.assertEqual(len(response['guesses']), 3)
+    self.assertEqual(len(response['clues']), 4)
+    self.assertFalse(response['correct'])
+
+    # 4th pass - question is complete.
+    response = json.loads(self.post('/api/question/%d' % question_id,
+                                    user=user, params=pass_guess).body)
+    self.assertEqual(response['score'], 0)
+    self.assertEqual(len(response['guesses']), 4)
+    self.assertEqual(len(response['clues']), 4)
+    self.assertFalse(response['correct'])
 
 
 if __name__ == '__main__':

@@ -43,7 +43,7 @@ def user(is_admin=None,
          link='http://www.google.com',
          overall_score=0,
          overall_clues=0,
-         questions_answered=None,
+         questions_answered=0,
          invited_by=None,
          joined=None):
   return models.User(**locals())
