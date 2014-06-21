@@ -99,7 +99,8 @@ class ApiTestCase(base.TestCase):
     now_mock.return_value = posed_date
     clues = ['foo', 'bar', 'baz', 'qux']
     question = helpers.question(posed=posed_date,
-                                clues=helpers.clues(clues))
+                                clues=helpers.clues(clues),
+                                answer_title='Foo')
     user = helpers.user()
     pass_guess = {'guess': 'pass'}
     question_id = question.put().id()
@@ -146,6 +147,7 @@ class ApiTestCase(base.TestCase):
     self.assertEqual(response['score'], 0)
     self.assertEqual(len(response['guesses']), 4)
     self.assertEqual(len(response['clues']), 4)
+    self.assertEqual(response['answer']['title'], 'Foo')
     self.assertFalse(response['correct'])
 
   def testGuess(self):
