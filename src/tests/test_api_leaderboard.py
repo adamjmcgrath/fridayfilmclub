@@ -8,35 +8,23 @@
 __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 
 import datetime
-import os
-import sys
+import json
+import mock
 import unittest
-import webtest
-import webapp2
 
 from google.appengine.api import memcache
-from google.appengine.ext import testbed
-
-TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../'))
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../lib'))
 
 import api
-import main
+import base
 import helpers
+import models
 
-class ApiTestCase(unittest.TestCase):
+
+class ApiTestCase(base.TestCase):
 
   def setUp(self):
-    self.testbed = testbed.Testbed()
-    self.testbed.activate()
-    self.testbed.init_memcache_stub()
+    super(ApiTestCase, self).setUp()
     self.testbed.init_datastore_v3_stub()
-    self.testapp = webtest.TestApp(main.routes)
-    print helpers.question()
-
-  def tearDown(self):
-    self.testbed.deactivate()
 
   def testLeaderBoardSetCache(self):
     api.set_leaderboard_cache('foo', 'bar')

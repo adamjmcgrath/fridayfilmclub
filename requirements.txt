@@ -2,3 +2,4 @@ Fabric
 nose
 NoseGAE
 WebTest
+mock

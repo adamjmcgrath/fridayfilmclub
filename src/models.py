@@ -253,7 +253,7 @@ class UserQuestion(ndb.Model):
       return self.guesses
 
   def calculate_score(self, posed):
-    now = int(datetime.datetime.now().strftime('%s'))
+    now = int(UserQuestion.now().strftime('%s'))
     posed = int(posed.strftime('%s'))
     penalties = len(self.incorrect_guesses()) *  _TIME_PER_PENALTY
     if self.complete and not self.correct:
@@ -287,6 +287,10 @@ class UserQuestion(ndb.Model):
       'score': user_question.score,
       'clues': len(user_question.guesses) - 1
     }
+
+  @staticmethod
+  def now():
+    return datetime.datetime.now()
 
 
 class UserSeason(ndb.Model):

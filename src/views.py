@@ -7,20 +7,16 @@
 __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 
 import logging
-import urlparse
 from operator import itemgetter
-import posixpath
 import uuid
 
-from google.appengine.api import channel, mail, users
-from google.appengine.ext import ndb
+from google.appengine.api import channel, users
 
 import auth
 import baserequesthandler
 import forms
 import models
 import settings
-import twitter
 
 HOST_URL = 'http://www.fridayfilmclub.com'
 
