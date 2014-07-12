@@ -3,6 +3,13 @@
 {% block page_id %}question-page{% endblock page_id %}
 
 {% block main %}
+{% if user.is_anonymous %}
+<div class="col-md-12">
+  <div class="join-alert alert alert-danger clearfix">
+    Psst... You're playing for fun, to play for real every week join the club <a href="{{ uri_for('register') }}" class="btn btn-danger btn-sm pull-right">Register</a>
+  </div>
+</div>
+{% endif %}
 <div class="col-md-9">
   <h1>
     What film is this from?
