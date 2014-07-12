@@ -71,11 +71,9 @@ def delete_leaderboard_cache():
 class Question(baserequesthandler.RequestHandler):
   """The main question/answer app logic - through a REST api."""
 
-  @auth.login_required
   def get(self, question_id):
     self.get_or_post(question_id)
 
-  @auth.login_required
   def post(self, question_id):
     # Get the users guess
     guess = self.request.get('guess')
@@ -86,8 +84,9 @@ class Question(baserequesthandler.RequestHandler):
 
     # Get the question and user.
     question = models.Question.get_by_id(int(question_id))
-    user = self.current_user
     posed = question.posed
+    anonymous_user = self.request.get('anonymous_user')
+    user = self.current_user if self.logged_in else None
 
     # For debugging - create an arbitrary posed date for un-posed questions.
     if not posed:
@@ -96,10 +95,21 @@ class Question(baserequesthandler.RequestHandler):
       else:
         return self.error(401)
 
+    # If anonymous user, use the uid from the url. Only logged in users can
+    # view the current question.
+    if anonymous_user and not question.is_current:
+      user = models.AnonymousUser.get_by_id(int(anonymous_user))
+
+    if not user:
+      return self.error(401)
+
     # Construct/get the user key.
     user_question_id = '%s-%s' % (question_id, user.key.id())
-    user_question = models.UserQuestion.get_or_insert(user_question_id,
-      question=question.key, user=user.key, user_is_admin=user.is_admin)
+    user_question = models.UserQuestion.get_or_insert(
+        user_question_id,
+        question=question.key,
+        user=user.key,
+        user_is_admin=user.is_admin)
 
     to_put = []
     # Check if guess is correct, update UserQuestion.
@@ -121,7 +131,7 @@ class Question(baserequesthandler.RequestHandler):
         if question.is_current:
           deferred.defer(delete_leaderboard_cache)
 
-        if question.season:
+        if question.season and not user.is_anonymous:
           user_season_id = '%s-%s' % (question.season.id(), user.key.id())
           user_season = models.UserSeason.get_or_insert(user_season_id,
             season=question.season, user=user.key, user_is_admin=user.is_admin)
@@ -134,7 +144,10 @@ class Question(baserequesthandler.RequestHandler):
 
       to_put.append(user_question)
       to_put.append(user)
-      ndb.put_multi(to_put)
+      if user.is_anonymous:
+        ndb.put_multi(to_put)
+      else:
+        user_question.put()
 
     # The number of the clues to show the user is one greater than the
     # number of guesses up to the maximum number of guesses.

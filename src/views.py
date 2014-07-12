@@ -37,7 +37,6 @@ class HomePage(baserequesthandler.RequestHandler):
 class Question(baserequesthandler.RequestHandler):
   """Shows the homepage."""
 
-  @auth.login_required
   def get(self, question_id):
 
     if question_id:
@@ -45,20 +44,30 @@ class Question(baserequesthandler.RequestHandler):
     else:
       question = models.Question.query(models.Question.is_current == True).get()
 
-    # Only Admins can view a question before it's posed
-    if not question.posed and not users.is_current_user_admin():
+    logged_in = self.logged_in
+
+    # Only admins can view a question before it's posed,
+    # only logged in users can view the current question.
+    if ((not question.posed and not users.is_current_user_admin()) or
+       (question.is_current and not logged_in)):
       return self.error(401)
 
-    user = self.current_user
+    if logged_in:
+      user = self.current_user
+    else:
+      user = models.AnonymousUser.create()
+      user.put()
 
     user_question_id = '%d-%s' % (question.key.id(), user.key.id())
-    user_question = models.UserQuestion.get_or_insert(user_question_id,
-      question=question.key,
-      user=user.key,
-      user_is_admin=user.is_admin
+    user_question = models.UserQuestion.get_or_insert(
+        user_question_id,
+        question=question.key,
+        user=user.key,
+        user_is_admin=user.is_admin
     )
 
     context = {
+      'user': user,
       'user_question': user_question,
       'question': question,
     }
