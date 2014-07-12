@@ -63,7 +63,8 @@ class Question(baserequesthandler.RequestHandler):
         user_question_id,
         question=question.key,
         user=user.key,
-        user_is_admin=user.is_admin
+        user_is_admin=user.is_admin,
+        user_is_anonymous=bool(user.is_anonymous)
     )
 
     context = {

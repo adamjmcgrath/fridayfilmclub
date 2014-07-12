@@ -250,12 +250,14 @@ class UserQuestion(ndb.Model):
   complete = ndb.BooleanProperty(default=False)
   completed = ndb.DateTimeProperty(auto_now=True)
   correct = ndb.BooleanProperty(default=False)
+  created = ndb.DateTimeProperty(auto_now_add=True)
   guesses = ndb.StringProperty(repeated=True)
   clues_used = ndb.ComputedProperty(lambda self: max(len(self.guesses) - 1, 0))
   question = ndb.KeyProperty(kind=Question)
   score = ndb.IntegerProperty()
-  user = ndb.KeyProperty() # Can be an anonymous user.
+  user = ndb.KeyProperty()  # Can be an anonymous user.
   user_is_admin = ndb.BooleanProperty(default=False)
+  user_is_anonymous = ndb.BooleanProperty(default=False)
 
   def incorrect_guesses(self):
     if self.correct:

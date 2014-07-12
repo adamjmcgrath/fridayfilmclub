@@ -10,6 +10,10 @@ cron:
   schedule: every friday 15:00
   timezone: Europe/London
 
+- description: delete obsolete anonymous users
+  url: /tasks/cleanupanonymoususers
+  schedule: every 1 hours
+
 - description: weekly backup
   url: /_ah/datastore_admin/backup.create?kind=Clue&kind=Question&kind=Season&kind=User&kind=UserQuestion&kind=UserSeason&kind=UserToken&filesystem=gs&gs_bucket_name=ffcapp.appspot.com
   schedule: every saturday 01:00

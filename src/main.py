@@ -19,6 +19,7 @@ import realtime
 import settings
 import suggest
 import secrets
+import tasks
 import views
 
 
@@ -38,6 +39,9 @@ routes = [
             'admin-delete-user-question'),
     ]),
     webapp2.Route(r'/admin', admin.HomePage, 'admin-homepage'),
+
+    webapp2.Route(r'/tasks/cleanupanonymoususers', tasks.CleanUpAnonymousUsers,
+        'tasks-cleananonusers'),
 
     # Api.
     webapp2.Route(r'/api/question/<:.+>', api.Question, 'api-question'),

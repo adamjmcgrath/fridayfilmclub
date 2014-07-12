@@ -55,8 +55,9 @@ handlers:
   script: main.app
   login: admin
 
-- url: /question/?.*
+- url: /tasks/?.*
   script: main.app
+  login: admin
 
 - url: /.*
   script: main.app
