@@ -48,7 +48,7 @@
 <script>
   var q = new ffc.quiz.Question('{{question.key.id()}}',
       document.getElementById('clues'),
-      document.getElementById('score-wrap'){% if user.is_anonymous %}, {{ user.key.id() }}{% endif %});
+      document.getElementById('score-wrap'){% if user.is_anonymous %}, '{{ user.key.id() }}'{% endif %});
 {% if channel_token and not user.is_anonymous %}
   var r = new ffc.quiz.RealtimeScores('{{ channel_token }}',
       document.getElementById('live-scores'));

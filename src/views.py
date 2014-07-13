@@ -55,8 +55,10 @@ class Question(baserequesthandler.RequestHandler):
     if logged_in:
       user = self.current_user
     else:
-      user = models.AnonymousUser.create()
-      user.put()
+      user = models.AnonymousUser.get(
+        existing_user_id=self.session.get('anonymous_user'))
+      user_key = user.put()
+      self.session['anonymous_user'] = user_key.id()
 
     user_question_id = '%d-%s' % (question.key.id(), user.key.id())
     user_question = models.UserQuestion.get_or_insert(
@@ -99,7 +101,8 @@ class Register(baserequesthandler.RequestHandler):
     provider = self.request.get('provider')
     form = forms.Registration(self.request.POST)
     if form.validate():
-      # Set the username and invitation in the session and login to the auth provider.
+      # Set the username and invitation in the session and login to the
+      # auth provider.
       self.session['username'] = self.request.get('username')
       self.redirect(self.uri_for('auth_login', provider=provider))
     else:

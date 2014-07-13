@@ -21,9 +21,9 @@ class CleanUpAnonymousUsers(baserequesthandler.RequestHandler):
   """Delete anonymous users and user questions that are over an hour old."""
 
   def get(self):
-    an_hour_ago = datetime.datetime.now() - datetime.timedelta(hours=1)
+    yesterday = datetime.datetime.now() - datetime.timedelta(hours=24)
     q = models.UserQuestion.query(
-      models.UserQuestion.created < an_hour_ago,
+      models.UserQuestion.created < yesterday,
       models.UserQuestion.user_is_anonymous == True
     )
     more = True
@@ -36,4 +36,4 @@ class CleanUpAnonymousUsers(baserequesthandler.RequestHandler):
       )
       for uq in user_question_entities:
         to_delete += [uq.key, uq.user]
-      ndb.delete_multi(to_delete)
+      ndb.delete_multi_async(to_delete)

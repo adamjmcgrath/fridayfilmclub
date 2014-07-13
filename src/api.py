@@ -98,7 +98,7 @@ class Question(baserequesthandler.RequestHandler):
     # If anonymous user, use the uid from the url. Only logged in users can
     # view the current question.
     if anonymous_user and not question.is_current:
-      user = models.AnonymousUser.get_by_id(int(anonymous_user))
+      user = models.AnonymousUser.get_by_id(anonymous_user)
 
     if not user:
       return self.error(401)

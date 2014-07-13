@@ -232,9 +232,10 @@ class AnonymousUser(User):
   is_anonymous = ndb.BooleanProperty(default=True)
 
   @classmethod
-  def create(cls):
-    username = 'User-%d' % uuid.uuid4()
-    return cls(username=username)
+  def get(cls, existing_user_id=None):
+    user_id = str(existing_user_id or uuid.uuid4())
+    username = 'User-%s' % user_id
+    return cls.get_or_insert(user_id, username=username)
 
 
 # pylint: disable=W0232
