@@ -112,6 +112,11 @@ indexes:
   - name: season
   - name: week
 
+- kind: UserQuestion
+  properties:
+  - name: user_is_anonymous
+  - name: created
+
 - kind: UserSeason
   properties:
   - name: season

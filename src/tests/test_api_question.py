@@ -38,6 +38,15 @@ class ApiTestCase(base.TestCase):
                         user=user)
     self.assertEqual(response.status_int, 200)
 
+  def testQuestionAllowsAnonymousUser(self):
+    question = helpers.question(posed=datetime.datetime.now())
+    user = helpers.anonymous_user(user_id='foo')
+    user.put()
+    response = self.get(
+      '/api/question/%d?anonymous_user=%s' % (question.put().id(), 'foo'),
+      user=user)
+    self.assertEqual(response.status_int, 200)
+
   def testQuestionRequiresPosed(self):
     question = helpers.question(posed=datetime.datetime.now())
     user = helpers.user()

@@ -17,6 +17,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../lib'))
 
 import models
 
+
 def question(clues=[],
              answer_id='foo',
              answer_title='bar',
@@ -47,6 +48,32 @@ def user(is_admin=None,
          invited_by=None,
          joined=None):
   return models.User(**locals())
+
+
+def user_question(complete=False,
+                  completed=None,
+                  correct=False,
+                  created=None,
+                  guesses=[],
+                  question=None,
+                  score=None,
+                  user=None,
+                  user_is_admin=False,
+                  user_is_anonymous=False):
+  return models.UserQuestion(**locals())
+
+
+def user_season(score=None,
+                clues=None,
+                season=None,
+                user=None,
+                user_is_admin=None,
+                questions_answered=None):
+  return models.UserSeason(**locals())
+
+
+def anonymous_user(user_id=None):
+  return models.AnonymousUser.get(existing_user_id=user_id)
 
 
 def clue(text=None,
