@@ -7,20 +7,16 @@
 __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 
 import logging
-import urlparse
 from operator import itemgetter
-import posixpath
 import uuid
 
-from google.appengine.api import channel, mail, users
-from google.appengine.ext import ndb
+from google.appengine.api import channel, users
 
 import auth
 import baserequesthandler
 import forms
 import models
 import settings
-import twitter
 
 HOST_URL = 'http://www.fridayfilmclub.com'
 
@@ -41,7 +37,6 @@ class HomePage(baserequesthandler.RequestHandler):
 class Question(baserequesthandler.RequestHandler):
   """Shows the homepage."""
 
-  @auth.login_required
   def get(self, question_id):
 
     if question_id:
@@ -49,20 +44,33 @@ class Question(baserequesthandler.RequestHandler):
     else:
       question = models.Question.query(models.Question.is_current == True).get()
 
-    # Only Admins can view a question before it's posed
-    if not question.posed and not users.is_current_user_admin():
+    logged_in = self.logged_in
+
+    # Only admins can view a question before it's posed,
+    # only logged in users can view the current question.
+    if ((not question.posed and not users.is_current_user_admin()) or
+       (question.is_current and not logged_in)):
       return self.error(401)
 
-    user = self.current_user
+    if logged_in:
+      user = self.current_user
+    else:
+      user = models.AnonymousUser.get(
+        existing_user_id=self.session.get('anonymous_user'))
+      user_key = user.put()
+      self.session['anonymous_user'] = user_key.id()
 
     user_question_id = '%d-%s' % (question.key.id(), user.key.id())
-    user_question = models.UserQuestion.get_or_insert(user_question_id,
-      question=question.key,
-      user=user.key,
-      user_is_admin=user.is_admin
+    user_question = models.UserQuestion.get_or_insert(
+        user_question_id,
+        question=question.key,
+        user=user.key,
+        user_is_admin=user.is_admin,
+        user_is_anonymous=bool(user.is_anonymous)
     )
 
     context = {
+      'user': user,
       'user_question': user_question,
       'question': question,
     }
@@ -93,7 +101,8 @@ class Register(baserequesthandler.RequestHandler):
     provider = self.request.get('provider')
     form = forms.Registration(self.request.POST)
     if form.validate():
-      # Set the username and invitation in the session and login to the auth provider.
+      # Set the username and invitation in the session and login to the
+      # auth provider.
       self.session['username'] = self.request.get('username')
       self.redirect(self.uri_for('auth_login', provider=provider))
     else:

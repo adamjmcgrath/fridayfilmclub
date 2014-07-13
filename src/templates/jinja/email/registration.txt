@@ -1,0 +1,14 @@
+Welcome to Friday Film Club,
+
+Your username is {{ username }}.
+
+You are now officially a member and Friday afternoons will cease to ever be the same again!
+
+For a full run down of the rules visit:
+http://www.fridayfilmclub.com/how
+
+And if you're wise and want to take advantage of an extra clue each week before the 3pm launch you may wish to follow me @filmmasterjack
+
+That's it for now. Roll on 3pm Friday and best of luck.
+
+Film Master Jack

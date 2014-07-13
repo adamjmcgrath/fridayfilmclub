@@ -13,9 +13,11 @@ import secrets
 import webapp2
 from webapp2_extras import auth, sessions
 
+from google.appengine.api import mail
 from simpleauth.handler import SimpleAuthHandler
 
 import models
+import settings
 
 def login_required(handler_method):
   """A decorator to require that a user be logged in to access a handler.
@@ -116,9 +118,21 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
         u.populate(**self._to_user_model_attrs(data, provider, True))
         u.put()
         self.auth.set_session(self.auth.store.user_to_dict(u), remember=True)
-        self.redirect('/settings')
-
         del self.session['username']
+
+        # Send registration email.
+        try:
+          body = self.generate_template('email/registration.txt', {
+            'username': username
+          })
+          mail.send_mail(sender=settings.FMJ_EMAIL,
+                         to=u.email,
+                         subject='Welcome to Friday Film Club',
+                         body=body)
+        except:
+          logging.info('Failed to send email to %s.' % username)
+
+        self.redirect('/settings')
 
     # Redirect them to the next page.
     target = self.session.get('original_url')

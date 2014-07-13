@@ -31,9 +31,10 @@ goog.require('goog.uri.utils');
  * @param {Element} parent The element in which to render the component once
  *     it gets a data response form the server.
  * @param {Element} scoreParent The element in which to render the score board.
+ * @param {?number} anonUser The anonymous user id.
  * @constructor
  */
-ffc.quiz.Question = function(key, parent, scoreParent) {
+ffc.quiz.Question = function(key, parent, scoreParent, anonUser) {
   goog.base(this);
 
   /**
@@ -97,6 +98,9 @@ ffc.quiz.Question = function(key, parent, scoreParent) {
    * @private
    */
   this.url_ = goog.string.subs(ffc.quiz.Question.URI_, key);
+  if (anonUser) {
+    this.url_ += goog.string.subs(ffc.quiz.Question.ANON_PARAM_, anonUser);
+  }
 
   this.setModel(new ffc.quiz.QuestionModel());
 
@@ -114,6 +118,14 @@ goog.exportSymbol('ffc.quiz.Question', ffc.quiz.Question);
  * @private
  */
 ffc.quiz.Question.URI_ = '/api/question/%s';
+
+
+/**
+ * The parameter for adding an anonymous user to requests.
+ * @type {string}
+ * @private
+ */
+ffc.quiz.Question.ANON_PARAM_ = '?anonymous_user=%s';
 
 
 /**
