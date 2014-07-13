@@ -9,6 +9,7 @@ __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 
 import datetime
 import mock
+import os
 import unittest
 
 import base
@@ -54,8 +55,8 @@ class TasksTestCase(base.TestCase):
     users = []
     joined = datetime.datetime.now() - datetime.timedelta(hours=48)
 
-    def side_effect(*args, **kwargs):
-      return deferred.run(*args, **kwargs)
+    def side_effect(deffered_fun, *args, **kwargs):
+      return deffered_fun(*args, **kwargs)
     deferred_mock.side_effect = side_effect
 
     for i in range(5):
@@ -66,8 +67,9 @@ class TasksTestCase(base.TestCase):
     ndb.put_multi(users)
     self.assertEqual(models.AnonymousUser.query().count(), 5)
 
+    os.environ['USER_IS_ADMIN'] = '1'
     self.get('/tasks/cleanupanonymoususers')
-    self.assertEqual(models.User.query().count(), 0)
+    self.assertEqual(models.AnonymousUser.query().count(), 0)
 
 
 if __name__ == '__main__':
