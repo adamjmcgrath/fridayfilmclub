@@ -67,7 +67,7 @@ class TestCase(unittest.TestCase):
         '_simpleauth_sess', session
     )
     os.environ['USER_IS_ADMIN'] = '1' if user.is_admin else '0'
-    os.environ['USER_EMAIL'] = user.email
+    os.environ['USER_EMAIL'] = '' if user.is_anonymous else user.email
 
     return {'Cookie': '_simpleauth_sess=%s' % serialized}
 
