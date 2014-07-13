@@ -11,6 +11,7 @@ import logging
 import hashlib
 import re
 import time
+import uuid
 
 from webapp2_extras.appengine.auth.models import User as AuthUser
 
@@ -156,6 +157,7 @@ class User(AuthUser):
     films
   """
   is_admin = ndb.BooleanProperty(default=False)
+  is_anonymous = ndb.BooleanProperty(default=False)
   pic = ndb.BlobKeyProperty()
   name = ndb.StringProperty()
   username = ndb.StringProperty()
@@ -226,6 +228,16 @@ class User(AuthUser):
     }
 
 
+class AnonymousUser(User):
+  is_anonymous = ndb.BooleanProperty(default=True)
+
+  @classmethod
+  def get(cls, existing_user_id=None):
+    user_id = str(existing_user_id or uuid.uuid4())
+    username = 'User-%s' % user_id
+    return cls.get_or_insert(user_id, username=username)
+
+
 # pylint: disable=W0232
 class UserQuestion(ndb.Model):
   """Links user and question and keeps track of guesses and score.
@@ -239,12 +251,14 @@ class UserQuestion(ndb.Model):
   complete = ndb.BooleanProperty(default=False)
   completed = ndb.DateTimeProperty(auto_now=True)
   correct = ndb.BooleanProperty(default=False)
+  created = ndb.DateTimeProperty(auto_now_add=True)
   guesses = ndb.StringProperty(repeated=True)
   clues_used = ndb.ComputedProperty(lambda self: max(len(self.guesses) - 1, 0))
   question = ndb.KeyProperty(kind=Question)
   score = ndb.IntegerProperty()
-  user = ndb.KeyProperty(kind=User)
+  user = ndb.KeyProperty()  # Can be an anonymous user.
   user_is_admin = ndb.BooleanProperty(default=False)
+  user_is_anonymous = ndb.BooleanProperty(default=False)
 
   def incorrect_guesses(self):
     if self.correct:
@@ -255,7 +269,7 @@ class UserQuestion(ndb.Model):
   def calculate_score(self, posed):
     now = int(UserQuestion.now().strftime('%s'))
     posed = int(posed.strftime('%s'))
-    penalties = len(self.incorrect_guesses()) *  _TIME_PER_PENALTY
+    penalties = len(self.incorrect_guesses()) * _TIME_PER_PENALTY
     if self.complete and not self.correct:
       score = 0
     else:
