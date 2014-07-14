@@ -50,7 +50,8 @@ class Question(baserequesthandler.RequestHandler):
     # only logged in users can view the current question.
     if ((not question.posed and not users.is_current_user_admin()) or
        (question.is_current and not logged_in)):
-      return self.error(401)
+      self.session['original_url'] = self.request.url
+      self.redirect('/login')
 
     if logged_in:
       user = self.current_user
