@@ -51,7 +51,7 @@ class Question(baserequesthandler.RequestHandler):
     if ((not question.posed and not users.is_current_user_admin()) or
        (question.is_current and not logged_in)):
       self.session['original_url'] = self.request.url
-      self.redirect('/login')
+      return self.redirect('/login')
 
     if logged_in:
       user = self.current_user
