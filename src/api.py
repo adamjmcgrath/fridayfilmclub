@@ -145,9 +145,9 @@ class Question(baserequesthandler.RequestHandler):
       to_put.append(user_question)
       to_put.append(user)
       if user.is_anonymous:
-        ndb.put_multi(to_put)
-      else:
         user_question.put()
+      else:
+        ndb.put_multi(to_put)
 
     # The number of the clues to show the user is one greater than the
     # number of guesses up to the maximum number of guesses.
