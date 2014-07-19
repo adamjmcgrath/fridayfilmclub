@@ -148,19 +148,27 @@ class ApiTestCase(base.TestCase):
 
   def testCorrect(self):
     answer = '/en/top_gun'
+    season = helpers.season()
     question = helpers.question(
       answer_id=answer,
-      posed=datetime.datetime.now()
+      posed=datetime.datetime.now(),
+      season=season.put()
     )
     user = helpers.user()
     question_id = question.put().id()
     guess = {
       'guess': answer
     }
+    self.assertEqual(user.overall_score, 0)
     response = json.loads(self.post('/api/question/%d' % question_id,
                                     user=user, params=guess).body)
     self.assertTrue(response['correct'])
     self.assertTrue(response['answer']['title'], 'Top Gun')
+    user_season = models.UserSeason.query(
+        models.UserSeason.user == user.key,
+        models.UserSeason.season == season.key).get()
+    self.assertGreater(user_season.score, 0)
+    self.assertGreater(user.overall_score, 0)
 
   @mock.patch('models.UserQuestion.now')
   def testUserSeason(self, now_mock):
