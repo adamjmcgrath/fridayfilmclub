@@ -207,9 +207,9 @@ class LeaderBoard(baserequesthandler.RequestHandler):
     cache_key = '%s:%s:%s:%s:%s' % (str(duration), str(offset),
                                  str(limit), sort, direction)
     cached = memcache.get_multi([_LB_CACHE, cache_key])
-    # if cached.get(cache_key) and (cache_key in cached.get(_LB_CACHE, '')):
-    #   self.render_json(cached.get(cache_key), is_string=True)
-    #   return
+    if cached.get(cache_key) and (cache_key in cached.get(_LB_CACHE, '')):
+      self.render_json(cached.get(cache_key), is_string=True)
+      return
 
     sort_prop = ndb.GenericProperty(sort_props[sort])
     if not direction == 'asc':
