@@ -12,7 +12,6 @@ import json
 import mock
 import unittest
 
-import api
 import base
 import helpers
 import models
