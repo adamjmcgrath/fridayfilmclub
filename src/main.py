@@ -14,7 +14,7 @@ import webapp2
 from webapp2_extras import routes as webapp_routes
 
 import admin
-import api
+from api import contacts, leaderboard, question
 import realtime
 import settings
 import suggest
@@ -44,10 +44,10 @@ routes = [
         'tasks-cleananonusers'),
 
     # Api.
-    webapp2.Route(r'/api/question/<:.+>', api.Question, 'api-question'),
-    webapp2.Route(r'/api/leaderboard/<:(week|all|\d+)>', api.LeaderBoard,
+    webapp2.Route(r'/api/question/<:.+>', question.Question, 'api-question'),
+    webapp2.Route(r'/api/leaderboard/<:(week|all|\d+)>', leaderboard.LeaderBoard,
         'api-leaderboard'),
-    webapp2.Route(r'/api/contacts/<:.+>', api.Contacts, 'api-contacts'),
+    webapp2.Route(r'/api/contacts/<:.+>', contacts.Contacts, 'api-contacts'),
     webapp2.Route(r'/suggest/<:.+>', suggest.SuggestHandler, name='suggest'),
 
     # Authentication.
