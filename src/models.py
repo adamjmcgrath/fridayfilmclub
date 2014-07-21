@@ -184,6 +184,7 @@ class User(AuthUser):
   questions_answered = ndb.IntegerProperty(default=0)
   invited_by = ndb.KeyProperty(kind='User')
   joined = ndb.DateTimeProperty(auto_now_add=True)
+  leagues = ndb.KeyProperty(repeated=True)
 
   def pic_url(self, size=None, crop=False):
     """Gets the image's url."""
@@ -327,3 +328,52 @@ class UserSeason(ndb.Model):
       'clues': user_season.clues,
       'answered': user_season.questions_answered,
     }
+
+
+class League(ndb.Model):
+  """A group of users."""
+  name = ndb.StringProperty()
+  name_slug = ndb.ComputedProperty(lambda self: slugify(self.name))
+  owner = ndb.KeyProperty(kind=User)
+  users = ndb.KeyProperty(repeated=True, kind=User)
+  created = ndb.DateProperty(auto_now_add=True)
+
+  @staticmethod
+  def create(owner, name, users=[]):
+    league = League(owner=owner.key, name=name, users=[owner.key])
+    owner.leagues.append(league.put())
+    owner.put()
+    if users:
+      league.add_users(users)
+    return league
+
+  def delete(self):
+    self.remove_users(ndb.get_multi(self.users))
+    owner = self.owner.get()
+    if self.key in owner.leagues:
+      owner.leagues.remove(self.key)
+      owner.put()
+    self.key.delete()
+
+  def add_users(self, users):
+    if type(users) is not list: users = [users]
+    to_put = [self]
+    for user in users:
+      user_key = user.key
+      if user_key not in self.users and user_key != self.owner:
+        self.users.append(user_key)
+        user.leagues.append(self.key)
+        to_put.append(user)
+    ndb.put_multi(to_put)
+
+  def remove_users(self, users):
+    if type(users) is not list: users = [users]
+    to_put = [self]
+    for user in users:
+      user_key = user.key
+      if user_key in self.users:
+        self.users.remove(user_key)
+        if self.key in user.leagues:
+          user.leagues.remove(self.key)
+          to_put.append(user)
+    ndb.put_multi(to_put)
