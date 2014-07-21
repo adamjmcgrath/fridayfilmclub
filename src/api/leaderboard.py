@@ -81,7 +81,7 @@ class LeaderBoard(baserequesthandler.RequestHandler):
 
     if league_param:
       league = models.League.get_by_id(int(league_param))
-      cache_key += ':league_param'
+      cache_key += ':%s' % league_param
 
     cached = memcache.get_multi([_LB_CACHE, cache_key])
     if cached.get(cache_key) and (cache_key in cached.get(_LB_CACHE, '')):
