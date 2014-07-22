@@ -181,10 +181,18 @@ class HighScores(baserequesthandler.RequestHandler):
   """The high scores page."""
 
   def get(self):
-    user_questions = models.UserQuestion.query().order(
-        -models.UserQuestion.score).fetch(10)
+    league = self.request.get('league')
+    user_question_query = models.UserQuestion.query().order(
+        -models.UserQuestion.score)
+
+    if league:
+      league = models.League.get_by_id(int(league))
+      user_question_query = user_question_query.filter(
+          models.UserQuestion.user.IN(league.users))
+
     self.render_template('highscores.html', {
-      'user_questions': user_questions
+      'user_questions': user_question_query.fetch(10),
+      'league': league
     })
 
 
