@@ -22,9 +22,10 @@ goog.require('goog.pubsub.PubSub');
  * Leaderboard model.
  * @param {string} id The leaderboard id.
  * @param {ffc.api.Client} client The REST client.
+ * @param {string=} opt_league The league id.
  * @constructor
  */
-ffc.leaderboard.LeaderBoardModel = function(id, client) {
+ffc.leaderboard.LeaderBoardModel = function(id, client, opt_league) {
   goog.base(this);
 
   /**
@@ -58,6 +59,11 @@ ffc.leaderboard.LeaderBoardModel = function(id, client) {
   this.sortDir = ffc.leaderboard.LeaderBoardModel.DEFAULT_DIR;
 
   /**
+   * @type {?string}
+   */
+  this.league = opt_league;
+
+  /**
    * @type {Function}
    * @private
    */
@@ -86,8 +92,8 @@ ffc.leaderboard.LeaderBoardModel.prototype.nextValue = null;
  * Get a new page of scores.
  */
 ffc.leaderboard.LeaderBoardModel.prototype.getData = function() {
-  this.getData_(this.page * this.pageSize, this.pageSize,
-      this.sortField, this.sortDir).then(this.handleResult.bind(this));
+  this.getData_(this.page * this.pageSize, this.pageSize, this.sortField,
+      this.sortDir, this.league).then(this.handleResult.bind(this));
 };
 
 

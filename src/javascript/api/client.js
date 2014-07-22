@@ -57,10 +57,11 @@ ffc.api.Client.prototype.post_ = function(url, data, opt_options) {
  * @param {number=} opt_pageSize The page size.
  * @param {string=} opt_sort The sort field.
  * @param {string=} opt_dir The direction: asc or dsc.
+ * @param {string=} opt_league The league id.
  * @return {goog.result.Result} The ajax result.
  */
 ffc.api.Client.prototype.getLeaderBoard = function(type,
-    opt_page, opt_pageSize, opt_sort, opt_dir) {
+    opt_page, opt_pageSize, opt_sort, opt_dir, opt_league) {
   var uri = goog.Uri.parse(
       goog.string.subs(ffc.api.Client.LEADER_BOARD_PATH_, type));
 
@@ -75,6 +76,9 @@ ffc.api.Client.prototype.getLeaderBoard = function(type,
   }
   if (opt_dir) {
     uri.setParameterValue('dir', opt_dir);
+  }
+  if (opt_league) {
+    uri.setParameterValue('league', opt_league);
   }
 
   return this.get_(uri);

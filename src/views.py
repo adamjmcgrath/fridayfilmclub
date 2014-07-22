@@ -171,8 +171,12 @@ class LeaderBoard(baserequesthandler.RequestHandler):
   """The leader board / results page."""
 
   def get(self):
+    league = self.request.get('league')
+    if league:
+      league = models.League.get_by_id(int(league))
     self.render_template('leaderboard.html', {
       'channel_token': channel.create_channel(str(uuid.uuid4())),
+      'league': league,
       'season': models.Season.get_current()
     })
 

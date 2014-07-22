@@ -6,7 +6,7 @@
 
 {% block content %}
 <div class="container">
-  <h1>Leaderboard</h1>
+  <h1>{% if league %}{{ league.name }} {% endif %}Leaderboard</h1>
   <p>Remember, every 12 weeks the current FFC season ends and another begins so there’s plenty of chance to play catch-up. </p>
   <ul id="leaderboard-tabs" class="nav nav-tabs">
     <li class="active"><a href="#" data-leaderboard="week">This week</a></li>
@@ -14,7 +14,7 @@
     <li><a href="#" data-leaderboard="{{ loop.index }}">Season {{ loop.index }}</a></li>
     {% endfor %}
     <li><a href="#" data-leaderboard="all">All time</a></li>
-    <li class="pull-right"><a href="{{ uri_for('high-scores') }}">High Scores</a></li>
+    <li class="pull-right"><a href="{{ uri_for('high-scores') }}{% if league %}?league={{ league.key.id }}{% endif %}">High Scores</a></li>
   </ul>
   <div class="leaderboard-container" id="leaderboard-container-all"></div>
   {% for season_number in range(season.number) %}
@@ -41,16 +41,19 @@
 <script>
   (function() {
 
-    var lbmw = new ffc.leaderboard.LeaderBoardModel('week', ffc.api.Client.getInstance());
+    var lbmw = new ffc.leaderboard.LeaderBoardModel('week',
+        ffc.api.Client.getInstance(), '{{ league and league.key.id() }}');
     var lbw = new ffc.leaderboard.LeaderBoard(lbmw, true);
     lbw.render(document.getElementById('leaderboard-container-week'));
 
-    var lbma = new ffc.leaderboard.LeaderBoardModel('all', ffc.api.Client.getInstance());
+    var lbma = new ffc.leaderboard.LeaderBoardModel('all',
+        ffc.api.Client.getInstance(), '{{ league and league.key.id() }}');
     var lba = new ffc.leaderboard.LeaderBoard(lbma, true);
     var leaderBoards = [lbw, lba];
 
     {% for season_number in range(season.number) %}
-      var lbms = new ffc.leaderboard.LeaderBoardModel('{{ loop.index }}', ffc.api.Client.getInstance());
+      var lbms = new ffc.leaderboard.LeaderBoardModel('{{ loop.index }}',
+          ffc.api.Client.getInstance(), '{{ league and league.key.id() }}');
       {% if loop.last %}
         var lbs = new ffc.leaderboard.LeaderBoard(lbms, true);
       {% else %}
