@@ -347,6 +347,10 @@ class League(ndb.Model):
       league.add_users(users)
     return league
 
+  @staticmethod
+  def get_by_name(name):
+    return League.query(League.name_slug == name).get()
+
   def delete(self):
     self.remove_users(ndb.get_multi(self.users))
     owner = self.owner.get()

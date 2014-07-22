@@ -170,10 +170,9 @@ class Archive(baserequesthandler.RequestHandler):
 class LeaderBoard(baserequesthandler.RequestHandler):
   """The leader board / results page."""
 
-  def get(self):
-    league = self.request.get('league')
+  def get(self, league=None):
     if league:
-      league = models.League.get_by_id(int(league))
+      league = models.League.get_by_name(league)
     self.render_template('leaderboard.html', {
       'channel_token': channel.create_channel(str(uuid.uuid4())),
       'league': league,
@@ -184,13 +183,12 @@ class LeaderBoard(baserequesthandler.RequestHandler):
 class HighScores(baserequesthandler.RequestHandler):
   """The high scores page."""
 
-  def get(self):
-    league = self.request.get('league')
+  def get(self, league=None):
     user_question_query = models.UserQuestion.query().order(
         -models.UserQuestion.score)
 
     if league:
-      league = models.League.get_by_id(int(league))
+      league = models.League.get_by_name(league)
       user_question_query = user_question_query.filter(
           models.UserQuestion.user.IN(league.users))
 
