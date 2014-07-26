@@ -41,19 +41,20 @@
 <script>
   (function() {
 
+    var league = '{{ league.key.id() if league else ""  }}';
     var lbmw = new ffc.leaderboard.LeaderBoardModel('week',
-        ffc.api.Client.getInstance(), '{{ league and league.key.id() }}');
+        ffc.api.Client.getInstance(), league);
     var lbw = new ffc.leaderboard.LeaderBoard(lbmw, true);
     lbw.render(document.getElementById('leaderboard-container-week'));
 
     var lbma = new ffc.leaderboard.LeaderBoardModel('all',
-        ffc.api.Client.getInstance(), '{{ league and league.key.id() }}');
+        ffc.api.Client.getInstance(), league);
     var lba = new ffc.leaderboard.LeaderBoard(lbma, true);
     var leaderBoards = [lbw, lba];
 
     {% for season_number in range(season.number) %}
       var lbms = new ffc.leaderboard.LeaderBoardModel('{{ loop.index }}',
-          ffc.api.Client.getInstance(), '{{ league and league.key.id() }}');
+          ffc.api.Client.getInstance(),league);
       {% if loop.last %}
         var lbs = new ffc.leaderboard.LeaderBoard(lbms, true);
       {% else %}
