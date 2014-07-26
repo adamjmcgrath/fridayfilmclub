@@ -22,12 +22,13 @@ goog.require('goog.i18n.NumberFormat.Format');
  * @param {number} answered
  * @constructor
  */
-ffc.api.User = function(name, pic, score, clues, answered) {
+ffc.api.User = function(name, pic, score, clues, answered, realName) {
     this.floatFormatter_ = new goog.i18n.NumberFormat('#,##0.0');
     this.intFormatter_ = new goog.i18n.NumberFormat(
       goog.i18n.NumberFormat.Format.DECIMAL);
     goog.base(this, {
       'name': name,
+      'realName': realName,
       'pic': pic,
       'score': score,
       'clues': clues,
@@ -106,6 +107,22 @@ ffc.api.User.buildFromRealtimeMessage = function(obj, score, clues, answered) {
                               score,
                               clues,
                               answered);
+  user.setChildNode('live', true);
+  return user;
+};
+
+
+/**
+ * @param {Object} obj Response from the REST api.
+ * @return {ffc.api.User} A user instance.
+ */
+ffc.api.User.buildFromUserSearch = function(obj) {
+  var user = new ffc.api.User(obj['username'],
+                              obj['pic'],
+                              null,
+                              null,
+                              null,
+                              obj['name']);
   user.setChildNode('live', true);
   return user;
 };

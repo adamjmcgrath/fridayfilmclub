@@ -61,6 +61,9 @@ routes = [
     # Main views (Authenticated).
     webapp2.Route(r'/question/<:.*>', views.Question, name='question'),
     webapp2.Route(r'/settings', views.Settings, name='settings'),
+    webapp2.Route(r'/addeditleague', views.AddEditLeague, name='addeditleague'),
+    webapp2.Route(r'/addeditleague/<league:.*>', views.AddEditLeague,
+        name='addeditleague-league'),
 
     # Realtime handlers.
     webapp2.Route(r'/_ah/channel/connected/', realtime.Connect),

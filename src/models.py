@@ -28,10 +28,10 @@ _MAX_SCORE = 20000
 _TIME_PER_PENALTY = 2000
 WEEKS_PER_SEASON = 12
 
+
 def slugify(my_string):
   """Remove special characters and replace spaces with hyphens."""
   return '-'.join(re.sub(RE_SPECIAL_CHARS_, '', my_string).lower().split(' '))
-
 
 
 class Season(ndb.Model):
@@ -333,10 +333,53 @@ class UserSeason(ndb.Model):
 class League(ndb.Model):
   """A group of users."""
   name = ndb.StringProperty()
+  pic = ndb.BlobKeyProperty()
   name_slug = ndb.ComputedProperty(lambda self: slugify(self.name))
   owner = ndb.KeyProperty(kind=User)
   users = ndb.KeyProperty(repeated=True, kind=User)
   created = ndb.DateProperty(auto_now_add=True)
+
+  def pic_url(self, size=None, crop=False):
+    """Gets the image's url."""
+    if self.pic:
+      return images.get_serving_url(self.pic, size=size, crop=crop)
+    else:
+      return ''
+
+  def delete(self):
+    self.remove_users(ndb.get_multi(self.users))
+    owner = self.owner.get()
+    if self.key in owner.leagues:
+      owner.leagues.remove(self.key)
+      owner.put()
+    self.key.delete()
+
+  def add_users(self, users):
+    if type(users) is not list: users = [users]
+    if not len(users):
+      return
+    to_put = [self]
+    for user in users:
+      user_key = user.key
+      if user_key not in self.users and user_key != self.owner:
+        self.users.append(user_key)
+        user.leagues.append(self.key)
+        to_put.append(user)
+    ndb.put_multi(to_put)
+
+  def remove_users(self, users):
+    if type(users) is not list: users = [users]
+    if not len(users):
+      return
+    to_put = [self]
+    for user in users:
+      user_key = user.key
+      if user_key in self.users:
+        self.users.remove(user_key)
+        if self.key in user.leagues:
+          user.leagues.remove(self.key)
+          to_put.append(user)
+    ndb.put_multi(to_put)
 
   @staticmethod
   def create(owner, name, users=[]):
@@ -350,34 +393,3 @@ class League(ndb.Model):
   @staticmethod
   def get_by_name(name):
     return League.query(League.name_slug == name).get()
-
-  def delete(self):
-    self.remove_users(ndb.get_multi(self.users))
-    owner = self.owner.get()
-    if self.key in owner.leagues:
-      owner.leagues.remove(self.key)
-      owner.put()
-    self.key.delete()
-
-  def add_users(self, users):
-    if type(users) is not list: users = [users]
-    to_put = [self]
-    for user in users:
-      user_key = user.key
-      if user_key not in self.users and user_key != self.owner:
-        self.users.append(user_key)
-        user.leagues.append(self.key)
-        to_put.append(user)
-    ndb.put_multi(to_put)
-
-  def remove_users(self, users):
-    if type(users) is not list: users = [users]
-    to_put = [self]
-    for user in users:
-      user_key = user.key
-      if user_key in self.users:
-        self.users.remove(user_key)
-        if self.key in user.leagues:
-          user.leagues.remove(self.key)
-          to_put.append(user)
-    ndb.put_multi(to_put)

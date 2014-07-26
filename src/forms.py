@@ -27,6 +27,7 @@ import settings
 
 _USERNAME_RE = re.compile(r'^[\w\d_]{3,16}$')
 
+
 def validate_username(form, field):
   """Validate the username."""
   auth_obj = auth.get_auth()

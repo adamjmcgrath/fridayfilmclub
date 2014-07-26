@@ -11,6 +11,7 @@ from operator import itemgetter
 import uuid
 
 from google.appengine.api import channel, users
+from google.appengine.ext import ndb
 
 import auth
 import baserequesthandler
@@ -203,3 +204,78 @@ class HowItWorks(baserequesthandler.RequestHandler):
 
   def get(self):
     self.render_template('how.html', {})
+
+
+class AddEditLeague(baserequesthandler.RequestHandler):
+  """Add / Edit leagues."""
+
+  @auth.login_required
+  def get(self, league=None):
+
+    owner_key = self.current_user.key
+    if league:
+      league = models.League.get_by_id(int(league))
+      owner_key = league.owner
+
+    user_keys = league.users if league else []
+
+    if owner_key in user_keys:
+      user_keys.remove(owner_key)
+
+    self.render_template('addeditleague.html', {
+      'league_name': league and league.name,
+      'league_pic': league and league.pic_url(),
+      'users': ndb.get_multi(user_keys) if league else []
+    })
+
+  @auth.login_required
+  def post(self, league=None):
+
+    owner_key = self.current_user.key
+    if league:
+      league = models.League.get_by_id(int(league))
+      owner_key = league.owner
+
+    post_dict = self.request.POST
+    errors = {}
+    user_keys = []
+    pic = None
+    league_name = league.name if league else ''
+
+    if post_dict['name']:
+      if models.League.get_by_name(models.slugify(post_dict['name'])):
+        errors['name'] = 'League name already exists.'
+      league_name = post_dict['name']
+
+    else:
+      errors['name'] = 'No league name specified.'
+
+    if post_dict['users']:
+      user_key_names = post_dict['users'].split(',')
+      user_keys = [ndb.Key('User', int(key)) for key in user_key_names]
+    elif league:
+      user_keys = list(league.users)
+
+    if post_dict['pic']:
+      pass
+
+    if owner_key in user_keys:
+      user_keys.remove(owner_key)
+
+    if not len(errors.keys()):
+      if league:
+        league.name = league_name
+        league.pic = pic or league.pic
+        league.put()
+        league.add_users(list(set(user_keys) - set(league.users)))
+        league.remove_users(list(set(league.users) - set(user_keys)))
+      else:
+        models.League.create(self.current_user, league_name, user_keys)
+
+    self.render_template('addeditleague.html', {
+      'league_name': league_name,
+      'league_pic': league and league.pic_url(),
+      'users': ndb.get_multi(user_keys),
+      'errors': errors,
+      'success': len(errors.keys())
+    })

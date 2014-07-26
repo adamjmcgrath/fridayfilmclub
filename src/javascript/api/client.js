@@ -97,6 +97,17 @@ ffc.api.Client.prototype.getContacts = function(provider) {
 
 
 /**
+ * @param {String} query
+ */
+ffc.api.Client.prototype.searchUsers = function(query) {
+  var uri = goog.Uri.parse(
+      goog.string.subs(ffc.api.Client.USERS_PATH_, query));
+
+  return this.get_(uri);
+};
+
+
+/**
  * @type {string}
  * @private
  */
@@ -124,3 +135,11 @@ ffc.api.Client.LEADER_BOARD_PATH_ =
  */
 ffc.api.Client.CONTACTS_PATH_ =
     ffc.api.Client.BASE_PATH_ + '/contacts/%s';
+
+
+/**
+ * @type {string}
+ * @private
+ */
+ffc.api.Client.USERS_PATH_ =
+    ffc.api.Client.BASE_PATH_ + '/users/%s';
