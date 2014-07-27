@@ -68,6 +68,7 @@ ffc.league.Form.prototype.decorateInternal = function(el) {
   goog.base(this, 'decorateInternal', el);
   this.addUserBtn_ = this.getElementByClass('add-user');
   this.userTable_ = this.getElementByClass('league-users');
+  this.userKeysField_ = this.getElementByClass('user-keys');
 };
 
 
@@ -130,4 +131,5 @@ ffc.league.Form.prototype.fillUserTable_ = function() {
  * @param {goog.events.Event} e
  */
 ffc.league.Form.prototype.onFormSubmitted_ = function(e) {
+  this.userKeysField_.value = this.usersModel_.getKeys().join(',');
 };

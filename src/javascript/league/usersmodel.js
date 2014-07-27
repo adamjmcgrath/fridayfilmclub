@@ -64,7 +64,19 @@ ffc.league.UsersModel.prototype.addUser = function(user, silent) {
  * @return {goog.ds.SortedNodeList}
  */
 ffc.league.UsersModel.prototype.getUsers = function() {
-    return this.users_;
+  return this.users_;
+};
+
+
+/**
+ * @return {string[]}
+ */
+ffc.league.UsersModel.prototype.getKeys = function() {
+  var keys = [];
+  for (var i = 0, len = this.users_.getCount(); i < len; i++) {
+    keys[i] = this.users_.getByIndex(i).key;
+  }
+  return keys;
 };
 
 /**

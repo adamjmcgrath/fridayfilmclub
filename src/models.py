@@ -208,7 +208,8 @@ class User(AuthUser):
     return {
       'username': self.username,
       'pic': self.pic_url(),
-      'name': self.name
+      'name': self.name,
+      'key': self.key.id()
     }
 
   @staticmethod

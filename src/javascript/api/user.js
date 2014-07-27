@@ -20,9 +20,11 @@ goog.require('goog.i18n.NumberFormat.Format');
  * @param {number} score
  * @param {number} clues
  * @param {number} answered
+ * @param {string} realName
+ * @param {string} key
  * @constructor
  */
-ffc.api.User = function(name, pic, score, clues, answered, realName) {
+ffc.api.User = function(name, pic, score, clues, answered, realName, key) {
     this.floatFormatter_ = new goog.i18n.NumberFormat('#,##0.0');
     this.intFormatter_ = new goog.i18n.NumberFormat(
       goog.i18n.NumberFormat.Format.DECIMAL);
@@ -32,7 +34,8 @@ ffc.api.User = function(name, pic, score, clues, answered, realName) {
       'pic': pic,
       'score': score,
       'clues': clues,
-      'answered': answered
+      'answered': answered,
+      'key': key
     }, name);
 };
 goog.inherits(ffc.api.User, goog.ds.FastDataNode);
@@ -122,7 +125,8 @@ ffc.api.User.buildFromUserSearch = function(obj) {
                               null,
                               null,
                               null,
-                              obj['name']);
+                              obj['name'],
+                              obj['key']);
   user.setChildNode('live', true);
   return user;
 };
@@ -138,5 +142,6 @@ ffc.api.User.buildFromUserData = function(obj) {
                           null,
                           null,
                           null,
-                          obj['name']);
+                          obj['name'],
+                          obj['key']);
 };
