@@ -126,3 +126,17 @@ ffc.api.User.buildFromUserSearch = function(obj) {
   user.setChildNode('live', true);
   return user;
 };
+
+
+/**
+ * @param {Object} obj User object from inline json on league page.
+ * @return {ffc.api.User} A user instance.
+ */
+ffc.api.User.buildFromUserData = function(obj) {
+  return new ffc.api.User(obj['username'],
+                          obj['pic'],
+                          null,
+                          null,
+                          null,
+                          obj['name']);
+};

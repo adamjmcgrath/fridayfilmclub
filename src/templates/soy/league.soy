@@ -1,0 +1,27 @@
+{namespace ffc.template.league}
+
+
+/**
+ * Users table.
+ * @param list_
+ */
+{template .userTable}
+  {foreach $user in $list_}
+    <tr>
+      <td>
+        <img src="{$user.pic}" alt="{$user.name}" width="20" height="20">
+      </td>
+      <td>
+        <a href="/u/{$user.name}">{$user.name}</a>
+      </td>
+      <td>
+        <button type="button" class="btn btn-default btn-xs">
+          <span class="glyphicon glyphicon-remove"></span> Remove
+        </button>
+      </td>
+    </tr>
+  {ifempty}
+    <tr><td colspan="3" class="empty">Add a user</td></tr>
+  {/foreach}
+{/template}
+

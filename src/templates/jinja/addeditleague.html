@@ -9,7 +9,7 @@
   <h1>{% if league %}Edit{% else %}Add{% endif %} a League</h1>
   <p class="intro">Fill in the details and hit save.</p>
 
-  <form class="form clearfix" id="user-settings-form" action="" method="post" enctype="multipart/form-data">
+  <form class="form clearfix" id="league-form" action="" method="post" enctype="multipart/form-data">
 
     <div class="form-group">
       <label for="name" class="control-label">Name</label>
@@ -31,7 +31,7 @@
       <div class="input-group">
           <input type="text" class="form-control" id="usersearch" placeholder="Search for a user&hellip;">
           <span class="input-group-btn">
-              <button type="button" class="btn btn-default">Add user</button>
+              <button type="button" class="btn btn-default add-user">Add user</button>
           </span>
       </div>
       <p class="help-block">Add users to your league.</p>
@@ -40,21 +40,15 @@
     <div id="usersTable">
       <table class="table table-striped table-hover">
         <tr>
-          <th>Users</th>
+          <th colspan="3">Users</th>
         </tr>
         <tbody class="league-users">
-        {% for user in users %}
-          <tr>
-            <td>{{ user.username }}</td>
-          </tr>
-        {% endfor %}
         </tbody>
       </table>
     </div>
 
     <div class="form-group">
       <input type="hidden" name="users" id="users">
-      <input type="hidden" id="selectedUser">
       <button type="submit" class="btn btn-primary pull-right">Save league</button>
     </div>
   </form>
@@ -75,17 +69,27 @@
   <script>
     goog.require('goog.ui.Component');
     goog.require('ffc.usersuggest.AutoComplete');
+    goog.require('ffc.league.UsersModel');
+    goog.require('ffc.league.Form');
   </script>
 {% else %}
 {#  <script src="/static/js/settings.js"></script>#}
 {% endif %}
 <script>
+
   (function() {
-    // Find users auto complete
     var userSearch = document.getElementById('usersearch');
-    var selectedUser = document.getElementById('selectedUser');
+    var formElement = document.getElementById('league-form');
+
     var ac = new ffc.usersuggest.AutoComplete(
-        userSearch, userSearch.parentNode.parentNode, selectedUser);
+        userSearch, userSearch.parentNode.parentNode);
+
+    var userModel = new ffc.league.UsersModel();
+
+    var leagueForm = new ffc.league.Form(userModel, ac);
+
+    leagueForm.decorate(formElement);
+    userModel.addUserData({{ to_json(users) }});
   })();
 </script>
 {% endblock %}

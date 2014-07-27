@@ -7,6 +7,7 @@
 __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 
 import datetime
+import json
 import logging
 import hashlib
 import re
@@ -202,6 +203,17 @@ class User(AuthUser):
       'season_score': season_score,
       'overall_score': overall_score
     }
+
+  def get_league_user_json(self):
+    return {
+      'username': self.username,
+      'pic': self.pic_url(),
+      'name': self.name
+    }
+
+  @staticmethod
+  def to_league_users_json(users):
+    return json.dumps([user.get_league_user_json() for user in users])
 
   @staticmethod
   def get_by_username(username):

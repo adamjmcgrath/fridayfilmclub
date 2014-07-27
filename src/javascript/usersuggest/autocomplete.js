@@ -26,12 +26,9 @@ goog.require('soy');
  * AutoComplete constructor.
  * @param {HTMLInputElement} el The input element to decorate.
  * @param {Element} parent The element to render the autocomplete in.
- * @param {HTMLInputElement} userField
  * @constructor
  */
-ffc.usersuggest.AutoComplete = function(el, parent, userField) {
-  var self = this;
-
+ffc.usersuggest.AutoComplete = function(el, parent) {
   // Create a custom renderer that renders rich rows.
   // The renderer calls row.render(node, token) for each row.
   var customRenderer = {};
@@ -40,9 +37,7 @@ ffc.usersuggest.AutoComplete = function(el, parent, userField) {
     row.data.toString = function() {
       return row.data['username'];
     };
-    row.data.select = function() {
-      userField.value = goog.json.serialize(row.data);
-    };
+    row.data.select = function() {};
   };
 
   /**
@@ -62,14 +57,14 @@ ffc.usersuggest.AutoComplete = function(el, parent, userField) {
   this.matcher_ = new ffc.usersuggest.RemoteArrayMatcher(
       ffc.usersuggest.AutoComplete.API_URL_);
 
-  var inputhandler = new goog.ui.ac.RichInputHandler(
+  var inputHandler = new goog.ui.ac.RichInputHandler(
       null, null, false, 300);
 
   goog.ui.ac.AutoComplete.call(this, this.matcher_, this.renderer_,
-      inputhandler);
+      inputHandler);
 
-  inputhandler.attachAutoComplete(this);
-  inputhandler.attachInputs(el);
+  inputHandler.attachAutoComplete(this);
+  inputHandler.attachInputs(el);
 };
 goog.inherits(ffc.usersuggest.AutoComplete, goog.ui.ac.AutoComplete);
 goog.exportSymbol('ffc.usersuggest.AutoComplete', ffc.usersuggest.AutoComplete);

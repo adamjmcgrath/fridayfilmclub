@@ -223,9 +223,10 @@ class AddEditLeague(baserequesthandler.RequestHandler):
       user_keys.remove(owner_key)
 
     self.render_template('addeditleague.html', {
-      'league_name': league and league.name,
-      'league_pic': league and league.pic_url(),
-      'users': ndb.get_multi(user_keys) if league else []
+      'league_name': league.name if league else '',
+      'league_pic': league.pic_url() if league else '',
+      'users': ndb.get_multi(user_keys) if league else [],
+      'to_json': models.User.to_league_users_json
     })
 
   @auth.login_required
@@ -277,5 +278,6 @@ class AddEditLeague(baserequesthandler.RequestHandler):
       'league_pic': league and league.pic_url(),
       'users': ndb.get_multi(user_keys),
       'errors': errors,
-      'success': len(errors.keys())
+      'success': len(errors.keys()),
+      'to_json': models.User.to_league_users_json
     })

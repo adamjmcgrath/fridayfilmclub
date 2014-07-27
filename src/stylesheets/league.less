@@ -1,0 +1,75 @@
+#addeditleague-page {
+
+  form {
+    margin: 20px 0;
+
+    .form-group {
+      position: relative;
+    }
+  }
+
+  th {
+    background-color: transparent;
+    border-top: none;
+  }
+
+  .ac-renderer {
+    position: absolute;
+    background: #FFF;
+    border: 1px solid #CCC;
+    border-top: 0;
+    top: 59px;
+    left: 3px;
+    right: 8px;
+    padding: 5px 0;
+    z-index: 1;
+
+    .ac-row {
+
+      cursor: pointer;
+      padding: 5px 10px 5px 10px;
+
+      img {
+        margin-right: 5px;
+      }
+
+    }
+    .ac-row:hover {
+      background: #f2f2f2;
+    }
+  }
+
+  .league-users {
+    td.empty {
+      font-style: italic;
+      color: @grayLight;
+      text-align: center;
+    }
+
+    td:first-child {
+      padding-right: 0;
+      width: 30px;
+    }
+    td:last-child {
+      width: 90px;
+
+      button {
+        visibility: hidden;
+
+        .glyphicon {
+          color: @red;
+        }
+      }
+    }
+
+    tr:hover {
+     td:last-child button {
+        visibility: visible;
+      }
+    }
+  }
+
+
+}
+
+
