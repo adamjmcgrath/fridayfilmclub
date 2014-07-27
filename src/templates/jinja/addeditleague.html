@@ -9,10 +9,17 @@
   <h1>{% if league %}Edit{% else %}Add{% endif %} a League</h1>
   <p class="intro">Fill in the details and hit save.</p>
 
+  {% if success %}
+    <div class="alert alert-success">You have successfully saved your league.</div>
+  {% endif %} 
+
   <form class="form clearfix" id="league-form" action="" method="post" enctype="multipart/form-data">
 
-    <div class="form-group">
-      <label for="name" class="control-label">Name</label>
+    <div class="form-group{% if errors and errors.name %} has-error{% endif %}">
+      <label for="name" class="control-label">
+        <span>Name</span>
+        {% if errors and errors.name %}<span class="pull-right">{{ errors.name }}</span>{% endif %}
+      </label>
       <input class="form-control" id="name" name="name" type="text" value="{{ league_name }}" />
       <p class="help-block">The name of your league.</p>
     </div>

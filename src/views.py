@@ -10,7 +10,7 @@ import logging
 from operator import itemgetter
 import uuid
 
-from google.appengine.api import channel, users
+from google.appengine.api import channel, files, users
 from google.appengine.ext import ndb
 
 import auth
@@ -247,7 +247,6 @@ class AddEditLeague(baserequesthandler.RequestHandler):
       if models.League.get_by_name(models.slugify(post_dict['name'])):
         errors['name'] = 'League name already exists.'
       league_name = post_dict['name']
-
     else:
       errors['name'] = 'No league name specified.'
 
@@ -258,7 +257,12 @@ class AddEditLeague(baserequesthandler.RequestHandler):
       user_keys = list(league.users)
 
     if post_dict['pic']:
-      pass
+      img_file = self.request.get('pic')
+      file_name = files.blobstore.create(mime_type='application/octet-stream')
+      with files.open(file_name, 'a') as f:
+        f.write(img_file)
+      files.finalize(file_name)
+      pic = files.blobstore.get_blob_key(file_name)
 
     if owner_key in user_keys:
       user_keys.remove(owner_key)
@@ -268,16 +272,26 @@ class AddEditLeague(baserequesthandler.RequestHandler):
         league.name = league_name
         league.pic = pic or league.pic
         league.put()
-        league.add_users(list(set(user_keys) - set(league.users)))
-        league.remove_users(list(set(league.users) - set(user_keys)))
+        league.add_users(
+          ndb.get_multi(list(set(user_keys) - set(league.users))))
+        league.remove_users(
+          ndb.get_multi(list(set(league.users) - set(user_keys))))
       else:
-        models.League.create(self.current_user, league_name, user_keys)
+        league = models.League.create(
+          self.current_user,
+          league_name,
+          users=ndb.get_multi(user_keys),
+          pic=pic)
+        league.put()
 
-    self.render_template('addeditleague.html', {
-      'league_name': league_name,
-      'league_pic': league and league.pic_url(),
-      'users': ndb.get_multi(user_keys),
-      'errors': errors,
-      'success': len(errors.keys()),
-      'to_json': models.User.to_league_users_json
-    })
+    if len(errors.keys()) == 0:
+      return self.redirect(
+        self.uri_for('leader-board-league', league=league.name_slug))
+    else:
+      self.render_template('addeditleague.html', {
+        'league_name': league_name,
+        'league_pic': league and league.pic_url(),
+        'users': ndb.get_multi(user_keys),
+        'errors': errors,
+        'to_json': models.User.to_league_users_json
+      })

@@ -395,8 +395,8 @@ class League(ndb.Model):
     ndb.put_multi(to_put)
 
   @staticmethod
-  def create(owner, name, users=[]):
-    league = League(owner=owner.key, name=name, users=[owner.key])
+  def create(owner, name, users=[], pic=None):
+    league = League(owner=owner.key, name=name, users=[owner.key], pic=pic)
     owner.leagues.append(league.put())
     owner.put()
     if users:
