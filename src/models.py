@@ -28,6 +28,7 @@ _MAX_SCORE = 20000
 # No. of seconds penalty per guess
 _TIME_PER_PENALTY = 2000
 WEEKS_PER_SEASON = 12
+_MAX_CLUES = 4
 
 
 def slugify(my_string):
@@ -280,6 +281,14 @@ class UserQuestion(ndb.Model):
     else:
       return self.guesses
 
+  def current_clue_number(self):
+    """The number of the clues to show the user is one greater than the
+    number of guesses up to the maximum number of guesses.
+    If the user has had no guesses they get one clue.
+    """
+    clue_increment = 0 if self.correct else 1
+    return min((len(self.guesses) + clue_increment), _MAX_CLUES)
+
   def calculate_score(self, posed):
     now = int(UserQuestion.now().strftime('%s'))
     posed = int(posed.strftime('%s'))
@@ -293,6 +302,16 @@ class UserQuestion(ndb.Model):
         posed, penalties, score)
 
     return score
+
+  @classmethod
+  def from_user_question(cls, user, question):
+    question_id = question.key.id()
+    user_question_id = '%s-%s' % (question_id, user.key.id())
+    return cls.get_or_insert(
+        user_question_id,
+        question=question.key,
+        user=user.key,
+        user_is_admin=user.is_admin)
 
   @staticmethod
   def get_profile_dict(uq):
@@ -330,8 +349,16 @@ class UserSeason(ndb.Model):
   user_is_admin = ndb.BooleanProperty(default=False)
   questions_answered = ndb.IntegerProperty(default=0)
 
+  @classmethod
+  def from_user_season(cls, user, season):
+    user_season_id = '%s-%s' % (season.id(), user.key.id())
+    return cls.get_or_insert(user_season_id,
+                             season=season,
+                             user=user.key,
+                             user_is_admin=user.is_admin)
+
   @staticmethod
-  def to_leaderboard_json(questions_in_season, user_season):
+  def to_leaderboard_json(user_season):
     """Used to return json for the leader board api season."""
     user = user_season.user.get()
     return {
@@ -406,3 +433,25 @@ class League(ndb.Model):
   @staticmethod
   def get_by_name(name):
     return League.query(League.name_slug == name).get()
+
+
+class LeagueUser(ndb.Model):
+  """Keep score of user in a league."""
+  created = ndb.DateTimeProperty(auto_now_add=True)
+  user = ndb.KeyProperty(kind=User)
+  league = ndb.KeyProperty(kind=League)
+  score = ndb.IntegerProperty(default=0)
+  clues = ndb.IntegerProperty(default=0)
+  questions_answered = ndb.IntegerProperty(default=0)
+
+  @staticmethod
+  def to_leaderboard_json(league_user):
+    """Used to return json for the leader board api season."""
+    user = league_user.user.get()
+    return {
+      'user_name': user.username,
+      'user_pic': user.pic_url(size=30),
+      'score': league_user.score,
+      'clues': league_user.clues,
+      'answered': league_user.questions_answered,
+    }

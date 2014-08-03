@@ -130,11 +130,9 @@ class LeaderBoard(baserequesthandler.RequestHandler):
       if league:
         user_season_query = user_season_query.filter(
           models.UserSeason.user.IN(league.users))
-      questions_in_season = models.Question.query(
-          models.Question.season == season.key).count()
       count = user_season_query.count()
       users_dicts = user_season_query.map(
-          partial(models.UserSeason.to_leaderboard_json, questions_in_season),
+          partial(models.UserSeason.to_leaderboard_json),
           options=qo)
 
     json_str = json.dumps({

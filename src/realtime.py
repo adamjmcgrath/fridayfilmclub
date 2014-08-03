@@ -39,6 +39,8 @@ def _send_score_to_players(user_key, user_question_score,
 
 def send_score_to_players(user, user_question, user_season):
   """Send a users score to all active players."""
+  if not user_season:
+    return
 
   # score, clues, answered
   deferred.defer(_send_score_to_players,
