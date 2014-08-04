@@ -30,6 +30,11 @@ _PROP_MAP = {
     'score': 'score',
     'clues': 'clues_used'
   },
+  'league': {
+    'score': 'score',
+    'clues': 'clues',
+    'answered': 'questions_answered',
+  },
   'season': {
     'score': 'score',
     'clues': 'clues',
@@ -62,9 +67,11 @@ def delete_leaderboard_cache():
 class LeaderBoard(baserequesthandler.RequestHandler):
   """Leader boards."""
 
-  def get(self, duration):
+  def get(self, duration, league=None):
     is_all = duration == 'all'
     is_week = duration == 'week'
+    is_league = duration == 'league'
+    league = self.request.get('league')
     offset = int(self.request.get('offset') or 0)
     limit = int(self.request.get('limit') or 20)
     try:
@@ -73,15 +80,9 @@ class LeaderBoard(baserequesthandler.RequestHandler):
       sort_props = _PROP_MAP['season']
     sort = self.request.get('sort') or 'score'
     direction = self.request.get('dir') or 'asc'
-    league_param = self.request.get('league')
-    league = None
 
     cache_key = '%s:%s:%s:%s:%s' % (str(duration), str(offset),
                                     str(limit), sort, direction)
-
-    if league_param:
-      league = models.League.get_by_id(int(league_param))
-      cache_key += ':%s' % league_param
 
     cached = memcache.get_multi([_LB_CACHE, cache_key])
     if cached.get(cache_key) and (cache_key in cached.get(_LB_CACHE, '')):
@@ -101,8 +102,6 @@ class LeaderBoard(baserequesthandler.RequestHandler):
     if is_all:
       user_query = models.User.query(
         models.User.is_admin == False).order(sort_prop)
-      if league:
-        user_query = user_query.filter(models.User._key.IN(league.users))
       count = user_query.count()
       users_dicts = user_query.map(models.User.to_leaderboard_json, options=qo)
 
@@ -115,25 +114,27 @@ class LeaderBoard(baserequesthandler.RequestHandler):
           models.UserQuestion.question == question_key,
           models.UserQuestion.complete == True,
           models.UserQuestion.user_is_admin == False).order(sort_prop)
-      if league:
-        user_question_query = user_question_query.filter(
-          models.UserQuestion.user.IN(league.users))
       count = user_question_query.count()
       users_dicts = user_question_query.map(
           models.UserQuestion.to_leaderboard_json, options=qo)
+
+    elif is_league:
+      league_key = ndb.Key('League', league)
+      league_user_query = models.LeagueUser.query(
+        models.LeagueUser.league == league_key,
+      )
+      count = league_user_query.count()
+      users_dicts = league_user_query.map(
+        models.LeagueUser.to_leaderboard_json, options=qo)
 
     else: # Should be the Season number.
       season = models.Season.get_by_id(duration)
       user_season_query = models.UserSeason.query(
           models.UserSeason.season == season.key,
           models.UserSeason.user_is_admin == False).order(sort_prop)
-      if league:
-        user_season_query = user_season_query.filter(
-          models.UserSeason.user.IN(league.users))
       count = user_season_query.count()
       users_dicts = user_season_query.map(
-          partial(models.UserSeason.to_leaderboard_json),
-          options=qo)
+          models.UserSeason.to_leaderboard_json, options=qo)
 
     json_str = json.dumps({
       'prev': users_dicts and users_dicts[0].get(sort) or 0,
