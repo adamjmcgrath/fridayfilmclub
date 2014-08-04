@@ -43,6 +43,18 @@ def update_users_season_score(user_season, score, num_guesses):
   user_season.questions_answered += 1
 
 
+def update_users_league_scores(user_key, score, num_guesses):
+  to_put = []
+  user = user_key.get()
+  for league_key in user.leagues:
+    user_league = models.UserLeague.from_league_key_user(league_key, user_key)
+    user_league.score += score
+    user_league.clues += num_guesses - 1
+    user_league.questions_answered += 1
+    to_put.append(user_league)
+  ndb.put_multi(to_put)
+
+
 def populate_guess(guess_id):
   """Get the title and year of a guessed film from the films data API."""
   if guess_id == _PASS:
@@ -105,18 +117,32 @@ class Question(baserequesthandler.RequestHandler):
         user_question.score = score
         user_season = None
 
+        # Update the users score and stats.
         update_users_score(user, score, num_guesses)
+
+        # Update the question answer count and reset the leaderboard cache.
         update_question(question)
 
+        # Update the users leagues.
+        if user.leagues:
+          deferred.defer(update_users_league_scores,
+                         user.key,
+                         score,
+                         num_guesses)
+
+        # Update the user season.
         if question.season and not user.is_anonymous:
           season = question.season
           user_season = models.UserSeason.from_user_season(user, season)
           update_users_season_score(user_season, score, num_guesses)
           to_put.append(user_season)
 
+        # If it's the current question, send the realtime score to the boards.
         if question.is_current or settings.DEBUG:
           realtime.send_score_to_players(user, user_question, user_season)
 
+      # Only need to update the user question if anonymous as they don't appear
+      # in the leaderboard.
       if user.is_anonymous:
         user_question.put()
       else:
@@ -124,9 +150,11 @@ class Question(baserequesthandler.RequestHandler):
         to_put += [question, user_question, user]
         ndb.put_multi(to_put)
 
+    # Get the next set of guesses, clues to send to show to the user.
     guesses = map(populate_guess, user_question.guesses)
     clues = question.clues[:user_question.current_clue_number()]
 
+    # Create the JSON for the UI.
     response_obj = {
         'clues': [c.get().to_json() for c in clues],
         'correct': user_question.correct,

@@ -423,7 +423,8 @@ class League(ndb.Model):
     ndb.put_multi(to_put)
 
   @staticmethod
-  def create(owner, name, users=[], pic=None):
+  def create(owner, name, users=None, pic=None):
+    users = users or []
     league = League(owner=owner.key, name=name, users=[owner.key], pic=pic)
     owner.leagues.append(league.put())
     owner.put()
@@ -444,6 +445,14 @@ class LeagueUser(ndb.Model):
   score = ndb.IntegerProperty(default=0)
   clues = ndb.IntegerProperty(default=0)
   questions_answered = ndb.IntegerProperty(default=0)
+
+  @classmethod
+  def from_league_user(cls, league_key, user_key):
+    league_user_id = '%s-%s' % (league_key.id(), user_key.id())
+    return cls.get_or_insert(
+        league_user_id,
+        league=league_key,
+        user=user_key)
 
   @staticmethod
   def to_leaderboard_json(league_user):
