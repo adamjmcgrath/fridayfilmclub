@@ -189,6 +189,9 @@ class User(AuthUser):
   joined = ndb.DateTimeProperty(auto_now_add=True)
   leagues = ndb.KeyProperty(repeated=True)
 
+  def get_leagues(self):
+    return ndb.get_multi(self.leagues)
+
   def pic_url(self, size=None, crop=False):
     """Gets the image's url."""
     if self.pic:
@@ -387,50 +390,40 @@ class League(ndb.Model):
     else:
       return ''
 
-  def delete(self):
-    self.remove_users(ndb.get_multi(self.users))
-    owner = self.owner.get()
-    if self.key in owner.leagues:
-      owner.leagues.remove(self.key)
-      owner.put()
-    self.key.delete()
-
-  def add_users(self, users):
-    if type(users) is not list: users = [users]
-    if not len(users):
-      return
+  @classmethod
+  def _post_delete_hook(cls, key, future):
+    users = User.query(User.leagues == key)
     to_put = []
     for user in users:
-      user_key = user.key
-      if user_key not in self.users and user_key != self.owner:
-        self.users.append(user_key)
+      if key in user.leagues:
+        logging.info('KEY')
+        logging.info(key)
+        user.leagues.remove(key)
+        to_put.append(user)
+    ndb.put_multi(to_put)
+
+  def _post_put_hook(self, future):
+    existing_users = User.query(User.leagues == self.key)
+    to_add = ndb.get_multi(list(set(self.users) - set(existing_users)))
+    to_remove = ndb.get_multi(list(set(existing_users) - set(self.users)))
+    owner = self.owner.get()
+
+    to_put = []
+    for user in to_add:
+      if self.key not in user.leagues:
         user.leagues.append(self.key)
         to_put.append(user)
-    ndb.put_multi_async(to_put)
 
-  def remove_users(self, users):
-    if type(users) is not list: users = [users]
-    if not len(users):
-      return
-    to_put = []
-    for user in users:
-      user_key = user.key
-      if user_key in self.users:
-        self.users.remove(user_key)
-        if self.key in user.leagues:
-          user.leagues.remove(self.key)
-          to_put.append(user)
-    ndb.put_multi_async(to_put)
+    if self.key not in owner.leagues:
+      owner.leagues.append(self.key)
+      to_put.append(owner)
 
-  @staticmethod
-  def create(owner, name, users=None, pic=None):
-    users = users or []
-    league = League(owner=owner.key, name=name, users=[owner.key], pic=pic)
-    owner.leagues.append(league.put())
-    owner.put()
-    if users:
-      league.add_users(users)
-    return league
+    for user in to_remove:
+      if self.key in user.leagues and not user == self.owner:
+        user.leagues.remove(self.key)
+        to_put.append(user)
+
+    ndb.put_multi(to_put)
 
   @staticmethod
   def get_by_name(name):

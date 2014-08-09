@@ -192,13 +192,10 @@ class LeagueUsersField(fields.HiddenField):
     super(LeagueUsersField, self).process_data(user_keys)
 
   def populate_obj(self, entity, name):
-    """Populate the current user for the owner field."""
+    """Populate the users field."""
     if not self.data:
       return
-    users = self.data.split(',')
-    user_keys = [ndb.Key('User', int(key)) for key in users]
-    entity.add_users(ndb.get_multi(list(set(user_keys) - set(entity.users))))
-    entity.remove_users(ndb.get_multi(list(set(entity.users) - set(user_keys))))
+    entity.users = [ndb.Key('User', int(key)) for key in self.data.split(',')]
 
 
 class LeagueIdField(fields.HiddenField):

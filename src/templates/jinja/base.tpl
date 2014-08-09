@@ -42,7 +42,15 @@
           </li>
           {% if logged_in %}
           <li{% if page_id == 'leaderboard-page' %} class="active"{% endif %}>
-            <a href="{{ uri_for('login') }}">Leagues</a>
+            <a href="{{ uri_for('login') }}">
+              Leagues
+              <ul class="leagues-menu">
+                {% for league in user.get_leagues() %}
+                <li><a href="#">{{ league.name }}</a></li>
+                {% endfor %}
+                <li><a href="{{ uri_for('add-league') }}">Create a league</a></li>
+              </ul>
+            </a>
           </li>
           {% endif %}
         </ul>
