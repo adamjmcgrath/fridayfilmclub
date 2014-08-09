@@ -19,12 +19,15 @@ import forms
 import models
 import settings
 
-EMAIL_BATCH_SIZE = 10
+EMAIL_BATCH_SIZE = 50
 
-def get_question_url(host_url, question_key):
+def get_question_url(host_url, question_key, dev=False):
     # Make sure the live cron job doesn't use the appspot.com url.
     if 'appspot.com' in host_url:
-      url = 'http://www.fridayfilmclub.com'
+      if dev:
+        url = 'http://dev.ffcapp.appspot.com'
+      else:
+        url = 'http://www.fridayfilmclub.com'
     else:
       url = host_url
 
@@ -137,10 +140,13 @@ class PoseQuestion(baserequesthandler.RequestHandler):
     msg = self.request.get('msg')
     question = self.request.get('question')
 
-    body = self.generate_template('email/question.txt', {
-      'url': get_question_url(self.request.host_url, question),
-      'msg': msg
-    })
+    # Create an email with a link to the dev environment for trusted testers.
+    url = get_question_url(self.request.host_url, question, dev=False)
+    url_dev = get_question_url(self.request.host_url, question, dev=True)
+    body = self.generate_template(
+      'email/question.txt', {'url': url, 'msg': msg})
+    body_dev = self.generate_template(
+      'email/question.txt', {'url': url_dev, 'msg': msg})
 
     for user_entity in user_entities:
       try:
@@ -151,7 +157,7 @@ class PoseQuestion(baserequesthandler.RequestHandler):
       mail.send_mail(sender=settings.FMJ_EMAIL,
                      to=email,
                      subject=subject,
-                     body=body)
+                     body=body_dev if user_entity.is_trusted_tester else body)
 
     if more:
       taskqueue.add(url=self.request.path,
