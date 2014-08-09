@@ -47,6 +47,27 @@ def validate_username(form, field):
     raise validators.ValidationError('This username is already taken.')
 
 
+def validate_league_name(form, field):
+  """Validate the league name."""
+  current_league_id = form.data['id']
+  current_league_name = None
+  if current_league_id:
+    current_league = models.League.get_by_id(int(current_league_id))
+    current_league_name = current_league.name
+
+  league_name = field.data.strip()
+
+  if not league_name:
+    raise validators.ValidationError('No league name specified.')
+
+  else:
+    # Only throw a name already exists error, if the user is trying to
+    # create a league or change their league name.
+    if ((league_name != current_league_name) and
+         models.League.get_by_name(models.slugify(league_name))):
+      raise validators.ValidationError('League name already exists.')
+
+
 class FilmField(fields.HiddenField):
   """A film field."""
 
@@ -152,6 +173,42 @@ class SeasonField(fields.SelectField):
     return [(str(x), str(x)) for x in range(season, season + 10)]
 
 
+class CurrentUserField(fields.HiddenField):
+  """Sets the current user on the entity."""
+
+  def populate_obj(self, entity, name):
+    """Populate the current user for the owner field."""
+    auth_obj = auth.get_auth()
+    user_dict = auth_obj.get_user_by_session()
+    entity.owner = ndb.Key('User', user_dict['user_id'])
+
+
+class LeagueUsersField(fields.HiddenField):
+  """Sets the current user on the entity."""
+
+  def process_data(self, user_keys):
+    if user_keys:
+      user_keys = ','.join([str(key.id()) for key in user_keys])
+    super(LeagueUsersField, self).process_data(user_keys)
+
+  def populate_obj(self, entity, name):
+    """Populate the current user for the owner field."""
+    if not self.data:
+      return
+    users = self.data.split(',')
+    user_keys = [ndb.Key('User', int(key)) for key in users]
+    entity.add_users(ndb.get_multi(list(set(user_keys) - set(entity.users))))
+    entity.remove_users(ndb.get_multi(list(set(entity.users) - set(user_keys))))
+
+
+class LeagueIdField(fields.HiddenField):
+  """Sets the current user on the entity."""
+
+  def process_data(self, data):
+    """Populate the current user for the owner field."""
+    super(LeagueIdField, self).process_data(data)
+
+
 class Question(Form):
   """A question form."""
   answer = FilmField('Film', [validators.Required()], id='film')
@@ -175,3 +232,21 @@ class User(Form):
   email = fields.TextField(validators=[validators.Email()])
   pic = ImageField('pic')
   favourite_film = FilmField()
+
+
+class League(Form):
+  id = LeagueIdField('')
+  name = fields.TextField('', [validate_league_name])
+  pic = ImageField('pic')
+  owner = CurrentUserField()
+  users = LeagueUsersField()
+
+  def users_json(self):
+    user_ids = self.users.data
+    user_dicts = []
+    if user_ids:
+      user_ids = user_ids.split(',')
+      user_keys = [ndb.Key('User', int(id)) for id in user_ids]
+      users = ndb.get_multi(user_keys)
+      user_dicts = [user.get_league_user_json() for user in users]
+    return json.dumps(user_dicts)

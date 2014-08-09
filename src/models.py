@@ -399,20 +399,20 @@ class League(ndb.Model):
     if type(users) is not list: users = [users]
     if not len(users):
       return
-    to_put = [self]
+    to_put = []
     for user in users:
       user_key = user.key
       if user_key not in self.users and user_key != self.owner:
         self.users.append(user_key)
         user.leagues.append(self.key)
         to_put.append(user)
-    ndb.put_multi(to_put)
+    ndb.put_multi_async(to_put)
 
   def remove_users(self, users):
     if type(users) is not list: users = [users]
     if not len(users):
       return
-    to_put = [self]
+    to_put = []
     for user in users:
       user_key = user.key
       if user_key in self.users:
@@ -420,7 +420,7 @@ class League(ndb.Model):
         if self.key in user.leagues:
           user.leagues.remove(self.key)
           to_put.append(user)
-    ndb.put_multi(to_put)
+    ndb.put_multi_async(to_put)
 
   @staticmethod
   def create(owner, name, users=None, pic=None):

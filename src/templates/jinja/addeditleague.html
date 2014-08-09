@@ -10,26 +10,26 @@
   <p class="intro">Fill in the details and hit save.</p>
 
   {% if success %}
-    <div class="alert alert-success">You have successfully saved your league.</div>
+    <div class="alert alert-success">You have successfully {% if league %}edited{% else %}created{% endif %} your league.</div>
   {% endif %} 
 
   <form class="form clearfix" id="league-form" action="" method="post" enctype="multipart/form-data">
 
-    <div class="form-group{% if errors and errors.name %} has-error{% endif %}">
+    <div class="form-group{% if form.name.errors %} has-error{% endif %}">
       <label for="name" class="control-label">
         <span>Name</span>
-        {% if errors and errors.name %}<span class="pull-right">{{ errors.name }}</span>{% endif %}
+        {% if form.name.errors %}<span class="pull-right">{{ form.name.errors }}</span>{% endif %}
       </label>
-      <input class="form-control" id="name" name="name" type="text" value="{{ league_name }}" />
+      {{ form.name(class_='form-control') }}
       <p class="help-block">The name of your league.</p>
     </div>
 
     <div class="form-group">
       <label for="pic" class="control-label">Picture</label>
-      {% if league_pic %}
-        <p>{{ league_pic }}</p>
+      {% if league and league.pic %}
+        <p><img src="{{ league.pic_url(size=100) }}" alt=""></p>
       {% endif %} 
-      <input class="form-control" id="pic" name="pic" type="file" />
+      {{ form.pic(class_='form-control') }}
       <p class="help-block">Max size 1MB</p>
     </div>
 
@@ -55,7 +55,8 @@
     </div>
 
     <div class="form-group">
-      <input type="hidden" name="users" id="users" class="user-keys">
+      {{ form.users(class_='user-keys') }}
+      {{ form.id }}
       <button type="submit" class="btn btn-primary pull-right">Save league</button>
     </div>
   </form>
@@ -96,7 +97,7 @@
     var leagueForm = new ffc.league.Form(userModel, ac);
 
     leagueForm.decorate(formElement);
-    userModel.addUserData({{ to_json(users) }});
+    userModel.addUserData({{ form.users_json() }});
   })();
 </script>
 {% endblock %}

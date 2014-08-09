@@ -210,88 +210,36 @@ class AddEditLeague(baserequesthandler.RequestHandler):
   """Add / Edit leagues."""
 
   @auth.login_required
-  def get(self, league=None):
+  def get(self, league_id=None):
 
-    owner_key = self.current_user.key
-    if league:
-      league = models.League.get_by_id(int(league))
-      owner_key = league.owner
-
-    user_keys = league.users if league else []
-
-    if owner_key in user_keys:
-      user_keys.remove(owner_key)
+    if league_id:
+      league = models.League.get_by_id(int(league_id))
+      form = forms.League(obj=league, id=league.key.id())
+    else:
+      league = None
+      form = forms.League()
 
     self.render_template('addeditleague.html', {
-      'league_name': league.name if league else '',
-      'league_pic': league.pic_url() if league else '',
-      'users': ndb.get_multi(user_keys) if league else [],
-      'to_json': models.User.to_league_users_json
+        'form': form,
+        'league': league,
+        'success': self.request.get('success')
     })
 
+
   @auth.login_required
-  def post(self, league=None):
-
-    owner_key = self.current_user.key
-    if league:
-      league = models.League.get_by_id(int(league))
-      owner_key = league.owner
-
-    post_dict = self.request.POST
-    errors = {}
-    user_keys = []
-    pic = None
-    league_name = league.name if league else ''
-
-    if post_dict['name']:
-      if models.League.get_by_name(models.slugify(post_dict['name'])):
-        errors['name'] = 'League name already exists.'
-      league_name = post_dict['name']
+  def post(self, league_id=None):
+    if league_id:
+      league = models.League.get_by_id(int(league_id))
     else:
-      errors['name'] = 'No league name specified.'
+      league = models.League()
 
-    if post_dict['users']:
-      user_key_names = post_dict['users'].split(',')
-      user_keys = [ndb.Key('User', int(key)) for key in user_key_names]
-    elif league:
-      user_keys = list(league.users)
+    form = forms.League(formdata=self.request.POST, obj=league)
 
-    if post_dict['pic']:
-      img_file = self.request.get('pic')
-      file_name = files.blobstore.create(mime_type='application/octet-stream')
-      with files.open(file_name, 'a') as f:
-        f.write(img_file)
-      files.finalize(file_name)
-      pic = files.blobstore.get_blob_key(file_name)
-
-    if owner_key in user_keys:
-      user_keys.remove(owner_key)
-
-    if not len(errors.keys()):
-      if league:
-        league.name = league_name
-        league.pic = pic or league.pic
-        league.put()
-        league.add_users(
-          ndb.get_multi(list(set(user_keys) - set(league.users))))
-        league.remove_users(
-          ndb.get_multi(list(set(league.users) - set(user_keys))))
-      else:
-        league = models.League.create(
-          self.current_user,
-          league_name,
-          users=ndb.get_multi(user_keys),
-          pic=pic)
-        league.put()
-
-    if len(errors.keys()) == 0:
-      return self.redirect(
-        self.uri_for('leader-board-league', league=league.name_slug))
+    if form.validate():
+      form.populate_obj(league)
+      self.redirect('/league/edit/%d?success=true' % league.put().id())
     else:
       self.render_template('addeditleague.html', {
-        'league_name': league_name,
-        'league_pic': league and league.pic_url(),
-        'users': ndb.get_multi(user_keys),
-        'errors': errors,
-        'to_json': models.User.to_league_users_json
+          'form': form,
+          'league': league
       })
