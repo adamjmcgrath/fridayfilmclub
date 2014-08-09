@@ -47,7 +47,11 @@
             </a>
             <ul class="dropdown-menu" id="leagues-dropdown-menu" role="menu">
               {% for league in user.get_leagues() %}
-              <li><a href="#"><span class="glyphicon glyphicon-list-alt"></span> {{ league.name }}</a></li>
+              <li>
+                <a href="{{ uri_for('league', league_id=league.name_slug) }}">
+                  <span class="glyphicon glyphicon-list-alt"></span> {{ league.name }}
+                </a>
+              </li>
               {% else %}
               <li role="presentation" class="dropdown-header">You have no leagues</li>
               {% endfor %}

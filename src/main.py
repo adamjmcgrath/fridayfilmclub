@@ -66,6 +66,7 @@ routes = [
     webapp2.Route(r'/league/add', views.AddEditLeague, name='add-league'),
     webapp2.Route(r'/league/edit/<league_id:.*>', views.AddEditLeague,
         name='edit-league'),
+    webapp2.Route(r'/league/<league_id:.*>', views.League, name='league'),
 
     # Realtime handlers.
     webapp2.Route(r'/_ah/channel/connected/', realtime.Connect),

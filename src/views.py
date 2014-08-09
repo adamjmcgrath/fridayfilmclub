@@ -206,6 +206,17 @@ class HowItWorks(baserequesthandler.RequestHandler):
     self.render_template('how.html', {})
 
 
+class League(baserequesthandler.RequestHandler):
+
+  @auth.login_required
+  def get(self, league_id=None):
+    league = models.League.get_by_name(league_id)
+
+    self.render_template('league.html', {
+        'league': league
+    })
+
+
 class AddEditLeague(baserequesthandler.RequestHandler):
   """Add / Edit leagues."""
 
