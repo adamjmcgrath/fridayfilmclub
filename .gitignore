@@ -3,4 +3,5 @@
 data/backups
 src/static/js
 src/static/css
+src/javascript/template
 vendors
