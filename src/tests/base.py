@@ -82,16 +82,16 @@ class TestCase(unittest.TestCase):
                             expect_errors=True,
                             params=params)
 
-  def post(self, url, user=None, params=None):
-    headers = {}
+  def post(self, url, user=None, headers=None, **kwargs):
+    headers = headers or {}
 
     if user:
-      headers = self.log_user_in(user)
+      headers = dict(headers.items() + self.log_user_in(user).items())
 
     return self.testapp.post(url,
                              headers=headers,
                              expect_errors=True,
-                             params=params)
+                             **kwargs)
 
 
 if __name__ == '__main__':

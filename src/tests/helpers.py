@@ -34,6 +34,7 @@ def question(clues=[],
 
 
 def user(is_admin=None,
+         is_trusted_tester=None,
          pic=None,
          name='John Smith',
          username='johnsmith',
