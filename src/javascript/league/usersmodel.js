@@ -61,6 +61,18 @@ ffc.league.UsersModel.prototype.addUser = function(user, silent) {
 
 
 /**
+ * @param {string} userName
+ * @param {boolean} silent Suppress the event.
+ */
+ffc.league.UsersModel.prototype.removeUser = function(userName, silent) {
+  this.users_.removeNode(userName);
+  if (!silent) {
+    this.publish(ffc.league.UsersModel.USERS_UPDATED_EVENT);
+  }
+};
+
+
+/**
  * @return {goog.ds.SortedNodeList}
  */
 ffc.league.UsersModel.prototype.getUsers = function() {

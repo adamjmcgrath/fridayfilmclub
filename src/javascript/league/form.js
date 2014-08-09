@@ -90,6 +90,9 @@ ffc.league.Form.prototype.enterDocument = function() {
 
   goog.events.listen(this.addUserBtn_, goog.events.EventType.CLICK,
       this.onAddUserClick_, false, this);
+
+  goog.events.listen(this.userTable_, goog.events.EventType.CLICK,
+      this.onTableClick_, true, this);
 };
 
 
@@ -115,6 +118,19 @@ ffc.league.Form.prototype.onAddUserClick_ = function(e) {
     this.autoComplete_.getTarget().value = '';
   }
 };
+
+
+/**
+ * Handle a click on the table.
+ */
+ffc.league.Form.prototype.onTableClick_ = function(e) {
+  var btn = goog.dom.getAncestorByClass(e.target, 'btn');
+  if (btn) {
+    var user = goog.dom.dataset.get(btn, 'removeUser');
+    this.usersModel_.removeUser(user);
+  }
+};
+
 
 
 /**
