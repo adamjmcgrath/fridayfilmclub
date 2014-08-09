@@ -19,6 +19,7 @@ from webapp2_extras.appengine.auth.models import User as AuthUser
 from google.appengine.api import files, images, urlfetch
 from google.appengine.ext import ndb
 
+from api import leaderboard
 import settings
 
 RE_SPECIAL_CHARS_ = re.compile(r'[^a-zA-Z0-9 ]')
@@ -190,9 +191,7 @@ class User(AuthUser):
   leagues = ndb.KeyProperty(repeated=True)
 
   def get_leagues(self):
-    leagues = ndb.get_multi(self.leagues)
-    # Put leagues you own at the top.
-    return sorted(leagues, lambda l: 1 if l.owner == self.key else -1)
+    return ndb.get_multi(self.leagues)
 
   def pic_url(self, size=None, crop=False):
     """Gets the image's url."""
@@ -402,10 +401,14 @@ class League(ndb.Model):
         logging.info(key)
         user.leagues.remove(key)
         to_put.append(user)
+
     ndb.put_multi(to_put)
+    leaderboard.delete_leaderboard_cache()
 
   def _post_put_hook(self, future):
-    existing_users = User.query(User.leagues == self.key)
+    existing_users = User.query(
+      User.leagues == self.key,
+      default_options=ndb.QueryOptions(keys_only=True))
     to_add = ndb.get_multi(list(set(self.users) - set(existing_users)))
     to_remove = ndb.get_multi(list(set(existing_users) - set(self.users)))
     owner = self.owner.get()
@@ -415,9 +418,11 @@ class League(ndb.Model):
       if self.key not in user.leagues:
         user.leagues.append(self.key)
         to_put.append(user)
+        to_put.append(LeagueUser.from_league_user(self.key, user.key))
 
     if self.key not in owner.leagues:
       owner.leagues.append(self.key)
+      to_put.append(LeagueUser.from_league_user(self.key, owner.key))
       to_put.append(owner)
 
     for user in to_remove:
@@ -426,6 +431,7 @@ class League(ndb.Model):
         to_put.append(user)
 
     ndb.put_multi(to_put)
+    leaderboard.delete_leaderboard_cache()
 
   @staticmethod
   def get_by_name(name):

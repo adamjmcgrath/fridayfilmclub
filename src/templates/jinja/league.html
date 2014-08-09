@@ -6,10 +6,44 @@
 
 {% block content %}
 <div class="container">
-  <h1>{{ league.name }}</h1>
-  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+  <div class="clearfix">
+    {% if league.pic %}
+      <img src="{{ league.pic_url(size=200) }}" class="league-image pull-right">
+    {% endif %}
+    <h1>{{ league.name }}</h1>
+    {% set owner = league.owner.get() %}
+    <p>
+      <b>Created:</b> {{ league.created }}<br>
+      <b>Owner:</b> <a href="{{ uri_for('profile', None, owner.username) }}">{{ owner.username }}</a><br>
+      <b>Members:</b> {{ league.users|length }}
+    </p>
   </div>
+  <div class="leaderboard-container" id="leaderboard-container-all"></div>
+</div>
 {% endblock %}
 
 {% block body_base %}
+  <script src="/_ah/channel/jsapi"></script>
+  <script>var appengine = goog.appengine;</script>
+{% if debug %}
+  <script src="/closure-library/closure/goog/base.js"></script>
+  <script src="/static/js/deps.js"></script>
+  <script>
+    goog.require('goog.ui.Component');
+    goog.require('ffc.leaderboard.LeaderBoard');
+    goog.require('ffc.leaderboard.LeaderBoardToggler');
+  </script>
+{% else %}
+  <script src="/static/js/leaderboard.js"></script>
+{% endif %}
+<script>
+  (function() {
+    var league = '{{ league.key.id() }}';
+    var lbm = new ffc.leaderboard.LeaderBoardModel('league',
+        ffc.api.Client.getInstance(), league);
+    var lb = new ffc.leaderboard.LeaderBoard(lbm, true);
+    lb.render(document.getElementById('leaderboard-container-all'));
+  })();
+</script>
 {% endblock %}
+

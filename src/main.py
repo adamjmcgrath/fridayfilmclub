@@ -45,10 +45,8 @@ routes = [
 
     # Api.
     webapp2.Route(r'/api/question/<:.+>', question.Question, 'api-question'),
-    webapp2.Route(r'/api/leaderboard/<:(week|all|\d+)>',
+    webapp2.Route(r'/api/leaderboard/<:(week|all|league|\d+)>',
         leaderboard.LeaderBoard, 'api-leaderboard'),
-    webapp2.Route(r'/api/leaderboard/<:league>/<league_id:.*>',
-        leaderboard.LeaderBoard, 'api-leaderboard-league'),
     webapp2.Route(r'/api/contacts/<:.+>', contacts.Contacts, 'api-contacts'),
     webapp2.Route(r'/api/users/<:.+>', users.UserSearch, 'api-users'),
     webapp2.Route(r'/suggest/<:.+>', suggest.SuggestHandler, name='suggest'),
