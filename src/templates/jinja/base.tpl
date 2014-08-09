@@ -11,8 +11,11 @@
 
       <div class="navbar" id="title-bar">
           <div class="container">
-            <a class="navbar-brand custom-font-header" href="{{ uri_for('home') }}">Friday Film Club</a>
-            <div id="sign-in" class="hidden-xs">
+            <a class="navbar-brand custom-font-header" href="{{ uri_for('home') }}">
+              <span class="hidden-xs">Friday Film Club</span>
+              <span class="visible-xs">FFC</span>
+            </a>
+            <div id="sign-in">
               {% if logged_in %}
                 <span>
                   <b>{{user.name}}</b><br>
@@ -26,26 +29,22 @@
           </div>
       </div>
 
-      <div class="navbar navbar-default visible-xs">
-        <a class="navbar-brand custom-font-header" href="{{ uri_for('home') }}">FFC</a>
-        <div id="sign-in">
-          {% if logged_in %}
-            <span>
-              <b>{{user.name}}</b><br>
-              <a href="{{ uri_for('settings') }}">settings</a> - <a href="{{ uri_for('logout') }}">logout</a>
-            </span>
-            <img src="{{user.pic_url()}}" width="30" height="30">
-          {% else %}
-            <a href="{{ uri_for('login') }}" class="btn btn-primary">Login</a>
-          {% endif %}
-        </div>
-      </div>
-
       <div class="navbar navbar-default" id="nav">
         <ul class="nav navbar-nav">
-          <li{% if page_id == 'how-page' %} class="active"{% endif %}><a href="/how">How to play</a></li>
-          <li{% if page_id == 'archive-page' %} class="active"{% endif %}><a href="/archive">Old questions</a></li>
-          <li{% if page_id == 'leaderboard-page' %} class="active"{% endif %}><a href="/leaderboard">Leaderboard</a></li>
+          <li{% if page_id == 'how-page' %} class="active"{% endif %}>
+            <a href="{{ uri_for('how-it-works') }}">How to play</a>
+          </li>
+          <li{% if page_id == 'archive-page' %} class="active"{% endif %}>
+            <a href="{{ uri_for('archive') }}">Archive</a>
+          </li>
+          <li{% if page_id == 'leaderboard-page' %} class="active"{% endif %}>
+            <a href="{{ uri_for('leader-board') }}">Leaderboard</a>
+          </li>
+          {% if logged_in %}
+          <li{% if page_id == 'leaderboard-page' %} class="active"{% endif %}>
+            <a href="{{ uri_for('login') }}">Leagues</a>
+          </li>
+          {% endif %}
         </ul>
       </div>
     {% endblock %}
