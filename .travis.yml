@@ -10,7 +10,8 @@ python:
 
 env:
   global:
-    secure: DXLD6sujA+tvf/xaBf83k53HTtypoqviz+V45CMuUu4JhjVMt2xKOM0j+IZS4FivhMVX+RO4cZAy6+72m/jofsMRMoqPVWZgZmGNnF8uLtSw9zFfbQGpe27f7d+1BFclLL7x0r1gdDx3p4yxNXjzoGGGT/4N//IVaVPNJf/MTFs=
+    - secure: DXLD6sujA+tvf/xaBf83k53HTtypoqviz+V45CMuUu4JhjVMt2xKOM0j+IZS4FivhMVX+RO4cZAy6+72m/jofsMRMoqPVWZgZmGNnF8uLtSw9zFfbQGpe27f7d+1BFclLL7x0r1gdDx3p4yxNXjzoGGGT/4N//IVaVPNJf/MTFs=
+    - APPENGINE_SDK=google_appengine_1.9.8
 
 install:
   - pip install -r requirements.txt
@@ -19,8 +20,8 @@ install:
 before_script:
   # app engine
   - mkdir -p vendors
-  - wget https://commondatastorage.googleapis.com/appengine-sdks/featured/google_appengine_1.9.6.zip  -nv
-  - unzip -qd vendors google_appengine_1.9.6.zip
+  - wget https://commondatastorage.googleapis.com/appengine-sdks/featured/$APPENGINE_SDK.zip  -nv
+  - unzip -qd vendors $APPENGINE_SDK.zip
   - export APPENGINE_SRC=vendors/google_appengine
 
   # closure compiler
