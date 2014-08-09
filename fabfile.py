@@ -80,7 +80,7 @@ def compile_css():
 
 
 def compile_js(part=None):
-  parts = ['deps', 'template', 'quiz', 'leaderboard', 'settings']
+  parts = ['template', 'deps', 'quiz', 'leaderboard', 'settings']
   local('mkdir -p src/static/js/')
   if part:
     parts = [part]
