@@ -18,7 +18,7 @@
     <div class="form-group{% if form.name.errors %} has-error{% endif %}">
       <label for="name" class="control-label">
         <span>Name</span>
-        {% if form.name.errors %}<span class="pull-right">{{ form.name.errors }}</span>{% endif %}
+        {% if form.name.errors %}<span class="pull-right">{{ form.name.errors|join(', ') }}</span>{% endif %}
       </label>
       {{ form.name(class_='form-control') }}
       <p class="help-block">The name of your league.</p>
@@ -81,10 +81,9 @@
     goog.require('ffc.league.Form');
   </script>
 {% else %}
-{#  <script src="/static/js/settings.js"></script>#}
+  <script src="/static/js/leagueform.js"></script>
 {% endif %}
 <script>
-
   (function() {
     var userSearch = document.getElementById('usersearch');
     var formElement = document.getElementById('league-form');
