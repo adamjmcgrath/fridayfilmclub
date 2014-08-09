@@ -41,16 +41,24 @@
             <a href="{{ uri_for('leader-board') }}">Leaderboard</a>
           </li>
           {% if logged_in %}
-          <li{% if page_id == 'leaderboard-page' %} class="active"{% endif %}>
-            <a href="{{ uri_for('login') }}">
-              Leagues
-              <ul class="leagues-menu">
-                {% for league in user.get_leagues() %}
-                <li><a href="#">{{ league.name }}</a></li>
-                {% endfor %}
-                <li><a href="{{ uri_for('add-league') }}">Create a league</a></li>
-              </ul>
+          <li class="dropdown">
+            <a href="#" id="leagues-dropdown" class="dropdown-toggle" data-toggle="dropdown">
+              Leagues <span class="caret"></span>
             </a>
+            <ul class="dropdown-menu" id="leagues-dropdown-menu" role="menu">
+              {% for league in user.get_leagues() %}
+              <li><a href="#"><span class="glyphicon glyphicon-list-alt"></span> {{ league.name }}</a></li>
+              {% else %}
+              <li role="presentation" class="dropdown-header">You have no leagues</li>
+              {% endfor %}
+              <li class="divider"></li>
+              <li>
+                <a href="{{ uri_for('add-league') }}">
+                  <span class="glyphicon glyphicon-plus"></span>
+                  Create a league
+                </a>
+              </li>
+            </ul>
           </li>
           {% endif %}
         </ul>
@@ -73,6 +81,23 @@
     </div>
     {% block body_base %}{% endblock %}
     <script>
+      (function() {
+        var dropDown = document.getElementById('leagues-dropdown');
+        var dropDownMenu = document.getElementById('leagues-dropdown-menu');
+        if (!dropDown) { return false; }
+        var handleClick = function(e) {
+          var classList = dropDown.classList;
+          if (classList.contains('open')) {
+            classList.remove('open');
+            dropDownMenu.style.display = 'none';
+          } else if (e.target == dropDown) {
+            classList.add('open');
+            dropDownMenu.style.display = 'block';
+          }
+        };
+        document.body.addEventListener('click', handleClick, true);
+      })();
+
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)

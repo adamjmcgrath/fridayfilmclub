@@ -190,7 +190,9 @@ class User(AuthUser):
   leagues = ndb.KeyProperty(repeated=True)
 
   def get_leagues(self):
-    return ndb.get_multi(self.leagues)
+    leagues = ndb.get_multi(self.leagues)
+    # Put leagues you own at the top.
+    return sorted(leagues, lambda l: 1 if l.owner == self.key else -1)
 
   def pic_url(self, size=None, crop=False):
     """Gets the image's url."""

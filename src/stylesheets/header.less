@@ -42,6 +42,7 @@ h1 {
     margin-bottom: -5px;
 
     a {
+      display: block;
       padding: 15px 30px;
     }
   }
@@ -97,7 +98,7 @@ h1 {
 
   #nav .navbar-nav a {
     font-size: 13px;
-    padding: 10px;
+    padding: 10px 8px;
   }
 
   .btn-xs {
@@ -107,6 +108,34 @@ h1 {
 
 }
 
+.dropdown-menu {
+  right: 0;
+  left: inherit;
+  padding: 0;
+  position: absolute !important;
+
+  li {
+    background: #F8F8F8;
+  }
+
+  li a,
+  .dropdown-header {
+    padding: 8px 10px !important;
+
+    .glyphicon {
+      font-size: 13px;
+      margin-right: 2px;
+    }
+  }
+
+  .dropdown-header {
+    text-align: center;
+  }
+
+  .divider {
+    margin: 0;
+  }
+}
 
 @media (max-width:430px) {
   .hide-xs {
