@@ -13,9 +13,13 @@
     <h1>{{ league.name }}</h1>
     {% set owner = league.owner.get() %}
     <p>
-      <b>Created:</b> {{ league.created }}<br>
-      <b>Owner:</b> <a href="{{ uri_for('profile', None, owner.username) }}">{{ owner.username }}</a><br>
-      <b>Members:</b> {{ league.users|length }}
+      <b>Created:</b>
+      {{ league.created }}<br>
+      <b>Owner:</b>
+      <a href="{{ uri_for('profile', None, owner.username) }}">{{ owner.username }}</a>
+      (<a href="{{ uri_for('edit-league', league_id=league.key.id()) }}">edit</a>)<br>
+      <b>Members:</b>
+      {{ league.users|length }}
     </p>
   </div>
   <div class="leaderboard-container" id="leaderboard-container-all"></div>

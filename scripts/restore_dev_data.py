@@ -27,6 +27,7 @@ def fix_appengine_path():
     os.path.join(APPENGINE_PATH, 'lib', 'webob-1.1.1'),
     os.path.join(APPENGINE_PATH, 'lib', 'yaml', 'lib'),
     os.path.join(APPENGINE_PATH, 'lib', 'webapp2-2.5.2'),
+    os.path.join(APPENGINE_PATH, 'lib', 'jinja2-2.6'),
   ]
   sys.path.extend(EXTRA_PATHS)
 

@@ -405,8 +405,6 @@ class League(ndb.Model):
     to_put = []
     for user in users:
       if key in user.leagues:
-        logging.info('KEY')
-        logging.info(key)
         user.leagues.remove(key)
         to_put.append(user)
 
@@ -434,7 +432,7 @@ class League(ndb.Model):
       to_put.append(owner)
 
     for user in to_remove:
-      if self.key in user.leagues and not user == self.owner:
+      if self.key in user.leagues and not user == owner:
         user.leagues.remove(self.key)
         to_put.append(user)
 
