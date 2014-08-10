@@ -135,9 +135,44 @@ h1 {
   .divider {
     margin: 0;
   }
+
+  &:after, &:before {
+      bottom: 100%;
+      left: 50%;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      position: absolute;
+      pointer-events: none;
+  }
+
+  &:after {
+    border-color: rgba(245, 245, 245, 0);
+    border-bottom-color: #F5F5F5;
+    border-width: 10px;
+    margin-left: 1px;
+  }
+
+  &:before {
+    border-color: rgba(204, 204, 204, 0);
+    border-bottom-color: #ccc;
+    border-width: 11px;
+    margin-left: 0;
+  }
+
 }
 
 @media (max-width:430px) {
+
+  .dropdown-menu:before {
+    margin-left: 24px;
+  }
+
+  .dropdown-menu:after {
+    margin-left: 25px;
+  }
+
   .hide-xs {
     display: none;
   }
