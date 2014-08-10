@@ -420,6 +420,7 @@ class League(ndb.Model):
     owner = self.owner.get()
 
     to_put = []
+    to_delete = []
     for user in to_add:
       if self.key not in user.leagues:
         user.leagues.append(self.key)
@@ -428,15 +429,17 @@ class League(ndb.Model):
 
     if self.key not in owner.leagues:
       owner.leagues.append(self.key)
-      to_put.append(LeagueUser.from_league_user(self.key, owner.key))
       to_put.append(owner)
+      to_put.append(LeagueUser.from_league_user(self.key, owner.key))
 
     for user in to_remove:
       if self.key in user.leagues and not user == owner:
         user.leagues.remove(self.key)
         to_put.append(user)
+        to_delete.append(LeagueUser.key_from_league_user(self.key, user.key))
 
     ndb.put_multi(to_put)
+    ndb.delete_multi(to_delete)
     leaderboard.delete_leaderboard_cache()
 
   @staticmethod
@@ -460,6 +463,11 @@ class LeagueUser(ndb.Model):
         league_user_id,
         league=league_key,
         user=user_key)
+
+  @staticmethod
+  def key_from_league_user(league_key, user_key):
+    league_user_id = '%s-%s' % (league_key.id(), user_key.id())
+    return ndb.Key('LeagueUser', league_user_id)
 
   @staticmethod
   def to_leaderboard_json(league_user):
