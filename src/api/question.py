@@ -47,7 +47,7 @@ def update_users_league_scores(user_key, score, num_guesses):
   to_put = []
   user = user_key.get()
   for league_key in user.leagues:
-    user_league = models.UserLeague.from_league_key_user(league_key, user_key)
+    user_league = models.LeagueUser.from_league_user(league_key, user_key)
     user_league.score += score
     user_league.clues += num_guesses - 1
     user_league.questions_answered += 1

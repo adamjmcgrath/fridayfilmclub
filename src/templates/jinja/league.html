@@ -19,7 +19,7 @@
       <a href="{{ uri_for('profile', None, owner.username) }}">{{ owner.username }}</a>
       (<a href="{{ uri_for('edit-league', league_id=league.key.id()) }}">edit</a>)<br>
       <b>Members:</b>
-      {{ league.users|length }}
+      {{ league.users|length + 1 }}
     </p>
   </div>
   <div class="leaderboard-container" id="leaderboard-container-all"></div>
