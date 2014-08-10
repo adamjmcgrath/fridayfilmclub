@@ -15,10 +15,15 @@ from fabric.api import *
 from fabric.colors import green, red, yellow
 import datetime
 import re
+import yaml
 
 APPENGINE_PATH = os.environ['APPENGINE_SRC']
 APPENGINE_DEV_APPSERVER =  os.path.join(APPENGINE_PATH, 'dev_appserver.py')
 APPENGINE_APP_CFG =  os.path.join(APPENGINE_PATH, 'appcfg.py')
+VERSIONS = {
+  'devel': 'dev',
+  'master': 'prod',
+}
 
 env.gae_email = 'adamjmcgrath@gmail.com'
 env.gae_src = './src'
@@ -42,15 +47,21 @@ fix_appengine_path()
 def deploy(branch='devel', token='', pull_request='false'):
   if pull_request != 'false':
     return
+  version = VERSIONS.get(branch)
 
-  version = branch
-  if branch == 'master':
-    version = 'prod'
-  if branch == 'devel':
-    version = 'dev'
+  if version:
+    local('python %s -V %s --oauth2 --oauth2_refresh_token=%s update %s' %
+          (APPENGINE_APP_CFG, version, token, env.gae_src))
 
-  local('python %s -V %s --oauth2 --oauth2_refresh_token=%s update %s' %
-        (APPENGINE_APP_CFG, version, token, env.gae_src))
+
+def set_app_version(branch):
+  version = VERSIONS.get(branch)
+  if version:
+    yaml_path = 'src/app.yaml'
+    app_yaml = yaml.load(open(yaml_path))
+    app_yaml['version'] = version
+    with open(yaml_path, 'w') as app_yaml_file:
+      app_yaml_file.write(yaml.dump(app_yaml, default_flow_style=False))
 
 
 def shell():

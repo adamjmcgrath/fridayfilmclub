@@ -1,5 +1,5 @@
 application: ffcapp
-version: 1
+version: default
 runtime: python27
 api_version: 1
 threadsafe: true
