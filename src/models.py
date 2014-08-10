@@ -21,6 +21,7 @@ from google.appengine.ext import ndb
 
 from api import leaderboard
 import settings
+import usersearch
 
 RE_SPECIAL_CHARS_ = re.compile(r'[^a-zA-Z0-9 ]')
 
@@ -189,6 +190,13 @@ class User(AuthUser):
   invited_by = ndb.KeyProperty(kind='User')
   joined = ndb.DateTimeProperty(auto_now_add=True)
   leagues = ndb.KeyProperty(repeated=True)
+
+  def _post_put_hook(self, future):
+    usersearch.index_users(self)
+
+  @classmethod
+  def _post_delete_hook(cls, key, future):
+    usersearch.remove_users(key)
 
   def get_leagues(self):
     return ndb.get_multi(self.leagues)

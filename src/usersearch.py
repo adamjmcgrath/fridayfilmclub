@@ -61,3 +61,13 @@ def index_users(users):
 
   index.put(docs)
 
+
+def remove_users(user_keys):
+  """Removes users from the user search index
+
+  Args:
+    user_keys (ndb.Key[]) Max 200 keys.
+  """
+  if type(user_keys) is not list: user_keys = [user_keys]
+  index = search.Index(name='users')
+  index.delete([str(key.id()) for key in user_keys])
