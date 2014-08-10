@@ -14,8 +14,8 @@ import unittest
 
 from google.appengine.api import memcache
 
-from api import leaderboard
 import base
+from api import leaderboard
 import helpers
 import models
 
