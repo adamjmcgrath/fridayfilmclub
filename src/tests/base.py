@@ -7,6 +7,7 @@
 
 __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 
+import json
 import os
 import sys
 import unittest
@@ -92,6 +93,10 @@ class TestCase(unittest.TestCase):
                              headers=headers,
                              expect_errors=True,
                              params=params)
+
+  def get_json(self, *args, **kwargs):
+    response = self.get(*args, **kwargs)
+    return json.loads(response.body)
 
 
 if __name__ == '__main__':

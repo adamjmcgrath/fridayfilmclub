@@ -125,7 +125,7 @@ class LeaderBoard(baserequesthandler.RequestHandler):
       league_key = ndb.Key('League', int(league_id))
       league_user_query = models.LeagueUser.query(
         models.LeagueUser.league == league_key,
-      )
+      ).order(sort_prop)
       count = league_user_query.count()
       users_dicts = league_user_query.map(
         models.LeagueUser.to_leaderboard_json, options=qo)

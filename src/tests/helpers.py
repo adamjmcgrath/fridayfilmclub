@@ -18,7 +18,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../lib'))
 import models
 
 
-def question(clues=[],
+def question(clues=None,
              answer_id='foo',
              answer_title='bar',
              answer_year=2000,
@@ -30,6 +30,7 @@ def question(clues=[],
              season=None,
              week=1,
              answered=0):
+  clues = clues or []
   return models.Question(**locals())
 
 
@@ -54,12 +55,13 @@ def user_question(complete=False,
                   completed=None,
                   correct=False,
                   created=None,
-                  guesses=[],
+                  guesses=None,
                   question=None,
                   score=None,
                   user=None,
                   user_is_admin=False,
                   user_is_anonymous=False):
+  guesses = guesses or []
   return models.UserQuestion(**locals())
 
 
@@ -70,6 +72,23 @@ def user_season(score=None,
                 user_is_admin=None,
                 questions_answered=None):
   return models.UserSeason(**locals())
+
+
+def league(name='Foo',
+           owner=None,
+           users=None,
+           created=None):
+  users = users or []
+  return models.League(**locals())
+
+
+def league_user(created=None,
+                user=None,
+                league=None,
+                score=None,
+                clues=None,
+                questions_answered=None):
+  return models.LeagueUser(**locals())
 
 
 def anonymous_user(user_id=None):
