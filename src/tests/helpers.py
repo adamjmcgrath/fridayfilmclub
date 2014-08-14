@@ -47,7 +47,9 @@ def user(is_admin=None,
          overall_clues=0,
          questions_answered=0,
          invited_by=None,
-         joined=None):
+         joined=None,
+         leagues=None):
+  leagues = leagues or []
   return models.User(**locals())
 
 
@@ -82,7 +84,8 @@ def league(name='Foo',
   return models.League(**locals())
 
 
-def league_user(created=None,
+def league_user(id=None,
+                created=None,
                 user=None,
                 league=None,
                 score=None,

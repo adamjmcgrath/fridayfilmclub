@@ -13,6 +13,7 @@ import mock
 import unittest
 
 import base
+from api import question as question_api
 import helpers
 import models
 
@@ -214,6 +215,41 @@ class ApiTestCase(base.TestCase):
 
     self.assertEquals(response['score'], 20000 - 2000 - (60 * 60))
 
+  def testUpdateQuestion(self):
+    question = helpers.question(answered=5)
+    question_api.update_question(question)
+    self.assertEqual(question.answered, 6)
+
+  def testUpdateUserScore(self):
+    user = helpers.user(
+      overall_score=10,
+      overall_clues=10,
+      questions_answered=10,
+    )
+    question_api.update_users_score(user, 5, 5)
+    self.assertEqual(user.overall_score, 15)
+    self.assertEqual(user.overall_clues, 14)
+    self.assertEqual(user.questions_answered, 11)
+
+  def testUpdateUsersLeagueScore(self):
+    user = helpers.user()
+    user_key = user.put()
+    league = helpers.league(owner=user_key)
+    league_key = league.put()
+    user.leagues = [league_key]
+    user.put()
+    league_user_id = '%s-%s' % (league_key.id(), user_key.id())
+    league_user = helpers.league_user(id=league_user_id,
+                                      user=user_key,
+                                      league=league_key,
+                                      score=5,
+                                      clues=5,
+                                      questions_answered=1)
+    league_user.put()
+    question_api.update_users_league_scores(user_key, 5, 5)
+    self.assertEqual(league_user.score, 10)
+    self.assertEqual(league_user.clues, 9)
+    self.assertEqual(league_user.questions_answered, 2)
 
 if __name__ == '__main__':
     unittest.main()
