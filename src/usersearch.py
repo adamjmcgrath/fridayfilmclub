@@ -49,14 +49,14 @@ def index_users(users):
     docs.append(search.Document(doc_id=str(user.key.id()),
                                 language='en',
                                 fields=[
-                                    search.TextField(name='username',
-                                                     value=user.username),
-                                    search.TextField(name='name',
-                                                     value=user.name),
-                                    search.TextField(name='tokens',
-                                                     value=tokens),
-                                    search.TextField(name='pic',
-                                                     value=user.pic_url())
+                                    search.TextField(
+                                      name='username', value=user.username),
+                                    search.TextField(
+                                      name='name', value=user.name),
+                                    search.TextField(
+                                      name='tokens', value=tokens),
+                                    search.TextField(
+                                      name='pic', value=user.pic_url(size=20))
                                 ]))
 
   index.put(docs)

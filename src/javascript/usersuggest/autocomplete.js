@@ -33,7 +33,11 @@ ffc.usersuggest.AutoComplete = function(el, parent) {
   // The renderer calls row.render(node, token) for each row.
   var customRenderer = {};
   customRenderer.renderRow = function(row, token, node) {
-    soy.renderElement(node, ffc.template.user.searchResult, row.data);
+    soy.renderElement(node, ffc.template.user.searchResult, {
+      pic: row.data['pic'],
+      username: row.data['username'],
+      name: row.data['name']
+    });
     row.data.toString = function() {
       return row.data['username'];
     };
