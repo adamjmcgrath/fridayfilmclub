@@ -10,7 +10,8 @@ import logging
 from operator import itemgetter
 import uuid
 
-from google.appengine.api import channel, users
+from google.appengine.api import channel, files, users
+from google.appengine.ext import ndb
 
 import auth
 import baserequesthandler
@@ -170,9 +171,12 @@ class Archive(baserequesthandler.RequestHandler):
 class LeaderBoard(baserequesthandler.RequestHandler):
   """The leader board / results page."""
 
-  def get(self):
+  def get(self, league=None):
+    if league:
+      league = models.League.get_by_name(league)
     self.render_template('leaderboard.html', {
       'channel_token': channel.create_channel(str(uuid.uuid4())),
+      'league': league,
       'season': models.Season.get_current()
     })
 
@@ -180,11 +184,18 @@ class LeaderBoard(baserequesthandler.RequestHandler):
 class HighScores(baserequesthandler.RequestHandler):
   """The high scores page."""
 
-  def get(self):
-    user_questions = models.UserQuestion.query().order(
-        -models.UserQuestion.score).fetch(10)
+  def get(self, league=None):
+    user_question_query = models.UserQuestion.query().order(
+        -models.UserQuestion.score)
+
+    if league:
+      league = models.League.get_by_name(league)
+      user_question_query = user_question_query.filter(
+          models.UserQuestion.user.IN(league.users))
+
     self.render_template('highscores.html', {
-      'user_questions': user_questions
+      'user_questions': user_question_query.fetch(10),
+      'league': league
     })
 
 
@@ -193,3 +204,53 @@ class HowItWorks(baserequesthandler.RequestHandler):
 
   def get(self):
     self.render_template('how.html', {})
+
+
+class League(baserequesthandler.RequestHandler):
+
+  @auth.login_required
+  def get(self, league_id=None):
+    league = models.League.get_by_name(league_id)
+
+    self.render_template('league.html', {
+        'league': league
+    })
+
+
+class AddEditLeague(baserequesthandler.RequestHandler):
+  """Add / Edit leagues."""
+
+  @auth.login_required
+  def get(self, league_id=None):
+
+    if league_id:
+      league = models.League.get_by_id(int(league_id))
+      form = forms.League(obj=league, id=league.key.id())
+    else:
+      league = None
+      form = forms.League()
+
+    self.render_template('addeditleague.html', {
+        'form': form,
+        'league': league,
+        'success': self.request.get('success')
+    })
+
+
+  @auth.login_required
+  def post(self, league_id=None):
+    if league_id:
+      league = models.League.get_by_id(int(league_id))
+    else:
+      league = models.League()
+
+    form = forms.League(formdata=self.request.POST, obj=league)
+
+    if form.validate():
+      form.populate_obj(league)
+      self.redirect('/league/edit/%d?success=true' % league.put().id())
+    else:
+      self.render_template('addeditleague.html', {
+          'form': form,
+          'league': league
+      })

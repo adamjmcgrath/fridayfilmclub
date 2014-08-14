@@ -3,3 +3,4 @@ nose
 NoseGAE
 WebTest
 mock
+pyyaml

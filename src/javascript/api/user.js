@@ -20,18 +20,22 @@ goog.require('goog.i18n.NumberFormat.Format');
  * @param {number} score
  * @param {number} clues
  * @param {number} answered
+ * @param {string} realName
+ * @param {string} key
  * @constructor
  */
-ffc.api.User = function(name, pic, score, clues, answered) {
+ffc.api.User = function(name, pic, score, clues, answered, realName, key) {
     this.floatFormatter_ = new goog.i18n.NumberFormat('#,##0.0');
     this.intFormatter_ = new goog.i18n.NumberFormat(
       goog.i18n.NumberFormat.Format.DECIMAL);
     goog.base(this, {
       'name': name,
+      'realName': realName,
       'pic': pic,
       'score': score,
       'clues': clues,
-      'answered': answered
+      'answered': answered,
+      'key': key
     }, name);
 };
 goog.inherits(ffc.api.User, goog.ds.FastDataNode);
@@ -108,4 +112,36 @@ ffc.api.User.buildFromRealtimeMessage = function(obj, score, clues, answered) {
                               answered);
   user.setChildNode('live', true);
   return user;
+};
+
+
+/**
+ * @param {Object} obj Response from the REST api.
+ * @return {ffc.api.User} A user instance.
+ */
+ffc.api.User.buildFromUserSearch = function(obj) {
+  var user = new ffc.api.User(obj['username'],
+                              obj['pic'],
+                              null,
+                              null,
+                              null,
+                              obj['name'],
+                              obj['key']);
+  user.setChildNode('live', true);
+  return user;
+};
+
+
+/**
+ * @param {Object} obj User object from inline json on league page.
+ * @return {ffc.api.User} A user instance.
+ */
+ffc.api.User.buildFromUserData = function(obj) {
+  return new ffc.api.User(obj['username'],
+                          obj['pic'],
+                          null,
+                          null,
+                          null,
+                          obj['name'],
+                          obj['key']);
 };
