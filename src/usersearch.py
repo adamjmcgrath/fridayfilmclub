@@ -19,16 +19,16 @@ def tokenize(phrase):
   Return:
     list The list of tokens.
   """
-  a = []
+  a = set()
   for word in phrase.lower().split():
     j = 1
     while True:
       for i in range(len(word) - j + 1):
-        a.append(word[i:i + j])
+        a.add(word[i:i + j])
       if j == len(word):
         break
       j += 1
-  return a
+  return list(a)
 
 
 def index_users(users):

@@ -34,7 +34,8 @@ def question(clues=None,
   return models.Question(**locals())
 
 
-def user(is_admin=None,
+def user(id=None,
+         is_admin=None,
          pic=None,
          name='John Smith',
          username='johnsmith',
