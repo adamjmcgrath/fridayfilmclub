@@ -36,6 +36,7 @@ def question(clues=None,
 
 def user(id=None,
          is_admin=None,
+         is_trusted_tester=None,
          pic=None,
          name='John Smith',
          username='johnsmith',
