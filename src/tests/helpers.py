@@ -105,5 +105,5 @@ def clues(clue_list):
   return map(lambda c: clue(text=c).put(), clue_list)
 
 
-def season(number=1):
+def season(id=None, number=1):
   return models.Season(**locals())

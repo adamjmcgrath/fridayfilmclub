@@ -36,6 +36,8 @@ class ApiTestCase(base.TestCase):
     self.league_key = league.put()
     # Remove the league user object that the league creates for the owner.
     models.LeagueUser.query().get().key.delete()
+    season = helpers.season(id='5', number=5)
+    season_key = season.put()
     for i in range(20):
       to_put.append(helpers.user(
           is_admin=False,
@@ -55,6 +57,13 @@ class ApiTestCase(base.TestCase):
           user=user_key,
           score=i,
           clues=i,
+          questions_answered=i))
+      to_put.append(helpers.user_season(
+          score=i,
+          clues=i,
+          season=season_key,
+          user=user_key,
+          user_is_admin=False,
           questions_answered=i))
     ndb.put_multi(to_put)
 
@@ -133,6 +142,23 @@ class ApiTestCase(base.TestCase):
     self.assertEqual(response['next'], 19)
     self.assertEqual(len(response['users']), 20)
     self.assertEqual(response['users'][0]['clues'], 0)
+
+  def testLeagueLeaderboardCache(self):
+    response = self.get(
+        '/api/leaderboard/league?league=%d&dir=asc&sort=score' %
+        self.league_key.id())
+    self.assertEqual(
+      memcache.get('league:0:20:score:asc:%d' % self.league_key.id()),
+      response.body)
+
+  def testSeasonLeaderboard(self):
+    response = self.get_json(
+      '/api/leaderboard/5?dir=dsc&sort=answered&offset=18&limit=2')
+    self.assertEqual(response['count'], 20)
+    self.assertEqual(response['prev'], 2)
+    self.assertEqual(response['next'], 0)
+    self.assertEqual(len(response['users']), 2)
+    self.assertEqual(response['users'][0]['answered'], 1)
 
 
 if __name__ == '__main__':
