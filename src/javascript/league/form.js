@@ -31,6 +31,8 @@ ffc.league.Form = function(usersModel, autoComplete) {
 };
 goog.inherits(ffc.league.Form, goog.ui.Component);
 goog.exportSymbol('ffc.league.Form', ffc.league.Form);
+goog.exportProperty(ffc.league.Form.prototype, 'decorate',
+    ffc.league.Form.prototype.decorate);
 
 
 /**
