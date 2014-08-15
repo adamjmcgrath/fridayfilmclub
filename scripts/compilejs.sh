@@ -105,7 +105,7 @@ if [ $1 == "settings" ] || [ $1 == "all" ]; then
 fi
 
 if [ $1 == "leagueform" ] || [ $1 == "all" ]; then
-  echo 'Building settings'
+  echo 'Building leagueform'
   python $CLOSURE_BUILDER_PATH \
     --root=$CLOSURE_LIB \
     --root=$CLOSURE_TEMPLATES \

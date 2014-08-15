@@ -28,8 +28,8 @@ ffc.league.UsersModel = function() {
 };
 goog.inherits(ffc.league.UsersModel, goog.pubsub.PubSub);
 goog.exportSymbol('ffc.league.UsersModel', ffc.league.UsersModel);
-goog.exportProperty(ffc.leaderboard.UsersModel.prototype, 'addUserData',
-    ffc.leaderboard.UsersModel.prototype.addUserData);
+goog.exportProperty(ffc.league.UsersModel.prototype, 'addUserData',
+    ffc.league.UsersModel.prototype.addUserData);
 
 
 /**
