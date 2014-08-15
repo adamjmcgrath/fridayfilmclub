@@ -10,6 +10,7 @@ goog.require('ffc.template.league');
 goog.require('ffc.api.User');
 
 
+goog.require('goog.array');
 goog.require('goog.events');
 goog.require('goog.ui.Component');
 goog.require('goog.ui.ac.AutoComplete.EventType');
@@ -139,8 +140,15 @@ ffc.league.Form.prototype.onTableClick_ = function(e) {
  * Populate the user table.
  */
 ffc.league.Form.prototype.fillUserTable_ = function() {
-  soy.renderElement(this.userTable_, ffc.template.league.userTable,
-        this.usersModel_.getUsers());
+  var users = {
+    users: goog.array.map(this.usersModel_.getUsers().list_, function(user) {
+      return {
+        name: user.getDataName(),
+        pic: user.getChildNodeValue('pic')
+      }
+    })
+  };
+  soy.renderElement(this.userTable_, ffc.template.league.userTable, users);
 };
 
 

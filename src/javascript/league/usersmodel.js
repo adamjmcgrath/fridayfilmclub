@@ -28,8 +28,6 @@ ffc.league.UsersModel = function() {
 };
 goog.inherits(ffc.league.UsersModel, goog.pubsub.PubSub);
 goog.exportSymbol('ffc.league.UsersModel', ffc.league.UsersModel);
-goog.exportProperty(ffc.league.UsersModel.prototype, 'addUserData',
-    ffc.league.UsersModel.prototype.addUserData);
 
 
 /**
@@ -48,6 +46,8 @@ ffc.league.UsersModel.prototype.addUserData = function(data) {
 
   this.publish(ffc.league.UsersModel.USERS_UPDATED_EVENT);
 };
+goog.exportProperty(ffc.league.UsersModel.prototype, 'addUserData',
+    ffc.league.UsersModel.prototype.addUserData);
 
 
 /**
