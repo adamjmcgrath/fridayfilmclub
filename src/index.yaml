@@ -15,6 +15,39 @@ indexes:
   - name: __key__
     direction: desc
 
+- kind: LeagueUser
+  properties:
+  - name: league
+  - name: clues
+
+- kind: LeagueUser
+  properties:
+  - name: league
+  - name: clues
+    direction: desc
+
+- kind: LeagueUser
+  properties:
+  - name: league
+  - name: questions_answered
+
+- kind: LeagueUser
+  properties:
+  - name: league
+  - name: questions_answered
+    direction: desc
+
+- kind: LeagueUser
+  properties:
+  - name: league
+  - name: score
+
+- kind: LeagueUser
+  properties:
+  - name: league
+  - name: score
+    direction: desc
+
 - kind: Question
   properties:
   - name: __key__
