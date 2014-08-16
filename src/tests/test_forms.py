@@ -147,6 +147,14 @@ class FormsTestCase(base.TestCase):
     field_list.process({})
     self.assertListEqual(field_list.data, [])
 
+  def testWeekField(self):
+    field = forms.WeekField().bind(Form(), 'a')
+    obj = mock.MagicMock()
+    field.data = '1'
+    field.populate_obj(obj, 'foo')
+    self.assertEqual(obj.week, 1)
+    self.assertEqual(forms.WeekField.week_choices()[0], ('1', '1'))
+
 
 if __name__ == '__main__':
     unittest.main()
