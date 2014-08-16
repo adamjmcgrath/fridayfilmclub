@@ -78,11 +78,13 @@ def user_season(score=None,
   return models.UserSeason(**locals())
 
 
-def league(name='Foo',
+def league(id=None,
+           name='Foo',
            owner=None,
            users=None,
            created=None):
   users = users or []
+  owner = owner or user().put()
   return models.League(**locals())
 
 
