@@ -100,6 +100,6 @@ def compile_js(part=None):
 
 
 def run_tests():
-  local('nosetests --nocapture --with-coverage --cover-inclusive --with-gae '
-        '--gae-application=src/ --where=src/tests/ --gae-lib-root=%s' %
-        APPENGINE_PATH)
+  local('nosetests --cover-html --nocapture --with-coverage --cover-inclusive '
+        '--with-gae --gae-application=src/ --where=src/tests/ --gae-lib-root=%s'
+        % APPENGINE_PATH)

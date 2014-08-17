@@ -7,3 +7,4 @@ src/javascript/template
 vendors
 scripts/_*
 .coverage
+src/tests/cover
