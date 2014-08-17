@@ -7,10 +7,12 @@
 
 __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 
+import json
 import mock
 import unittest
 import webapp2
 
+from google.appengine.ext import ndb
 from wtforms import validators, Form, FormField
 
 import base
@@ -154,6 +156,24 @@ class FormsTestCase(base.TestCase):
     field.populate_obj(obj, 'foo')
     self.assertEqual(obj.week, 1)
     self.assertEqual(forms.WeekField.week_choices()[0], ('1', '1'))
+
+  def testLeagueUserFieldProcess(self):
+    field = forms.LeagueUsersField().bind(Form(), 'a')
+    keys = [ndb.Key('User', 1), ndb.Key('User', 2)]
+    field.process_data(keys)
+    self.assertEqual(field.data, '1,2')
+
+  def testLeagueUserPopulate(self):
+    field = forms.LeagueUsersField().bind(Form(), 'a')
+    obj = mock.MagicMock()
+    field.data = '1,2'
+    field.populate_obj(obj, 'foo')
+    self.assertListEqual(obj.users, [ndb.Key('User', 1), ndb.Key('User', 2)])
+
+  def testLeagueFormUsersJson(self):
+    form = forms.League()
+    form.users.data = str(helpers.user(username='foo').put().id())
+    self.assertEqual(json.loads(form.users_json())[0]['username'], 'foo')
 
 
 if __name__ == '__main__':
