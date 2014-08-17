@@ -6,3 +6,4 @@ src/static/css
 src/javascript/template
 vendors
 scripts/_*
+.coverage

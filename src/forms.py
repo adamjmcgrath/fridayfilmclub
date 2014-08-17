@@ -198,14 +198,6 @@ class LeagueUsersField(fields.HiddenField):
     entity.users = [ndb.Key('User', int(key)) for key in self.data.split(',')]
 
 
-class LeagueIdField(fields.HiddenField):
-  """Sets the current user on the entity."""
-
-  def process_data(self, data):
-    """Populate the current user for the owner field."""
-    super(LeagueIdField, self).process_data(data)
-
-
 class Question(Form):
   """A question form."""
   answer = FilmField('Film', [validators.Required()], id='film')
@@ -232,7 +224,7 @@ class User(Form):
 
 
 class League(Form):
-  id = LeagueIdField('')
+  id = fields.HiddenField('')
   name = fields.TextField('', [validate_league_name])
   pic = ImageField('pic')
   owner = CurrentUserField()
