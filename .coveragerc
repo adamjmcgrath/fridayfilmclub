@@ -12,3 +12,4 @@ omit =
   *simpleauth*
   *wtforms*
   *encodings*
+  *httplib2*
