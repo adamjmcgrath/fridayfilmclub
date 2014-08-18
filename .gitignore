@@ -8,3 +8,4 @@ vendors
 scripts/_*
 .coverage
 src/tests/cover
+src/lib
