@@ -23,16 +23,16 @@ handlers:
   static_dir: static
 
 - url: /closure-library
-  static_dir: closure-library
+  static_dir: /lib/closure-library
 
 - url: /closure-templates
-  static_dir: closure-templates
+  static_dir: lib/closure-templates
 
 - url: /javascript
   static_dir: javascript
 
 - url: /growjs
-  static_dir: growjs
+  static_dir: lib/growjs
 
 - url: /(.*\.less)
   mime_type: text/css
@@ -40,13 +40,13 @@ handlers:
   upload: (.*\.less)
 
 - url: /less
-  static_dir: less
+  static_dir: lib/less
 
 - url: /twitter-bootstrap
-  static_dir: twitter-bootstrap
+  static_dir: lib/twitter-bootstrap
 
 - url: /fonts
-  static_dir: twitter-bootstrap/fonts
+  static_dir: lib/twitter-bootstrap/fonts
 
 - url: /stylesheets
   static_dir: stylesheets
@@ -78,21 +78,18 @@ skip_files:
 - ^(.*/)?.*~
 - ^(.*/)?.*\.py[co]
 - ^(.*/)?\..*
-- ^(.*/)?closure-library/closure/bin/.*
-- ^(.*/)?closure-library/.*\.data$
-- ^(.*/)?closure-templates/buildtools/.*
-- ^(.*/)?closure-templates/examples/.*
-- ^(.*/)?closure-templates/java/.*
-- ^(.*/)?closure-templates/javadoc-complete/.*
-- ^(.*/)?closure-templates/javadoc-lite/.*
-- ^(.*/)?closure-templates/javascript/examples/.*
-- ^(.*/)?closure-templates/testdata/.*
-- ^(.*/)?closure-templates/.*txt
-- ^(.*/)?closure-templates/.*xml
-- ^(.*/)?less/bin/.*
-- ^(.*/)?less/build/build.yml
-- ^(.*/)?less/test/browser/test-runner-template.tmpl
-- ^(.*/)?twitter-bootstrap/_config.yml$
+- ^(.*/)?lib/closure-library/closure/bin/.*
+- ^(.*/)?lib/closure-library/.*\.data$
+- ^(.*/)?lib/closure-templates/buildtools/.*
+- ^(.*/)?lib/closure-templates/examples/.*
+- ^(.*/)?lib/closure-templates/java/.*
+- ^(.*/)?lib/closure-templates/javadoc-complete/.*
+- ^(.*/)?lib/closure-templates/javadoc-lite/.*
+- ^(.*/)?lib/closure-templates/javascript/examples/.*
+- ^(.*/)?lib/closure-templates/testdata/.*
+- ^(.*/)?lib/closure-templates/.*txt
+- ^(.*/)?lib/closure-templates/.*xml
+- ^(.*/)?lib/twitter-bootstrap/_config.yml$
 - ^(.*/)?README(.md)?$
 - ^(.*/)?AUTHORS$
 - ^(.*/)?CONTRIBUTING(.md)?$

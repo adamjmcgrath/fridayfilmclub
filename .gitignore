@@ -9,3 +9,4 @@ scripts/_*
 .coverage
 src/tests/cover
 src/lib
+npm-debug.log
