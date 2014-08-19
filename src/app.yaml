@@ -23,33 +23,30 @@ handlers:
   static_dir: static
 
 - url: /closure-library
-  static_dir: closure-library
+  static_dir: lib/closure-library
 
 - url: /closure-templates
-  static_dir: closure-templates
+  static_dir: lib/closure-templates
 
 - url: /javascript
   static_dir: javascript
 
 - url: /growjs
-  static_dir: growjs
-
-- url: /(.*\.less)
-  mime_type: text/css
-  static_files: \1
-  upload: (.*\.less)
+  static_dir: lib/growjs
 
 - url: /less
-  static_dir: less
+  static_dir: lib/less
 
-- url: /twitter-bootstrap
-  static_dir: twitter-bootstrap
+- url: /lib/twitter
+  static_dir: lib/twitter
+  mime_type: text/css
 
 - url: /fonts
-  static_dir: twitter-bootstrap/fonts
+  static_dir: lib/twitter/fonts
 
 - url: /stylesheets
   static_dir: stylesheets
+  mime_type: text/css
   
 - url: /admin/?.*
   script: main.app
@@ -78,21 +75,18 @@ skip_files:
 - ^(.*/)?.*~
 - ^(.*/)?.*\.py[co]
 - ^(.*/)?\..*
-- ^(.*/)?closure-library/closure/bin/.*
-- ^(.*/)?closure-library/.*\.data$
-- ^(.*/)?closure-templates/buildtools/.*
-- ^(.*/)?closure-templates/examples/.*
-- ^(.*/)?closure-templates/java/.*
-- ^(.*/)?closure-templates/javadoc-complete/.*
-- ^(.*/)?closure-templates/javadoc-lite/.*
-- ^(.*/)?closure-templates/javascript/examples/.*
-- ^(.*/)?closure-templates/testdata/.*
-- ^(.*/)?closure-templates/.*txt
-- ^(.*/)?closure-templates/.*xml
-- ^(.*/)?less/bin/.*
-- ^(.*/)?less/build/build.yml
-- ^(.*/)?less/test/browser/test-runner-template.tmpl
-- ^(.*/)?twitter-bootstrap/_config.yml$
+- ^(.*/)?lib/closure-library/closure/bin/.*
+- ^(.*/)?lib/closure-library/.*\.data$
+- ^(.*/)?lib/closure-templates/buildtools/.*
+- ^(.*/)?lib/closure-templates/examples/.*
+- ^(.*/)?lib/closure-templates/java/.*
+- ^(.*/)?lib/closure-templates/javadoc-complete/.*
+- ^(.*/)?lib/closure-templates/javadoc-lite/.*
+- ^(.*/)?lib/closure-templates/javascript/examples/.*
+- ^(.*/)?lib/closure-templates/testdata/.*
+- ^(.*/)?lib/closure-templates/.*txt
+- ^(.*/)?lib/closure-templates/.*xml
+- ^(.*/)?lib/twitter/_config.yml$
 - ^(.*/)?README(.md)?$
 - ^(.*/)?AUTHORS$
 - ^(.*/)?CONTRIBUTING(.md)?$

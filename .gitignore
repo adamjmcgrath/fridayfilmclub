@@ -8,3 +8,6 @@ vendors
 scripts/_*
 .coverage
 src/tests/cover
+src/lib
+npm-debug.log
+node_modules
