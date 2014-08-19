@@ -4,8 +4,8 @@
 #
 # Tools for compiling JavaScript using the Closure Compilers.
 
-CLOSURE_LIB=./src/closure-library
-CLOSURE_TEMPLATES=./src/closure-templates/javascript
+CLOSURE_LIB=./src/lib/closure-library
+CLOSURE_TEMPLATES=./src/lib/closure-templates/javascript
 CLOSURE_SRC=$CLOSURE_LIB/closure
 CLOSURE_BUILDER_PATH=$CLOSURE_LIB/closure/bin/build/closurebuilder.py
 CLOSURE_DEPSWRITER_PATH=$CLOSURE_LIB/closure/bin/build/depswriter.py
@@ -21,7 +21,7 @@ USER_SUGGEST_SOURCE=$FFC_SOURCE/usersuggest
 LEADERBOARD_SOURCE=$FFC_SOURCE/leaderboard
 SUGGEST_SOURCE=$FFC_SOURCE/suggest
 TEMPLATE_SOURCE=$FFC_SOURCE/template
-GROW_SOURCE=$FFC_PATH/growjs
+GROW_SOURCE=$FFC_PATH/lib/growjs
 FFC_QUIZ_JS_OUTPUT=$FFC_PATH/static/js/quiz.js
 FFC_LEADERBOARD_JS_OUTPUT=$FFC_PATH/static/js/leaderboard.js
 FFC_SETTINGS_JS_OUTPUT=$FFC_PATH/static/js/settings.js
@@ -34,8 +34,8 @@ if [ $1 == "deps" ] || [ $1 == "all" ]; then
   echo 'Building deps'
   python $CLOSURE_DEPSWRITER_PATH \
     --root_with_prefix="$FFC_SOURCE ../../../javascript/"\
-    --root_with_prefix="$CLOSURE_TEMPLATES ../../../closure-templates/javascript/"\
-    --root_with_prefix="$GROW_SOURCE ../../../growjs/"\
+    --root_with_prefix="$CLOSURE_TEMPLATES ../../../lib/closure-templates/javascript/"\
+    --root_with_prefix="$GROW_SOURCE ../../../lib/growjs/"\
     > $FFC_DEPS_OUTPUT
   echo 'Written deps to '$FFC_DEPS_OUTPUT
 fi

@@ -23,7 +23,7 @@ handlers:
   static_dir: static
 
 - url: /closure-library
-  static_dir: /lib/closure-library
+  static_dir: lib/closure-library
 
 - url: /closure-templates
   static_dir: lib/closure-templates
@@ -34,22 +34,19 @@ handlers:
 - url: /growjs
   static_dir: lib/growjs
 
-- url: /(.*\.less)
-  mime_type: text/css
-  static_files: \1
-  upload: (.*\.less)
-
 - url: /less
   static_dir: lib/less
 
 - url: /twitter-bootstrap
-  static_dir: lib/twitter-bootstrap
+  static_dir: lib/twitter
+  mime_type: text/css
 
 - url: /fonts
-  static_dir: lib/twitter-bootstrap/fonts
+  static_dir: lib/twitter/fonts
 
 - url: /stylesheets
   static_dir: stylesheets
+  mime_type: text/css
   
 - url: /admin/?.*
   script: main.app
@@ -89,7 +86,7 @@ skip_files:
 - ^(.*/)?lib/closure-templates/testdata/.*
 - ^(.*/)?lib/closure-templates/.*txt
 - ^(.*/)?lib/closure-templates/.*xml
-- ^(.*/)?lib/twitter-bootstrap/_config.yml$
+- ^(.*/)?lib/twitter/_config.yml$
 - ^(.*/)?README(.md)?$
 - ^(.*/)?AUTHORS$
 - ^(.*/)?CONTRIBUTING(.md)?$
