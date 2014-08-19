@@ -37,7 +37,7 @@ handlers:
 - url: /less
   static_dir: lib/less
 
-- url: /twitter-bootstrap
+- url: /lib/twitter
   static_dir: lib/twitter
   mime_type: text/css
 
