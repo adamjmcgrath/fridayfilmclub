@@ -10,3 +10,4 @@ scripts/_*
 src/tests/cover
 src/lib
 npm-debug.log
+node_modules
