@@ -6,6 +6,6 @@
     "closure-templates": "google/closure-templates#8ece726724f668bc80015e8371fc6feeaef1a47c",
     "growjs": "adamjmcgrath/growjs#9ba19f2926748f59233dd90fbbca0d60d86b2698",
     "less": "1.7.4",
-    "twitter": "3.2.0"
+    "twitter": "3.1.1"
 	}
 }

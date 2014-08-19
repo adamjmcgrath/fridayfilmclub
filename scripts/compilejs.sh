@@ -34,8 +34,8 @@ if [ $1 == "deps" ] || [ $1 == "all" ]; then
   echo 'Building deps'
   python $CLOSURE_DEPSWRITER_PATH \
     --root_with_prefix="$FFC_SOURCE ../../../javascript/"\
-    --root_with_prefix="$CLOSURE_TEMPLATES ../../../lib/closure-templates/javascript/"\
-    --root_with_prefix="$GROW_SOURCE ../../../lib/growjs/"\
+    --root_with_prefix="$CLOSURE_TEMPLATES ../../../closure-templates/javascript/"\
+    --root_with_prefix="$GROW_SOURCE ../../../growjs/"\
     > $FFC_DEPS_OUTPUT
   echo 'Written deps to '$FFC_DEPS_OUTPUT
 fi
