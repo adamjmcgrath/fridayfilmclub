@@ -12,6 +12,8 @@ goog.require('ffc.api.User');
 
 goog.require('goog.array');
 goog.require('goog.events');
+goog.require('goog.events.KeyCodes');
+goog.require('goog.events.KeyHandler.EventType');
 goog.require('goog.ui.Component');
 goog.require('goog.ui.ac.AutoComplete.EventType');
 
@@ -26,6 +28,13 @@ goog.require('soy');
  */
 ffc.league.Form = function(usersModel, autoComplete) {
   goog.base(this);
+
+  /**
+   * Event handler for this object.
+   * @type {goog.events.EventHandler}
+   * @private
+   */
+  this.eh_ = this.getHandler();
 
   this.usersModel_ = usersModel;
   this.autoComplete_ = autoComplete;
@@ -72,6 +81,7 @@ ffc.league.Form.prototype.decorateInternal = function(el) {
   this.addUserBtn_ = this.getElementByClass('add-user');
   this.userTable_ = this.getElementByClass('league-users');
   this.userKeysField_ = this.getElementByClass('user-keys');
+  this.searchInput_ = this.dom_.getElementByClass('usersearch');
 };
 
 
@@ -84,18 +94,30 @@ ffc.league.Form.prototype.enterDocument = function() {
   this.usersModel_.subscribe(ffc.league.UsersModel.USERS_UPDATED_EVENT,
       this.fillUserTable_, this);
 
-  goog.events.listen(this.autoComplete_,
+  this.eh_.listen(this.autoComplete_,
       goog.ui.ac.AutoComplete.EventType.UPDATE, this.onUserSelected_, false,
       this);
 
-  goog.events.listen(this.getElement(), goog.events.EventType.SUBMIT,
+  this.eh_.listen(this.getElement(), goog.events.EventType.SUBMIT,
       this.onFormSubmitted_, false, this);
 
-  goog.events.listen(this.addUserBtn_, goog.events.EventType.CLICK,
+  this.eh_.listen(this.addUserBtn_, goog.events.EventType.CLICK,
       this.onAddUserClick_, false, this);
 
-  goog.events.listen(this.userTable_, goog.events.EventType.CLICK,
+  this.eh_.listen(this.userTable_, goog.events.EventType.CLICK,
       this.onTableClick_, true, this);
+
+  this.eh_.listen(this.autoComplete_,
+      ffc.usersuggest.AutoComplete.INPUT_ENTER_PRESSED_EVENT,
+      this.onAutoCompleteEnterPressed_);
+};
+
+
+/**
+ * Handle a user pressing enter in the user search input.
+ */
+ffc.league.Form.prototype.onAutoCompleteEnterPressed_ = function() {
+  this.addUser();
 };
 
 
@@ -109,10 +131,19 @@ ffc.league.Form.prototype.onUserSelected_ = function(e) {
 
 
 /**
- * Set selected user state.
+ * Handle the add user button click.
  * @param {goog.events.Event} e
  */
 ffc.league.Form.prototype.onAddUserClick_ = function(e) {
+  this.addUser();
+};
+
+
+/**
+ * Add a user to the grid.
+ * @param {goog.events.Event} e
+ */
+ffc.league.Form.prototype.addUser = function(e) {
   var users = this.usersModel_.getUsers();
   if (this.selectedUser_ &&
       !goog.isDef(users.indexOf(this.selectedUser_['name']))) {

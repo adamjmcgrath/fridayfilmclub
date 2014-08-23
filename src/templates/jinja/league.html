@@ -7,20 +7,34 @@
 {% block content %}
 <div class="container">
   <div class="clearfix">
+    <div class="col-md-{% if league.pic %}9{% else %}12{% endif %}">
+      {% set owner = league.owner.get() %}
+      <h1>
+        {{ league.name }}
+        {% if user == owner %}
+          <a href="{{ uri_for('edit-league', league_id=league.key.id()) }}" class="btn btn-primary btn-sm pull-right">Edit your league</a>
+        {% endif %}
+      </h1>
+      <div class="list-group">
+        <div class="list-group-item">
+          <h5 class="list-group-item-heading">Created:</h5>
+          <p class="list-group-item-text">{{ league.created }}</p>
+        </div>
+        <div class="list-group-item">
+          <h5 class="list-group-item-heading">Owner:</h5>
+          <p class="list-group-item-text"><a href="{{ uri_for('profile', None, owner.username) }}">{{ owner.username }}</a></p>
+        </div>
+        <div class="list-group-item">
+          <h5 class="list-group-item-heading">Members:</h5>
+          <p class="list-group-item-text">{{ league.users|length + 1 }}</p>
+        </div>
+      </div>
+    </div>
     {% if league.pic %}
+    <div class="col-md-3">
       <img src="{{ league.pic_url(size=200) }}" class="league-image pull-right">
+    </div>
     {% endif %}
-    <h1>{{ league.name }}</h1>
-    {% set owner = league.owner.get() %}
-    <p>
-      <b>Created:</b>
-      {{ league.created }}<br>
-      <b>Owner:</b>
-      <a href="{{ uri_for('profile', None, owner.username) }}">{{ owner.username }}</a>
-      (<a href="{{ uri_for('edit-league', league_id=league.key.id()) }}">edit</a>)<br>
-      <b>Members:</b>
-      {{ league.users|length + 1 }}
-    </p>
   </div>
   <div class="leaderboard-container" id="leaderboard-container-all"></div>
 </div>

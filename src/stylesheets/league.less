@@ -39,12 +39,12 @@
       }
 
     }
-    .ac-row:hover {
+    .ac-row:hover, .ac-row.active {
       background: #f2f2f2;
     }
   }
 
-  .league-users {
+  .league-users, .owner-row {
     td.empty {
       font-style: italic;
       color: @grayLight;
@@ -74,13 +74,36 @@
     }
   }
 
+  .league-users {
+    border-top: none !important;
+  }
+
+  .league-users > tr > td {
+    background-color: #f9f9f9;
+  }
+
+   .league-users > tr:nth-child(odd) > td {
+    background: none;
+  }
+
+   .league-users > tr:hover > td {
+    background-color: #F5F5F5;
+  }
+
+
 }
 
 .league-image {
-  margin-top: 20px;
+  margin: 20px 0 20px 20px;
+  width: 100%;
 }
 
 #league-page {
+
+  h1 a.pull-right {
+    margin-top: 5px;
+  }
+
   .leaderboard-container {
     margin-top: 20px;
   }

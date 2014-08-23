@@ -36,7 +36,7 @@
     <div class="form-group">
       <label for="usersearch" class="control-label">Users</label>
       <div class="input-group">
-          <input type="text" class="form-control" id="usersearch" placeholder="Search for a user&hellip;">
+          <input type="text" class="form-control usersearch" id="usersearch" placeholder="Search for a user&hellip;" autocomplete="off">
           <span class="input-group-btn">
               <button type="button" class="btn btn-default add-user">Add user</button>
           </span>
@@ -49,8 +49,18 @@
         <tr>
           <th colspan="3">Users</th>
         </tr>
-        <tbody class="league-users">
+        <tbody class="owner-row">
+          <tr>
+            <td>
+              <img src="{{ user.pic_url(size=20) }}" alt="user.username" width="20" height="20">
+            </td>
+            <td>
+              <a href="/u/{{ user.username }}">{{ user.username }}</a>
+            </td>
+            <td></td>
+          </tr>
         </tbody>
+        <tbody class="league-users"></tbody>
       </table>
     </div>
 

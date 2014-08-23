@@ -230,6 +230,10 @@ class AddEditLeague(baserequesthandler.RequestHandler):
       league = None
       form = forms.League()
 
+    # Only the owner can edit a league.
+    if league and league.owner != self.current_user.key:
+      return self.error(401)
+
     self.render_template('addeditleague.html', {
         'form': form,
         'league': league,
@@ -243,6 +247,10 @@ class AddEditLeague(baserequesthandler.RequestHandler):
       league = models.League.get_by_id(int(league_id))
     else:
       league = models.League()
+
+    # Only the owner can edit a league.
+    if league and league.owner != self.current_user.key:
+      return self.error(401)
 
     form = forms.League(formdata=self.request.POST, obj=league)
 

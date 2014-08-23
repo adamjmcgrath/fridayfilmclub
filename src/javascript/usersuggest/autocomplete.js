@@ -9,8 +9,9 @@
 
 goog.provide('ffc.usersuggest.AutoComplete');
 
-goog.require('ffc.usersuggest.RemoteArrayMatcher');
 goog.require('ffc.template.user');
+goog.require('ffc.usersuggest.InputHandler');
+goog.require('ffc.usersuggest.RemoteArrayMatcher');
 
 goog.require('goog.array');
 goog.require('goog.dom');
@@ -61,7 +62,7 @@ ffc.usersuggest.AutoComplete = function(el, parent) {
   this.matcher_ = new ffc.usersuggest.RemoteArrayMatcher(
       ffc.usersuggest.AutoComplete.API_URL_);
 
-  var inputHandler = new goog.ui.ac.RichInputHandler(
+  var inputHandler = new ffc.usersuggest.InputHandler(
       null, null, false, 300);
 
   goog.ui.ac.AutoComplete.call(this, this.matcher_, this.renderer_,
@@ -75,7 +76,22 @@ goog.exportSymbol('ffc.usersuggest.AutoComplete', ffc.usersuggest.AutoComplete);
 
 
 /**
+ * Dispatch input enter pressed event.
+ */
+ffc.usersuggest.AutoComplete.prototype.inputEnterPressed = function() {
+  this.dispatchEvent(ffc.usersuggest.AutoComplete.INPUT_ENTER_PRESSED_EVENT);
+};
+
+
+/**
  * @type {string}
  * @private
  */
 ffc.usersuggest.AutoComplete.API_URL_ = '/api/users';
+
+
+/**
+ * Enter pressed event.
+ * @type {string}
+ */
+ffc.usersuggest.AutoComplete.INPUT_ENTER_PRESSED_EVENT = 'enterpressed';
