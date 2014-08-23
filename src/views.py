@@ -49,7 +49,7 @@ class Question(baserequesthandler.RequestHandler):
 
     # Only admins can view a question before it's posed,
     # only logged in users can view the current question.
-    if ((not question.posed and not users.is_current_user_admin()) or
+    if ((not question.posed and not users.is_current_user_admin() and not logged_in) or
        (question.is_current and not logged_in)):
       self.session['original_url'] = self.request.url
       return self.redirect('/login')
