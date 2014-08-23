@@ -82,6 +82,10 @@ def run_server(port='8080', clear_datastore=False, send_mail=True):
   local(command % (APPENGINE_DEV_APPSERVER, port, env.gae_src))
 
 
+def symlink_requirements():
+  local('gaenv --lib src/pylib --no-import')
+
+
 # Compile CSS/JS
 
 def compile_css():
