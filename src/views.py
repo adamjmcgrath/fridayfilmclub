@@ -249,7 +249,7 @@ class AddEditLeague(baserequesthandler.RequestHandler):
       league = models.League()
 
     # Only the owner can edit a league.
-    if league and league.owner != self.current_user.key:
+    if league_id and league.owner != self.current_user.key:
       return self.error(401)
 
     form = forms.League(formdata=self.request.POST, obj=league)
