@@ -13,5 +13,6 @@ FMJ_EMAIL_SHORT = 'fmj@fridayfilmclub.com'
 FMJ_EMAIL = 'Film Master Jack <%s>' % FMJ_EMAIL_SHORT
 ENVIRONMENT = ({
   'www.fridayfilmclub.com': 'prod',
+  'ffcapp.appspot.com': 'prod',
   'dev.ffcapp.appspot.com': 'staging',
 }).get(os.environ.get('HTTP_HOST'), 'local')
