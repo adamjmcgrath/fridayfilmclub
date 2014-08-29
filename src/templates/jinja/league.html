@@ -1,0 +1,67 @@
+{% extends "templates/jinja/base.tpl" %}
+
+{% set page_id = 'league-page' %}
+
+{% block page_id %}{{ page_id }}{% endblock page_id %}
+
+{% block content %}
+<div class="container">
+  <div class="clearfix">
+    <div class="col-md-{% if league.pic %}9{% else %}12{% endif %}">
+      {% set owner = league.owner.get() %}
+      <h1>
+        {{ league.name }}
+        {% if user == owner %}
+          <a href="{{ uri_for('edit-league', league_id=league.key.id()) }}" class="btn btn-primary btn-sm pull-right">Edit your league</a>
+        {% endif %}
+      </h1>
+      <div class="list-group">
+        <div class="list-group-item">
+          <h5 class="list-group-item-heading">Created:</h5>
+          <p class="list-group-item-text">{{ league.created }}</p>
+        </div>
+        <div class="list-group-item">
+          <h5 class="list-group-item-heading">Owner:</h5>
+          <p class="list-group-item-text"><a href="{{ uri_for('profile', None, owner.username) }}">{{ owner.username }}</a></p>
+        </div>
+        <div class="list-group-item">
+          <h5 class="list-group-item-heading">Members:</h5>
+          <p class="list-group-item-text">{{ league.users|length + 1 }}</p>
+        </div>
+      </div>
+    </div>
+    {% if league.pic %}
+    <div class="col-md-3">
+      <img src="{{ league.pic_url(size=200) }}" class="league-image pull-right">
+    </div>
+    {% endif %}
+  </div>
+  <div class="leaderboard-container" id="leaderboard-container-all"></div>
+</div>
+{% endblock %}
+
+{% block body_base %}
+  <script src="/_ah/channel/jsapi"></script>
+  <script>var appengine = goog.appengine;</script>
+{% if debug %}
+  <script src="/closure-library/closure/goog/base.js"></script>
+  <script src="/static/js/deps.js"></script>
+  <script>
+    goog.require('goog.ui.Component');
+    goog.require('ffc.leaderboard.LeaderBoard');
+    goog.require('ffc.leaderboard.LeaderBoardToggler');
+  </script>
+{% else %}
+  <script src="/static/js/leaderboard.js"></script>
+{% endif %}
+<script>
+  (function() {
+    var league = '{{ league.key.id() }}';
+    var lbm = new ffc.leaderboard.LeaderBoardModel('league',
+        ffc.api.Client.getInstance(), league);
+    var lb = new ffc.leaderboard.LeaderBoard(lbm, true);
+    lb.render(document.getElementById('leaderboard-container-all'));
+  })();
+</script>
+{% endblock %}
+

@@ -3,4 +3,12 @@
 data/backups
 src/static/js
 src/static/css
+src/javascript/template
 vendors
+scripts/_*
+.coverage
+src/tests/cover
+src/lib
+src/pylib
+npm-debug.log
+node_modules

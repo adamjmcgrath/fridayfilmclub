@@ -1,0 +1,15 @@
+{namespace ffc.template.user}
+
+
+/**
+ * User search result row.
+ * @param name
+ * @param pic
+ * @param username
+ */
+{template .searchResult}
+<span>
+  {if $pic}<img src="{$pic}">{/if}
+  <span class="name">{$username} ({$name})</span>
+</span>
+{/template}

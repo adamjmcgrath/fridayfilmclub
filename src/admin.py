@@ -47,8 +47,8 @@ class AddEditQuestion(baserequesthandler.RequestHandler):
   def get(self, key=None):
     if key:
       question_entity = ndb.Key('Question', int(key)).get()
-
       form = forms.Question(obj=question_entity)
+
     else:
       question_entity = None
       form = forms.Question()
@@ -75,8 +75,7 @@ class AddEditQuestion(baserequesthandler.RequestHandler):
     else:
       self.render_template('admin/addquestion.html', {
           'form': form,
-          'question': question_entity,
-          'debug': self.request.get('debug')
+          'question': question_entity
       })
 
 

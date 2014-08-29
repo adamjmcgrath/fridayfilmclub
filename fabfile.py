@@ -15,10 +15,15 @@ from fabric.api import *
 from fabric.colors import green, red, yellow
 import datetime
 import re
+import yaml
 
 APPENGINE_PATH = os.environ['APPENGINE_SRC']
 APPENGINE_DEV_APPSERVER =  os.path.join(APPENGINE_PATH, 'dev_appserver.py')
 APPENGINE_APP_CFG =  os.path.join(APPENGINE_PATH, 'appcfg.py')
+VERSIONS = {
+  'devel': 'dev',
+  'master': 'prod',
+}
 
 env.gae_email = 'adamjmcgrath@gmail.com'
 env.gae_src = './src'
@@ -42,15 +47,21 @@ fix_appengine_path()
 def deploy(branch='devel', token='', pull_request='false'):
   if pull_request != 'false':
     return
+  version = VERSIONS.get(branch)
 
-  version = branch
-  if branch == 'master':
-    version = 'prod'
-  if branch == 'devel':
-    version = 'dev'
+  if version:
+    local('python %s -V %s --oauth2 --oauth2_refresh_token=%s update %s' %
+          (APPENGINE_APP_CFG, version, token, env.gae_src))
 
-  local('python %s -V %s --oauth2 --oauth2_refresh_token=%s update %s' %
-        (APPENGINE_APP_CFG, version, token, env.gae_src))
+
+def set_app_version(branch):
+  version = VERSIONS.get(branch)
+  if version:
+    yaml_path = 'src/app.yaml'
+    app_yaml = yaml.load(open(yaml_path))
+    app_yaml['version'] = version
+    with open(yaml_path, 'w') as app_yaml_file:
+      app_yaml_file.write(yaml.dump(app_yaml, default_flow_style=False))
 
 
 def shell():
@@ -71,6 +82,10 @@ def run_server(port='8080', clear_datastore=False, send_mail=True):
   local(command % (APPENGINE_DEV_APPSERVER, port, env.gae_src))
 
 
+def symlink_requirements():
+  local('gaenv --lib src/pylib --no-import')
+
+
 # Compile CSS/JS
 
 def compile_css():
@@ -80,7 +95,7 @@ def compile_css():
 
 
 def compile_js(part=None):
-  parts = ['deps', 'template', 'quiz', 'leaderboard', 'settings']
+  parts = ['template', 'deps', 'quiz', 'leaderboard', 'settings', 'leagueform']
   local('mkdir -p src/static/js/')
   if part:
     parts = [part]
@@ -89,5 +104,6 @@ def compile_js(part=None):
 
 
 def run_tests():
-  local('nosetests --nocapture --with-gae --gae-application=src/ '
-        '--where=src/tests/ --gae-lib-root=%s' % APPENGINE_PATH)
+  local('nosetests --cover-html --nocapture --with-coverage --cover-inclusive '
+        '--with-gae --gae-application=src/ --where=src/tests/ --gae-lib-root=%s'
+        % APPENGINE_PATH)

@@ -4,8 +4,8 @@
 #
 # Tools for compiling JavaScript using the Closure Compilers.
 
-CLOSURE_LIB=./src/closure-library
-CLOSURE_TEMPLATES=./src/closure-templates/javascript
+CLOSURE_LIB=./src/lib/closure-library
+CLOSURE_TEMPLATES=./src/lib/closure-templates/javascript
 CLOSURE_SRC=$CLOSURE_LIB/closure
 CLOSURE_BUILDER_PATH=$CLOSURE_LIB/closure/bin/build/closurebuilder.py
 CLOSURE_DEPSWRITER_PATH=$CLOSURE_LIB/closure/bin/build/depswriter.py
@@ -16,13 +16,16 @@ FFC_PATH=./src
 FFC_SOURCE=$FFC_PATH/javascript
 API_SOURCE=$FFC_SOURCE/api
 QUIZ_SOURCE=$FFC_SOURCE/quiz
+LEAGUE_SOURCE=$FFC_SOURCE/league
+USER_SUGGEST_SOURCE=$FFC_SOURCE/usersuggest
 LEADERBOARD_SOURCE=$FFC_SOURCE/leaderboard
 SUGGEST_SOURCE=$FFC_SOURCE/suggest
 TEMPLATE_SOURCE=$FFC_SOURCE/template
-GROW_SOURCE=$FFC_PATH/growjs
+GROW_SOURCE=$FFC_PATH/lib/growjs
 FFC_QUIZ_JS_OUTPUT=$FFC_PATH/static/js/quiz.js
 FFC_LEADERBOARD_JS_OUTPUT=$FFC_PATH/static/js/leaderboard.js
 FFC_SETTINGS_JS_OUTPUT=$FFC_PATH/static/js/settings.js
+FFC_LEAGUE_FORM_JS_OUTPUT=$FFC_PATH/static/js/leagueform.js
 FFC_DEPS_OUTPUT=$FFC_PATH/static/js/deps.js
 EXTERNS_SOURCE=$FFC_SOURCE/externs
 
@@ -99,4 +102,23 @@ if [ $1 == "settings" ] || [ $1 == "all" ]; then
     --compiler_flags="--compilation_level=ADVANCED_OPTIMIZATIONS" \
     --compiler_flags="--output_wrapper=\"(function() {%output%})();\"" \
     > $FFC_SETTINGS_JS_OUTPUT
+fi
+
+if [ $1 == "leagueform" ] || [ $1 == "all" ]; then
+  echo 'Building leagueform'
+  python $CLOSURE_BUILDER_PATH \
+    --root=$CLOSURE_LIB \
+    --root=$CLOSURE_TEMPLATES \
+    --root=$API_SOURCE \
+    --root=$USER_SUGGEST_SOURCE \
+    --root=$LEAGUE_SOURCE \
+    --root=$TEMPLATE_SOURCE \
+    --namespace="ffc.usersuggest.AutoComplete" \
+    --namespace="ffc.league.UsersModel" \
+    --namespace="ffc.league.Form" \
+    --output_mode=compiled \
+    --compiler_jar=$CLOSURE_COMPILER_PATH \
+    --compiler_flags="--compilation_level=ADVANCED_OPTIMIZATIONS" \
+    --compiler_flags="--output_wrapper=\"(function() {%output%})();\"" \
+    > $FFC_LEAGUE_FORM_JS_OUTPUT
 fi

@@ -1,0 +1,15 @@
+# .coveragerc to control coverage.py
+[run]
+source=src
+omit =
+  *distlib*
+  *google_appengine*
+  *PIL*
+  *FixTk*
+  *email*
+  *oauth2*
+  *mock*
+  *simpleauth*
+  *wtforms*
+  *encodings*
+  *httplib2*

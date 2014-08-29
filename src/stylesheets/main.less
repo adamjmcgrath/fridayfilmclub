@@ -1,4 +1,4 @@
-@import '../twitter-bootstrap/less/bootstrap.less';
+@import '../lib/twitter/less/bootstrap.less';
 @import 'vars.less';
 @import 'header.less';
 @import 'question.less';
@@ -9,6 +9,9 @@
 @import 'leaderboard.less';
 @import 'questions.less';
 @import 'dialog.less';
+@import 'league.less';
+@import 'settings.less';
+@import 'archive.less';
 
 .custom-font { font-family: 'Montserrat', sans-serif; }
 .custom-font-header { font-family: 'Codystar', cursive; }
@@ -27,6 +30,12 @@ hr {
 
 .form-control {
   color: #888;
+}
+
+.new {
+  color: @errorText;
+  font-weight: bold;
+  font-size: 70%;
 }
 
 .signoff {
@@ -65,63 +74,14 @@ hr {
   margin-bottom: 20px;
 }
 
-#settings-page {
-
-  .ac-row {
-    padding: 0 10px;
-
-    label {
-      font-weight: normal;
-      span {
-        margin-left: 5px;
-      }
-    }
-  }
-
-  .help-block {
-    margin-bottom: 0;
-    color: inherit;
-  }
-
-  .alert-info {
-    margin-top: 20px;
-  }
-
-  .edit-success {
-    margin: 0 15px 5px 15px;
-  }
-
-}
-
 #profile-page .col-md-9 .well {
   padding: 9px 19px;
 }
 
-#archive-page {
-
-  .intro {
-    margin-bottom: 20px;
-  }
-
- .well {
-    padding-bottom: 0;
-    padding-top: 10px;
-
-    h4 {
-      text-align: center;
-      padding-bottom: 5px;
-    }
-
-    .btn {
-      display: block;
-      margin-top: 10px;
-    }
-  }
-
-}
 
 #follow-twitter {
   background: url('/static/img/follow-twitter.png') no-repeat;
   padding-left: 26px;
   color: #00ACEA;
 }
+

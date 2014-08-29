@@ -57,10 +57,11 @@ ffc.api.Client.prototype.post_ = function(url, data, opt_options) {
  * @param {number=} opt_pageSize The page size.
  * @param {string=} opt_sort The sort field.
  * @param {string=} opt_dir The direction: asc or dsc.
+ * @param {string=} opt_league The league id.
  * @return {goog.result.Result} The ajax result.
  */
 ffc.api.Client.prototype.getLeaderBoard = function(type,
-    opt_page, opt_pageSize, opt_sort, opt_dir) {
+    opt_page, opt_pageSize, opt_sort, opt_dir, opt_league) {
   var uri = goog.Uri.parse(
       goog.string.subs(ffc.api.Client.LEADER_BOARD_PATH_, type));
 
@@ -76,6 +77,9 @@ ffc.api.Client.prototype.getLeaderBoard = function(type,
   if (opt_dir) {
     uri.setParameterValue('dir', opt_dir);
   }
+  if (opt_league) {
+    uri.setParameterValue('league', opt_league);
+  }
 
   return this.get_(uri);
 };
@@ -87,6 +91,17 @@ ffc.api.Client.prototype.getLeaderBoard = function(type,
 ffc.api.Client.prototype.getContacts = function(provider) {
   var uri = goog.Uri.parse(
       goog.string.subs(ffc.api.Client.CONTACTS_PATH_, provider));
+
+  return this.get_(uri);
+};
+
+
+/**
+ * @param {String} query
+ */
+ffc.api.Client.prototype.searchUsers = function(query) {
+  var uri = goog.Uri.parse(
+      goog.string.subs(ffc.api.Client.USERS_PATH_, query));
 
   return this.get_(uri);
 };
@@ -120,3 +135,11 @@ ffc.api.Client.LEADER_BOARD_PATH_ =
  */
 ffc.api.Client.CONTACTS_PATH_ =
     ffc.api.Client.BASE_PATH_ + '/contacts/%s';
+
+
+/**
+ * @type {string}
+ * @private
+ */
+ffc.api.Client.USERS_PATH_ =
+    ffc.api.Client.BASE_PATH_ + '/users/%s';

@@ -14,7 +14,7 @@ import webapp2
 from webapp2_extras import routes as webapp_routes
 
 import admin
-from api import contacts, leaderboard, question
+from api import contacts, leaderboard, question, users
 import realtime
 import settings
 import suggest
@@ -45,9 +45,10 @@ routes = [
 
     # Api.
     webapp2.Route(r'/api/question/<:.+>', question.Question, 'api-question'),
-    webapp2.Route(r'/api/leaderboard/<:(week|all|\d+)>', leaderboard.LeaderBoard,
-        'api-leaderboard'),
+    webapp2.Route(r'/api/leaderboard/<:(week|all|league|\d+)>',
+        leaderboard.LeaderBoard, 'api-leaderboard'),
     webapp2.Route(r'/api/contacts/<:.+>', contacts.Contacts, 'api-contacts'),
+    webapp2.Route(r'/api/users/<:.+>', users.UserSearch, 'api-users'),
     webapp2.Route(r'/suggest/<:.+>', suggest.SuggestHandler, name='suggest'),
 
     # Authentication.
@@ -60,6 +61,10 @@ routes = [
     # Main views (Authenticated).
     webapp2.Route(r'/question/<:.*>', views.Question, name='question'),
     webapp2.Route(r'/settings', views.Settings, name='settings'),
+    webapp2.Route(r'/league/add', views.AddEditLeague, name='add-league'),
+    webapp2.Route(r'/league/edit/<league_id:.*>', views.AddEditLeague,
+        name='edit-league'),
+    webapp2.Route(r'/league/<league_id:.*>', views.League, name='league'),
 
     # Realtime handlers.
     webapp2.Route(r'/_ah/channel/connected/', realtime.Connect),
@@ -70,7 +75,11 @@ routes = [
     webapp2.Route(r'/register', views.Register, name='register'),
     webapp2.Route(r'/archive', views.Archive, name='archive'),
     webapp2.Route(r'/leaderboard', views.LeaderBoard, name='leader-board'),
+    webapp2.Route(r'/leaderboard/<league:.*>', views.LeaderBoard,
+        name='leader-board-league'),
     webapp2.Route(r'/highscores', views.HighScores, name='high-scores'),
+    webapp2.Route(r'/highscores/<league:.*>', views.HighScores,
+        name='high-scores-league'),
     webapp2.Route(r'/how', views.HowItWorks, name='how-it-works'),
     webapp2.Route(r'/u/<:[\w\d_]+>', views.Profile, name='profile'),
     webapp2.Route(r'/', views.HomePage, name='home'),
