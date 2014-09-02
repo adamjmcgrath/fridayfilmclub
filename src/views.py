@@ -80,7 +80,10 @@ class Question(baserequesthandler.RequestHandler):
       # Add the realtime scores token.
       context['channel_token'] = channel.create_channel(user_question_id)
 
-    self.render_template('question.html', context)
+    if self.request.get('is_mirror'):
+      self.render_template('question_mirror.html', context)
+    else:
+      self.render_template('question.html', context)
 
 
 class Login(baserequesthandler.RequestHandler):
