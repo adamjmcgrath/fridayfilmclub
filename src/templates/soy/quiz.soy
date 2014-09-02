@@ -96,7 +96,7 @@
  * @param? numGuesses The number of guesses made
  */
 {template .answer}
-<div class="alert clearfix alert-{if $correct}success{else}danger{/if} clue">
+<div class="alert answer-alert clearfix alert-{if $correct}success{else}danger{/if} clue">
   <h4 class="alert-heading">
     {if $correct}
       {if $numGuesses == 1}
@@ -116,6 +116,10 @@
   <p>Check out how this all looks on the <a href="/leaderboard">Leaderboard</a></p>
   <p>And here's the film on <a href="{$imdb_url}">IMDB</a></p>
   <p><b><i>Thanks for playing, and see you next week!</i><br>FMJ</b></p>
+
+  <p class="mirror">The answer is of course: <b>{$title}</b> ({$year})</p>
+  <p class="mirror">You used <b>{$numGuesses - 1}</b> clues.</p>
+  <p class="mirror"><b><i>Thanks for playing, and hope to see you again!</i><br>Film Master Jack</b></p>
 </div>
 {/template}
 
