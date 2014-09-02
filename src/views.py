@@ -40,6 +40,8 @@ class Question(baserequesthandler.RequestHandler):
 
   def get(self, question_id):
 
+    is_mirror = self.request.get('is_mirror')
+
     if question_id:
       question = models.Question.get_by_id(int(question_id))
     else:
@@ -54,7 +56,7 @@ class Question(baserequesthandler.RequestHandler):
       self.session['original_url'] = self.request.url
       return self.redirect('/login')
 
-    if logged_in:
+    if logged_in and not is_mirror:
       user = self.current_user
     else:
       user = models.AnonymousUser.get(
@@ -80,7 +82,7 @@ class Question(baserequesthandler.RequestHandler):
       # Add the realtime scores token.
       context['channel_token'] = channel.create_channel(user_question_id)
 
-    if self.request.get('is_mirror'):
+    if is_mirror:
       self.render_template('question_mirror.html', context)
     else:
       self.render_template('question.html', context)
