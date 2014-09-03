@@ -75,5 +75,14 @@ body {
   var q = new ffc.quiz.Question('{{question.key.id()}}',
       document.getElementById('clues'),
       document.getElementById('score-wrap'){% if user.is_anonymous %}, '{{ user.key.id() }}'{% endif %});
+
+  // Allow resizing of iframe.
+  var de = document.documentElement;
+  var wl = window.location;
+  var resizeCb = function() {
+    wl.hash = de.clientHeight;
+  };
+  window.onresize = resizeCb;
+  resizeCb();
 </script>
 {% endblock %}
