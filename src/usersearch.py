@@ -42,8 +42,8 @@ def index_users(users):
   index = search.Index(name='users')
 
   for user in users:
-    # Don't index admin users
-    if user.is_admin:
+    # Don't index admin/anon users
+    if user.is_admin or user.is_anonymous:
       continue
     tokens = ','.join(tokenize('%s %s' % (user.name, user.username)))
     docs.append(search.Document(doc_id=str(user.key.id()),
