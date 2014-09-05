@@ -7,8 +7,8 @@ mock
 pyyaml
 pylint
 oauth2==1.5.211
-simpleauth==0.1.4
 httplib2==0.9
 python-dateutil==2.1
 wtforms==0.6.3
 gaenv
+-e git+https://github.com/crhym3/simpleauth.git@f6709ce1963e19640c351a2985c10d32cdf57533#egg=simpleauth
