@@ -11,4 +11,4 @@ httplib2==0.9
 python-dateutil==2.1
 wtforms==0.6.3
 gaenv
--e git+https://github.com/crhym3/simpleauth.git@8116f5f33bc3d5c37c8d91ed41a26d441c7b1dcf#egg=simpleauth
+-e git://github.com/crhym3/simpleauth.git@8116f5f33bc3d5c37c8d91ed41a26d441c7b1dcf#egg=simpleauth
