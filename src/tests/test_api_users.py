@@ -19,7 +19,6 @@ class ApiTestCase(base.TestCase):
 
   def setUp(self):
     super(ApiTestCase, self).setUp()
-    self.testbed.init_search_stub()
     ndb.put_multi([
       helpers.user(username='foo'),
       helpers.user(username='bar'),

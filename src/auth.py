@@ -12,6 +12,7 @@ import secrets
 
 import webapp2
 from webapp2_extras import auth, sessions
+from webapp2_extras.appengine.auth.models import UserToken
 
 from google.appengine.api import mail
 from simpleauth.handler import SimpleAuthHandler
@@ -62,9 +63,9 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
     },
   }
 
-  def _on_signin(self, data, auth_info, provider):
+  def _login_user(self, data, auth_info, provider):
     """Callback whenever a new or existing user is logging in.
-
+  
     Args:
       data: is a user info dictionary.
       auth_info: contains access token or oauth token and secret.
@@ -101,23 +102,23 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
 
       if self.logged_in:
         logging.info('Updating currently logged in user.')
-        u = self.current_user
-        u.auth_ids.append(auth_id)
-        u.populate(**self._to_user_model_attrs(data, provider, False))
-        u.put()
-        self.auth.set_session(self.auth.store.user_to_dict(u), remember=True)
+        user = self.current_user
+        user.auth_ids.append(auth_id)
+        user.populate(**self._to_user_model_attrs(data, provider, False))
+        user.put()
+        self.auth.set_session(self.auth.store.user_to_dict(user), remember=True)
 
       elif username:
         logging.info('Creating a user for %s.' % username)
 
         # Create a user the given username.
-        u = models.User(username=username.strip())
+        user = models.User(username=username.strip())
 
         # Authenticate the new user.
-        u.auth_ids.append(auth_id)
-        u.populate(**self._to_user_model_attrs(data, provider, True))
-        u.put()
-        self.auth.set_session(self.auth.store.user_to_dict(u), remember=True)
+        user.auth_ids.append(auth_id)
+        user.populate(**self._to_user_model_attrs(data, provider, True))
+        user.put()
+        self.auth.set_session(self.auth.store.user_to_dict(user), remember=True)
         del self.session['username']
 
         # Send registration email.
@@ -126,13 +127,23 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
             'username': username
           })
           mail.send_mail(sender=settings.FMJ_EMAIL,
-                         to=u.email,
+                         to=user.email,
                          subject='Welcome to Friday Film Club',
                          body=body)
         except:
           logging.info('Failed to send email to %s.' % username)
 
-        self.redirect('/settings')
+    return user
+
+  def _on_signin(self, data, auth_info, provider):
+    """Callback whenever a new or existing user is logging in.
+
+    Args:
+      data: is a user info dictionary.
+      auth_info: contains access token or oauth token and secret.
+      provider: the id of the oauth provider.
+    """
+    self._login_user(data, auth_info, provider)
 
     # Redirect them to the next page.
     target = self.session.get('original_url')
@@ -174,3 +185,21 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
           user_attrs.setdefault(key, value)
 
     return user_attrs
+
+  def _auth_token(self, provider=None):
+    """Used as a replacement to _auth_<provider>_callback to create a token
+    based login flow for mobiles.
+    """
+    self.session['username'] = self,request.get('username')
+    
+    cfg = self.PROVIDERS.get(provider, (None,))
+    meth = self._auth_method(cfg[0], 'callback')
+    # Get user profile data and their access token
+    user_data, auth_info = meth(provider, *cfg[-1:])
+    # The rest should be implemented by the actual app
+    user = self._login_user(user_data, auth_info, provider)
+
+    # Set token
+    user_data['token'] = UserToken.create(user.key.id(), 'bearer').token
+
+    return self.render_json(user_data)

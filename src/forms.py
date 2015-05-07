@@ -200,15 +200,19 @@ class LeagueUsersField(fields.HiddenField):
 
 class Question(Form):
   """A question form."""
+  def __init__(self):
+    self.week.default = WeekField.week_default()
+    self.season.choices = SeasonField.season_choices()
+    super(Question, self).__init__()
+  
   answer = FilmField('Film', [validators.Required()], id='film')
   clues = CluesFieldList(ClueFormField(ClueForm), min_entries=4)
   email_msg = fields.TextAreaField('Email Message')
   packshot = ImageField('Image')
   imdb_url = fields.TextField('IMDB Link',
                               default='http://www.imdb.com/title/XXX/')
-  week = WeekField(choices=WeekField.week_choices(),
-                   default=WeekField.week_default())
-  season = SeasonField(choices=SeasonField.season_choices())
+  week = WeekField(choices=WeekField.week_choices())
+  season = SeasonField()
 
 
 class Registration(Form):
