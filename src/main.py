@@ -56,6 +56,8 @@ routes = [
         handler='auth.AuthHandler:_simple_auth', name='auth_login'),
     webapp2.Route('/auth/<provider>/callback',
         handler='auth.AuthHandler:_auth_callback', name='auth_callback'),
+    webapp2.Route('/auth/<provider>/token',
+        handler='auth.AuthHandler:_auth_token', name='auth_token'),
     webapp2.Route('/logout', handler='auth.AuthHandler:logout', name='logout'),
 
     # Main views (Authenticated).

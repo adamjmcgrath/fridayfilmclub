@@ -25,8 +25,6 @@ class ApiTestCase(base.TestCase):
 
   def setUp(self):
     super(ApiTestCase, self).setUp()
-    self.testbed.init_datastore_v3_stub()
-    self.testbed.init_memcache_stub()
     to_put = []
     question = helpers.question(is_current=True, clues=[])
     question_key = question.put()

@@ -20,10 +20,6 @@ import models
 
 class ApiTestCase(base.TestCase):
 
-  def setUp(self):
-    super(ApiTestCase, self).setUp()
-    self.testbed.init_datastore_v3_stub()
-
   def testQuestionRequiresAdminOrPosed(self):
     question = helpers.question()
     user = helpers.user()

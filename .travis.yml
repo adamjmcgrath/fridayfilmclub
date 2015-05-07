@@ -1,0 +1,53 @@
+language: python
+
+branches:
+  only:
+    - master
+    - devel
+
+python:
+  - "2.7"
+
+env:
+  global:
+    - secure: DXLD6sujA+tvf/xaBf83k53HTtypoqviz+V45CMuUu4JhjVMt2xKOM0j+IZS4FivhMVX+RO4cZAy6+72m/jofsMRMoqPVWZgZmGNnF8uLtSw9zFfbQGpe27f7d+1BFclLL7x0r1gdDx3p4yxNXjzoGGGT/4N//IVaVPNJf/MTFs=
+    - APPENGINE_SDK=google_appengine_1.9.19
+
+install:
+  - pip install -r requirements.txt
+  - fab symlink_requirements
+  - npm install
+  - bower install
+
+before_script:
+  - export PATH=node_modules/.bin/:$PATH
+
+  # app engine
+  - mkdir -p vendors
+  - wget https://commondatastorage.googleapis.com/appengine-sdks/featured/$APPENGINE_SDK.zip  -nv
+  - unzip -qd vendors $APPENGINE_SDK.zip
+  - export APPENGINE_SRC=vendors/google_appengine
+  - export PYTHONPATH=$PYTHONPATH:`pwd`/vendors/google_appengine
+
+  # closure compiler
+  - mkdir -p vendors/closure
+  - wget http://dl.google.com/closure-compiler/compiler-latest.zip && unzip compiler-latest.zip -d vendors/closure
+  - export CLOSURE_JAR=vendors/closure/compiler.jar
+
+  # closure templates compiler
+  - mkdir -p vendors/closure-templates
+  - wget https://closure-templates.googlecode.com/files/closure-templates-for-javascript-latest.zip && unzip closure-templates-for-javascript-latest.zip -d vendors/closure-templates
+  - export SOY_JAR=vendors/closure-templates/SoyToJsSrcCompiler.jar
+
+script:
+  - fab compile_css
+  - fab compile_js
+  - fab run_tests
+
+after_success:
+  - fab deploy:branch=$TRAVIS_BRANCH,token=$OAUTH2_REFRESH_TOKEN,pull_request=$TRAVIS_PULL_REQUEST
+
+notifications:
+  email:
+    - adamjmcgrath@gmail.com
+

@@ -32,6 +32,9 @@ class TestCase(unittest.TestCase):
   def setUp(self):
     self.testbed = testbed.Testbed()
     self.testbed.activate()
+    self.testbed.init_all_stubs()
+    self.mail_stub = self.testbed.get_stub('mail')
+
     self.app = webapp2.WSGIApplication(config={
       'webapp2_extras.sessions': {
           'cookie_name': '_simpleauth_sess',

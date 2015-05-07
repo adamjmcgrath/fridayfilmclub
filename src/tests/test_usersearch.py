@@ -19,10 +19,6 @@ import usersearch
 
 class TasksTestCase(base.TestCase):
 
-  def setUp(self):
-    super(TasksTestCase, self).setUp()
-    self.testbed.init_search_stub()
-
   def testTokenise(self):
     tests = [
       ('foo', ['f', 'fo', 'foo', 'o', 'oo']),
