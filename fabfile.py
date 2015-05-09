@@ -44,7 +44,7 @@ def deploy(branch='devel', token='', pull_request='false'):
   if pull_request != 'false':
     return
   # Use dev/prod or a sanitised version of the branch name.
-  version = VERSIONS.get(branch, default=re.sub(r'[\W_]', '-', branch))
+  version = VERSIONS.get(branch, re.sub(r'[\W_]', '-', branch))
 
   if version:
     local('python %s -V %s --oauth2 --oauth2_refresh_token=%s update %s' %
