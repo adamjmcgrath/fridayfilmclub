@@ -13,9 +13,11 @@ env:
     - secure: "rYSb8SSq1xgTWIf2wTg/f65yIxvK4wg841X3tRQBuI9/qfo+1AoDbHtReU+SGf74xUCOEPVAEEGWthzUrVI4QJKd+0d7REnEq3Bmudt1x2eNd9wXqUuTsxQeRgcQz8N1f6Z3Bel/DqXNRmjxitwcBaSe8sUtkjDpaA94OGigQ1LYwH5ZzTTggdIZY5CLnXHo3QvPwXGbVOJ4FMueen3vyb6r0aoriQdiAOMnAcUnd80uWznQ1cIrMR5wSsctHQjVH7Gzz1nvW3HOANGW9cp0pIkcA2974tItqUXL2nevCo8U+YT6XyK4byPWdQc98cjf+dQZoQToBARErykKlUfkHEf9YlAuZ8mS7L2nXYXwO4qQAt7z7TNEUsJXvP8IxcM/d202lMJVAQK0vJa63laNCMayc5phhZ/Hvp63A6Lsa4EBGcMlQrW+dkSKkWhi45q+vxTFWXemqa8MnvkvCS+V22Qy43n6flp5ywmBt9LnSPc2IbEs5L9wX28UW03PUexly5zBKMYtOprP3njSt6uzMSn2A3uL7felQp3IBGayo1RIIbKnw9NqvgU9NJhUATEgYGDu1WbJhG+jml1DCN6mwWMjyQfXBGyKBcbSX5e8xt/a7eKjLOIDUaw0UxN/S9LTGDLKVpiKmoAZspBgHeKxfwyjjwY84YqxKIGj1Vate1M="
     - APPENGINE_SDK=google_appengine_1.9.19
 
+before_install:
+  - openssl aes-256-cbc -K $encrypted_aac91bacce06_key -iv $encrypted_aac91bacce06_iv -in src/secrets.py.enc -out src/secrets.py -d
+
 install:
   - pip install -r requirements.txt
-  - fab symlink_requirements
   - npm install
   - bower install
 
@@ -38,6 +40,8 @@ before_script:
   - mkdir -p vendors/closure-templates
   - wget https://closure-templates.googlecode.com/files/closure-templates-for-javascript-latest.zip && unzip closure-templates-for-javascript-latest.zip -d vendors/closure-templates
   - export SOY_JAR=vendors/closure-templates/SoyToJsSrcCompiler.jar
+
+  - fab symlink_requirements
 
 script:
   - fab compile_css
