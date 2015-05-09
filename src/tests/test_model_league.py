@@ -16,10 +16,6 @@ import models
 
 class LeagueTestCase(base.TestCase):
 
-  def setUp(self):
-    super(LeagueTestCase, self).setUp()
-    self.testbed.init_datastore_v3_stub()
-
   def testPostPutHook(self):
     league_owner = helpers.user()
     league_member_1 = helpers.user()

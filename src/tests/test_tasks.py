@@ -22,10 +22,6 @@ from google.appengine.ext import deferred, ndb
 
 class TasksTestCase(base.TestCase):
 
-  def setUp(self):
-    super(TasksTestCase, self).setUp()
-    self.testbed.init_datastore_v3_stub()
-
   def testDeleteUser(self):
     user = helpers.user()
     user_id = user.put().id()

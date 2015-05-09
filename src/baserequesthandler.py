@@ -16,6 +16,7 @@ import re
 import jinja2
 import webapp2
 from webapp2_extras import auth, sessions
+from webapp2_extras.appengine.auth.models import UserToken
 
 import settings
 
@@ -52,13 +53,21 @@ class RequestHandler(webapp2.RequestHandler):
   @webapp2.cached_property
   def current_user(self):
     """Returns currently logged in user"""
+    token = os.getenv('HTTP_AUTHORIZATION')
+    if token:
+      user_token = UserToken.get('', 'bearer', token)
+      return self.auth.store.user_model.get_by_id(int(user_token.user))
     user_dict = self.auth.get_user_by_session()
     return self.auth.store.user_model.get_by_id(user_dict['user_id'])
 
   @webapp2.cached_property
   def logged_in(self):
     """Returns true if a user is currently logged in, false otherwise."""
-    return self.auth.get_user_by_session() is not None
+    token = os.getenv('HTTP_AUTHORIZATION')
+    if token:
+      return UserToken.get('', 'bearer', token) is not None
+    else:
+      return self.auth.get_user_by_session() is not None
 
   def is_debug_mode(self):
     """docstring for is_debug_mode"""
@@ -113,4 +122,3 @@ class RequestHandler(webapp2.RequestHandler):
   def render_empty(self):
     """Render an empty response."""
     self.response.write('')
-

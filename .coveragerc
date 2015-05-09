@@ -13,3 +13,4 @@ omit =
   *wtforms*
   *encodings*
   *httplib2*
+  *lib*

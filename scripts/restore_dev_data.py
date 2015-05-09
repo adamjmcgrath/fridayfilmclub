@@ -13,28 +13,13 @@ To get entities from prod backup:
 
 import os
 import sys
+sys.path.append('/usr/local/google_appengine')
+import dev_appserver
 
-APPENGINE_PATH = '/usr/local/google_appengine/'
+dev_appserver.fix_sys_path()
 
-def fix_appengine_path():
-  EXTRA_PATHS = [
-    APPENGINE_PATH,
-    os.path.join(APPENGINE_PATH, 'lib', 'antlr3'),
-    os.path.join(APPENGINE_PATH, 'lib', 'django'),
-    os.path.join(APPENGINE_PATH, 'lib', 'fancy_urllib'),
-    os.path.join(APPENGINE_PATH, 'lib', 'ipaddr'),
-    os.path.join(APPENGINE_PATH, 'lib', 'webapp2'),
-    os.path.join(APPENGINE_PATH, 'lib', 'webob-1.1.1'),
-    os.path.join(APPENGINE_PATH, 'lib', 'yaml', 'lib'),
-    os.path.join(APPENGINE_PATH, 'lib', 'webapp2-2.5.2'),
-    os.path.join(APPENGINE_PATH, 'lib', 'jinja2-2.6'),
-  ]
-  sys.path.extend(EXTRA_PATHS)
-
-fix_appengine_path()
-
-# Add models to path.
-sys.path.insert(0, '/Users/adammcgrath/dev/projects/ffc/src/')
+dir = os.path.dirname(__file__)
+sys.path.insert(0, os.path.join(dir, '../src'))
 
 from google.appengine.ext import ndb
 from google.appengine.ext.remote_api import remote_api_stub

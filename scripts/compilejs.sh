@@ -22,11 +22,13 @@ LEADERBOARD_SOURCE=$FFC_SOURCE/leaderboard
 SUGGEST_SOURCE=$FFC_SOURCE/suggest
 TEMPLATE_SOURCE=$FFC_SOURCE/template
 GROW_SOURCE=$FFC_PATH/lib/growjs
-FFC_QUIZ_JS_OUTPUT=$FFC_PATH/static/js/quiz.js
-FFC_LEADERBOARD_JS_OUTPUT=$FFC_PATH/static/js/leaderboard.js
-FFC_SETTINGS_JS_OUTPUT=$FFC_PATH/static/js/settings.js
-FFC_LEAGUE_FORM_JS_OUTPUT=$FFC_PATH/static/js/leagueform.js
-FFC_DEPS_OUTPUT=$FFC_PATH/static/js/deps.js
+JS_OUTPUT_FOLDER=$FFC_PATH/static/js
+FFC_QUIZ_JS_OUTPUT=$JS_OUTPUT_FOLDER/quiz.js
+FFC_LEADERBOARD_JS_OUTPUT=$JS_OUTPUT_FOLDER/leaderboard.js
+FFC_LEADERBOARD_JS_MAP=$JS_OUTPUT_FOLDER/leaderboard.map
+FFC_SETTINGS_JS_OUTPUT=$JS_OUTPUT_FOLDER/settings.js
+FFC_LEAGUE_FORM_JS_OUTPUT=$JS_OUTPUT_FOLDER/leagueform.js
+FFC_DEPS_OUTPUT=$JS_OUTPUT_FOLDER/deps.js
 EXTERNS_SOURCE=$FFC_SOURCE/externs
 
 
@@ -83,9 +85,12 @@ if [ $1 == "leaderboard" ] || [ $1 == "all" ]; then
     --output_mode=compiled \
     --compiler_jar=$CLOSURE_COMPILER_PATH \
     --compiler_flags="--compilation_level=ADVANCED_OPTIMIZATIONS" \
+    --compiler_flags="--create_source_map=$JS_OUTPUT_FOLDER/leaderboard.map" \
     --compiler_flags="--externs=$EXTERNS_SOURCE/channel.js" \
     --compiler_flags="--output_wrapper=\"(function() {%output%})();\"" \
     > $FFC_LEADERBOARD_JS_OUTPUT
+
+    echo "//# sourceMappingURL=/static/js/leaderboard.map" >> $FFC_LEADERBOARD_JS_OUTPUT
 fi
 
 if [ $1 == "settings" ] || [ $1 == "all" ]; then

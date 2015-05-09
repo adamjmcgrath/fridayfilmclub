@@ -16,10 +16,6 @@ import models
 
 class LeagueUserTestCase(base.TestCase):
 
-  def setUp(self):
-    super(LeagueUserTestCase, self).setUp()
-    self.testbed.init_datastore_v3_stub()
-
   def testGetOrInsert(self):
     user_key = helpers.user().put()
     league_key = helpers.league(owner=user_key).put()

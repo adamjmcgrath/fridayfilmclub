@@ -10,5 +10,6 @@ scripts/_*
 src/tests/cover
 src/lib
 src/pylib
+src/secrets.py
 npm-debug.log
 node_modules

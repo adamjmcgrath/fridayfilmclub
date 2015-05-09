@@ -1,0 +1,53 @@
+language: python
+
+python:
+  - "2.7"
+
+env:
+  global:
+    - secure: KTWs8jE9COxyuULlAiynxrI61wKfZhz56B99zT75e4tdcCSGRIIWut8Skm1thAUSQsEymXhvhhmgND3qbjChyw90F/hAiA8xgo/QxpESvI48AXi9CLPfB9kyaf9SPqXokKxj0yYqCCYLLfmCu/glO66S69+5iQbwn8M+9WHdeHwYffJrFJonUt/E0HAuaNdmJIDCd3nuAp7Ol7JAuUsg8971SoeDqk+wBPNzN4UWYtpWGvxUas51w7YjIPwG7cr6C3XvP/G1x2YPU6yP0gQBtgKt3X3+W6FJqO1GZaiQ1iTK+nRhaU1SecjmkHJJKQjQDX+0CLVWW5Y98SrbtKYht/Ez3/3GG4NyHTtmBZ67F4cC3ikdTRDp3ixTAoay7M4osIgvkdNsCeiYGz8dXvIbOsh+bebCPHwYfdsVk0656XS3V2G5EnXMhqaOzDqdwdCMCUR/LUm4GOmZ2BqNAQT/CnsWugE7BZwyN9I8S1bVMfU0a4soXNAlXbr6Kzr01cdX7Po43y7GOe4QgQHMJuNrFzbJ24IT/OOKJKkgRRfUQoX3LQHH++EHUnKpeTDrT72MRp095jiRW5gjUVjidTtYG0YruZ4PFv66ICKHEmVEm57ATxjupea/goESWslp1/Vj2XV3mKhVcGwJ52WHV2czh8EEu/G16XZMHqwFDjIOg6c=
+    - APPENGINE_SDK=google_appengine_1.9.19
+
+before_install:
+  - openssl aes-256-cbc -K $encrypted_aac91bacce06_key -iv $encrypted_aac91bacce06_iv -in src/secrets.py.enc -out src/secrets.py -d
+
+install:
+  - pip install -r requirements.txt
+  - npm install
+  - bower install
+
+before_script:
+  - export PATH=node_modules/.bin/:$PATH
+
+  # app engine
+  - mkdir -p vendors
+  - wget https://commondatastorage.googleapis.com/appengine-sdks/featured/$APPENGINE_SDK.zip  -nv
+  - unzip -qd vendors $APPENGINE_SDK.zip
+  - export APPENGINE_SRC=vendors/google_appengine
+  - export PYTHONPATH=$PYTHONPATH:`pwd`/vendors/google_appengine
+
+  # closure compiler
+  - mkdir -p vendors/closure
+  - wget https://dl.google.com/closure-compiler/compiler-20140625.zip && unzip compiler-20140625.zip -d vendors/closure
+  - export CLOSURE_JAR=vendors/closure/compiler.jar
+
+  # closure templates compiler
+  - mkdir -p vendors/closure-templates
+  - wget https://closure-templates.googlecode.com/files/closure-templates-for-javascript-latest.zip && unzip closure-templates-for-javascript-latest.zip -d vendors/closure-templates
+  - export SOY_JAR=vendors/closure-templates/SoyToJsSrcCompiler.jar
+
+  - fab symlink_requirements
+
+script:
+  - fab compile_css
+  - fab compile_js
+  - fab run_tests
+
+after_success:
+  - fab deploy:branch=$TRAVIS_BRANCH,pull_request=$TRAVIS_PULL_REQUEST,tag=$TRAVIS_TAG
+  - coveralls
+
+notifications:
+  email:
+    - adamjmcgrath@gmail.com
+

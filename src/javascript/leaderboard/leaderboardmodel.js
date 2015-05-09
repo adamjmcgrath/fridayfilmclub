@@ -110,7 +110,7 @@ ffc.leaderboard.LeaderBoardModel.prototype.sort = function(sort, dir) {
 
 
 /**
- * @param {Object} result The service result.
+ * @param {Object} data The service result.
  */
 ffc.leaderboard.LeaderBoardModel.prototype.handleResult = function(data) {
   this.previousValue = data['prev'];

@@ -20,20 +20,16 @@ TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../'))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../lib'))
 
+import base
 import auth
 import main
 import models
 
 
-class AuthTestCase(unittest.TestCase):
+class AuthTestCase(base.TestCase):
 
   def setUp(self):
-    self.testbed = testbed.Testbed()
-    self.testbed.activate()
-    self.testbed.init_datastore_v3_stub()
-    self.testbed.init_mail_stub()
-    self.mail_stub = self.testbed.get_stub('mail')
-    self.testapp = webtest.TestApp(main.routes)
+    super(AuthTestCase, self).setUp()
 
     routes = [webapp2.Route('/', None, name='main')]
     app = webapp2.WSGIApplication(routes=routes, config=main.app_config)
