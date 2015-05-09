@@ -1,10 +1,5 @@
 language: python
 
-branches:
-  only:
-    - master
-    - devel
-
 python:
   - "2.7"
 
@@ -49,7 +44,7 @@ script:
   - fab run_tests
 
 after_success:
-  - fab deploy:branch=$TRAVIS_BRANCH,token=$OAUTH2_REFRESH_TOKEN,pull_request=$TRAVIS_PULL_REQUEST
+  - fab deploy:branch=$TRAVIS_BRANCH,pull_request=$TRAVIS_PULL_REQUEST,tag=$TRAVIS_TAG
   - coveralls
 
 notifications:

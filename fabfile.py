@@ -8,6 +8,7 @@ from __future__ import with_statement
 
 __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 
+import logging
 import os
 import re
 import sys
@@ -16,39 +17,28 @@ from fabric.api import *
 APPENGINE_PATH = os.environ['APPENGINE_SRC']
 APPENGINE_DEV_APPSERVER =  os.path.join(APPENGINE_PATH, 'dev_appserver.py')
 APPENGINE_APP_CFG =  os.path.join(APPENGINE_PATH, 'appcfg.py')
-VERSIONS = {
-  'devel': 'dev',
-  'master': 'prod',
-}
+
+sys.path.append(APPENGINE_PATH)
+import dev_appserver
+
+dev_appserver.fix_sys_path()
 
 env.gae_email = 'adamjmcgrath@gmail.com'
 env.gae_src = './src'
 
-def fix_appengine_path():
-  EXTRA_PATHS = [
-    APPENGINE_PATH,
-    os.path.join(APPENGINE_PATH, 'lib', 'antlr3'),
-    os.path.join(APPENGINE_PATH, 'lib', 'django'),
-    os.path.join(APPENGINE_PATH, 'lib', 'fancy_urllib'),
-    os.path.join(APPENGINE_PATH, 'lib', 'ipaddr'),
-    os.path.join(APPENGINE_PATH, 'lib', 'webob'),
-    os.path.join(APPENGINE_PATH, 'lib', 'yaml', 'lib'),
-  ]
-  
-  sys.path = EXTRA_PATHS + sys.path
 
-fix_appengine_path()
-
-
-def deploy(branch='devel', token='', pull_request='false'):
+def deploy(branch='dev', pull_request='false', tag=None):
   if pull_request != 'false':
     return
-  # Use dev/prod or a sanitised version of the branch name.
-  version = VERSIONS.get(branch, re.sub(r'[\W_]', '-', branch))
+  version = re.sub(r'[\W_]', '-', branch)
+  if tag:
+    logging.info('Deploying TAG:%s to prod', tag)
+    version = 'PROD'
+  else:
+    logging.info('Deploying VERSION:%s', version)
 
-  if version:
-    local('python %s -V %s --oauth2 --oauth2_refresh_token=%s update %s' %
-          (APPENGINE_APP_CFG, version, token, env.gae_src))
+  local('python %s -V %s --oauth2 --oauth2_refresh_token=$OAUTH2_REFRESH_TOKEN update %s' %
+        (APPENGINE_APP_CFG, version, env.gae_src))
 
 
 def shell():
@@ -74,7 +64,7 @@ def symlink_requirements():
 
 
 def compile_css():
-  print 'Compiling CSS'
+  logging.info('Compiling CSS')
   local('mkdir -p src/static/css/')
   local('lessc --compress src/stylesheets/main.less > src/static/css/main.css')
 
