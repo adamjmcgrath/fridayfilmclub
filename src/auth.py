@@ -190,7 +190,7 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
     """Used as a replacement to _auth_<provider>_callback to create a token
     based login flow for mobiles.
     """
-    self.session['username'] = self,request.get('username')
+    self.session['username'] = self.request.get('username')
     
     cfg = self.PROVIDERS.get(provider, (None,))
     meth = self._auth_method(cfg[0], 'callback')

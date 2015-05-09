@@ -40,8 +40,11 @@ routes = [
     ]),
     webapp2.Route(r'/admin', admin.HomePage, 'admin-homepage'),
 
+    # Tasks
     webapp2.Route(r'/tasks/cleanupanonymoususers', tasks.CleanUpAnonymousUsers,
         'tasks-cleananonusers'),
+    webapp2.Route(r'/tasks/cleanupusertokens', tasks.CleanUpUserTokens,
+        'tasks-cleanupusertokens'),
 
     # Api.
     webapp2.Route(r'/api/question/<:.+>', question.Question, 'api-question'),

@@ -14,6 +14,10 @@ cron:
   url: /tasks/cleanupanonymoususers
   schedule: every 24 hours
 
+- description: delete obsolete anonymous users
+  url: /tasks/cleanupanonymoususers
+  schedule: every monday 05:00
+
 - description: weekly backup
   url: /_ah/datastore_admin/backup.create?kind=Clue&kind=Question&kind=Season&kind=User&kind=UserQuestion&kind=UserSeason&kind=UserToken&kind=League&kind=LeagueUser&filesystem=gs&gs_bucket_name=ffcapp.appspot.com
   schedule: every saturday 01:00

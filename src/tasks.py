@@ -10,6 +10,7 @@ import datetime
 import logging
 
 from google.appengine.ext import deferred, blobstore, ndb
+from webapp2_extras.appengine.auth.models import UserToken
 
 import baserequesthandler
 import models
@@ -67,3 +68,28 @@ class CleanUpAnonymousUsers(baserequesthandler.RequestHandler):
       )
       for uq in user_entities:
         deferred.defer(delete_user, uq.key.id(), anonymous=True)
+
+
+class CleanUpUserTokens(baserequesthandler.RequestHandler):
+  """Delete User tokens that are older than 3 months old."""
+
+  def get(self):
+    # 'auth' Tokens expire after 3 months, 'bearer' after 1 year.
+    now = datetime.datetime.utcnow()
+    three_months_ago = now - datetime.timedelta(3 * (365/12))
+    one_year_ago = now - datetime.timedelta(365)
+    expired_tokens = UserToken.query(
+      ndb.OR(ndb.AND(UserToken.subject == 'auth',
+                     UserToken.created <= three_months_ago),
+             ndb.AND(UserToken.subject == 'bearer',
+                     UserToken.created <= one_year_ago))
+    )
+
+    while True:
+      logging.info('Deleting user tokens')
+      keys = expired_tokens.fetch(100, keys_only=True)
+      if len(keys) > 0:
+        ndb.delete_multi(keys)
+      else:
+        break
+

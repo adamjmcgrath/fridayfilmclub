@@ -232,3 +232,8 @@ indexes:
   - name: user_is_admin
   - name: score
     direction: desc
+
+- kind: UserToken
+  properties:
+  - name: subject
+  - name: created
