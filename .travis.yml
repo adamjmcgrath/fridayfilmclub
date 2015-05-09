@@ -33,7 +33,7 @@ before_script:
 
   # closure compiler
   - mkdir -p vendors/closure
-  - wget http://dl.google.com/closure-compiler/compiler-latest.zip && unzip compiler-latest.zip -d vendors/closure
+  - wget https://dl.google.com/closure-compiler/compiler-20140625.zip && unzip compiler-20140625.zip -d vendors/closure
   - export CLOSURE_JAR=vendors/closure/compiler.jar
 
   # closure templates compiler
