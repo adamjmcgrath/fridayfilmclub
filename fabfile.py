@@ -30,7 +30,8 @@ env.gae_src = './src'
 def deploy(branch='dev', pull_request='false', tag=None):
   if pull_request != 'false':
     return
-  version = re.sub(r'[\W_]', '-', branch)
+  version = 'dev' if branch == 'master' else re.sub(r'[\W_]', '-', branch)
+
   if tag:
     logging.info('Deploying TAG:%s to prod', tag)
     version = 'PROD'
