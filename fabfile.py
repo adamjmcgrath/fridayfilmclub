@@ -70,7 +70,7 @@ def run_server(port='8080', clear_datastore=False, send_mail=True):
 
 
 def symlink_requirements():
-  local('gaenv --lib src/pylib --no-import')
+  local('gaenv --lib src/pylib --no-import=true')
 
 
 def compile_css():
