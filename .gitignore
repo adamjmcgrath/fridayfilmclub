@@ -14,3 +14,5 @@ src/secrets.py
 npm-debug.log
 node_modules
 .idea
+.env
+
