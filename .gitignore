@@ -13,3 +13,4 @@ src/pylib
 src/secrets.py
 npm-debug.log
 node_modules
+.idea
