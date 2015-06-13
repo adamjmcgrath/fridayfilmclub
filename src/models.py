@@ -187,6 +187,7 @@ class User(AuthUser):
   overall_score = ndb.IntegerProperty(default=0)
   overall_clues = ndb.IntegerProperty(default=0)
   questions_answered = ndb.IntegerProperty(default=0)
+  active_questions_answered = ndb.IntegerProperty(default=0)
   invited_by = ndb.KeyProperty(kind='User')
   joined = ndb.DateTimeProperty(auto_now_add=True)
   leagues = ndb.KeyProperty(repeated=True)
