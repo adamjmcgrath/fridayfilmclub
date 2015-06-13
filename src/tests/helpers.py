@@ -48,6 +48,7 @@ def user(id=None,
          overall_score=0,
          overall_clues=0,
          questions_answered=0,
+         active_questions_answered=0,
          invited_by=None,
          joined=None,
          leagues=None):
