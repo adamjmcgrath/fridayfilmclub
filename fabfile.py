@@ -34,7 +34,7 @@ def deploy(branch='dev', pull_request='false', tag=None):
 
   if tag:
     logging.info('Deploying TAG:%s to prod', tag)
-    version = 'PROD'
+    version = 'prod'
   else:
     logging.info('Deploying VERSION:%s', version)
 
