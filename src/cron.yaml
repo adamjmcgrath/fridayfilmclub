@@ -14,8 +14,8 @@ cron:
   url: /tasks/cleanupanonymoususers
   schedule: every 24 hours
 
-- description: delete obsolete anonymous users
-  url: /tasks/cleanupanonymoususers
+- description: clean up obsolete user tokens
+  url: /tasks/cleanupusertokens
   schedule: every monday 05:00
 
 - description: weekly backup
