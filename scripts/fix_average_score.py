@@ -8,7 +8,7 @@
 import os
 import sys
 import getpass
-
+import datetime
 
 APPENGINE_PATH = os.path.abspath(os.environ['APPENGINE_SRC'])
 APPENGINE_DEV_APPSERVER =  os.path.join(APPENGINE_PATH, 'dev_appserver.py')
@@ -42,7 +42,7 @@ def fix_user(u):
 
   for uq in uqs:
     if (uq.created and
-       (uq.created - uq.question.get().posed).total_seconds() > 20000):
+       (uq.created - uq.question.get().posed) > datetime.timedelta(days=7)):
       correction += 1
 
   u.active_questions_answered = u.questions_answered - correction
@@ -56,7 +56,8 @@ def main():
   remote_api_stub.ConfigureRemoteDatastore(APP_NAME, '/_ah/remote_api',
       auth_func, servername='ffcapp.appspot.com')
 
-  for u in models.User.query():
+  for u in models.User.query(models.User.name=='Tom Johnson'):
+  # for u in models.User.query():
     fix_user(u)
 
 if __name__ == '__main__':
