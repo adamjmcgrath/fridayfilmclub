@@ -53,7 +53,7 @@ class Contacts(baserequesthandler.RequestHandler):
     if refresh_token:
 
       #  Convert the access token to refresh_token
-      app_id, app_secret, app_scope = secrets.AUTH_CONFIG['google']
+      app_id, app_secret, app_scope = secrets.get_auth_config('google', 'prod')
       data = urllib.urlencode({
             'client_id': app_id,
             'client_secret': app_secret,
@@ -99,7 +99,7 @@ class Contacts(baserequesthandler.RequestHandler):
 
   def get_facebook_friends(self):
     u = self.current_user
-    app_id, app_secret, app_scope = secrets.AUTH_CONFIG['facebook']
+    app_id, app_secret, app_scope = secrets.get_auth_config('facebook', 'prod')
     # facebook_token = u.facebook_token
     facebook_token = app_id + '|' + app_secret
     facebook_uid = u.facebook_uid
