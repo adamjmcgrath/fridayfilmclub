@@ -56,8 +56,7 @@ def main():
   remote_api_stub.ConfigureRemoteDatastore(APP_NAME, '/_ah/remote_api',
       auth_func, servername='ffcapp.appspot.com')
 
-  for u in models.User.query(models.User.name=='Tom Johnson'):
-  # for u in models.User.query():
+  for u in models.User.query():
     fix_user(u)
 
 if __name__ == '__main__':
