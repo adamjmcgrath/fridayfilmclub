@@ -17,7 +17,8 @@ import secrets
 from google.appengine.api import urlfetch
 
 
-consumer_token, consumer_token_secret = secrets.AUTH_CONFIG['twitter']
+# TODO (adamjmcgrath) don't hardcode environment.
+consumer_token, consumer_token_secret = secrets.get_auth_config('twitter', 'prod')
 
 
 def timestamp():

@@ -221,11 +221,13 @@ class ApiTestCase(base.TestCase):
       overall_score=10,
       overall_clues=10,
       questions_answered=10,
+      active_questions_answered=5,
     )
-    question_api.update_users_score(user, 5, 5)
+    question_api.update_users_score(user, 5, 5, True)
     self.assertEqual(user.overall_score, 15)
     self.assertEqual(user.overall_clues, 14)
     self.assertEqual(user.questions_answered, 11)
+    self.assertEqual(user.active_questions_answered, 6)
 
   def testUpdateUsersLeagueScore(self):
     user = helpers.user()

@@ -14,7 +14,7 @@ import re
 import sys
 from fabric.api import *
 
-APPENGINE_PATH = os.environ['APPENGINE_SRC']
+APPENGINE_PATH = os.path.abspath(os.environ['APPENGINE_SRC'])
 APPENGINE_DEV_APPSERVER =  os.path.join(APPENGINE_PATH, 'dev_appserver.py')
 APPENGINE_APP_CFG =  os.path.join(APPENGINE_PATH, 'appcfg.py')
 

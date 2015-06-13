@@ -31,10 +31,12 @@ def update_question(question):
     deferred.defer(leaderboard.delete_leaderboard_cache)
 
 
-def update_users_score(user, score, num_guesses):
+def update_users_score(user, score, num_guesses, is_current):
   user.overall_score += score
   user.overall_clues += num_guesses - 1
   user.questions_answered += 1
+  if is_current:
+    user.active_questions_answered += 1
 
 
 def update_users_season_score(user_season, score, num_guesses):
@@ -118,7 +120,7 @@ class Question(baserequesthandler.RequestHandler):
         user_season = None
 
         # Update the users score and stats.
-        update_users_score(user, score, num_guesses)
+        update_users_score(user, score, num_guesses, question.is_current)
 
         # Update the question answer count and reset the leaderboard cache.
         update_question(question)

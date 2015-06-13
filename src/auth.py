@@ -162,7 +162,8 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
 
   def _get_consumer_info_for(self, provider):
     """Returns a tuple (key, secret) for auth init requests."""
-    return secrets.AUTH_CONFIG[provider]
+    return secrets.get_auth_config(
+      provider, settings.get_environment(self.request.host))
 
   def _to_user_model_attrs(self, data, provider, new_user):
     attrs_map = self.USER_ATTRS[provider]

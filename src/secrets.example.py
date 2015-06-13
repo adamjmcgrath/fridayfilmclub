@@ -61,7 +61,8 @@ _CONFIG_STAGING = {
   'twitter': (TWITTER_CONSUMER_KEY_STAGING, TWITTER_CONSUMER_SECRET_STAGING),
 }
 
-AUTH_CONFIG = ({
-  'local': _CONFIG_DEV,
-  'staging': _CONFIG_STAGING,
-}).get(settings.ENVIRONMENT, _CONFIG)
+def get_auth_config(provider, environment):
+  return ({
+    'local': _CONFIG_DEV,
+    'staging': _CONFIG_STAGING,
+  }).get(environment, _CONFIG)[provider]
