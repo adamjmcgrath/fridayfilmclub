@@ -42,7 +42,8 @@ class ApiTestCase(base.TestCase):
           username='user-%d' % i,
           overall_score=i,
           overall_clues=i,
-          questions_answered=i))
+          questions_answered=i,
+          active_questions_answered=i))
       to_put.append(helpers.user_question(
           user_is_admin=False,
           complete=True,
@@ -55,7 +56,8 @@ class ApiTestCase(base.TestCase):
           user=user_key,
           score=i,
           clues=i,
-          questions_answered=i))
+          questions_answered=i,
+          active_questions_answered=i))
       to_put.append(helpers.user_season(
           score=i,
           clues=i,

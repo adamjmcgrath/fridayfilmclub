@@ -31,6 +31,7 @@ class LeagueUserTestCase(base.TestCase):
     league_user.score = 1
     league_user.clues = 2
     league_user.questions_answered = 3
+    league_user.active_questions_answered = 3
     league_user_json = models.LeagueUser.to_leaderboard_json(league_user)
     self.assertEqual(league_user_json['user_name'], 'foo')
     self.assertEqual(league_user_json['score'], 1)

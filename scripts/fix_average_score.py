@@ -31,12 +31,15 @@ os.environ['USER_EMAIL'] = 'adamjmcgrath@gmail.com'
 def auth_func():
   return os.environ['USER_EMAIL'], getpass.getpass('Password:')
 
-
-def fix_user(u):
-  uqs = [uq for uq in models.UserQuestion.query(
+def get_uqs(u):
+  return [uq for uq in models.UserQuestion.query(
     models.UserQuestion.user==u.key,
     models.UserQuestion.complete==True,
    ndb.OR(models.UserQuestion.score==0, models.UserQuestion.score==None))]
+
+def fix_user(u):
+  uqs = get_uqs(u)
+  lus = models.LeagueUser.query(models.LeagueUser.user==u.key)
 
   correction = 0
 
@@ -47,8 +50,21 @@ def fix_user(u):
 
   u.active_questions_answered = u.questions_answered - correction
   print '%s: old: %d, new: %d' % (u.username, u.questions_answered, u.active_questions_answered)
-  if correction > 1:
+  if u.active_questions_answered > 0:
     u.put()
+
+  for lu in lus:
+    l_correction = 0
+    league = lu.league.get()
+    for uq in uqs:
+      if (uq.created and
+          uq.created.date() > league.created and
+         (uq.created - uq.question.get().posed) > datetime.timedelta(days=7)):
+        l_correction += 1
+    lu.active_questions_answered = lu.questions_answered - l_correction
+    print '  league - %s: old: %d, new: %d' % (u.username, lu.questions_answered, lu.active_questions_answered)
+    if lu.active_questions_answered > 0:
+      lu.put()
 
 
 def main():

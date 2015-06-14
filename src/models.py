@@ -253,7 +253,7 @@ class User(AuthUser):
       'user_pic': user.pic_url(size=30),
       'score': user.overall_score,
       'clues': user.overall_clues,
-      'answered': user.questions_answered,
+      'answered': user.active_questions_answered
     }
 
 
@@ -380,7 +380,7 @@ class UserSeason(ndb.Model):
       'user_pic': user.pic_url(size=30),
       'score': user_season.score,
       'clues': user_season.clues,
-      'answered': user_season.questions_answered,
+      'answered': user_season.questions_answered
     }
 
 
@@ -456,6 +456,7 @@ class LeagueUser(ndb.Model):
   score = ndb.IntegerProperty(default=0)
   clues = ndb.IntegerProperty(default=0)
   questions_answered = ndb.IntegerProperty(default=0)
+  active_questions_answered = ndb.IntegerProperty(default=0)
 
   @classmethod
   def from_league_user(cls, league_key, user_key):
@@ -479,5 +480,5 @@ class LeagueUser(ndb.Model):
       'user_pic': user.pic_url(size=30),
       'score': league_user.score,
       'clues': league_user.clues,
-      'answered': league_user.questions_answered,
+      'answered': league_user.active_questions_answered
     }
