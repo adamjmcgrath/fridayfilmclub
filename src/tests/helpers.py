@@ -95,6 +95,7 @@ def league_user(id=None,
                 league=None,
                 score=None,
                 clues=None,
+                active_questions_answered=None,
                 questions_answered=None):
   return models.LeagueUser(**locals())
 
