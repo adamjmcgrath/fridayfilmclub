@@ -201,9 +201,9 @@ class LeagueUsersField(fields.HiddenField):
 class Question(Form):
   """A question form."""
   def __init__(self):
+    super(Question, self).__init__()
     self.week.default = WeekField.week_default()
     self.season.choices = SeasonField.season_choices()
-    super(Question, self).__init__()
   
   answer = FilmField('Film', [validators.Required()], id='film')
   clues = CluesFieldList(ClueFormField(ClueForm), min_entries=4)
