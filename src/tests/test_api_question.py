@@ -244,7 +244,7 @@ class ApiTestCase(base.TestCase):
                                       clues=5,
                                       questions_answered=1)
     league_user.put()
-    question_api.update_users_league_scores(user_key, 5, 5)
+    question_api.update_users_league_scores(user_key, 5, 5, False)
     self.assertEqual(league_user.score, 10)
     self.assertEqual(league_user.clues, 9)
     self.assertEqual(league_user.questions_answered, 2)

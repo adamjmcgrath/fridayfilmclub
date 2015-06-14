@@ -45,7 +45,7 @@ def update_users_season_score(user_season, score, num_guesses):
   user_season.questions_answered += 1
 
 
-def update_users_league_scores(user_key, score, num_guesses):
+def update_users_league_scores(user_key, score, num_guesses, is_current):
   to_put = []
   user = user_key.get()
   for league_key in user.leagues:
@@ -53,6 +53,8 @@ def update_users_league_scores(user_key, score, num_guesses):
     user_league.score += score
     user_league.clues += num_guesses - 1
     user_league.questions_answered += 1
+    if is_current:
+      user_league.active_questions_answered += 1
     to_put.append(user_league)
   ndb.put_multi(to_put)
 
@@ -130,7 +132,8 @@ class Question(baserequesthandler.RequestHandler):
           deferred.defer(update_users_league_scores,
                          user.key,
                          score,
-                         num_guesses)
+                         num_guesses,
+                         question.is_current)
 
         # Update the user season.
         if question.season and not user.is_anonymous:
