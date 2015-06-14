@@ -83,8 +83,8 @@ routes = [
     webapp2.Route(r'/leaderboard/<league:.*>', views.LeaderBoard,
         name='leader-board-league'),
     webapp2.Route(r'/highscores', views.HighScores, name='high-scores'),
-    webapp2.Route(r'/highscores/<league:.*>', views.HighScores,
-        name='high-scores-league'),
+    webapp2.Route(r'/highscoresnew', views.HighScoresNew, name='high-scores'),
+
     webapp2.Route(r'/how', views.HowItWorks, name='how-it-works'),
     webapp2.Route(r'/u/<:[\w\d_]+>', views.Profile, name='profile'),
     webapp2.Route(r'/', views.HomePage, name='home'),

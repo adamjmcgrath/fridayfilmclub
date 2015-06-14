@@ -6,6 +6,7 @@
 
 __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 
+from itertools import groupby
 import logging
 from operator import itemgetter
 import uuid
@@ -201,6 +202,27 @@ class HighScores(baserequesthandler.RequestHandler):
     self.render_template('highscores.html', {
       'user_questions': user_question_query.fetch(10),
       'league': league
+    })
+
+
+class HighScoresNew(baserequesthandler.RequestHandler):
+  """The high scores page."""
+
+  def get(self, league=None):
+    user_questions = models.UserQuestion.query(
+      models.UserQuestion.score > 19949).order(
+      -models.UserQuestion.score).fetch(1000)
+
+    scores = []
+    for key, group in groupby(user_questions, lambda uq: uq.score):
+      scores.append({
+        'score': key,
+        'users': [(key, len(list(group))) for key, group in groupby(
+          sorted(group, key=lambda uq: uq.user), lambda uq: uq.user)]
+      })
+
+    self.render_template('highscoresnew.html', {
+      'scores': scores
     })
 
 

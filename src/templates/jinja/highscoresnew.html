@@ -1,0 +1,39 @@
+{% extends "templates/jinja/base.tpl" %}
+
+{% set page_id = 'highscores-page' %}
+
+{% block page_id %}{{ page_id }}{% endblock page_id %}
+
+{% block content %}
+<div class="col-md-12">
+  <h1>High Scores</h1>
+  <p class="intro">An on-going list for the most rapid answers of all time.</p>
+  {% for score in scores %}
+    <h2 class="high-scores-score">{{score.score}}</h2>
+    {% for (user, count) in score.users %}
+    {% set user_entity = user.get() %}
+    <span class="high-score-user">
+      <a href="{{ uri_for('profile', None, user_entity.username) }}">
+        <img src="{{ user_entity.pic_url() }}"
+             width="20"
+             height="20"
+             alt="{{user_entity.username}}"
+             title="{{user_entity.username}}">
+      </a>
+      {% if count > 1 %}
+      <span>{{count}}</span>
+      {% endif %}
+    </span>
+    {% endfor %}
+  {% endfor %}
+  <br>
+{% endblock %}
+
+{% block sidebar %}
+<div class="col-md-3" id="sidebar">
+
+</div>
+{% endblock %}
+
+{% block body_base %}
+{% endblock %}
