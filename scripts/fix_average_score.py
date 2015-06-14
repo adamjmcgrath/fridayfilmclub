@@ -50,7 +50,7 @@ def fix_user(u):
 
   u.active_questions_answered = u.questions_answered - correction
   print '%s: old: %d, new: %d' % (u.username, u.questions_answered, u.active_questions_answered)
-  if correction > 0:
+  if u.active_questions_answered > 0:
     u.put()
 
   for lu in lus:
@@ -63,7 +63,7 @@ def fix_user(u):
         l_correction += 1
     lu.active_questions_answered = lu.questions_answered - l_correction
     print '  league - %s: old: %d, new: %d' % (u.username, lu.questions_answered, lu.active_questions_answered)
-    if l_correction > 0:
+    if lu.active_questions_answered > 0:
       lu.put()
 
 

@@ -253,8 +253,7 @@ class User(AuthUser):
       'user_pic': user.pic_url(size=30),
       'score': user.overall_score,
       'clues': user.overall_clues,
-      'answered': user.questions_answered,
-      'active_answered': user.active_questions_answered,
+      'answered': user.active_questions_answered
     }
 
 
@@ -481,6 +480,5 @@ class LeagueUser(ndb.Model):
       'user_pic': user.pic_url(size=30),
       'score': league_user.score,
       'clues': league_user.clues,
-      'answered': league_user.questions_answered,
-      'active_answered': league_user.active_questions_answered,
+      'answered': league_user.active_questions_answered
     }
