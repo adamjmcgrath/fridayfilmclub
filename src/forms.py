@@ -200,8 +200,8 @@ class LeagueUsersField(fields.HiddenField):
 
 class Question(Form):
   """A question form."""
-  def __init__(self):
-    super(Question, self).__init__()
+  def __init__(self,  **kwargs):
+    super(Question, self).__init__( **kwargs)
     self.week.default = WeekField.week_default()
     self.season.choices = SeasonField.season_choices()
   
