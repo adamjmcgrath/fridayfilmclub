@@ -12,12 +12,13 @@ import logging
 import json
 import re
 import posixpath
+import uuid
+import cloudstorage
 
 import webapp2
 from webapp2_extras import auth
-from google.appengine.api import files
-from google.appengine.api import urlfetch
-from google.appengine.ext import ndb
+from google.appengine.api import files, images, urlfetch
+from google.appengine.ext import blobstore, ndb
 from google.appengine.ext.db import BadKeyError
 from wtforms import fields, Form, validators, widgets
 
@@ -26,6 +27,7 @@ import settings
 
 
 _USERNAME_RE = re.compile(r'^[\w\d_]{3,16}$')
+GCS_FOLDER = '/ffcapp.appspot.com/images/'
 
 
 def validate_username(form, field):
@@ -94,24 +96,32 @@ class FilmField(fields.HiddenField):
 class ImageField(fields.FileField):
   """An image field."""
 
-  def populate_obj(self, obj, name):
-    """Populate the object represented by the film field."""
-    req = webapp2.get_request()
-    img_file = req.get(self.name)
-    if not img_file:
-      return
-    file_name = files.blobstore.create(mime_type='application/octet-stream')
-    with files.open(file_name, 'a') as f:
-      f.write(img_file)
-    files.finalize(file_name)
+  def __init__(self, name, gcs_folder, img_size=None, **kwargs):
+    self.gcs_folder = gcs_folder
+    self.img_size = img_size
+    super(ImageField, self).__init__(name, **kwargs)
 
-    setattr(obj, name, files.blobstore.get_blob_key(file_name))
+  def populate_obj(self, obj, name):
+    """Populate the question model with a GCS image."""
+    req = webapp2.get_request()
+    if not req.get(self.name):
+      return
+
+    img_file = req.POST.get(self.name)
+    file_name = posixpath.join(
+      GCS_FOLDER, self.gcs_folder, uuid.uuid4(), img_file.filename)
+    gcs_file = cloudstorage.open(file_name, 'w', content_type=img_file.type)
+    logging.info('Saving file: %s' % file_name)
+    gcs_file.write(img_file.value)
+    gcs_file.close()
+
+    setattr(obj, name, blobstore.create_gs_key('/gs' + file_name))
 
 
 class ClueForm(Form):
   """A clue form."""
   text = fields.TextAreaField('Text')
-  image = ImageField('Image')
+  image = ImageField('Image', 'clues')
 
 
 class ClueFormField(fields.FormField):
@@ -208,7 +218,7 @@ class Question(Form):
   answer = FilmField('Film', [validators.Required()], id='film')
   clues = CluesFieldList(ClueFormField(ClueForm), min_entries=4)
   email_msg = fields.TextAreaField('Email Message')
-  packshot = ImageField('Image')
+  packshot = ImageField('Image', 'questions')
   imdb_url = fields.TextField('IMDB Link',
                               default='http://www.imdb.com/title/XXX/')
   week = WeekField(choices=WeekField.week_choices())
@@ -223,14 +233,14 @@ class Registration(Form):
 class User(Form):
   username = fields.TextField('', [validate_username])
   email = fields.TextField(validators=[validators.Email()])
-  pic = ImageField('pic')
+  pic = ImageField('pic', 'profiles')
   favourite_film = FilmField()
 
 
 class League(Form):
   id = fields.HiddenField('')
   name = fields.TextField('', [validate_league_name])
-  pic = ImageField('pic')
+  pic = ImageField('pic', 'leagues')
   owner = CurrentUserField()
   users = LeagueUsersField()
 
