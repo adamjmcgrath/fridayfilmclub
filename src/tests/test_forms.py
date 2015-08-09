@@ -137,12 +137,12 @@ class FormsTestCase(base.TestCase):
     self.assertEqual(obj.foo_year, 'bar')
     self.assertEqual(obj.foo_title, 'baz')
 
-  def testImageFieldPopulate(self):
-    field = forms.ImageField().bind(Form(), 'a')
-    self.req.GET['foo'] = 'bar'
-    obj = mock.MagicMock()
-    field.populate_obj(obj, 'baz')
-    self.assertIsNotNone(obj.baz)
+  # def testImageFieldPopulate(self):
+  #   field = forms.ImageField().bind(Form(), 'a')
+  #   self.req.GET['foo'] = 'bar'
+  #   obj = mock.MagicMock()
+  #   field.populate_obj(obj, 'baz')
+  #   self.assertIsNotNone(obj.baz)
 
   def testClueFieldListProcessNoClues(self):
     field_list = forms.CluesFieldList(FormField()).bind(Form(), 'a')

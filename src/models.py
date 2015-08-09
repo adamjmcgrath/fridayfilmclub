@@ -66,6 +66,7 @@ class Question(ndb.Model):
   is_current = ndb.BooleanProperty(default=False)
   imdb_url = ndb.StringProperty()
   packshot = ndb.BlobKeyProperty()
+  packshot_img_url = ndb.StringProperty()
   email_msg = ndb.TextProperty()
   season = ndb.KeyProperty(kind=Season)
   week = ndb.IntegerProperty()
