@@ -45,6 +45,7 @@ routes = [
         'tasks-cleananonusers'),
     webapp2.Route(r'/tasks/cleanupusertokens', tasks.CleanUpUserTokens,
         'tasks-cleanupusertokens'),
+    webapp2.Route(r'/tasks/backup', tasks.ScheduledBackup, 'tasks-backup'),
 
     # Api.
     webapp2.Route(r'/api/question/<:.+>', question.Question, 'api-question'),
