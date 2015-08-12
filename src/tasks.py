@@ -9,6 +9,7 @@ __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 import datetime
 import logging
 
+from google.appengine.api import taskqueue
 from google.appengine.ext import deferred, blobstore, ndb
 from webapp2_extras.appengine.auth.models import UserToken
 
@@ -16,6 +17,17 @@ import baserequesthandler
 import models
 
 BATCH_SIZE = 100
+BACKUP_ENTITIES = [
+  'Clue',
+  'Question',
+  'Season',
+  'User',
+  'UserQuestion',
+  'UserSeason',
+  'UserToken',
+  'League',
+  'LeagueUser',
+]
 
 
 def delete_user(user_id, anonymous=False):
@@ -93,3 +105,19 @@ class CleanUpUserTokens(baserequesthandler.RequestHandler):
       else:
         break
 
+
+class ScheduledBackup(baserequesthandler.RequestHandler):
+
+  def get(self):
+    backup_folder = datetime.now().strftime('%y-%m-%d')
+    bucket_name = 'ffcapp.appspot.com/backups/%s' % backup_folder
+    params = {
+      'filesystem' : 'gs',
+      'gs_bucket_name': bucket_name,
+      'kind' : BACKUP_ENTITIES
+    }
+
+    url = '/_ah/datastore_admin/backup.create'
+
+    logging.info('Backing up %s to: %s' % (BACKUP_ENTITIES, bucket_name))
+    taskqueue.add(url=url, params=params, queue_name='backup-builtin-queue')
