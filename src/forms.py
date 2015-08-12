@@ -17,7 +17,7 @@ import cloudstorage
 
 import webapp2
 from webapp2_extras import auth
-from google.appengine.api import files, images, urlfetch
+from google.appengine.api import images, urlfetch
 from google.appengine.ext import blobstore, ndb
 from google.appengine.ext.db import BadKeyError
 from wtforms import fields, Form, validators, widgets

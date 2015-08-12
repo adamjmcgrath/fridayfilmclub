@@ -33,7 +33,6 @@ class FormsTestCase(base.TestCase):
     self.req = req
     self.testbed.init_datastore_v3_stub()
     self.testbed.init_blobstore_stub()
-    self.testbed.init_files_stub()
 
   def testValidateValidUsername(self):
     field = mock.MagicMock()
