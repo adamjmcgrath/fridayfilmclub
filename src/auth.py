@@ -90,7 +90,8 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
     if user:
       logging.info('Found existing user to log in')
       # existing user. just log them in and update token.
-      user.populate(**self._to_user_model_attrs(data, provider, False))
+      user.populate(**self._to_user_model_attrs(
+        data, provider, False, user.username_lower))
       user.put()
       self.auth.set_session(self.auth.store.user_to_dict(user), remember=True)
 
@@ -104,7 +105,8 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
         logging.info('Updating currently logged in user.')
         user = self.current_user
         user.auth_ids.append(auth_id)
-        user.populate(**self._to_user_model_attrs(data, provider, False))
+        user.populate(**self._to_user_model_attrs(
+          data, provider, False, user.username_lower))
         user.put()
         self.auth.set_session(self.auth.store.user_to_dict(user), remember=True)
 
