@@ -109,7 +109,7 @@ class CleanUpUserTokens(baserequesthandler.RequestHandler):
 class ScheduledBackup(baserequesthandler.RequestHandler):
 
   def get(self):
-    backup_folder = datetime.now().strftime('%y-%m-%d')
+    backup_folder = datetime.datetime.now().strftime('%y-%m-%d')
     bucket_name = 'ffcapp.appspot.com/backups/%s' % backup_folder
     params = {
       'filesystem' : 'gs',
