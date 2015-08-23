@@ -83,9 +83,25 @@ def migrate_packshot(q):
 
 
 def migrate_questions():
-  for q in models.Question.query().fetch(2):
+  for q in models.Question.query():
     migrate_packshot(q)
     migrate_screenshot(q)
+
+
+def migrate_users():
+  for u in models.User.query():
+    old_key = str(u.pic)
+    u.pic = save_image(u.pic, 'profiles', u.username_lower)
+    print ('profile: %s | old: %s | new: %s' % (u.username_lower, old_key, str(u.pic)))
+    u.put()
+
+
+def migrate_leagues():
+  for l in models.League.query():
+    old_key = str(l.pic)
+    l.pic = save_image(l.pic, 'leagues', l.name_slug)
+    print ('league: %s | old: %s | new: %s' % (l.name_slug, old_key, str(l.pic)))
+    l.put()
 
 
 def main():
@@ -93,8 +109,9 @@ def main():
   remote_api_stub.ConfigureRemoteApi(APP_NAME, '/_ah/remote_api',
       auth_func, servername='ffcapp.appspot.com')
 
-  # migrate_questions()
-  # TODO leagues, users
+  migrate_questions()
+  migrate_users()
+  migrate_leagues()
 
 
 if __name__ == '__main__':
