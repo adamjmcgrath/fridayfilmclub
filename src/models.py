@@ -247,7 +247,7 @@ class User(AuthUser):
       logging.info('Saving file: %s' % file_name)
       gcs_file.write(result.content)
       gcs_file.close()
-      return blobstore.create_gs_key('/gs' + file_name)
+      return blobstore.BlobKey(blobstore.create_gs_key('/gs' + file_name))
 
   @staticmethod
   def to_leaderboard_json(user):
