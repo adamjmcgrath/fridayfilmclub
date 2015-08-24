@@ -45,6 +45,10 @@ def auth_func():
   return (os.environ['USER_EMAIL'], getpass.getpass())
 
 def save_image(blob_key, folder_name, file_name):
+  if not blob_key:
+    print 'ERROR: no blob %s/%s' % (folder_name, file_name)
+    return blob_key
+
   img_file = blobstore.BlobInfo(blob_key)
   img_file_o = img_file.open()
   img_data = img_file_o.read()
@@ -87,21 +91,33 @@ def migrate_questions():
     migrate_packshot(q)
     migrate_screenshot(q)
 
-
-def migrate_users():
-  for u in models.User.query():
+def migrate_users(curs=None):
+  users, next_curs, more = models.User.query().fetch_page(500,
+                                                          start_cursor=curs)
+  for u in users:
     old_key = str(u.pic)
     u.pic = save_image(u.pic, 'profiles', u.username_lower)
     print ('profile: %s | old: %s | new: %s' % (u.username_lower, old_key, str(u.pic)))
-    u.put()
+
+  ndb.put_multi(users)
+
+  if more:
+    migrate_users(next_curs)
 
 
-def migrate_leagues():
-  for l in models.League.query():
+def migrate_leagues(curs=None):
+  leagues, next_curs, more = models.League.query().fetch_page(500,
+                                                              start_cursor=curs)
+
+  for l in leagues:
     old_key = str(l.pic)
     l.pic = save_image(l.pic, 'leagues', l.name_slug)
     print ('league: %s | old: %s | new: %s' % (l.name_slug, old_key, str(l.pic)))
-    l.put()
+
+  ndb.put_multi(leagues)
+
+  if more:
+    migrate_leagues(next_curs)
 
 
 def main():
