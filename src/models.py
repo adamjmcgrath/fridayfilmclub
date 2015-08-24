@@ -9,15 +9,15 @@ __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 import datetime
 import json
 import logging
-import hashlib
+import posixpath
 import re
-import time
 import uuid
+import cloudstorage
 
 from webapp2_extras.appengine.auth.models import User as AuthUser
 
-from google.appengine.api import files, images, urlfetch
-from google.appengine.ext import ndb
+from google.appengine.api import images, urlfetch
+from google.appengine.ext import blobstore, ndb
 
 from api import leaderboard
 import settings
@@ -66,6 +66,7 @@ class Question(ndb.Model):
   is_current = ndb.BooleanProperty(default=False)
   imdb_url = ndb.StringProperty()
   packshot = ndb.BlobKeyProperty()
+  packshot_img_url = ndb.StringProperty()
   email_msg = ndb.TextProperty()
   season = ndb.KeyProperty(kind=Season)
   week = ndb.IntegerProperty()
@@ -236,14 +237,17 @@ class User(AuthUser):
     return User.query().filter(User.username_lower == username.lower()).get()
 
   @staticmethod
-  def blob_from_url(url):
+  def blob_from_url(url, username):
     result = urlfetch.fetch(url)
     if result.status_code == 200:
-      file_name = files.blobstore.create(mime_type='application/octet-stream')
-      with files.open(file_name, 'a') as f:
-        f.write(result.content)
-      files.finalize(file_name)
-      return files.blobstore.get_blob_key(file_name)
+      file_name = posixpath.join(
+        '/ffcapp.appspot.com/images/profiles/', username)
+      gcs_file = cloudstorage.open(
+        file_name, 'w', content_type=result.headers['Content-Type'])
+      logging.info('Saving file: %s' % file_name)
+      gcs_file.write(result.content)
+      gcs_file.close()
+      return blobstore.BlobKey(blobstore.create_gs_key('/gs' + file_name))
 
   @staticmethod
   def to_leaderboard_json(user):

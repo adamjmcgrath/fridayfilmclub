@@ -33,7 +33,6 @@ class FormsTestCase(base.TestCase):
     self.req = req
     self.testbed.init_datastore_v3_stub()
     self.testbed.init_blobstore_stub()
-    self.testbed.init_files_stub()
 
   def testValidateValidUsername(self):
     field = mock.MagicMock()
@@ -138,7 +137,7 @@ class FormsTestCase(base.TestCase):
     self.assertEqual(obj.foo_title, 'baz')
 
   def testImageFieldPopulate(self):
-    field = forms.ImageField().bind(Form(), 'a')
+    field = forms.ImageField('foo', 'bar').bind(Form(), 'a')
     self.req.GET['foo'] = 'bar'
     obj = mock.MagicMock()
     field.populate_obj(obj, 'baz')

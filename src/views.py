@@ -10,7 +10,7 @@ import logging
 from operator import itemgetter
 import uuid
 
-from google.appengine.api import channel, files, users
+from google.appengine.api import channel, users
 from google.appengine.ext import ndb
 
 import auth

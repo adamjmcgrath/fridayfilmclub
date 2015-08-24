@@ -13,3 +13,4 @@ python-coveralls
 python-dateutil==2.1
 wtforms==0.6.3
 gaenv==0.1.8.post0
+GoogleAppEngineCloudStorageClient==1.9.22.1

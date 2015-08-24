@@ -12,12 +12,12 @@ import logging
 import json
 import re
 import posixpath
+import cloudstorage
 
 import webapp2
 from webapp2_extras import auth
-from google.appengine.api import files
-from google.appengine.api import urlfetch
-from google.appengine.ext import ndb
+from google.appengine.api import images, urlfetch
+from google.appengine.ext import blobstore, ndb
 from google.appengine.ext.db import BadKeyError
 from wtforms import fields, Form, validators, widgets
 
@@ -26,6 +26,7 @@ import settings
 
 
 _USERNAME_RE = re.compile(r'^[\w\d_]{3,16}$')
+GCS_ROOT = '/ffcapp.appspot.com/images/'
 
 
 def validate_username(form, field):
@@ -94,24 +95,61 @@ class FilmField(fields.HiddenField):
 class ImageField(fields.FileField):
   """An image field."""
 
-  def populate_obj(self, obj, name):
-    """Populate the object represented by the film field."""
-    req = webapp2.get_request()
-    img_file = req.get(self.name)
-    if not img_file:
-      return
-    file_name = files.blobstore.create(mime_type='application/octet-stream')
-    with files.open(file_name, 'a') as f:
-      f.write(img_file)
-    files.finalize(file_name)
+  def __init__(self, name, gcs_folder, img_size=None, **kwargs):
+    self.gcs_folder = gcs_folder
+    self.img_size = img_size
+    super(ImageField, self).__init__(name, **kwargs)
 
-    setattr(obj, name, files.blobstore.get_blob_key(file_name))
+  def file_name(self, req, obj):
+    img_file = req.POST.get(self.name)
+    return img_file.filename
+
+  def populate_obj(self, obj, name):
+    """Populate the question model with a GCS image."""
+    req = webapp2.get_request()
+    if not req.get(self.name):
+      return
+
+    img_file = req.POST.get(self.name)
+    file_name = posixpath.join(
+      GCS_ROOT, self.gcs_folder, self.file_name(req, obj))
+    gcs_file = cloudstorage.open(file_name, 'w', content_type=img_file.type)
+    logging.info('Saving file: %s' % file_name)
+    gcs_file.write(img_file.value)
+    gcs_file.close()
+
+    setattr(obj, name,
+            blobstore.BlobKey(blobstore.create_gs_key('/gs' + file_name)))
+
+
+class ProfileImageField(ImageField):
+
+  def file_name(self, req, obj):
+    return obj.username_lower
+
+
+class PackshotImageField(ImageField):
+
+  def file_name(self, req, obj):
+    return '%s-packshot' % models.slugify(obj.answer_title)
+
+
+class ScreenshotImageField(ImageField):
+
+  def file_name(self, req, obj):
+    return '%s-screenshot' % models.slugify(obj.question.get().answer_title)
+
+
+class LeagueImageField(ImageField):
+
+  def file_name(self, req, obj):
+    return obj.name_slug
 
 
 class ClueForm(Form):
   """A clue form."""
   text = fields.TextAreaField('Text')
-  image = ImageField('Image')
+  image = ScreenshotImageField('Image', 'questions')
 
 
 class ClueFormField(fields.FormField):
@@ -198,7 +236,41 @@ class LeagueUsersField(fields.HiddenField):
     entity.users = [ndb.Key('User', int(key)) for key in self.data.split(',')]
 
 
-class Question(Form):
+class OrderedFieldForm(Form):
+  """
+  Set the order in which the fields populate the model.
+
+  So we can rely on the model having populated fields in subsequent
+  populate object calls.
+  """
+
+  # The field order list must contain the name of every field.
+  field_order = []
+
+  def populate_obj(self, obj):
+    """
+    Populates the attributes of the passed `obj` with data from the form's
+    fields.
+    """
+    items = sorted(
+      self._fields.items(), key=lambda tup: self.field_order.index(tup[0]))
+
+    for name, field in items:
+        field.populate_obj(obj, name)
+
+
+class Question(OrderedFieldForm):
+
+  field_order = [
+    'answer',
+    'clues',
+    'week',
+    'season',
+    'imdb_url',
+    'email_msg',
+    'packshot',
+  ]
+
   """A question form."""
   def __init__(self,  **kwargs):
     super(Question, self).__init__( **kwargs)
@@ -208,7 +280,7 @@ class Question(Form):
   answer = FilmField('Film', [validators.Required()], id='film')
   clues = CluesFieldList(ClueFormField(ClueForm), min_entries=4)
   email_msg = fields.TextAreaField('Email Message')
-  packshot = ImageField('Image')
+  packshot = PackshotImageField('Image', 'questions')
   imdb_url = fields.TextField('IMDB Link',
                               default='http://www.imdb.com/title/XXX/')
   week = WeekField(choices=WeekField.week_choices())
@@ -220,17 +292,34 @@ class Registration(Form):
   username = fields.TextField('', [validate_username])
 
 
-class User(Form):
+class User(OrderedFieldForm):
+
+  field_order = [
+    'username',
+    'email',
+    'favourite_film',
+    'pic',
+  ]
+
   username = fields.TextField('', [validate_username])
   email = fields.TextField(validators=[validators.Email()])
-  pic = ImageField('pic')
+  pic = ProfileImageField('pic', 'profiles')
   favourite_film = FilmField()
 
 
-class League(Form):
+class League(OrderedFieldForm):
+
+  field_order = [
+    'id',
+    'name',
+    'pic',
+    'owner',
+    'users',
+  ]
+
   id = fields.HiddenField('')
   name = fields.TextField('', [validate_league_name])
-  pic = ImageField('pic')
+  pic = LeagueImageField('pic', 'leagues')
   owner = CurrentUserField()
   users = LeagueUsersField()
 

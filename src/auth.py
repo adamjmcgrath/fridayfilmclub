@@ -90,7 +90,8 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
     if user:
       logging.info('Found existing user to log in')
       # existing user. just log them in and update token.
-      user.populate(**self._to_user_model_attrs(data, provider, False))
+      user.populate(**self._to_user_model_attrs(
+        data, provider, False, user.username_lower))
       user.put()
       self.auth.set_session(self.auth.store.user_to_dict(user), remember=True)
 
@@ -104,7 +105,8 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
         logging.info('Updating currently logged in user.')
         user = self.current_user
         user.auth_ids.append(auth_id)
-        user.populate(**self._to_user_model_attrs(data, provider, False))
+        user.populate(**self._to_user_model_attrs(
+          data, provider, False, user.username_lower))
         user.put()
         self.auth.set_session(self.auth.store.user_to_dict(user), remember=True)
 
@@ -116,7 +118,8 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
 
         # Authenticate the new user.
         user.auth_ids.append(auth_id)
-        user.populate(**self._to_user_model_attrs(data, provider, True))
+        user.populate(**self._to_user_model_attrs(
+          data, provider, True, user.username_lower))
         user.put()
         self.auth.set_session(self.auth.store.user_to_dict(user), remember=True)
         del self.session['username']
@@ -165,7 +168,7 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
     return secrets.get_auth_config(
       provider, settings.get_environment(self.request.host))
 
-  def _to_user_model_attrs(self, data, provider, new_user):
+  def _to_user_model_attrs(self, data, provider, new_user, username):
     attrs_map = self.USER_ATTRS[provider]
     user_attrs = {}
     for k, v in data.iteritems():
@@ -182,7 +185,7 @@ class AuthHandler(baserequesthandler.RequestHandler, SimpleAuthHandler):
 
         if new_user:
           if key == 'pic':
-            value = models.User.blob_from_url(value)
+            value = models.User.blob_from_url(value, username)
           user_attrs.setdefault(key, value)
 
     return user_attrs
