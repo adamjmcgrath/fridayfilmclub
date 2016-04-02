@@ -1,0 +1,29 @@
+{% extends "templates/jinja/base.tpl" %}
+
+{% set page_id = 'unsubscribe-page' %}
+
+{% block page_id %}{{ page_id }}{% endblock page_id %}
+
+{% block content %}
+  {% if success %}
+  <h4 class="text-center">You have successfully unsubscribed.</h4>
+  {% else %}
+  <h4 class="text-center">Are you sure you want to unsubscribe?</h4>
+  <div class="row">
+    <div class="col-md-6 text-right">
+      <form action="" method="post">
+        <input type="submit" class="btn btn-primary" value="Yes please">
+      </form>
+    </div>
+    <div class="col-md-6 text-left"><a href="/" class="btn btn-default">No Thanks</a></div>
+  </div>
+  {% endif %}
+{% endblock %}
+
+{% block sidebar %}
+{% endblock %}
+
+{% block body_base %}
+{% endblock %}
+
+

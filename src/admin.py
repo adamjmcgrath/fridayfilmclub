@@ -21,17 +21,27 @@ import settings
 
 EMAIL_BATCH_SIZE = 50
 
-def get_question_url(host_url, question_key, dev=False):
-    # Make sure the live cron job doesn't use the appspot.com url.
-    if 'appspot.com' in host_url:
-      if dev:
-        url = 'http://dev.ffcapp.appspot.com'
-      else:
-        url = 'http://www.fridayfilmclub.com'
-    else:
-      url = host_url
 
-    return urlparse.urljoin(url, 'question/%s' % question_key)
+def get_host(host_url, dev=False):
+  # Make sure the live cron job doesn't use the appspot.com url.
+  if 'appspot.com' in host_url:
+    if dev:
+      url = 'http://dev.ffcapp.appspot.com'
+    else:
+      url = 'http://www.fridayfilmclub.com'
+  else:
+    url = host_url
+  return url
+
+
+def get_question_url(host_url, question_key, dev=False):
+  url = get_host(host_url, dev)
+  return urlparse.urljoin(url, 'question/%s' % question_key)
+
+
+def get_unsubscribe_url(host_url, user_id, dev=False):
+  url = get_host(host_url, dev)
+  return urlparse.urljoin(url, 'unsubscribe/%d' % user_id)
 
 
 class HomePage(baserequesthandler.RequestHandler):
@@ -132,20 +142,12 @@ class PoseQuestion(baserequesthandler.RequestHandler):
     cursor = self.request.get('cursor') or None
     if cursor:
       cursor = Cursor(urlsafe=cursor)
-    q = models.User.query()
+    q = models.User.query().filter(models.User.should_email == True)
     user_entities, next_cursor, more = q.fetch_page(EMAIL_BATCH_SIZE,
                                                     start_cursor=cursor)
     subject = self.request.get('subject')
     msg = self.request.get('msg')
     question = self.request.get('question')
-
-    # Create an email with a link to the dev environment for trusted testers.
-    url = get_question_url(self.request.host_url, question, dev=False)
-    url_dev = get_question_url(self.request.host_url, question, dev=True)
-    body = self.generate_template(
-      'email/question.txt', {'url': url, 'msg': msg})
-    body_dev = self.generate_template(
-      'email/question.txt', {'url': url_dev, 'msg': msg})
 
     for user_entity in user_entities:
       try:
@@ -153,10 +155,19 @@ class PoseQuestion(baserequesthandler.RequestHandler):
       except AttributeError:
         continue
 
+      body = self.generate_template('email/question.txt', {
+        'url': get_question_url(self.request.host_url, question,
+                                dev=user_entity.is_trusted_tester),
+        'msg': msg,
+        'unsubscribe_url': get_unsubscribe_url(self.request.host_url,
+                                               user_entity.key.id(),
+                                               dev=user_entity.is_trusted_tester)
+      })
+
       mail.send_mail(sender=settings.FMJ_EMAIL,
                      to=email,
                      subject=subject,
-                     body=body_dev if user_entity.is_trusted_tester else body)
+                     body=body)
 
     if more:
       taskqueue.add(url=self.request.path,
@@ -174,9 +185,10 @@ class PoseQuestionTest(baserequesthandler.RequestHandler):
   def get(self, key):
     """Sends a test email to the admins."""
     question = models.Question.get_by_id(int(key))
-
     body = self.generate_template('email/question.txt', {
       'url': get_question_url(self.request.host_url, key),
+      # Use a dummy user id for the unsubscribe url
+      'unsubscribe_url': get_unsubscribe_url(self.request.host_url, 1),
       'msg': question.email_msg,
       'name': 'Admin'
     })
@@ -186,7 +198,8 @@ class PoseQuestionTest(baserequesthandler.RequestHandler):
                    subject='Friday Film Club TEST',
                    body=body)
 
-    self.redirect(self.uri_for('admin-homepage'))
+    self.response.headers['content-type'] = 'text/plain'
+    self.response.out.write(body)
 
 
 class DryRun(baserequesthandler.RequestHandler):

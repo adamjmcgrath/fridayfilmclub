@@ -51,7 +51,8 @@ def user(id=None,
          active_questions_answered=0,
          invited_by=None,
          joined=None,
-         leagues=None):
+         leagues=None,
+         should_email=True):
   leagues = leagues or []
   return models.User(**locals())
 

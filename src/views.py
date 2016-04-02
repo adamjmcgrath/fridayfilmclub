@@ -267,3 +267,25 @@ class AddEditLeague(baserequesthandler.RequestHandler):
           'form': form,
           'league': league
       })
+
+
+class Unsubscribe(baserequesthandler.RequestHandler):
+
+  def get(self, user_id):
+    user = ndb.Key('User', int(user_id)).get()
+    if not user:
+      return self.error(404)
+
+    self.render_template('unsubscribe.html', {})
+
+  def post(self, user_id):
+    user = ndb.Key('User', int(user_id)).get()
+    if not user:
+      return self.error(401)
+
+    user.should_email = False
+    user.put()
+
+    self.render_template('unsubscribe.html', {
+      'success': True
+    })
