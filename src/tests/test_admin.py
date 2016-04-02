@@ -46,7 +46,7 @@ class AdminTestCase(base.TestCase):
                      'http://localhost:8080/question/foo')
 
   def testPoseQuestionEmail(self):
-    helpers.user(email='foo@bar.com').put()
+    user_id = helpers.user(email='foo@bar.com').put().id()
     os.environ['USER_IS_ADMIN'] = '1'
     self.post('/admin/posequestion', params={
       'subject': 'Foo',
@@ -59,10 +59,27 @@ class AdminTestCase(base.TestCase):
     self.assertEqual(1, len(messages))
     self.assertEqual('Foo', message.subject)
     self.assertIn(
+      'http://www.fridayfilmclub.com/unsubscribe/%d' % user_id, message.body.payload)
+    self.assertIn(
       'http://www.fridayfilmclub.com/question/baz', message.body.payload)
 
+  def testPoseQuestionEmailShouldEmail(self):
+    helpers.user(email='foo@bar.com').put()
+    helpers.user(email='bar@bar.com', should_email=False).put()
+    os.environ['USER_IS_ADMIN'] = '1'
+    self.post('/admin/posequestion', params={
+      'subject': 'Foo',
+      'msg': 'Bar',
+      'question': 'baz',
+    }, headers={'host': 'ffcapp.appspot.com'})
+
+    messages = self.mail_stub.get_sent_messages()
+    message = messages[0]
+    self.assertEqual(1, len(messages))
+    self.assertEqual('foo@bar.com', message.to)
+
   def testPoseQuestionTrustedTesterEmail(self):
-    helpers.user(email='foo@bar.com', is_trusted_tester=True).put()
+    user_id = helpers.user(email='foo@bar.com', is_trusted_tester=True).put().id()
     os.environ['USER_IS_ADMIN'] = '1'
     self.post('/admin/posequestion', params={
       'subject': 'Foo',
@@ -74,6 +91,8 @@ class AdminTestCase(base.TestCase):
     message = messages[0]
     self.assertEqual(1, len(messages))
     self.assertEqual('Foo', message.subject)
+    self.assertIn(
+      'http://dev.ffcapp.appspot.com/unsubscribe/%d' % user_id, message.body.payload)
     self.assertIn(
       'http://dev.ffcapp.appspot.com/question/baz', message.body.payload)
 

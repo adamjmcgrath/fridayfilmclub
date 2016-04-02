@@ -164,6 +164,7 @@ class User(AuthUser):
   is_admin = ndb.BooleanProperty(default=False)
   is_anonymous = ndb.BooleanProperty(default=False)
   is_trusted_tester = ndb.BooleanProperty(default=False)
+  should_email = ndb.BooleanProperty(default=True)
   pic = ndb.BlobKeyProperty()
   name = ndb.StringProperty()
   username = ndb.StringProperty()

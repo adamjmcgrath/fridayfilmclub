@@ -7,8 +7,8 @@
 
 To get entities from prod backup:
 
-1. gsutil -m cp gs://ffcapp.appspot.com/**YYYY_MM_DD** data/backups/YYYYMMDD/.
-2. Run restore_dev_data.py YYYYMMDD
+1. gsutil -m cp gs://ffcapp.appspot.com/backups/YY-MM-DD data/backups/.
+2. Run restore_dev_data.py YY-MM-DD
 """
 
 import os
@@ -50,34 +50,45 @@ def fix_emails(curs=None):
   if more:
     fix_emails(next_curs)
 
+def recursive_walk(folder):
+  for folderName, subfolders, filenames in os.walk(folder):
+    if subfolders:
+      for subfolder in subfolders:
+        recursive_walk(subfolder)
+    print('\nFolder: ' + folderName + '\n')
+    for filename in filenames:
+      handle_file(folderName, filename)
+
+def handle_file(base_dir, backup_file):
+  raw = open('%s/%s' % (base_dir, backup_file), 'r')
+  reader = records.RecordsReader(raw)
+  entities = []
+  for record in reader:
+    try:
+      entity_proto = entity_pb.EntityProto(contents=record)
+    except:
+      break
+
+    entity_proto.key().set_app(APP_NAME)
+    for p in entity_proto.property_list():
+      p.value().referencevalue().set_app(APP_NAME)
+
+    entities.append(ndb.Model._from_pb(entity_proto))
+
+  if len(entities):
+    ndb.put_multi(entities)
+    print 'restored: %s' % backup_file
 
 def main():
-  # Use 'localhost:8080' for dev server.
   remote_api_stub.ConfigureRemoteDatastore(APP_NAME, '/_ah/remote_api',
       auth_func, servername='localhost:8080')
 
   year = sys.argv[1]
-  base_dir = 'data/backups/%s' % year
+  base_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                          '../data/backups/%s' % year)
 
-  for backup_file in os.listdir(base_dir):
-    raw = open('%s/%s' % (base_dir, backup_file), 'r')
-    reader = records.RecordsReader(raw)
-    entities = []
-    for record in reader:
-      try:
-        entity_proto = entity_pb.EntityProto(contents=record)
-      except:
-        break
+  recursive_walk(base_dir)
 
-      entity_proto.key().set_app(APP_NAME)
-      for p in entity_proto.property_list():
-        p.value().referencevalue().set_app(APP_NAME)
-
-      entities.append(ndb.Model._from_pb(entity_proto))
-
-    if len(entities):
-      ndb.put_multi(entities)
-      print 'restored: %s' % backup_file
   fix_emails()
 
 if __name__ == '__main__':

@@ -89,6 +89,7 @@ routes = [
     webapp2.Route(r'/how', views.HowItWorks, name='how-it-works'),
     webapp2.Route(r'/u/<:[\w\d_]+>', views.Profile, name='profile'),
     webapp2.Route(r'/', views.HomePage, name='home'),
+    webapp2.Route(r'/unsubscribe/<:\d+>', views.Unsubscribe, name='unsubscribe'),
 ]
 
 app_config = {

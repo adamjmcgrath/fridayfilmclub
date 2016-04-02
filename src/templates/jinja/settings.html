@@ -38,6 +38,17 @@
       </div>
     </div>
 
+    {# Email prefs #}
+    <div class="form-group">
+      <div class="col-lg-offset-3 col-lg-10">
+        <div class="checkbox">
+          <label>
+            {{ form.should_email() }} Subscribe to the weekly question by email
+          </label>
+        </div>
+      </div>
+    </div>
+
     {# Favourite Film #}
     {% if not user.favourite_film_title %}
       <div class="alert alert-warning">I'd really like to know your favourite film <span class="glyphicon glyphicon-hand-down"></span></div>

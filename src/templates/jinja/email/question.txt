@@ -6,3 +6,5 @@ Talk to me, Goose!
 
 FMJ @filmmasterjack
 www.facebook.com/fridayfilmclub
+
+Click here to unsubscribe: {{ unsubscribe_url }}

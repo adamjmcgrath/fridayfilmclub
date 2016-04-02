@@ -297,11 +297,13 @@ class User(OrderedFieldForm):
   field_order = [
     'username',
     'email',
+    'should_email',
     'favourite_film',
     'pic',
   ]
 
   username = fields.TextField('', [validate_username])
+  should_email = fields.BooleanField('')
   email = fields.TextField(validators=[validators.Email()])
   pic = ProfileImageField('pic', 'profiles')
   favourite_film = FilmField()
