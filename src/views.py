@@ -7,6 +7,7 @@
 __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 
 import logging
+import math
 from operator import itemgetter
 import uuid
 
@@ -166,10 +167,15 @@ class Archive(baserequesthandler.RequestHandler):
   """An archive of old questions."""
 
   def get(self):
-    questions = models.Question.query(models.Question.posed != None,
-                                      models.Question.is_current == False)
+    page_size = 12
+    query = models.Question.query(models.Question.posed != None,
+                                  models.Question.is_current == False).order(-models.Question.posed)
+    page = int(self.request.get('page', default_value='1'))
+
     self.render_template('archive.html', {
-      'questions': questions
+      'questions': query.fetch(page_size, offset=((page - 1) * page_size)),
+      'pages': int(math.ceil(float(query.count()) / page_size)),
+      'page': page
     })
 
 
