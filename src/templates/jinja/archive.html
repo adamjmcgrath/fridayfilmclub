@@ -8,10 +8,10 @@
 <div class="col-md-12">
   <h1>Old questions</h1>
   <p class="intro">Welcome to my archive. There may not be any points on offer, but the game remains the same.</p>
-  {% if not questions.get() %}
+  {% if not questions %}
   <div class="alert alert-warning">There are no questions in the archive yet.</div>
   {% endif %} 
-  {% for q in questions|reverse %}
+  {% for q in questions %}
     {% if not loop.index0 % 3 %}
       {% if not loop.first %}
         </div>
@@ -29,6 +29,17 @@
       </div>
     {% endif %}
   {% endfor %}
+
+  <div class="archive-pagination">
+    <ul class="pagination pagination-sm">
+      {% for p in range(1, pages + 1) %}
+      <li{% if page == p %} class="active"{% endif%}>
+        <a href="?page={{p}}">{{p}}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+
 {% endblock %}
 
 {% block sidebar %}

@@ -60,6 +60,12 @@ indexes:
 
 - kind: Question
   properties:
+  - name: is_current
+  - name: posed
+    direction: desc
+
+- kind: Question
+  properties:
   - name: season
   - name: week
 

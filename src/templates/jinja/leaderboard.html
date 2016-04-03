@@ -11,7 +11,7 @@
   <ul id="leaderboard-tabs" class="nav nav-tabs">
     <li class="active"><a href="#" data-leaderboard="week">This week</a></li>
     {% for season_number in range(season.number) %}
-    <li><a href="#" data-leaderboard="{{ loop.index }}">Season {{ loop.index }}</a></li>
+    <li><a href="#" data-leaderboard="{{ loop.index }}"><span class="season-prefix">Season </span>{{ loop.index }}</a></li>
     {% endfor %}
     <li><a href="#" data-leaderboard="all">All time</a></li>
     <li class="pull-right"><a href="{{ uri_for('high-scores') }}">High Scores</a></li>

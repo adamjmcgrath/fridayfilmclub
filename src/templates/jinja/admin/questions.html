@@ -6,6 +6,16 @@
 {{super()}}
 <h2>Questions</h2>
 
+<ul id="manage-questions-tabs" class="nav nav-tabs">
+  {% for s in range(1, current_season + 1) %}
+  <li{% if s == season %} class="active"{% endif %}>
+    <a href="?season={{s}}">
+      <span class="season-prefix">Season</span> {{s}}
+    </a>
+  </li>
+  {% endfor %}
+</ul>
+
 <table class="table table-striped">
   <tr>
     <th>Title</th>
