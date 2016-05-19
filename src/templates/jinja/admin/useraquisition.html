@@ -6,7 +6,7 @@
 {{super()}}
 <h2>User Aquisition</h2>
 <div id="chart" style="width: 100%; height: 500px;"></div>
-<pre id="table"></pre>
+<div id="table" style="width: 100%; height: 500px;"></div>
 
 
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -22,7 +22,7 @@
   ];
 
 
-  google.charts.load('current', {'packages':['corechart']});
+  google.charts.load('current', {'packages':['corechart', 'table']});
   google.charts.setOnLoadCallback(drawChart);
 
   function drawChart() {
@@ -40,8 +40,9 @@
 
     chart.draw(data, options);
 
-    var csv = google.visualization.dataTableToCsv(data2);
-    document.getElementById('table').innerHTML = csv;
+    var table = new google.visualization.Table(document.getElementById('table'));
+    table.draw(data2, {width: '100%', height: '100%'});
+
 
   }
 </script>
