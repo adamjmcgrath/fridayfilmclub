@@ -1,0 +1,50 @@
+{% extends "templates/jinja/admin/base.tpl" %}
+
+{% block page_id %}user-aquisition-page{% endblock page_id %}
+
+{% block main %}
+{{super()}}
+<h2>User Aquisition</h2>
+<div id="chart" style="width: 100%; height: 500px;"></div>
+<pre id="table"></pre>
+
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<script type="text/javascript">
+  var raw = [
+    ['Month', 'Users'],{% for user in users %}
+    [new Date('{{ user.month }}'.split('-')[0], '{{ user.month }}'.split('-')[1]), {{ user.total }}],{% endfor %}
+  ];
+  var raw2 = [
+    ['Month', 'Users'],{% for user in users %}
+    [new Date('{{ user.month }}'.split('-')[0], '{{ user.month }}'.split('-')[1]), {{ user.count }}],{% endfor %}
+  ];
+
+
+  google.charts.load('current', {'packages':['corechart']});
+  google.charts.setOnLoadCallback(drawChart);
+
+  function drawChart() {
+    var data = google.visualization.arrayToDataTable(raw);
+    var data2 = google.visualization.arrayToDataTable(raw2);
+
+
+    var options = {
+      title: 'User Aquisition',
+//      curveType: 'function',
+      legend: { position: 'bottom' }
+    };
+
+    var chart = new google.visualization.LineChart(document.getElementById('chart'));
+
+    chart.draw(data, options);
+
+    var csv = google.visualization.dataTableToCsv(data2);
+    document.getElementById('table').innerHTML = csv;
+
+  }
+</script>
+
+{% endblock %}
+

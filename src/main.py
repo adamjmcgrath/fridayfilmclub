@@ -37,6 +37,8 @@ routes = [
         webapp2.Route('/dryrun', admin.DryRun, 'admin-dryrun'),
         webapp2.Route('/deleteuserquestion', admin.DeleteUserQuestion,
             'admin-delete-user-question'),
+        webapp2.Route('/user-aquisition', admin.UserAquisition,
+            'admin-user-aquisition'),
     ]),
     webapp2.Route(r'/admin', admin.HomePage, 'admin-homepage'),
 

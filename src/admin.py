@@ -6,6 +6,7 @@
 __author__ = 'adamjmcgrath@gmail.com (Adam McGrath)'
 
 import datetime
+import itertools
 import logging
 import urlparse
 
@@ -246,3 +247,25 @@ class DeleteUserQuestion(baserequesthandler.RequestHandler):
     if uq_key:
       ndb.Key('UserQuestion', uq_key).delete()
     self.redirect(self.request.referer)
+
+
+class UserAquisition(baserequesthandler.RequestHandler):
+  """Shows a chart of user aquisition."""
+
+  def get(self):
+    users = models.User.query().order(models.User.created)
+
+    data = []
+    total = 0
+    for month, group in itertools.groupby(users, key=lambda(user): user.created.strftime('%Y-%m')):
+      count = len(list(group))
+      total += count
+      data.append({
+        'month': month,
+        'count': count,
+        'total': total
+      })
+
+    self.render_template('admin/useraquisition.html', {
+      'users': data
+    })
