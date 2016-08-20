@@ -5,9 +5,11 @@
 {% block page_id %}{{ page_id }}{% endblock page_id %}
 
 {% block content %}
-<div class="container">
+<div class="page-promo">
   <h1>Leaderboard</h1>
   <p>Remember, every 12 weeks the current FFC season ends and another begins so there’s plenty of chance to play catch-up. </p>
+</div>
+<div class="container">
   <ul id="leaderboard-tabs" class="nav nav-tabs">
     <li class="active"><a href="#" data-leaderboard="week">This week</a></li>
     {% for season_number in range(season.number) %}

@@ -3,12 +3,13 @@
 {% block page_id %}settings-page{% endblock page_id %}
 
 {% block main %}
+<div class="page-promo">
+  <h1>Settings</h1>
+</div>
 {% if success %}
 <div class="alert alert-success edit-success">Thank you. Your changes have been saved.</div>
 {% endif %}
 <div class="col-md-9">
-  <h1>Settings</h1>
-
   <h4 class="text-muted">Edit your profile</h4>
   <form class="form-horizontal" id="user-settings-form" action="" method="post" enctype="multipart/form-data" onsubmit="return getAnswer()">
 
@@ -115,6 +116,10 @@
       {% endif %}
     </li>
   </ul>
+  <h4 class="text-muted">Logout</h4>
+  <p>
+    <a href="{{ uri_for('logout') }}">logout of account</a>
+  </p>
 </div>
 <datalist id="emailAutoComplete"></datalist>
 {% endblock %}

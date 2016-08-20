@@ -38,7 +38,7 @@ before_script:
 
   # closure templates compiler
   - mkdir -p vendors/closure-templates
-  - wget https://closure-templates.googlecode.com/files/closure-templates-for-javascript-latest.zip && unzip closure-templates-for-javascript-latest.zip -d vendors/closure-templates
+  - wget https://dl.google.com/closure-templates/closure-templates-for-javascript-latest.zip && unzip closure-templates-for-javascript-latest.zip -d vendors/closure-templates
   - export SOY_JAR=vendors/closure-templates/SoyToJsSrcCompiler.jar
 
   - fab symlink_requirements

@@ -1,183 +1,71 @@
 
-h1 {
-  margin-bottom: @baseLineHeight/2;
-}
-
 #title-bar {
-  background: @grayDark;
+  background: rgba(255, 255, 255, 0.3);
   border-radius: 0;
   margin-bottom: 0;
-  padding: 10px;
 }
 
 .navbar-brand {
+  background: url('/static/img/logo.png') no-repeat 50%;
+  background-size: 90px;
   color: @white !important;
-  float: none;
-  font-size: 40px;
-  line-height: 20px;
-  display: block;
-  text-align: center;
-}
-
-.navbar-brand:hover {
-  color: @yellow;
-}
-
-#sign-in {
-  color: @white;
-  position: absolute;
-  right: 20px;
-  top: 20px;
-}
-
-#nav {
-  border-radius: 0;
-  border-width: 1px 0;
-  text-align: center;
-  position: relative;
-
-  .navbar-nav {
-    display: inline-block;
-    float: none;
-    margin-bottom: -5px;
-
-    a {
-      display: block;
-      padding: 15px 30px;
-    }
-  }
-
-  .btn-xs {
-    position: absolute;
-    right: 0;
-    top: 0;
-    margin: 13px 18px 0 0;
-  }
-}
-
-.navbar.visible-xs {
-
-  background: @grayDark;
-  margin: 0;
-  border: none;
-
-
-  #sign-in {
-    top: 0;
-  }
-}
-
-/* remove responsive nav behaviour. */
-.navbar-nav {
   float: left;
-  margin: 0;
+  display: block;
+  text-indent: -9999px;
+  width: 150px;
+  height: 150px;
+}
+
+
+.navbar-nav {
+  float: right;
+  margin: 60px 0 0;
 }
 .navbar-nav > li {
   float: left;
-}
 
-@media (max-width:767px) {
-  .navbar {
-    margin-bottom: 0;
-    min-height: 10px;
-  }
+  a {
+    color: @grayDark;
+    text-transform: uppercase;
+    font-size: 11px;
+    line-height: 28px;
+    padding: 0 30px 0 0;
 
-  #title-bar {
-    padding: 0 0 5px 0;
-  }
-
-  .navbar-brand {
-    float: left;
-    font-size: 25px;
-    padding: 20px 0 0 0;
-  }
-
-   #sign-in {
-     top: 13px !important;
-   }
-
-  #nav .navbar-nav a {
-    font-size: 13px;
-    padding: 10px 8px;
-  }
-
-  .btn-xs {
-    position: static !important;
-    float: right;
-  }
-
-}
-
-.dropdown-menu {
-  right: 0;
-  left: inherit;
-  padding: 0;
-  position: absolute !important;
-
-  li {
-    background: #F8F8F8;
-  }
-
-  li a,
-  .dropdown-header {
-    padding: 8px 10px !important;
-
-    .glyphicon {
-      font-size: 13px;
-      margin-right: 2px;
+    &:hover {
+      background: none;
     }
+
   }
 
-  .dropdown-header {
-    text-align: center;
-  }
+}
 
-  .divider {
-    margin: 0;
-  }
-
-  &:after, &:before {
-      bottom: 100%;
-      left: 50%;
-      border: solid transparent;
-      content: " ";
-      height: 0;
-      width: 0;
-      position: absolute;
-      pointer-events: none;
-  }
-
-  &:after {
-    border-color: rgba(245, 245, 245, 0);
-    border-bottom-color: #F5F5F5;
-    border-width: 10px;
-    margin-left: 1px;
-  }
-
-  &:before {
-    border-color: rgba(204, 204, 204, 0);
-    border-bottom-color: #ccc;
-    border-width: 11px;
-    margin-left: 0;
-  }
-
+.user-pic {
+  margin-right: 5px;
 }
 
 @media (max-width:430px) {
 
-  .dropdown-menu:before {
-    margin-left: 24px;
+  .navbar-brand {
+    float: none;
+    margin: auto;
   }
 
-  .dropdown-menu:after {
-    margin-left: 25px;
+  .navbar-nav {
+    margin: 0 0 10px 0;
+
+    li a {
+      padding-right: 28px;
+    }
   }
 
-  .hide-xs {
-    display: none;
-  }
-}
+  #user-link {
+    position: absolute;
+    top: 10px;
+    right: 10px;
 
-#leagues-dropdown-menu {
-  text-align: left;
+    a {
+      padding-right: 0;
+    }
+  }
+
 }

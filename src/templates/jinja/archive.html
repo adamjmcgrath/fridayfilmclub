@@ -5,9 +5,11 @@
 {% block page_id %}{{ page_id }}{% endblock page_id %}
 
 {% block content %}
-<div class="col-md-12">
+<div class="page-promo">
   <h1>Old questions</h1>
   <p class="intro">Welcome to my archive. There may not be any points on offer, but the game remains the same.</p>
+</div>
+<div class="col-md-12">
   {% if not questions %}
   <div class="alert alert-warning">There are no questions in the archive yet.</div>
   {% endif %} 

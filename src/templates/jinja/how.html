@@ -6,26 +6,64 @@
 
 
 {% block content %}
-<div class="col-md-10 col-md-offset-1">
+<div class="page-promo">
   <h2>How to Play</h2>
-  <ul>
-    <li>Each Friday at 3PM you will be sent an email and the clock will start clicking...</li>
-    <li>When you click on the link within the email you will be taken to a screenshot of a film and you have approximately 5½ hours to submit your answer.</li>
-    <li>The clock will drop 1 point per second and there are a maximum of <b>20,000</b> points available from the 3PM email being sent. The faster you answer, the higher your score.</li>
-    <li>If you don’t recognise the screenshot you can request up to 3 clues. But use a clue or submit an incorrect answer and you’ll instantly drop <b>2,000</b> points.</li>
-    <li>The game is divided up into Seasons of 12 weeks in length but you can join and play at any time.</li>
-    <li>There’s an on-going leaderboard and prizes available for the winner of each Season along with rewards for fastest answer and consistency of play.</li>
-  </ul>
-  <p>As Kevin Bacon once said: <i>“These are the fact of the case, and they are undisputed”</i> so that's it, folks.</p>
-  <p>Best of luck, and welcome to Friday Film Club!</p>
-
-  <blockquote class="signoff">
-    <p>FMJ</p>
-    <small>Film Master Jack</small>
-    <small><a href="https://twitter.com/FilmMasterJack">@filmmasterjack</a></small>
-    <small><a href="https://www.facebook.com/fridayfilmclub">facebook.com/fridayfilmclub</a></small>
-  </blockquote>
 </div>
+
+<div class="col-md-12" class="how-boxes">
+
+
+  <div class="row">
+    <div class="col-md-4"><div class="inner">
+      <span class="number">1</span>
+      <hr>
+      <h3>Your time starts now</h3>
+      <p>Every Friday at 3pin you will be sent an email and the clock will start ticking...</p>
+    </div></div>
+    <div class="col-md-4"><div class="inner">
+      <span class="number">2</span>
+      <hr>
+      <h3>Take a look</h3>
+      <p>Click the link in the email to be taken to that week's film screenshot. We generously give you 5 1/2 hours to submit your answer... go go go!</p>
+    </div></div>
+    <div class="col-md-4"><div class="inner">
+      <span class="number">3</span>
+      <hr>
+      <h3>Race against the clock</h3>
+      <p>The clock will drop 1 point per second and there are a maximum of 20,000 points available from the 3pm email being sent. The faster you answer, the higher your score.</p>
+    </div></div>
+  </div>
+  <div class="row">
+    <div class="col-md-4"><div class="inner">
+      <span class="number">4</span>
+      <hr>
+      <h3>Give us a clue</h3>
+      <p>If you don't recognise the screenshot you can request up to 3 clues. For every clue requested, or any incorrect answers submitted, you'll instantly drop 2,000 points.</p>
+    </div></div>
+    <div class="col-md-4"><div class="inner">
+      <span class="number">5</span>
+      <hr>
+      <h3>What are you waiting for</h3>
+      <p>The game is divided Up into seasons of 12 weeks, but you can join in anytime.</p>
+    </div></div>
+    <div class="col-md-4"><div class="inner">
+      <span class="number">6</span>
+      <hr>
+      <h3>Winner winner</h3>
+      <p>There's an ongoing leaderimard and of course, some prizes available for the winner of each season. There will be rewards for fastest answer and consistency of play.</p>
+    </div></div>
+  </div>
+
+</div>
+
+<p class="join">
+  {% if logged_in %}
+    <a href="{{ uri_for('settings') }}" class="btn btn-lg btn-info">Settings</a>
+  {% else %}
+    <a href="{{ uri_for('register') }}" class="btn btn-lg btn-success">Join the club</a>
+  {% endif %}
+</p>
+
 {% endblock %}
 
 {% block sidebar %}
@@ -37,4 +75,17 @@
 {% block body_base %}
 {% endblock %}
 
+
+
+
+
+
+
+
+
+
+
+
+<!--PRIVATE LEAGUES-->
+<!--Set up orjoi 1 your friends/colleagues in private leagues to test your wits against each other. Play for fun, or make it more interesting__-->
 

@@ -5,10 +5,11 @@
 {% block page_id %}{{ page_id }}{% endblock page_id %}
 
 {% block content %}
-<div class="col-md-12">
+<div class="page-promo">
   <h1>{% if league %}Edit{% else %}Add{% endif %} a League</h1>
   <p class="intro">Fill in the details and hit save.</p>
-
+</div>
+<div class="col-md-12">
   {% if success %}
     <div class="alert alert-success">You have successfully {% if league %}edited{% else %}created{% endif %} your league.</div>
   {% endif %} 

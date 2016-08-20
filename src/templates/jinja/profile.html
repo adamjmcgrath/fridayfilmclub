@@ -3,8 +3,10 @@
 {% block page_id %}profile-page{% endblock page_id %}
 
 {% block main %}
-<div class="col-md-9">
+<div class="page-promo">
   <h1>{{ user_profile.username }}'s profile</h1>
+</div>
+<div class="col-md-9">
   {% if user_profile.favourite_film_title %}
   <div class="well">
     <h4 class="text-muted">Favourite Film:</h4>

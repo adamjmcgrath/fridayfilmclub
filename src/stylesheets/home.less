@@ -1,16 +1,24 @@
 #home-page {
 
+  background: rgb(122, 122, 122) url(/static/img/bandw2-o.jpg) no-repeat 50% 30px;
+  background-size: cover;
+  color: white;
+
+  .text-muted {
+    color: white;
+  }
+
   h1 {
-    color: #333;
-    font-size: 32px;
+    font-size: 60px;
     font-weight: normal;
     text-transform: uppercase;
+    padding-top: 50px;
   }
 
   h2 {
-    color: #999;
-    font-size: 50px;
+    font-size: 20px;
     line-height: 20px;
+    margin-bottom: 50px;
   }
 
   h5.panel-heading {
@@ -29,21 +37,32 @@
 }
 
 #home-promo {
+  background: black;
   margin-bottom: 60px;
+  padding-bottom: 50px;
   margin-top: 30px;
   text-align: center;
 
   .btn {
+    background: white;
     margin-top: 30px;
   }
 
 }
 
-@media (max-width:767px) {
-  #home-promo h1 {
-    font-size: 22px;
+.bottom-logo {
+  background: url(/static/img/logo.png) no-repeat 50%;
+  background-size: 20%;
+  -webkit-filter: invert(1);
+  filter: invert(1);
+  width: 100%;
+  height: 300px;
+}
+
+@media (max-width:430px) {
+
+  #home-promo {
+    margin-bottom: 10px;
   }
-  #home-promo h2 {
-    font-size: 40px;
-  }
+
 }

@@ -9,64 +9,63 @@
   <body id="{% block page_id %}{% endblock %}">
     {% block nav_bar %}
 
-      <div class="navbar" id="title-bar">
-          <div class="container">
-            <a class="navbar-brand custom-font-header" href="{{ uri_for('home') }}">
-              <span class="hidden-xs">Friday Film Club</span>
-              <span class="visible-xs">FFC</span>
-            </a>
-            <div id="sign-in">
-              {% if logged_in %}
-                <span>
-                  <b>{{user.name}}</b><br>
-                  <a href="{{ uri_for('settings') }}">settings</a> - <a href="{{ uri_for('logout') }}">logout</a>
-                </span>
-                <img src="{{user.pic_url()}}" width="30" height="30">
-              {% else %}
-                <a href="{{ uri_for('login') }}" class="btn btn-primary">Login</a>
-              {% endif %}
-            </div>
-          </div>
+      <div class="social-bar">
+        <div class="facebook"><a href="https://www.facebook.com/fridayfilmclub" target="_blank" rel="noopener">Facebook</a></div>
+        <div class="twitter"><a href="https://twitter.com/FilmMasterJack" target="_blank" rel="noopener">Twitter</a></div>
+        <div class="email"><a href="mailto:fmj@fridayfilmclub.com">fmj@fridayfilmclub.com</a></div>
       </div>
 
-      <div class="navbar navbar-default" id="nav">
-        <ul class="nav navbar-nav">
-          <li{% if page_id == 'how-page' %} class="active"{% endif %}>
-            <a href="{{ uri_for('how-it-works') }}">How to play</a>
-          </li>
-          <li{% if page_id == 'archive-page' %} class="active"{% endif %}>
-            <a href="{{ uri_for('archive') }}">Archive</a>
-          </li>
-          <li{% if page_id == 'leaderboard-page' %} class="active"{% endif %}>
-            <a href="{{ uri_for('leader-board') }}">Leaderboard</a>
-          </li>
-          {% if logged_in %}
-          <li class="dropdown">
-            <a href="#" id="leagues-dropdown" class="dropdown-toggle" data-toggle="dropdown">
-              Leagues <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu" id="leagues-dropdown-menu" role="menu">
-              {% for league in user.get_leagues() %}
-              <li>
-                <a href="{{ uri_for('league', league_id=league.name_slug) }}">
-                  <span class="glyphicon glyphicon-list-alt"></span> {{ league.name }}
+      <div class="navbar" id="title-bar">
+        <div class="container">
+          <a class="navbar-brand custom-font-header" href="{{ uri_for('home') }}">
+            Friday Film Club
+          </a>
+          <ul class="nav navbar-nav">
+              <li{% if page_id == 'how-page' %} class="active"{% endif %}>
+                <a href="{{ uri_for('how-it-works') }}">How to play</a>
+              </li>
+              <li{% if page_id == 'archive-page' %} class="active"{% endif %}>
+                <a href="{{ uri_for('archive') }}">Archive</a>
+              </li>
+              <li{% if page_id == 'leaderboard-page' %} class="active"{% endif %}>
+                <a href="{{ uri_for('leader-board') }}">Leaderboard</a>
+              </li>
+              {% if logged_in %}
+              <li class="dropdown">
+                <a href="#" id="leagues-dropdown" class="dropdown-toggle" data-toggle="dropdown">
+                  Leagues <span class="caret"></span>
                 </a>
+                <ul class="dropdown-menu" id="leagues-dropdown-menu" role="menu">
+                  {% for league in user.get_leagues() %}
+                  <li>
+                    <a href="{{ uri_for('league', league_id=league.name_slug) }}">
+                      <span class="glyphicon glyphicon-list-alt"></span> {{ league.name }}
+                    </a>
+                  </li>
+                  {% else %}
+                  <li role="presentation" class="dropdown-header">You have no leagues</li>
+                  {% endfor %}
+                  <li class="divider"></li>
+                  <li>
+                    <a href="{{ uri_for('add-league') }}">
+                      <span class="glyphicon glyphicon-plus"></span>
+                      Create a league
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <li id="user-link">
+                <a href="{{ uri_for('settings') }}"><img src="{{user.pic_url()}}" width="30" height="30" class="user-pic"> {{user.name}}</a>
               </li>
               {% else %}
-              <li role="presentation" class="dropdown-header">You have no leagues</li>
-              {% endfor %}
-              <li class="divider"></li>
               <li>
-                <a href="{{ uri_for('add-league') }}">
-                  <span class="glyphicon glyphicon-plus"></span>
-                  Create a league
-                </a>
+                <a href="{{ uri_for('login') }}" class="btn btn-primary">Login</a>
               </li>
+              {% endif %}
             </ul>
-          </li>
-          {% endif %}
-        </ul>
+        </div>
       </div>
+
     {% endblock %}
 
     <div class="container">
@@ -76,13 +75,12 @@
           {% block sidebar %}{% endblock %}
         </div>
       {% endblock %}
+    </div>
       {% block footer %}
-        <hr>
         <div id="footer">
-          <p>&copy; Friday Film Club <a href="https://twitter.com/FilmMasterJack" target="_blank" class="pull-right" id="follow-twitter">Follow us on Twitter</a></p>
+          <p>&copy; Friday Film Club</p>
         </div>
       {% endblock %}
-    </div>
     {% block body_base %}{% endblock %}
     <script>
       (function() {
@@ -109,14 +107,6 @@
       ga('create', 'UA-46472389-1', 'fridayfilmclub.com');
       ga('send', 'pageview');
 
-      (function() {
-        var twitterBtn = document.getElementById('follow-twitter');
-        if (twitterBtn) {
-          twitterBtn.onclick = function() {
-            window['ga']('send', 'event', 'button', 'click', 'follow-us-on-twitter');
-          }
-        }
-      })();
     </script>
   </body>
 </html>

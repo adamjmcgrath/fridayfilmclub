@@ -5,16 +5,19 @@
 {% block page_id %}{{ page_id }}{% endblock page_id %}
 
 {% block content %}
+<div class="page-promo">
+  {% set owner = league.owner.get() %}
+  <h1>
+    {{ league.name }}
+    {% if user == owner %}
+      <a href="{{ uri_for('edit-league', league_id=league.key.id()) }}" class="btn btn-primary btn-sm pull-right">Edit your league</a>
+    {% endif %}
+  </h1>
+</div>
+
 <div class="container">
   <div class="clearfix">
     <div class="col-md-{% if league.pic %}9{% else %}12{% endif %}">
-      {% set owner = league.owner.get() %}
-      <h1>
-        {{ league.name }}
-        {% if user == owner %}
-          <a href="{{ uri_for('edit-league', league_id=league.key.id()) }}" class="btn btn-primary btn-sm pull-right">Edit your league</a>
-        {% endif %}
-      </h1>
       <div class="list-group">
         <div class="list-group-item">
           <h5 class="list-group-item-heading">Created:</h5>

@@ -12,16 +12,26 @@
 @import 'league.less';
 @import 'settings.less';
 @import 'archive.less';
+@import 'dropdown.less';
+@import 'social-bar.less';
+@import 'how.less';
 
-.custom-font { font-family: 'Montserrat', sans-serif; }
-.custom-font-header { font-family: 'Codystar', cursive; }
-.custom-font-script { font-family: 'Cookie', cursive; }
+.custom-font {
+  font-family: 'Share', cursive;
+  text-transform: uppercase;
+}
+.custom-font-script {
+  font-family: 'Diplomata SC', cursive;
+  text-transform: uppercase;
+}
 
-body { background: @grayLighter; }
+body {
+  background: rgb(122, 122, 122) url(/static/img/bandw1-o.jpg) no-repeat 50% 30px;
+  background-size: cover;
+}
 
-hr {
-  border-top-color: @gray;
-  border-bottom-width: 0;
+body#admin-home-page, body#add-question-page, body#posed-page, body#questions-page {
+  background: @grayLighter;
 }
 
 .container {
@@ -52,13 +62,6 @@ hr {
   }
 }
 
-#how-page {
-  blockquote {
-    border-color: #e0e0e0;
-    margin-bottom: 10px;
-  }
-}
-
 // TODO (adamjmcgrath) Move these into their own page styles.
 .glyphicon-ok {
   color: @green;
@@ -71,17 +74,61 @@ hr {
 }
 
 #footer {
-  margin-bottom: 20px;
+  background: @grayLighter;
+  padding: 20px;
+  text-transform: uppercase;
+  color: @grayDark;
+  font-size: 10px;
+
+  p {
+    margin: 0;
+  }
 }
 
 #profile-page .col-md-9 .well {
   padding: 9px 19px;
 }
 
+.btn:hover {
+  border-color: inherit !important;
+}
 
-#follow-twitter {
-  background: url('/static/img/follow-twitter.png') no-repeat;
-  padding-left: 26px;
-  color: #00ACEA;
+.btn {
+  text-transform: none !important;
+  border-radius: 13px;
+  color: @yellow !important;
+  font-size: 11px;
+  padding: 0 20px !important;
+  border: 2px solid @yellow;
+  background: transparent;
+  height: 27px;
+  line-height: 23px !important;
+}
+
+.btn-lg {
+  text-transform: none !important;
+  border-radius: 26px;
+  color: @yellow !important;
+  font-size: 18px;
+  padding: 0 30px !important;
+  border: 3px solid @yellow;
+  background: transparent;
+  height: 52px;
+  line-height: 43px !important;
+}
+
+.page-promo {
+
+  background: black;
+  margin: 50px 0;
+  padding: 10px 20px 20px;
+  color: white;
+
+  h1, h2 {
+    font-family: 'Share', cursive;
+    text-transform: uppercase;
+    color: @yellow;
+    margin-bottom: 10px;
+  }
 }
 
