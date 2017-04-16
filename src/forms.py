@@ -131,13 +131,14 @@ class ProfileImageField(ImageField):
 class PackshotImageField(ImageField):
 
   def file_name(self, req, obj):
-    return '%s-packshot' % models.slugify(obj.answer_title)
+    return '%s-packshot-%s' % (models.slugify(obj.answer_title), obj.key.id())
 
 
 class ScreenshotImageField(ImageField):
 
   def file_name(self, req, obj):
-    return '%s-screenshot' % models.slugify(obj.question.get().answer_title)
+    return '%s-screenshot-%s' % (
+      models.slugify(obj.question.get().answer_title), obj.key.id())
 
 
 class LeagueImageField(ImageField):
