@@ -7,6 +7,7 @@ mock==1.0.1
 pyyaml
 pylint==1.4.3
 Pillow==2.8.1
+pycrypto==2.6.1
 oauth2==1.5.211
 httplib2==0.9
 python-coveralls
