@@ -79,7 +79,7 @@
       {% block footer %}
         <hr>
         <div id="footer">
-          <p>&copy; Friday Film Club <a href="https://twitter.com/FilmMasterJack" target="_blank" class="pull-right" id="follow-twitter">Follow us on Twitter</a></p>
+          <p>&copy; Friday Film Club | <a href="https://www.iubenda.com/privacy-policy/61527402" target="_blank">Privacy Policy</a> <a href="https://twitter.com/FilmMasterJack" target="_blank" class="pull-right" id="follow-twitter">Follow us on Twitter</a></p>
         </div>
       {% endblock %}
     </div>
