@@ -19,7 +19,7 @@ before_install:
 install:
   - pip install -r requirements.txt
   - npm install
-  - bower install
+  - ./node_modules/.bin/bower install
 
 before_script:
   - export PATH=node_modules/.bin/:$PATH
